@@ -1,0 +1,331 @@
+/**
+ * lib/i18n.ts
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Central place for ALL website text in both languages.
+ * To edit any text on the site, change it here — nothing else needed.
+ *
+ * Structure:  translations[language].section.key
+ */
+
+export type Language = "bs" | "en";
+
+export const translations = {
+  // ════════════════════════════════════════════════════════════════════════
+  //  BOSANSKI / HRVATSKI / SRPSKI
+  // ════════════════════════════════════════════════════════════════════════
+  bs: {
+    nav: {
+      services:  "Usluge",
+      portfolio: "Portfolio",
+      about:     "O nama",
+      saas:      "SaaS",
+      contact:   "Kontakt",
+    },
+    hero: {
+      badge:       "Digitalna Agencija · Web · AI · Marketing",
+      title1:      "Vaš biznis,",
+      titleAccent: "transformiran kodom",
+      title2:      "i inteligencijom.",
+      subtitle:    "Spajamo preciznost modernog web razvoja s moći AI-a i strateškim digitalnim marketingom — da vaš brend ne samo preživi online, nego dominira.",
+      ctaPrimary:   "Započnimo projekat",
+      ctaSecondary: "Naš Portfolio",
+    },
+    stats: {
+      heading:  "Brojevi koji govore",
+      projects: "Završenih projekata",
+      clients:  "Zadovoljnih klijenata",
+      markets:  "Tržišta",
+      support:  "Podrška",
+      projectsValue: "15+",
+      clientsValue:  "100%",
+      marketsValue:  "4",
+      supportValue:  "24/7",
+    },
+    services: {
+      label:    "Šta radimo",
+      heading:  "Naše Usluge",
+      subtitle: "Od prve linije koda do finalne reklame — pokrivamo cijeli digitalni spektar koji vaš biznis treba.",
+      items: [
+        {
+          title:    "Webflow Development",
+          desc:     "Vizualno impresivni, brzinski optimizirani sajtovi koji konvertuju posjetioce u kupce — bez kompromisa u dizajnu.",
+          features: ["CMS & e-commerce", "SEO optimizacija", "Animacije & micro-interactions", "Performanse 95+"],
+        },
+        {
+          title:    "Custom Web Aplikacije",
+          desc:     "Skalabilne React/Next.js aplikacije prilagođene vašim poslovnim procesima — od MVP-a do enterprise platformi.",
+          features: ["React / Next.js 14", "REST & GraphQL API", "Autentifikacija", "Deployment & DevOps"],
+        },
+        {
+          title:    "Digitalni Marketing",
+          desc:     "Data-driven strategije koje povećavaju vidljivost brenda, grade zajednicu i generiraju mjerljive rezultate.",
+          features: ["Paid Ads (Meta, Google)", "Content strategija", "Community management", "Analitika & izvještaji"],
+        },
+        {
+          title:    "AI Prompting & Integracije",
+          desc:     "Iskoristite moć velikih jezičnih modela. Od automatizacije do naprednih AI funkcionalnosti u vašem produktu.",
+          features: ["GPT / Claude integracije", "AI automatizacija", "Custom chatbotovi", "Prompt optimizacija"],
+        },
+      ],
+    },
+    satisfaction: {
+      label:    "Rezultati",
+      heading:  "Zadovoljstvo klijenata",
+      subtitle: "Ne vjerujte nam na riječ — vjerujte brojevima koje isporučujemo.",
+      metrics: [
+        { label: "Zadovoljstvo klijenata",   value: 98 },
+        { label: "Projekti na vrijeme",      value: 95 },
+        { label: "Povrat investicije (ROI)", value: 92 },
+        { label: "Ponovna saradnja",         value: 90 },
+      ],
+      growthTitle: "Rast online prisustva klijenata",
+      growthSub:   "Prosječan rast u prvih 6 mjeseci saradnje",
+      months: ["Mjesec 1", "Mjesec 2", "Mjesec 3", "Mjesec 4", "Mjesec 5", "Mjesec 6"],
+    },
+    about: {
+      label:    "Tim",
+      heading:  "Ko smo mi",
+      subtitle: "Dvoje stručnjaka s jednom misijom — pomoći ambicioznim brendovima da dominiraju digitalnim prostorom.",
+      photoHint: "Vaša slika ovdje",
+      members: [
+        {
+          name: "Bakir Mehić",
+          role: "Lead Developer & UI/UX Architect",
+          bio:  "Gradim digitalna iskustva koja oduzimaju dah — od preciznih Webflow sajtova do kompleksnih custom web aplikacija. Specijaliziran za AI Prompt Engineering i QA Automatizaciju koja eliminira bugove prije produkcije.",
+          tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automatizacija"],
+        },
+        {
+          name: "Nedim Kupusija",
+          role: "Digital Marketing & Social Media Manager",
+          bio:  "Pomažem brendovima da pronađu pravi glas u digitalnom prostoru. Kroz data-driven strategije, kreativni sadržaj i precizno targetiranje gradimo online prisustvo koje generira stvarne rezultate.",
+          tags: ["Brand Scaling", "Content Strategija", "Online Optimizacija"],
+        },
+      ],
+    },
+    portfolio: {
+      label:    "Naš rad",
+      heading:  "Portfolio",
+      subtitle: "Svaki projekt je pažljivo izgrađen s jasnim ciljem — izvrsni digitalni rezultati.",
+      featured: "Izdvojeno",
+      viewProject: "Pogledaj projekat",
+      details:  "Detalji projekta",
+      items: [
+        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",  category: "Webflow Development",  desc: "Profesionalni medicinski website za hiperbaričnu terapiju — optimiziran za konverzije i lokalni SEO." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Klijent", category: "Web Development",      desc: "Visoko-konvertirajuća landing page sa naprednom integracijom rezervacionog sistema." },
+        { title: "Fitness Trainer Website",  client: "Personal Trainer",   category: "UI/UX & Development",  desc: "Dinamičan osobni brend website za fitness trenera sa online booking sistemom." },
+      ],
+    },
+    saas: {
+      label:       "Naš flagship produkt",
+      heading1:    "Revolucija u",
+      headingAccent: "Rent-a-Car industriji",
+      badge:       "Rent-a-Car SaaS Platforma",
+      title:       "Sve-u-jednom SaaS platforma dizajnirana za Balkanska tržišta",
+      desc:        "Gradimo naprednu cloud platformu specijalno prilagođenu izazovima rent-a-car industrije u BiH, Srbiji, Hrvatskoj i Crnoj Gori — s planom ekspanzije na EU tržište. Nema više excela i WhatsApp rezervacija. Dobrodošli u 21. vijek.",
+      launch:      "Planirano lansiranje:",
+      launchDate:  "Januar 2027",
+      featuresTitle: "Ključne funkcionalnosti",
+      features: [
+        "Automatizacija rezervacija i flote",
+        "AI pricing & demand forecasting",
+        "Multi-lokacija & multi-valuta podrška",
+        "Napredne analitike i izvještaji",
+        "Integrirani CRM sistem",
+        "White-label rješenje za agencije",
+      ],
+      earlyAccess: "Rani pristup",
+      earlyAccessDesc: "Prijavite se i testirajte besplatno prva 2 mjeseca.",
+      placeholder: "vasa@email.com",
+      submit:      "Prijavi se",
+      submitting:  "Slanje…",
+      success:     "Uspješno ste se prijavili! Kontaktirat ćemo vas.",
+    },
+    contact: {
+      label:    "Kontakt",
+      heading:  "Započnimo saradnju",
+      subtitle: "Imate projekat na umu? Javite nam se — odgovaramo u roku od 24 sata.",
+      nameLabel:    "Ime i prezime",
+      namePlaceholder: "Vaše ime",
+      emailLabel:   "Email adresa",
+      emailPlaceholder: "vasa@email.com",
+      subjectLabel: "Tip projekta",
+      subjectOptions: ["Web razvoj", "Digitalni marketing", "AI integracija", "SaaS / Rent-a-Car", "Ostalo"],
+      messageLabel: "Poruka",
+      messagePlaceholder: "Recite nam nešto o vašem projektu…",
+      submit:     "Pošalji poruku",
+      submitting: "Slanje…",
+      success:    "Hvala! Vaša poruka je poslana. Javljamo se uskoro.",
+      orReach:    "Ili nas kontaktirajte direktno",
+    },
+    footer: {
+      tagline:  "Digitalna agencija koja pretvara poslovne vizije u izvanredne digitalne realnosti. Web, AI, Marketing.",
+      location: "Mostar, Bosna i Hercegovina",
+      companyHeading: "Kompanija",
+      servicesHeading: "Usluge",
+      contactHeading: "Kontakt",
+      rights:   "Sva prava zadržana.",
+      madeWith: "Dizajnirano & razvijeno s ❤️ u Mostaru",
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  ENGLISH
+  // ════════════════════════════════════════════════════════════════════════
+  en: {
+    nav: {
+      services:  "Services",
+      portfolio: "Portfolio",
+      about:     "About",
+      saas:      "SaaS",
+      contact:   "Contact",
+    },
+    hero: {
+      badge:       "Digital Agency · Web · AI · Marketing",
+      title1:      "Your business,",
+      titleAccent: "transformed by code",
+      title2:      "and intelligence.",
+      subtitle:    "We blend the precision of modern web development with the power of AI and strategic digital marketing — so your brand doesn't just survive online, it dominates.",
+      ctaPrimary:   "Start a project",
+      ctaSecondary: "Our Portfolio",
+    },
+    stats: {
+      heading:  "Numbers that speak",
+      projects: "Completed projects",
+      clients:  "Happy clients",
+      markets:  "Markets",
+      support:  "Support",
+      projectsValue: "15+",
+      clientsValue:  "100%",
+      marketsValue:  "4",
+      supportValue:  "24/7",
+    },
+    services: {
+      label:    "What we do",
+      heading:  "Our Services",
+      subtitle: "From the first line of code to the final ad — we cover the entire digital spectrum your business needs.",
+      items: [
+        {
+          title:    "Webflow Development",
+          desc:     "Visually stunning, speed-optimized websites that convert visitors into customers — with no compromise on design.",
+          features: ["CMS & e-commerce", "SEO optimization", "Animations & micro-interactions", "Performance 95+"],
+        },
+        {
+          title:    "Custom Web Apps",
+          desc:     "Scalable React/Next.js applications tailored to your business processes — from MVP to enterprise platforms.",
+          features: ["React / Next.js 14", "REST & GraphQL API", "Authentication", "Deployment & DevOps"],
+        },
+        {
+          title:    "Digital Marketing",
+          desc:     "Data-driven strategies that boost brand visibility, build community, and generate measurable results.",
+          features: ["Paid Ads (Meta, Google)", "Content strategy", "Community management", "Analytics & reporting"],
+        },
+        {
+          title:    "AI Prompting & Integrations",
+          desc:     "Harness the power of large language models. From automation to advanced AI features built into your product.",
+          features: ["GPT / Claude integrations", "AI automation", "Custom chatbots", "Prompt optimization"],
+        },
+      ],
+    },
+    satisfaction: {
+      label:    "Results",
+      heading:  "Client Satisfaction",
+      subtitle: "Don't take our word for it — trust the numbers we deliver.",
+      metrics: [
+        { label: "Client satisfaction",     value: 98 },
+        { label: "On-time delivery",        value: 95 },
+        { label: "Return on investment",    value: 92 },
+        { label: "Repeat collaboration",    value: 90 },
+      ],
+      growthTitle: "Client online presence growth",
+      growthSub:   "Average growth in the first 6 months",
+      months: ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6"],
+    },
+    about: {
+      label:    "Team",
+      heading:  "Who we are",
+      subtitle: "Two experts with one mission — helping ambitious brands dominate the digital space.",
+      photoHint: "Your photo here",
+      members: [
+        {
+          name: "Bakir Mehić",
+          role: "Lead Developer & UI/UX Architect",
+          bio:  "I build breathtaking digital experiences — from precise Webflow sites to complex custom web apps. Specialized in AI Prompt Engineering and QA Automation that eliminates bugs before production.",
+          tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automation"],
+        },
+        {
+          name: "Nedim Kupusija",
+          role: "Digital Marketing & Social Media Manager",
+          bio:  "I help brands find their true voice in the digital space. Through data-driven strategies, creative content, and precise targeting, we build an online presence that generates real results.",
+          tags: ["Brand Scaling", "Content Strategy", "Online Optimization"],
+        },
+      ],
+    },
+    portfolio: {
+      label:    "Our work",
+      heading:  "Portfolio",
+      subtitle: "Every project is carefully crafted with a clear goal — exceptional digital results.",
+      featured: "Featured",
+      viewProject: "View project",
+      details:  "Project details",
+      items: [
+        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",   category: "Webflow Development",  desc: "Professional medical website for hyperbaric therapy — optimized for conversions and local SEO." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Client",   category: "Web Development",      desc: "High-converting landing page with advanced booking system integration." },
+        { title: "Fitness Trainer Website",  client: "Personal Trainer",    category: "UI/UX & Development",  desc: "Dynamic personal brand website for a fitness trainer with an online booking system." },
+      ],
+    },
+    saas: {
+      label:       "Our flagship product",
+      heading1:    "Revolutionizing the",
+      headingAccent: "Rent-a-Car industry",
+      badge:       "Rent-a-Car SaaS Platform",
+      title:       "An all-in-one SaaS platform built for the Balkan markets",
+      desc:        "We're building an advanced cloud platform specifically tailored to the challenges of the rent-a-car industry in Bosnia, Serbia, Croatia, and Montenegro — with planned EU expansion. No more Excel sheets and WhatsApp bookings. Welcome to the 21st century.",
+      launch:      "Expected launch:",
+      launchDate:  "January 2027",
+      featuresTitle: "Key features",
+      features: [
+        "Booking & fleet automation",
+        "AI pricing & demand forecasting",
+        "Multi-location & multi-currency support",
+        "Advanced analytics & reporting",
+        "Integrated CRM system",
+        "White-label solution for agencies",
+      ],
+      earlyAccess: "Early access",
+      earlyAccessDesc: "Sign up and test free for the first 2 months.",
+      placeholder: "your@email.com",
+      submit:      "Sign up",
+      submitting:  "Sending…",
+      success:     "Successfully signed up! We'll be in touch.",
+    },
+    contact: {
+      label:    "Contact",
+      heading:  "Let's work together",
+      subtitle: "Have a project in mind? Reach out — we reply within 24 hours.",
+      nameLabel:    "Full name",
+      namePlaceholder: "Your name",
+      emailLabel:   "Email address",
+      emailPlaceholder: "your@email.com",
+      subjectLabel: "Project type",
+      subjectOptions: ["Web development", "Digital marketing", "AI integration", "SaaS / Rent-a-Car", "Other"],
+      messageLabel: "Message",
+      messagePlaceholder: "Tell us a bit about your project…",
+      submit:     "Send message",
+      submitting: "Sending…",
+      success:    "Thank you! Your message has been sent. We'll get back to you soon.",
+      orReach:    "Or contact us directly",
+    },
+    footer: {
+      tagline:  "A digital agency turning business visions into extraordinary digital realities. Web, AI, Marketing.",
+      location: "Mostar, Bosnia and Herzegovina",
+      companyHeading: "Company",
+      servicesHeading: "Services",
+      contactHeading: "Contact",
+      rights:   "All rights reserved.",
+      madeWith: "Designed & developed with ❤️ in Mostar",
+    },
+  },
+} as const;
+
+// Helper type for autocompletion
+export type Translation = (typeof translations)["bs"];
