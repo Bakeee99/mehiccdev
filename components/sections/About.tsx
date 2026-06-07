@@ -1,7 +1,11 @@
 /**
  * components/sections/About.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Who we are" — team cards WITH photo placeholders.
+ * "Who we are" — team cards WITH photo placeholders + LinkedIn hover effect.
+ *
+ * Hover effect: photo zooms (scale 1.1), card gets a blue glow border,
+ * and a LinkedIn icon fades in at the top-right corner of the photo.
+ * The whole card is a link to the person's LinkedIn.
  *
  * HOW TO ADD REAL PHOTOS:
  *   1. Put your images in /public/team/ (e.g. bakir.jpg, nedim.jpg)
@@ -18,7 +22,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Photo config — leave src empty ("") to show the placeholder ────────────────
 const PHOTOS = [
-  { src: "", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2,    linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
+  { src: "", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2,     linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
   { src: "", gradient: "from-indigo-500 to-blue-500", initials: "NK", icon: Megaphone, linkedin: "https://www.linkedin.com/in/nedim-kupusija-4632a533b/" },
 ];
 
@@ -60,15 +64,19 @@ export function About() {
           {t.about.members.map((member, i) => {
             const photo = PHOTOS[i];
             return (
-              <motion.div
+              <motion.a
                 key={member.name}
+                href={photo.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={member.name + " LinkedIn"}
                 variants={i === 0 ? slideInLeft : slideInRight}
-                className="group relative rounded-2xl border border-[var(--border)] bg-[var(--surface)]
-                           overflow-hidden hover:border-brand-600/40 dark:hover:border-brand-500/40
-                           transition-all duration-300 hover:shadow-xl hover:shadow-brand-600/10
+                whileHover={{ boxShadow: "0 0 0 2px #2563EB, 0 20px 44px rgba(37,99,235,0.3)" }}
+                className="group relative block rounded-2xl border border-[var(--border)]
+                           bg-[var(--surface)] overflow-hidden transition-all duration-300
                            hover:-translate-y-1"
               >
-                {/* ── Photo area ──────────────────────────────────────────────── */}
+                {/* ── Photo area (zooms on hover) ─────────────────────────────── */}
                 <div className="relative h-72 overflow-hidden">
                   {photo.src ? (
                     // Real photo (uses <img> so no next/image config needed)
@@ -76,11 +84,11 @@ export function About() {
                     <img
                       src={photo.src}
                       alt={member.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   ) : (
-                    // Placeholder until a real photo is added
-                    <div className={`w-full h-full bg-gradient-to-br ${photo.gradient} flex flex-col items-center justify-center relative`}>
+                    // Placeholder until a real photo is added — zooms on hover
+                    <div className={"w-full h-full bg-gradient-to-br " + photo.gradient + " flex flex-col items-center justify-center relative transition-transform duration-500 group-hover:scale-110"}>
                       <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20" aria-hidden />
                       <div className="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 border border-white/30">
                         <span className="text-4xl font-extrabold text-white">{photo.initials}</span>
@@ -91,6 +99,15 @@ export function About() {
                       </div>
                     </div>
                   )}
+
+                  {/* LinkedIn icon — top-right, fades in on hover */}
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-xl
+                                  bg-white/20 backdrop-blur-md border border-white/30
+                                  flex items-center justify-center text-white z-10
+                                  opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0
+                                  transition-all duration-300">
+                    <Linkedin size={18} />
+                  </div>
                 </div>
 
                 {/* ── Info ────────────────────────────────────────────────────── */}
@@ -110,7 +127,7 @@ export function About() {
                     ))}
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
             );
           })}
         </motion.div>
