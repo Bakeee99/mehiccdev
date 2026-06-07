@@ -25,7 +25,7 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>("bs");
+  const [lang, setLangState] = useState<Language>("en");
 
   // On mount, read saved language preference (if any)
   useEffect(() => {
