@@ -39,6 +39,7 @@ export function Navbar() {
     { label: t.nav.portfolio, href: "#portfolio" },
     { label: t.nav.about,     href: "#o-nama"    },
     { label: t.nav.saas,      href: "#saas"      },
+    { label: t.nav.pricing,   href: "#cjenovnik" },
   ];
 
   return (
