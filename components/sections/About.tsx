@@ -12,14 +12,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Megaphone, ImageIcon } from "lucide-react";
+import { Code2, Megaphone, ImageIcon, Linkedin } from "lucide-react";
 import { staggerContainerSlow, fadeUp, slideInLeft, slideInRight, viewportOnce } from "@/lib/animations";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Photo config — leave src empty ("") to show the placeholder ────────────────
 const PHOTOS = [
-  { src: "", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2    },
-  { src: "", gradient: "from-indigo-500 to-blue-500", initials: "NK", icon: Megaphone },
+  { src: "", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2,    linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
+  { src: "", gradient: "from-indigo-500 to-blue-500", initials: "NK", icon: Megaphone, linkedin: "https://www.linkedin.com/in/nedim-kupusija-4632a533b/" },
 ];
 
 export function About() {

@@ -15,12 +15,12 @@ const TEAM_CONTACTS = [
   {
     name: "Bakir Mehić", email: "bakir.mehic@mehiccdev.com",
     instagram: "https://instagram.com/bakirmehic",   // ← update with real handle
-    linkedin:  "https://linkedin.com/in/bakirmehic",  // ← update with real URL
+    linkedin:  "https://www.linkedin.com/in/bakir-mehic-qa-engineer/",  // ← update with real URL
   },
   {
     name: "Nedim Kupusija", email: "nedim.kupusija@mehiccdev.com",
     instagram: "https://instagram.com/nedimkupusija", // ← update
-    linkedin:  "https://linkedin.com/in/nedimkupusija",// ← update
+    linkedin:  "https://www.linkedin.com/in/nedim-kupusija-4632a533b/",// ← update
   },
 ];
 
