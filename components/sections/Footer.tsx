@@ -14,12 +14,12 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 const TEAM_CONTACTS = [
   {
     name: "Bakir Mehić", email: "bakir.mehic@mehiccdev.com",
-    instagram: "https://instagram.com/bakirmehic",   // ← update with real handle
+    instagram: "https://www.instagram.com/mehicbakir",   // ← update with real handle
     linkedin:  "https://www.linkedin.com/in/bakir-mehic-qa-engineer/",  // ← update with real URL
   },
   {
     name: "Nedim Kupusija", email: "nedim.kupusija@mehiccdev.com",
-    instagram: "https://instagram.com/nedimkupusija", // ← update
+    instagram: "https://www.instagram.com/nedim.40", // ← update
     linkedin:  "https://www.linkedin.com/in/nedim-kupusija-4632a533b/",// ← update
   },
 ];
