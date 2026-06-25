@@ -19,21 +19,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, X, ArrowRight, Coffee, Sparkles } from "lucide-react";
+import { Check, ArrowRight, Coffee, Sparkles, Table2, Zap, Clock, CircleCheck, TriangleAlert, ShieldCheck, RefreshCw, MousePointerClick } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 /* ── Types & bilingual content ─────────────────────────────────────────────── */
 type Cap = { pre: string; strong: string; post: string };
 type Item = [string, string];
 type Card = { label: string; lt: string; big: number; per: string; cap: Cap; coffee: string; items: Item[] };
+type Pair = { bIcon: LucideIcon; b: string; bd: string; aIcon: LucideIcon; a: string; ad: string };
 type Content = {
   eyebrow: string;
   h: [string, string, string];
   sub: string;
   project: Card;
   support: Card;
-  baHead: string; beforeH: string; afterH: string;
-  before: string[]; after: string[];
+  trHead: string; trSub: string; beforeH: string; afterH: string;
+  pairs: Pair[];
+  summary: [string, string, string];
   banner: [string, string, string];
   bannerSub: string; btn: string;
 };
@@ -63,10 +66,16 @@ const T: { bs: Content; en: Content } = {
         ["Izmjene u 2 klika", "bez čekanja i bez muke"],
       ],
     },
-    baHead: "Šta se mijenja kad radite s nama",
+    trHead: "Od haosa do potpune kontrole",
+    trSub: "Svaki problem koji ste imali — mi smo zamijenili rješenjem koje radi samo.",
     beforeH: "PRIJE", afterH: "SA NAMA",
-    before: ["Excel tabele i ručne bilješke", "Sati izgubljeni na administraciju", "Propušteni upiti i greške", "Sve ručno, sve sporo"],
-    after: ["Sve automatizovano — radi samo", "Vrijeme za ono što je važno", "Ništa se ne gubi, sve pod kontrolom", "Gotovo u 2 klika"],
+    pairs: [
+      { bIcon: Table2, b: "Excel tabele i ručne bilješke", bd: "sve razbacano na više mjesta", aIcon: Zap, a: "Sve automatizovano", ad: "jedan sistem, radi samo" },
+      { bIcon: Clock, b: "Sati izgubljeni na administraciju", bd: "vrijeme koje nikad ne vratite", aIcon: CircleCheck, a: "Vrijeme za ono što je važno", ad: "fokus na rast biznisa" },
+      { bIcon: TriangleAlert, b: "Propušteni upiti i greške", bd: "klijenti koji odu konkurenciji", aIcon: ShieldCheck, a: "Ništa se ne gubi", ad: "svaki upit zabilježen i siguran" },
+      { bIcon: RefreshCw, b: "Sve ručno, sve sporo", bd: "svaka izmjena je muka", aIcon: MousePointerClick, a: "Gotovo u 2 klika", ad: "brzo, jednostavno, odmah" },
+    ],
+    summary: ["Rezultat: ", "više vremena, manje stresa", " i sistem koji radi za vas — non-stop."],
     banner: ["Plaćate manje od kafe dnevno — a dobijate ", "digitalnu mašinu", " koja radi za vas 24/7."],
     bannerSub: "Investicija koja se vrati već u prvih mjesec dana.",
     btn: "Zakaži besplatne konsultacije →",
@@ -95,10 +104,16 @@ const T: { bs: Content; en: Content } = {
         ["Edits in 2 clicks", "no waiting, no hassle"],
       ],
     },
-    baHead: "What changes when you work with us",
+    trHead: "From chaos to full control",
+    trSub: "Every problem you used to have — we replaced it with a solution that runs itself.",
     beforeH: "BEFORE", afterH: "WITH US",
-    before: ["Spreadsheets and manual notes", "Hours lost on admin", "Missed inquiries and errors", "All manual, all slow"],
-    after: ["Everything automated — runs itself", "Time for what actually matters", "Nothing lost, all under control", "Done in 2 clicks"],
+    pairs: [
+      { bIcon: Table2, b: "Spreadsheets and manual notes", bd: "everything scattered everywhere", aIcon: Zap, a: "Everything automated", ad: "one system, runs itself" },
+      { bIcon: Clock, b: "Hours lost on admin", bd: "time you never get back", aIcon: CircleCheck, a: "Time for what matters", ad: "focus on growing the business" },
+      { bIcon: TriangleAlert, b: "Missed inquiries and errors", bd: "clients who go to competitors", aIcon: ShieldCheck, a: "Nothing gets lost", ad: "every inquiry captured and safe" },
+      { bIcon: RefreshCw, b: "All manual, all slow", bd: "every change is a hassle", aIcon: MousePointerClick, a: "Done in 2 clicks", ad: "fast, simple, instant" },
+    ],
+    summary: ["The result: ", "more time, less stress", " and a system that works for you — non-stop."],
     banner: ["You pay less than a coffee a day — and get a ", "digital machine", " that works for you 24/7."],
     bannerSub: "An investment that pays off in the very first month.",
     btn: "Book a free consultation →",
@@ -235,41 +250,69 @@ export function Value() {
           <ValueCard card={d.support} inView={cardsIn} comma={comma} accent={false} />
         </div>
 
-        {/* Before / After */}
-        <div ref={baRef} className={`rounded-[26px] p-9 bg-[var(--surface)] border border-[var(--border)] backdrop-blur-md mb-8 ${revealCls(baIn)}`}>
-          <h3 className="text-center text-xl font-bold mb-7">{d.baHead}</h3>
-          <div className="grid md:grid-cols-[1fr_auto_1fr] gap-6 items-center">
-            <div className="p-5">
-              <h4 className="text-[13px] font-bold uppercase tracking-wide text-red-400 mb-4 flex items-center gap-2">
-                <X size={15} strokeWidth={3} /> {d.beforeH}
-              </h4>
-              <ul className="flex flex-col gap-3">
-                {d.before.map((b) => (
-                  <li key={b} className="flex items-start gap-2.5 text-sm text-[var(--text-muted)]">
-                    <X size={15} strokeWidth={2.5} className="text-red-400 flex-shrink-0 mt-0.5" /> {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Transformation — paired before → after rows */}
+        <div ref={baRef} className={`rounded-[26px] p-7 sm:p-9 bg-[var(--surface)] border border-[var(--border)] backdrop-blur-md mb-8 ${revealCls(baIn)}`}>
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-extrabold tracking-tight mb-2">{d.trHead}</h3>
+            <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto">{d.trSub}</p>
+          </div>
 
-            <div className="flex justify-center md:rotate-0 rotate-90 my-1">
-              <div className="w-12 h-12 rounded-full bg-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-600/40">
-                <ArrowRight size={20} />
-              </div>
+          {/* Column labels (desktop only) — pure text, no borders/lines */}
+          <div className="hidden sm:grid grid-cols-[1fr_56px_1fr] gap-4 mb-5 border-0">
+            <div className="flex items-center gap-2 text-[12px] font-extrabold tracking-wider uppercase text-red-400 border-0 bg-transparent">
+              <span className="w-2 h-2 rounded-full bg-red-400" /> {d.beforeH}
             </div>
+            <div />
+            <div className="flex items-center gap-2 text-[12px] font-extrabold tracking-wider uppercase text-green-500 border-0 bg-transparent">
+              <span className="w-2 h-2 rounded-full bg-green-500" /> {d.afterH}
+            </div>
+          </div>
 
-            <div className="p-5 rounded-[18px] bg-[linear-gradient(160deg,rgba(74,222,128,0.08),transparent)] border border-green-500/20">
-              <h4 className="text-[13px] font-bold uppercase tracking-wide text-green-500 mb-4 flex items-center gap-2">
-                <Check size={15} strokeWidth={3} /> {d.afterH}
-              </h4>
-              <ul className="flex flex-col gap-3">
-                {d.after.map((a) => (
-                  <li key={a} className="flex items-start gap-2.5 text-sm text-[var(--text)]">
-                    <Check size={15} strokeWidth={2.5} className="text-green-500 flex-shrink-0 mt-0.5" /> {a}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Rows */}
+          <div className="flex flex-col gap-4">
+            {d.pairs.map((p, i) => {
+              const BIcon = p.bIcon;
+              const AIcon = p.aIcon;
+              return (
+                <div key={i} className="group grid sm:grid-cols-[1fr_56px_1fr] grid-cols-1 gap-2.5 sm:gap-4 items-stretch">
+                  {/* Before */}
+                  <div className="flex items-center gap-4 px-5 py-4 rounded-[18px] bg-[var(--surface)] border border-[var(--border)] opacity-[0.72] group-hover:opacity-95 transition-all duration-300">
+                    <span className="flex-shrink-0 w-[42px] h-[42px] rounded-xl bg-red-400/12 text-red-400 flex items-center justify-center">
+                      <BIcon size={21} />
+                    </span>
+                    <span>
+                      <span className="block text-[15px] font-bold leading-tight text-[var(--text-muted)]">{p.b}</span>
+                      <span className="block text-[12.5px] text-[var(--text-muted)] opacity-70 mt-0.5">{p.bd}</span>
+                    </span>
+                  </div>
+
+                  {/* Arrow */}
+                  <div className="flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-600/40 rotate-90 sm:rotate-0 group-hover:scale-110 transition-transform duration-300">
+                      <ArrowRight size={18} />
+                    </div>
+                  </div>
+
+                  {/* After */}
+                  <div className="flex items-center gap-4 px-5 py-4 rounded-[18px] border border-green-500/25 bg-[linear-gradient(120deg,rgba(74,222,128,0.1),var(--surface)_70%)] group-hover:translate-x-1 group-hover:border-green-500/45 group-hover:shadow-xl group-hover:shadow-green-500/10 transition-all duration-300">
+                    <span className="flex-shrink-0 w-[42px] h-[42px] rounded-xl bg-green-500/15 text-green-500 flex items-center justify-center">
+                      <AIcon size={21} />
+                    </span>
+                    <span>
+                      <span className="block text-[15px] font-bold leading-tight text-[var(--text)]">{p.a}</span>
+                      <span className="block text-[12.5px] text-[var(--text-muted)] mt-0.5">{p.ad}</span>
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Summary strip */}
+          <div className="mt-7 text-center px-6 py-5 rounded-[18px] bg-[linear-gradient(135deg,rgba(37,99,235,0.12),rgba(74,222,128,0.06))] border border-[var(--border)]">
+            <span className="text-[15px] text-[var(--text-muted)]">
+              {d.summary[0]}<b className="text-[var(--text)] font-bold">{d.summary[1]}</b>{d.summary[2]}
+            </span>
           </div>
         </div>
 

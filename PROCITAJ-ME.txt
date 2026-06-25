@@ -1,39 +1,31 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — "Vrijednost" sekcija (više od cijene)
+  mehiccdev — "Vrijednost" sekcija (sa novom Transformacijom)
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-U:
-  • components/sections/Value.tsx   (nova sekcija "Zašto se isplati")
-
-ŠTA RADI:
-  Sekcija koja klijentu pokazuje VRIJEDNOST, ne samo cijenu:
-   • "Manje od kafe dnevno" — dnevni preračun pune cijene i održavanja
-   • Dvije kartice vrijednosti (projekat + podrška/hosting)
-   • "Prije / Sa nama" usporedba (haos → automatizovano)
-   • CTA banner na kraju
-  Brojevi se odbrojavaju, kartice se pojavljuju s animacijom.
+ŠTA JE NOVO:
+  Stari "Prije / Sa nama" blok (dvije obične liste) zamijenjen je
+  novim dizajnom: PROBLEM → RJEŠENJE u parovima.
+   • Lijevo problem (prigušeno, crveno), strelica, desno rješenje
+     (živo, zeleno, uzdignuto).
+   • Svaki red ima ikonicu i podtekst.
+   • Zaključna traka "Rezultat: više vremena, manje stresa..."
+  Sve ostalo u Value sekciji (dvije kartice cijene/dan + CTA) ostaje.
 
 KAKO UBACITI:
-  1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-     Fajl sjeda u components/sections/Value.tsx
-  2. Otvori app/page.tsx i:
-     a) Dodaj import (uz ostale importe sekcija):
-            import { Value } from "@/components/sections/Value";
-     b) Ubaci <Value /> ODMAH ISPOD <Pricing />:
-            <Pricing />
-            <Value />        <-- dodaj ovu liniju
-  3. Pokreni:  npm run dev   i provjeri.
-  4. Ako je OK:
-        git add .
-        git commit -m "Dodana Vrijednost sekcija (vise od cijene)"
-        git push
+  1. Raspakuj U KORIJEN projekta — fajl zamjenjuje
+     components/sections/Value.tsx (klikni DA na "Replace").
+  2. Ako već imaš <Value /> u app/page.tsx — ne treba ništa mijenjati.
+     Ako ga još nemaš:
+        import { Value } from "@/components/sections/Value";
+        ...
+        <Pricing />
+        <Value />
+  3. npm run dev  → provjeri
+  4. git add . && git commit -m "Redizajn transformacije u Value" && git push
 
 NAPOMENE:
-  • Samostalna komponenta — sav tekst (BS/EN) je u fajlu, ne diraš i18n.
-  • Automatski koristi tvoju dark/light temu i jezik (BS/EN).
-  • Brojevi (€4,50 i €2,63) su upisani u fajlu — ako promijeniš
-    cijene paketa, slobodno ih ažuriraj na vrhu fajla u objektu "T"
-    (project.big i support.big), da i dalje stoji "manje od".
-  • Dugme vodi na #kontakt — provjeri da ti kontakt sekcija ima
-    id="kontakt" (ako se zove drugačije, promijeni href u fajlu).
+  • Samostalna komponenta — tekst (BS/EN) je u fajlu, ne diraš i18n.
+  • Prati tvoju dark/light temu i jezik automatski.
+  • Tekst transformacije možeš mijenjati na vrhu fajla (objekat T,
+    "pairs" niz: b=problem, a=rješenje, bd/ad=podtekstovi).
 ═══════════════════════════════════════════════════════════
