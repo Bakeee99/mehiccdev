@@ -15,6 +15,7 @@ import { SaasTeaser }   from "@/components/sections/SaasTeaser";
 import { Contact }      from "@/components/sections/Contact";
 import { Footer }       from "@/components/sections/Footer";
 import { Results } from "@/components/sections/Results";
+import { Value } from "@/components/sections/Value";
 
 export default function HomePage() {
   return (
@@ -26,6 +27,7 @@ export default function HomePage() {
       <About />
       <Portfolio />
       <Pricing />
+      <Value />
       <SaasTeaser />
       <Contact />
       <Footer />

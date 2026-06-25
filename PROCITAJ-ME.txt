@@ -1,33 +1,39 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Nova "Rezultati" sekcija (animirana)
+  mehiccdev — "Vrijednost" sekcija (više od cijene)
 ═══════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-U:
-  • components/sections/Results.tsx   (nova animirana sekcija)
+  • components/sections/Value.tsx   (nova sekcija "Zašto se isplati")
+
+ŠTA RADI:
+  Sekcija koja klijentu pokazuje VRIJEDNOST, ne samo cijenu:
+   • "Manje od kafe dnevno" — dnevni preračun pune cijene i održavanja
+   • Dvije kartice vrijednosti (projekat + podrška/hosting)
+   • "Prije / Sa nama" usporedba (haos → automatizovano)
+   • CTA banner na kraju
+  Brojevi se odbrojavaju, kartice se pojavljuju s animacijom.
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-     Fajl će sjesti u components/sections/Results.tsx
+     Fajl sjeda u components/sections/Value.tsx
   2. Otvori app/page.tsx i:
-     a) Dodaj import na vrh (uz ostale importe sekcija):
-            import { Results } from "@/components/sections/Results";
-     b) Nađi svoju POSTOJEĆU sekciju rezultata/zadovoljstva
-        (npr. <Satisfaction /> ili sličan naziv) i ZAMIJENI je sa:
-            <Results />
-        Ako ne znaš koja je — to je ona sekcija s krugovima 98%/95%...
-  3. Pokreni:  npm run dev   i provjeri kako izgleda.
+     a) Dodaj import (uz ostale importe sekcija):
+            import { Value } from "@/components/sections/Value";
+     b) Ubaci <Value /> ODMAH ISPOD <Pricing />:
+            <Pricing />
+            <Value />        <-- dodaj ovu liniju
+  3. Pokreni:  npm run dev   i provjeri.
   4. Ako je OK:
         git add .
-        git commit -m "Nova animirana Rezultati sekcija"
+        git commit -m "Dodana Vrijednost sekcija (vise od cijene)"
         git push
 
 NAPOMENE:
-  • Komponenta je SAMOSTALNA — sav tekst (BS/EN) je unutar fajla,
-    ne treba dirati lib/i18n.ts.
+  • Samostalna komponenta — sav tekst (BS/EN) je u fajlu, ne diraš i18n.
   • Automatski koristi tvoju dark/light temu i jezik (BS/EN).
-  • Brojevi se odbrojavaju, prsten se crta, grafikon se animira
-    kad sekcija uđe u ekran.
-
-  Ako želiš promijeniti tekst, procente ili mjesece — sve je na
-  vrhu fajla u objektu "T" (bs i en blok).
+  • Brojevi (€4,50 i €2,63) su upisani u fajlu — ako promijeniš
+    cijene paketa, slobodno ih ažuriraj na vrhu fajla u objektu "T"
+    (project.big i support.big), da i dalje stoji "manje od".
+  • Dugme vodi na #kontakt — provjeri da ti kontakt sekcija ima
+    id="kontakt" (ako se zove drugačije, promijeni href u fajlu).
 ═══════════════════════════════════════════════════════════
