@@ -14,6 +14,7 @@ import { Pricing }      from "@/components/sections/Pricing";
 import { SaasTeaser }   from "@/components/sections/SaasTeaser";
 import { Contact }      from "@/components/sections/Contact";
 import { Footer }       from "@/components/sections/Footer";
+import { Results } from "@/components/sections/Results";
 
 export default function HomePage() {
   return (
@@ -21,7 +22,7 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Services />
-      <Satisfaction />
+      <Results />
       <About />
       <Portfolio />
       <Pricing />

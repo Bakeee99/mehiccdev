@@ -1,34 +1,33 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Nove cijene + dnevni preračun (v2)
+  mehiccdev — Nova "Rezultati" sekcija (animirana)
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE U OVOM ZIP-U:
-  • components/sections/Pricing.tsx   (ažurirana komponenta)
-  • lib/i18n.ts                        (nove cijene + prevodi)
+ŠTA JE U ZIP-U:
+  • components/sections/Results.tsx   (nova animirana sekcija)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. Na pitanje "Replace / Zamijeni?" → klikni DA.
-  3. Pokreni:  npm run dev   i provjeri cjenovnik.
+     Fajl će sjesti u components/sections/Results.tsx
+  2. Otvori app/page.tsx i:
+     a) Dodaj import na vrh (uz ostale importe sekcija):
+            import { Results } from "@/components/sections/Results";
+     b) Nađi svoju POSTOJEĆU sekciju rezultata/zadovoljstva
+        (npr. <Satisfaction /> ili sličan naziv) i ZAMIJENI je sa:
+            <Results />
+        Ako ne znaš koja je — to je ona sekcija s krugovima 98%/95%...
+  3. Pokreni:  npm run dev   i provjeri kako izgleda.
   4. Ako je OK:
         git add .
-        git commit -m "Nove cijene + dnevni preracun (puna cijena + odrzavanje)"
+        git commit -m "Nova animirana Rezultati sekcija"
         git push
 
-NOVE CIJENE I DNEVNI PRERAČUN:
-  Web (puna cijena kroz prvu godinu):
-    • Basic    €350   ≈ €0.96/dan
-    • Standard €749   ≈ €2.05/dan
-    • Premium  €1.499 ≈ €4.11/dan
-  Održavanje (mjesečno → dnevno, /30 dana):
-    • Basic    €25/mj ≈ €0.83/dan
-    • Standard €45/mj ≈ €1.50/dan
-    • Premium  €75/mj ≈ €2.50/dan
+NAPOMENE:
+  • Komponenta je SAMOSTALNA — sav tekst (BS/EN) je unutar fajla,
+    ne treba dirati lib/i18n.ts.
+  • Automatski koristi tvoju dark/light temu i jezik (BS/EN).
+  • Brojevi se odbrojavaju, prsten se crta, grafikon se animira
+    kad sekcija uđe u ekran.
 
-NAPOMENA:
-  Svi dnevni iznosi se računaju AUTOMATSKI iz cijene.
-  Promijeniš cijenu u lib/i18n.ts → dnevni iznos se sam ažurira.
-
-  Ako si ranije ručno mijenjao lib/i18n.ts, prije zamjene
-  baci pogled da se neka tvoja izmjena ne izgubi.
+  Ako želiš promijeniti tekst, procente ili mjesece — sve je na
+  vrhu fajla u objektu "T" (bs i en blok).
 ═══════════════════════════════════════════════════════════
