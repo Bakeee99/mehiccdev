@@ -13,7 +13,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Gift, Check, Star, Rocket, Diamond, Megaphone, TrendingUp, Crown } from "lucide-react";
+import { Gift, Check, Star, Rocket, Diamond, Megaphone, TrendingUp, Crown, CalendarDays } from "lucide-react";
+
+// Computes an approximate per-day cost from a one-time price string,
+// amortized over the first year (365 days). Strips currency symbol and
+// thousand separators so "€1,499" / "€1.499" both parse to 1499.
+function perDayCost(price: string): string {
+  const n = parseInt(price.replace(/[^0-9]/g, ""), 10);
+  if (!n || isNaN(n)) return "";
+  return (n / 365).toFixed(2);
+}
+
+// Computes an approximate per-day cost from a MONTHLY price string
+// (e.g. maintenance "€25/mo" → ≈ €0.83/day), based on a 30-day month.
+function perDayFromMonthly(price: string): string {
+  const n = parseInt(price.replace(/[^0-9]/g, ""), 10);
+  if (!n || isNaN(n)) return "";
+  return (n / 30).toFixed(2);
+}
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -93,7 +110,18 @@ export function Pricing() {
                 <div className="mb-1">
                   <span className="text-4xl font-extrabold text-[var(--text)]">{plan.price}</span>
                 </div>
-                <p className="text-xs text-[var(--text-muted)] mb-4">{p.once}</p>
+                <p className="text-xs text-[var(--text-muted)] mb-3">{p.once}</p>
+
+                {/* Daily-cost framing — makes the FULL price feel approachable */}
+                <div className="inline-flex items-center gap-2 self-start mb-5 px-3 py-1.5 rounded-full
+                                bg-brand-600/10 dark:bg-brand-500/10 border border-brand-600/15">
+                  <CalendarDays size={13} className="text-brand-600 dark:text-brand-400 flex-shrink-0" />
+                  <span className="text-xs text-[var(--text)] font-semibold">
+                    {p.dailyApprox} €{perDayCost(plan.price)}
+                    <span className="text-[var(--text-muted)] font-normal">{p.perDay}</span>
+                  </span>
+                  <span className="text-[11px] text-[var(--text-muted)]">· {p.dailyNote}</span>
+                </div>
 
                 {/* Free marketing banner */}
                 <div className="rounded-xl bg-green-500/10 p-3 mb-3">
@@ -106,10 +134,11 @@ export function Pricing() {
                   </p>
                 </div>
 
-                {/* Optional maintenance */}
+                {/* Optional maintenance — with daily breakdown for easy comparison */}
                 <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg)]/50 px-3 py-2 mb-5">
                   <p className="text-[11px] text-[var(--text-muted)]">
                     {p.maintLabel} <strong className="text-[var(--text)]">{plan.maint}</strong>
+                    <span className="text-[var(--text-muted)]"> · {p.dailyApprox} €{perDayFromMonthly(plan.maint)}{p.perDay}</span>
                   </p>
                 </div>
 
