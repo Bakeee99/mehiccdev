@@ -78,7 +78,7 @@ const T: { bs: Content; en: Content } = {
     summary: ["Rezultat: ", "više vremena, manje stresa", " i sistem koji radi za vas — non-stop."],
     banner: ["Plaćate manje od kafe dnevno — a dobijate ", "digitalnu mašinu", " koja radi za vas 24/7."],
     bannerSub: "Investicija koja se vrati već u prvih mjesec dana.",
-    btn: "Zakaži besplatne konsultacije →",
+    btn: "Zakaži besplatne konsultacije",
   },
   en: {
     eyebrow: "WHY IT PAYS OFF",
@@ -116,7 +116,7 @@ const T: { bs: Content; en: Content } = {
     summary: ["The result: ", "more time, less stress", " and a system that works for you — non-stop."],
     banner: ["You pay less than a coffee a day — and get a ", "digital machine", " that works for you 24/7."],
     bannerSub: "An investment that pays off in the very first month.",
-    btn: "Book a free consultation →",
+    btn: "Book a free consultation",
   },
 };
 
@@ -162,7 +162,7 @@ function DecimalCounter({ target, inView, comma }: { target: number; inView: boo
 function ValueCard({ card, inView, comma, accent }: { card: Card; inView: boolean; comma: boolean; accent: boolean }) {
   return (
     <div
-      className={`group relative rounded-[26px] p-9 backdrop-blur-md overflow-hidden
+      className={`group relative rounded-[26px] p-7 sm:p-9 backdrop-blur-md overflow-hidden
                   transition-all duration-[400ms] hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-600/20
                   ${accent
                     ? "border-[1.5px] border-brand-600/35 bg-[linear-gradient(160deg,rgba(37,99,235,0.12),var(--surface)_55%)]"
@@ -269,14 +269,14 @@ export function Value() {
           </div>
 
           {/* Rows */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-7 sm:gap-4">
             {d.pairs.map((p, i) => {
               const BIcon = p.bIcon;
               const AIcon = p.aIcon;
               return (
-                <div key={i} className="group grid sm:grid-cols-[1fr_56px_1fr] grid-cols-1 gap-2.5 sm:gap-4 items-stretch">
+                <div key={i} className="group grid sm:grid-cols-[1fr_56px_1fr] grid-cols-1 gap-2 sm:gap-4 items-stretch">
                   {/* Before */}
-                  <div className="flex items-center gap-4 px-5 py-4 rounded-[18px] bg-[var(--surface)] border border-[var(--border)] opacity-[0.72] group-hover:opacity-95 transition-all duration-300">
+                  <div className="flex items-center gap-3.5 sm:gap-4 px-4 sm:px-5 py-4 rounded-[18px] bg-[var(--surface)] border border-[var(--border)] opacity-[0.72] group-hover:opacity-95 transition-all duration-300">
                     <span className="flex-shrink-0 w-[42px] h-[42px] rounded-xl bg-red-400/12 text-red-400 flex items-center justify-center">
                       <BIcon size={21} />
                     </span>
@@ -294,7 +294,7 @@ export function Value() {
                   </div>
 
                   {/* After */}
-                  <div className="flex items-center gap-4 px-5 py-4 rounded-[18px] border border-green-500/25 bg-[linear-gradient(120deg,rgba(74,222,128,0.1),var(--surface)_70%)] group-hover:translate-x-1 group-hover:border-green-500/45 group-hover:shadow-xl group-hover:shadow-green-500/10 transition-all duration-300">
+                  <div className="flex items-center gap-3.5 sm:gap-4 px-4 sm:px-5 py-4 rounded-[18px] border border-green-500/25 bg-[linear-gradient(120deg,rgba(74,222,128,0.1),var(--surface)_70%)] group-hover:translate-x-1 group-hover:border-green-500/45 group-hover:shadow-xl group-hover:shadow-green-500/10 transition-all duration-300">
                     <span className="flex-shrink-0 w-[42px] h-[42px] rounded-xl bg-green-500/15 text-green-500 flex items-center justify-center">
                       <AIcon size={21} />
                     </span>
@@ -319,19 +319,20 @@ export function Value() {
         {/* CTA banner */}
         <div
           ref={ctaRef}
-          className={`rounded-[26px] p-11 text-center bg-[linear-gradient(135deg,rgba(37,99,235,0.2),rgba(37,99,235,0.05))] border border-brand-600/30 ${revealCls(ctaIn)}`}
+          className={`rounded-[26px] p-7 sm:p-11 text-center bg-[linear-gradient(135deg,rgba(37,99,235,0.2),rgba(37,99,235,0.05))] border border-brand-600/30 ${revealCls(ctaIn)}`}
         >
-          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 leading-snug">
+          <h3 className="text-xl sm:text-3xl font-extrabold tracking-tight mb-3 leading-snug">
             {d.banner[0]}
             <span className="text-brand-600 dark:text-brand-400">{d.banner[1]}</span>
             {d.banner[2]}
           </h3>
-          <p className="text-[var(--text-muted)] text-base mb-7">{d.bannerSub}</p>
+          <p className="text-[var(--text-muted)] text-[15px] sm:text-base mb-7">{d.bannerSub}</p>
           <a
             href="#kontakt"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold text-[15px] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold text-sm sm:text-[15px] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
           >
-            {d.btn}
+            <span>{d.btn}</span>
+            <ArrowRight size={18} className="flex-shrink-0" />
           </a>
         </div>
       </div>

@@ -15,7 +15,21 @@
 import { useState } from "react";
 
 import { motion } from "framer-motion";
-import { Gift, Check, Star, Rocket, Diamond, Megaphone, TrendingUp, Crown, CalendarDays } from "lucide-react";
+import { Gift, Check, Star, Rocket, Diamond, Megaphone, TrendingUp, Crown, CalendarDays, ArrowRight } from "lucide-react";
+
+// Self-contained bilingual copy for the pricing CTA (no i18n changes needed)
+const PRICING_CTA = {
+  bs: {
+    title: "Niste sigurni koji paket je pravi za vas?",
+    sub: "Javite nam šta vam treba — predložimo najbolje rješenje, bez obaveze.",
+    btn: "Zatražite besplatnu ponudu",
+  },
+  en: {
+    title: "Not sure which package is right for you?",
+    sub: "Tell us what you need — we'll suggest the best solution, no obligation.",
+    btn: "Get a free quote",
+  },
+} as const;
 
 // Computes an approximate per-day cost from a one-time price string,
 // amortized over the first year (365 days). Strips currency symbol and
@@ -42,10 +56,11 @@ const WEB_ICONS = [Rocket, Star, Diamond];
 const MKT_ICONS = [Megaphone, TrendingUp, Crown];
 
 export function Pricing() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   // Keeps sections visible after a language/theme switch (no re-hide on re-render)
   const [seen, setSeen] = useState(false);
   const p = t.pricing;
+  const cta = PRICING_CTA[lang as "bs" | "en"] || PRICING_CTA.bs;
 
   return (
     <section id="cjenovnik" className="py-28 lg:py-36 relative overflow-hidden">
@@ -264,6 +279,34 @@ export function Pricing() {
         >
           {p.mktFooter}
         </motion.p>
+
+        {/* CTA below pricing */}
+        <motion.div
+          variants={fadeUp}
+          initial={seen ? false : "hidden"}
+          whileInView="visible"
+          viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
+          className="mt-12 sm:mt-14 rounded-[26px] p-7 sm:p-10 text-center
+                     bg-[linear-gradient(135deg,rgba(37,99,235,0.16),rgba(37,99,235,0.04))]
+                     border border-brand-600/30"
+        >
+          <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-2.5 leading-snug">
+            {cta.title}
+          </h3>
+          <p className="text-[var(--text-muted)] text-[15px] sm:text-base mb-7 max-w-lg mx-auto">
+            {cta.sub}
+          </p>
+          <a
+            href="#kontakt"
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-4
+                       bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold text-sm sm:text-[15px]
+                       transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+          >
+            <span>{cta.btn}</span>
+            <ArrowRight size={18} className="flex-shrink-0" />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

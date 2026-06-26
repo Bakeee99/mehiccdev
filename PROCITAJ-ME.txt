@@ -1,46 +1,36 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — POPRAVAK: sadržaj nestaje pri promjeni jezika/teme
+  mehiccdev — Mobilna responzivnost + CTA ispod cjenovnika
 ═══════════════════════════════════════════════════════════
 
-PROBLEM:
-  Kad promijeniš jezik ili temu, neke sekcije postanu nevidljive
-  dok ne reloadaš stranicu.
+ŠTA JE POPRAVLJENO:
 
-UZROK:
-  Sekcije se animiraju "na scroll" (initial="hidden" + whileInView).
-  Pri promjeni jezika/teme sve se ponovo iscrta, elementi se vrate
-  na "hidden" (nevidljivo), ali se animacija ne okine ponovo jer si
-  već skrolovao tu — pa ostanu nevidljivi do reloada.
+  1) CTA DUGME (Value sekcija) — strelica više NE prelazi u novi red.
+     Sad je mala ikonica uz tekst, dugme je pune širine na mobitelu,
+     manji padding i font na malim ekranima.
 
-POPRAVAK (u ovom zip-u):
-  Svaka sekcija sad pamti da je već prikazana (stanje "seen").
-  Nakon prvog prikaza, na svako sljedeće iscrtavanje element ostaje
-  vidljiv (ne sakriva se ponovo). Prva animacija na scroll i dalje
-  radi normalno.
+  2) TRANSFORMACIJA (Value) — na mobitelu parovi "problem → rješenje"
+     su sad jasno razdvojeni (veći razmak između parova, manji unutar),
+     tješnji padding kartica → uredniji raspored.
 
-ŠTA JE U ZIP-U (8 ispravljenih sekcija):
-  components/sections/About.tsx
-  components/sections/Contact.tsx
-  components/sections/Footer.tsx
-  components/sections/Portfolio.tsx
-  components/sections/Pricing.tsx
-  components/sections/SaasTeaser.tsx
-  components/sections/Satisfaction.tsx
-  components/sections/Services.tsx
+  3) VALUE KARTICE (€/dan) — responzivan padding (manji na mobitelu).
+
+  4) NOVI CTA ISPOD CJENOVNIKA — "Niste sigurni koji paket je pravi
+     za vas?" + dugme "Zatražite besplatnu ponudu". Dvojezično (BS/EN),
+     vodi na #kontakt.
+
+ŠTA JE U ZIP-U:
+  components/sections/Value.tsx     (mobilne popravke)
+  components/sections/Pricing.tsx   (novi CTA ispod cjenovnika)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. Na pitanje "Replace / Zamijeni?" → klikni DA za sve.
-  3. Pokreni:  npm run dev
-     Testiraj: skroluj dole, pa mijenjaj jezik/temu — ništa ne smije
-     nestati.
-  4. Ako je OK:
-        git add .
-        git commit -m "Fix: sadrzaj nestaje pri promjeni jezika/teme"
-        git push
+  2. "Replace / Zamijeni?" → DA za oba fajla.
+  3. npm run dev  → provjeri na mobilnoj širini (DevTools → telefon).
+  4. git add . && git commit -m "Mobilna responzivnost + CTA ispod cjenovnika" && git push
 
-NAPOMENA:
+NAPOMENE:
   • Provjereno: cijeli projekt se uspješno builda (npm run build).
-  • Results i Value sekcije već rade ispravno (drugi pristup) — nisu
-    mijenjane.
+  • Novi CTA tekst je samostalan u Pricing.tsx (objekat PRICING_CTA),
+    ne treba dirati i18n.
+  • Dugmad vode na #kontakt — provjeri da kontakt sekcija ima id="kontakt".
 ═══════════════════════════════════════════════════════════
