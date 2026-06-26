@@ -16,6 +16,8 @@ const MARKETS = ["🇧🇦 BiH", "🇷🇸 Srbija", "🇭🇷 Hrvatska", "🇲�
 
 export function SaasTeaser() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
   const [email, setEmail]         = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
@@ -38,9 +40,10 @@ export function SaasTeaser() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-12"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -54,9 +57,10 @@ export function SaasTeaser() {
 
         <motion.div
           variants={scaleIn}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="relative rounded-3xl overflow-hidden"
           style={{
             background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",

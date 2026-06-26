@@ -15,6 +15,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 import { motion } from "framer-motion";
 import { Code2, Megaphone, ImageIcon, Linkedin } from "lucide-react";
 import { staggerContainerSlow, fadeUp, slideInLeft, slideInRight, viewportOnce } from "@/lib/animations";
@@ -28,6 +30,8 @@ const PHOTOS = [
 
 export function About() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
 
   return (
     <section id="o-nama" className="py-28 lg:py-36 relative overflow-hidden">
@@ -37,9 +41,10 @@ export function About() {
         {/* Header */}
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -56,9 +61,10 @@ export function About() {
         {/* Team cards */}
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid md:grid-cols-2 gap-6 lg:gap-8"
         >
           {t.about.members.map((member, i) => {

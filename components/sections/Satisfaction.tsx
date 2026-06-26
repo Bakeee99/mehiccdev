@@ -12,7 +12,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { staggerContainer, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -105,6 +105,8 @@ function GrowthChart({ months }: { months: readonly string[] }) {
 
 export function Satisfaction() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
 
   return (
     <section className="py-28 lg:py-36 relative overflow-hidden">
@@ -115,9 +117,10 @@ export function Satisfaction() {
         {/* Header */}
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -134,9 +137,10 @@ export function Satisfaction() {
         {/* Radial gauges */}
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
         >
           {t.satisfaction.metrics.map((m, i) => (
@@ -147,9 +151,10 @@ export function Satisfaction() {
         {/* Growth chart card */}
         <motion.div
           variants={fadeUp}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="p-8 lg:p-10 rounded-3xl border border-[var(--border)] bg-[var(--surface)]"
         >
           <div className="mb-8">

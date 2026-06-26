@@ -6,6 +6,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 import { motion } from "framer-motion";
 import { Globe, AppWindow, LineChart, BrainCircuit } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
@@ -21,6 +23,8 @@ const META = [
 
 export function Services() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
 
   return (
     <section id="usluge" className="py-28 lg:py-36 relative overflow-hidden">
@@ -30,9 +34,10 @@ export function Services() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -48,9 +53,10 @@ export function Services() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5"
         >
           {t.services.items.map((service, i) => {

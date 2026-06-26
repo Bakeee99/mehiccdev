@@ -25,6 +25,8 @@ const CONTACT_EMAILS = [
 
 export function Contact() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
@@ -64,9 +66,10 @@ export function Contact() {
         {/* Header */}
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -84,9 +87,10 @@ export function Contact() {
           {/* ── Form (3/5 width) ──────────────────────────────────────────────── */}
           <motion.div
             variants={slideInLeft}
-            initial="hidden"
+            initial={seen ? false : "hidden"}
             whileInView="visible"
             viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
             className="lg:col-span-3 p-8 rounded-3xl border border-[var(--border)] bg-[var(--surface)]"
           >
             {submitted ? (
@@ -181,9 +185,10 @@ export function Contact() {
           {/* ── Direct contact (2/5 width) ────────────────────────────────────── */}
           <motion.div
             variants={slideInRight}
-            initial="hidden"
+            initial={seen ? false : "hidden"}
             whileInView="visible"
             viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
             className="lg:col-span-2 flex flex-col gap-4"
           >
             <div className="p-6 rounded-3xl border border-[var(--border)] bg-[var(--surface)]">

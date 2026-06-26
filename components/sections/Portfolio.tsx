@@ -6,6 +6,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 import { motion } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
@@ -20,6 +22,8 @@ const META = [
 
 export function Portfolio() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
 
   return (
     <section id="portfolio" className="py-28 lg:py-36 relative overflow-hidden">
@@ -28,9 +32,10 @@ export function Portfolio() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
         >
           <div>
@@ -48,9 +53,10 @@ export function Portfolio() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid md:grid-cols-2 xl:grid-cols-3 gap-6"
         >
           {t.portfolio.items.map((project, i) => {

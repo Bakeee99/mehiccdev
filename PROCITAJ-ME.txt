@@ -1,31 +1,46 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — "Vrijednost" sekcija (sa novom Transformacijom)
+  mehiccdev — POPRAVAK: sadržaj nestaje pri promjeni jezika/teme
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE NOVO:
-  Stari "Prije / Sa nama" blok (dvije obične liste) zamijenjen je
-  novim dizajnom: PROBLEM → RJEŠENJE u parovima.
-   • Lijevo problem (prigušeno, crveno), strelica, desno rješenje
-     (živo, zeleno, uzdignuto).
-   • Svaki red ima ikonicu i podtekst.
-   • Zaključna traka "Rezultat: više vremena, manje stresa..."
-  Sve ostalo u Value sekciji (dvije kartice cijene/dan + CTA) ostaje.
+PROBLEM:
+  Kad promijeniš jezik ili temu, neke sekcije postanu nevidljive
+  dok ne reloadaš stranicu.
+
+UZROK:
+  Sekcije se animiraju "na scroll" (initial="hidden" + whileInView).
+  Pri promjeni jezika/teme sve se ponovo iscrta, elementi se vrate
+  na "hidden" (nevidljivo), ali se animacija ne okine ponovo jer si
+  već skrolovao tu — pa ostanu nevidljivi do reloada.
+
+POPRAVAK (u ovom zip-u):
+  Svaka sekcija sad pamti da je već prikazana (stanje "seen").
+  Nakon prvog prikaza, na svako sljedeće iscrtavanje element ostaje
+  vidljiv (ne sakriva se ponovo). Prva animacija na scroll i dalje
+  radi normalno.
+
+ŠTA JE U ZIP-U (8 ispravljenih sekcija):
+  components/sections/About.tsx
+  components/sections/Contact.tsx
+  components/sections/Footer.tsx
+  components/sections/Portfolio.tsx
+  components/sections/Pricing.tsx
+  components/sections/SaasTeaser.tsx
+  components/sections/Satisfaction.tsx
+  components/sections/Services.tsx
 
 KAKO UBACITI:
-  1. Raspakuj U KORIJEN projekta — fajl zamjenjuje
-     components/sections/Value.tsx (klikni DA na "Replace").
-  2. Ako već imaš <Value /> u app/page.tsx — ne treba ništa mijenjati.
-     Ako ga još nemaš:
-        import { Value } from "@/components/sections/Value";
-        ...
-        <Pricing />
-        <Value />
-  3. npm run dev  → provjeri
-  4. git add . && git commit -m "Redizajn transformacije u Value" && git push
+  1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
+  2. Na pitanje "Replace / Zamijeni?" → klikni DA za sve.
+  3. Pokreni:  npm run dev
+     Testiraj: skroluj dole, pa mijenjaj jezik/temu — ništa ne smije
+     nestati.
+  4. Ako je OK:
+        git add .
+        git commit -m "Fix: sadrzaj nestaje pri promjeni jezika/teme"
+        git push
 
-NAPOMENE:
-  • Samostalna komponenta — tekst (BS/EN) je u fajlu, ne diraš i18n.
-  • Prati tvoju dark/light temu i jezik automatski.
-  • Tekst transformacije možeš mijenjati na vrhu fajla (objekat T,
-    "pairs" niz: b=problem, a=rješenje, bd/ad=podtekstovi).
+NAPOMENA:
+  • Provjereno: cijeli projekt se uspješno builda (npm run build).
+  • Results i Value sekcije već rade ispravno (drugi pristup) — nisu
+    mijenjane.
 ═══════════════════════════════════════════════════════════

@@ -6,6 +6,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 import { motion } from "framer-motion";
 import { Mail, Instagram, Linkedin } from "lucide-react";
 import { staggerContainer, fadeUp, viewportOnce } from "@/lib/animations";
@@ -26,6 +28,8 @@ const TEAM_CONTACTS = [
 
 export function Footer() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
   const year = new Date().getFullYear();
 
   const NAV_COLUMNS = [
@@ -48,9 +52,10 @@ export function Footer() {
     <footer className="relative border-t border-[var(--border)] bg-[var(--surface)]">
       <motion.div
         variants={staggerContainer}
-        initial="hidden"
+        initial={seen ? false : "hidden"}
         whileInView="visible"
         viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
         className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">

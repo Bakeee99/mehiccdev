@@ -12,6 +12,8 @@
 
 "use client";
 
+import { useState } from "react";
+
 import { motion } from "framer-motion";
 import { Gift, Check, Star, Rocket, Diamond, Megaphone, TrendingUp, Crown, CalendarDays } from "lucide-react";
 
@@ -41,6 +43,8 @@ const MKT_ICONS = [Megaphone, TrendingUp, Crown];
 
 export function Pricing() {
   const { t } = useLanguage();
+  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
+  const [seen, setSeen] = useState(false);
   const p = t.pricing;
 
   return (
@@ -57,9 +61,10 @@ export function Pricing() {
         {/* ════ WEB PACKAGES ════ */}
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-14"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -75,9 +80,10 @@ export function Pricing() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
         >
           {p.webPlans.map((plan, i) => {
@@ -163,9 +169,10 @@ export function Pricing() {
 
         <motion.p
           variants={fadeUp}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
         >
           {p.webFooter}
@@ -174,9 +181,10 @@ export function Pricing() {
         {/* ════ MARKETING PACKAGES ════ */}
         <motion.div
           variants={staggerContainer}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center mb-14 mt-24"
         >
           <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
@@ -192,9 +200,10 @@ export function Pricing() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
         >
           {p.mktPlans.map((plan, i) => {
@@ -247,9 +256,10 @@ export function Pricing() {
 
         <motion.p
           variants={fadeUp}
-          initial="hidden"
+          initial={seen ? false : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
+          onViewportEnter={() => setSeen(true)}
           className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
         >
           {p.mktFooter}
