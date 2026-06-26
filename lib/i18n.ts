@@ -203,7 +203,7 @@ export const translations = {
       servicesHeading: "Usluge",
       contactHeading: "Kontakt",
       rights:   "Sva prava zadržana.",
-      madeWith: "Dizajnirano & razvijeno s ❤️ u Mostaru",
+      madeWith: "Mostar, Bosna i Hercegovina",
     },
   },
 
@@ -400,7 +400,7 @@ export const translations = {
       servicesHeading: "Services",
       contactHeading: "Contact",
       rights:   "All rights reserved.",
-      madeWith: "Designed & developed with ❤️ in Mostar",
+      madeWith: "Mostar, Bosnia and Herzegovina",
     },
   },
 } as const;

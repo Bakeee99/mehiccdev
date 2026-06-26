@@ -9,7 +9,7 @@
 import { useState } from "react";
 
 import { motion } from "framer-motion";
-import { Mail, Instagram, Linkedin } from "lucide-react";
+import { Mail, Instagram, Linkedin, MapPin } from "lucide-react";
 import { staggerContainer, fadeUp, viewportOnce } from "@/lib/animations";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -124,7 +124,10 @@ export function Footer() {
       <div className="border-t border-[var(--border)]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-[var(--text-muted)]">© {year} mehiccdev. {t.footer.rights}</p>
-          <p className="text-xs text-[var(--text-muted)]">{t.footer.madeWith}</p>
+          <p className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+            <MapPin size={13} className="text-brand-600 dark:text-brand-400 flex-shrink-0" />
+            {t.footer.madeWith}
+          </p>
         </div>
       </div>
     </footer>

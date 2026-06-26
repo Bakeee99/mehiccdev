@@ -1,31 +1,30 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Popravak: plava linija viri sa kartica (Usluge)
+  mehiccdev — Profesionalniji footer (umjesto "s ❤️ u Mostaru")
 ═══════════════════════════════════════════════════════════
 
-PROBLEM:
-  Na karticama u sekciji "Usluge", gornja plava gradijentna linija
-  (hover akcent) virila je preko zaobljenih uglova kartice.
+ŠTA JE PROMIJENJENO:
+  Stara linija "Dizajnirano & razvijeno s ❤️ u Mostaru" zamijenjena
+  je čistom, minimalnom lokacijskom oznakom:
 
-UZROK:
-  Linija je išla od ruba do ruba sa svojim zaobljenjem, ali kartica
-  nije obrezivala sadržaj — pa je linija "iskakala" preko uglova.
+     📍 Mostar, Bosna i Hercegovina   (BS)
+     📍 Mostar, Bosnia and Herzegovina (EN)
 
-POPRAVAK:
-  • Dodato "overflow-hidden" na karticu → linija se sad obrezuje
-    tačno po zaobljenim uglovima kartice (uvučena, uredna).
-  • Linija više ne nosi vlastito zaobljenje (ne treba — kartica je
-    obrezuje).
+  Uz malu plavu "pin" ikonicu, poravnatu desno u dnu footera.
+  Lijevo i dalje stoji: © 2026 mehiccdev. Sva prava zadržana.
 
 ŠTA JE U ZIP-U:
-  components/sections/Services.tsx
+  components/sections/Footer.tsx   (dodana MapPin ikonica)
+  lib/i18n.ts                      (novi tekst, BS i EN)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. "Replace / Zamijeni?" → DA.
-  3. npm run dev  → pređi mišem preko kartica, linija ostaje unutar uglova.
-  4. git add . && git commit -m "Fix: hover linija viri sa kartica (Usluge)" && git push
+  2. "Replace / Zamijeni?" → DA za oba fajla.
+  3. npm run dev  → provjeri dno stranice (BS i EN).
+  4. git add . && git commit -m "Profesionalniji footer (lokacija umjesto heart)" && git push
 
-NAPOMENA:
+NAPOMENE:
   • Provjereno: projekt se uspješno builda (npm run build).
-  • Provjerene su i ostale sekcije — ovaj problem je bio samo u Uslugama.
+  • Ako si RANIJE ručno mijenjao lib/i18n.ts, prije zamjene baci pogled
+    da se neka tvoja izmjena ne izgubi (ili promijeni samo liniju
+    "madeWith" ručno).
 ═══════════════════════════════════════════════════════════
