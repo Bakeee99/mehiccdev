@@ -68,9 +68,9 @@ export function Services() {
                 className="group relative flex flex-col p-6 rounded-2xl border border-[var(--border)]
                            bg-[var(--surface)] hover:border-brand-600/40 dark:hover:border-brand-500/30
                            transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/10
-                           hover:-translate-y-2 cursor-default"
+                           hover:-translate-y-2 cursor-default overflow-hidden"
               >
-                <div className={`absolute top-0 inset-x-0 h-0.5 rounded-t-2xl bg-gradient-to-r ${META[i].accent}
+                <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${META[i].accent}
                                  opacity-0 group-hover:opacity-100 transition-opacity duration-300`} aria-hidden />
                 <div className={`w-11 h-11 rounded-xl mb-5 flex items-center justify-center
                                  bg-gradient-to-br ${META[i].accent} shadow-lg

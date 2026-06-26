@@ -1,36 +1,31 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Mobilna responzivnost + CTA ispod cjenovnika
+  mehiccdev — Popravak: plava linija viri sa kartica (Usluge)
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE POPRAVLJENO:
+PROBLEM:
+  Na karticama u sekciji "Usluge", gornja plava gradijentna linija
+  (hover akcent) virila je preko zaobljenih uglova kartice.
 
-  1) CTA DUGME (Value sekcija) — strelica više NE prelazi u novi red.
-     Sad je mala ikonica uz tekst, dugme je pune širine na mobitelu,
-     manji padding i font na malim ekranima.
+UZROK:
+  Linija je išla od ruba do ruba sa svojim zaobljenjem, ali kartica
+  nije obrezivala sadržaj — pa je linija "iskakala" preko uglova.
 
-  2) TRANSFORMACIJA (Value) — na mobitelu parovi "problem → rješenje"
-     su sad jasno razdvojeni (veći razmak između parova, manji unutar),
-     tješnji padding kartica → uredniji raspored.
-
-  3) VALUE KARTICE (€/dan) — responzivan padding (manji na mobitelu).
-
-  4) NOVI CTA ISPOD CJENOVNIKA — "Niste sigurni koji paket je pravi
-     za vas?" + dugme "Zatražite besplatnu ponudu". Dvojezično (BS/EN),
-     vodi na #kontakt.
+POPRAVAK:
+  • Dodato "overflow-hidden" na karticu → linija se sad obrezuje
+    tačno po zaobljenim uglovima kartice (uvučena, uredna).
+  • Linija više ne nosi vlastito zaobljenje (ne treba — kartica je
+    obrezuje).
 
 ŠTA JE U ZIP-U:
-  components/sections/Value.tsx     (mobilne popravke)
-  components/sections/Pricing.tsx   (novi CTA ispod cjenovnika)
+  components/sections/Services.tsx
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. "Replace / Zamijeni?" → DA za oba fajla.
-  3. npm run dev  → provjeri na mobilnoj širini (DevTools → telefon).
-  4. git add . && git commit -m "Mobilna responzivnost + CTA ispod cjenovnika" && git push
+  2. "Replace / Zamijeni?" → DA.
+  3. npm run dev  → pređi mišem preko kartica, linija ostaje unutar uglova.
+  4. git add . && git commit -m "Fix: hover linija viri sa kartica (Usluge)" && git push
 
-NAPOMENE:
-  • Provjereno: cijeli projekt se uspješno builda (npm run build).
-  • Novi CTA tekst je samostalan u Pricing.tsx (objekat PRICING_CTA),
-    ne treba dirati i18n.
-  • Dugmad vode na #kontakt — provjeri da kontakt sekcija ima id="kontakt".
+NAPOMENA:
+  • Provjereno: projekt se uspješno builda (npm run build).
+  • Provjerene su i ostale sekcije — ovaj problem je bio samo u Uslugama.
 ═══════════════════════════════════════════════════════════
