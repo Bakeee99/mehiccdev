@@ -1,30 +1,41 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Profesionalniji footer (umjesto "s ❤️ u Mostaru")
+  mehiccdev — NOVI cjenovnik: Web aplikacije + Marketing paketi
 ═══════════════════════════════════════════════════════════
 
 ŠTA JE PROMIJENJENO:
-  Stara linija "Dizajnirano & razvijeno s ❤️ u Mostaru" zamijenjena
-  je čistom, minimalnom lokacijskom oznakom:
+  Stari cjenovnik (web paketi za rent-a-car stranice + stari marketing
+  dio) je U POTPUNOSTI ZAMIJENJEN novim sadržajem:
 
-     📍 Mostar, Bosna i Hercegovina   (BS)
-     📍 Mostar, Bosnia and Herzegovina (EN)
+  1) WEB APLIKACIJE (3 paketa):
+     • Starter   — €900 jednokratno + €49/mj
+     • Business  — €2.200 jednokratno + €99/mj   (najpopularniji)
+     • Premium   — od €4.500 jednokratno + od €179/mj
+     Business = tačno tvoj Maximum Rent a Car (i tako je napisano).
+     Svaki paket ima zelenu "Gratis marketing paket" oznaku (1. mjesec).
+     Svi CTA-ovi: "Zatraži ponudu".
 
-  Uz malu plavu "pin" ikonicu, poravnatu desno u dnu footera.
-  Lijevo i dalje stoji: © 2026 mehiccdev. Sva prava zadržana.
+  2) MARKETING PAKETI (3 paketa, zeleni stil):
+     • Start €30/mj · Rast €75/mj (popularni) · Dominacija €125/mj
+     Naslov jasno kaže da je prvi mjesec gratis uz svaku aplikaciju.
+
+  Sekcija ostaje pod id="cjenovnik" — link u navigaciji i dalje radi.
+  Dvojezično (BS/EN), dark/light tema, responzivno (3 kolone → 1 na mobitelu),
+  i otporno na nestajanje pri promjeni jezika/teme.
 
 ŠTA JE U ZIP-U:
-  components/sections/Footer.tsx   (dodana MapPin ikonica)
-  lib/i18n.ts                      (novi tekst, BS i EN)
+  components/sections/Pricing.tsx   (kompletna nova sekcija — JEDAN fajl)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. "Replace / Zamijeni?" → DA za oba fajla.
-  3. npm run dev  → provjeri dno stranice (BS i EN).
-  4. git add . && git commit -m "Profesionalniji footer (lokacija umjesto heart)" && git push
+  2. "Replace / Zamijeni?" → DA.
+  3. npm run dev  → provjeri sekciju "Cjenovnik" (BS/EN, dark/light, mobitel).
+  4. git add . && git commit -m "Novi cjenovnik: web aplikacije + marketing paketi" && git push
 
 NAPOMENE:
-  • Provjereno: projekt se uspješno builda (npm run build).
-  • Ako si RANIJE ručno mijenjao lib/i18n.ts, prije zamjene baci pogled
-    da se neka tvoja izmjena ne izgubi (ili promijeni samo liniju
-    "madeWith" ručno).
+  • Provjereno: cijeli projekat se uspješno builda (npm run build).
+  • Komponenta je SAMOSTALNA — svi tekstovi i cijene su unutar Pricing.tsx
+    (objekat PRICING, BS i EN). Mijenjaš cijenu/tekst? Samo tu, ništa drugo.
+  • i18n.ts NIJE mijenjan. Stari "pricing" ključevi u i18n.ts ostaju ali se
+    više ne koriste — ne smetaju. Možeš ih kasnije obrisati ako želiš.
+  • Dugmad vode na #kontakt — provjeri da kontakt sekcija ima id="kontakt".
 ═══════════════════════════════════════════════════════════
