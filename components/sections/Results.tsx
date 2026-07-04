@@ -103,9 +103,9 @@ const FACT_ICONS: LucideIcon[] = [Rocket, PhoneOff, Clock];
 
 const OLD_SEC = 21.6;
 const NEW_SEC = 3.2;
-// trajanje animacije trke (ms): aplikacija završi za ~1s, stari sajt u istom
-// omjeru izgleda beskonačno spor (~6,75s)
-const NEW_MS = 1000;
+// trajanje animacije trke (ms): aplikacija završi za ~1,3s, stari sajt u istom
+// omjeru izgleda beskonačno spor (~8,8s)
+const NEW_MS = 1300;
 const OLD_MS = Math.round(NEW_MS * (OLD_SEC / NEW_SEC));
 
 /* ── Brojač sekundi (rAF), staje na cilju ──────────────────────────────────── */
@@ -219,9 +219,20 @@ export function Results() {
   const revealHead  = useReveal();
   const revealFacts = useReveal();
 
-  // "go" pokreće i reveal i trke/brojače, jednom, i preživljava re-render
-  const [raceGo, setRaceGo]     = useState(false);
-  const [gaugesGo, setGaugesGo] = useState(false);
+  // "go" pokreće i reveal i trke/brojače, jednom, i preživljava re-render.
+  // Trka NE kreće čim proviri prvi piksel kartice: čeka da je ~45% kartice
+  // u ekranu (viewport amount ispod), pa još 0,8s pauze da se pogled smjesti.
+  // Bez toga bi brza traka završila prije nego što je posjetilac uopšte vidi.
+  const [raceVisible, setRaceVisible] = useState(false);
+  const [raceGo, setRaceGo]           = useState(false);
+  const [gaugesGo, setGaugesGo]       = useState(false);
+
+  useEffect(() => {
+    if (!raceVisible) return;
+    if (reduce) { setRaceGo(true); return; }
+    const t = setTimeout(() => setRaceGo(true), 800);
+    return () => clearTimeout(t);
+  }, [raceVisible, reduce]);
 
   return (
     <section id="rezultati" className="py-28 lg:py-32 relative overflow-hidden">
@@ -261,9 +272,9 @@ export function Results() {
         <motion.div
           variants={scaleIn}
           initial="hidden"
-          animate={raceGo ? "visible" : "hidden"}
-          viewport={viewportOnce}
-          onViewportEnter={() => setRaceGo(true)}
+          animate={raceVisible ? "visible" : "hidden"}
+          viewport={{ once: true, amount: 0.45 }}
+          onViewportEnter={() => setRaceVisible(true)}
           className="relative rounded-3xl p-6 sm:p-9 overflow-hidden mb-6
                      bg-[var(--surface)] border border-brand-600/25"
         >

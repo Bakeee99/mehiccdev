@@ -1,56 +1,25 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — REZULTATI v2: "Brojke koje možete provjeriti"
+  mehiccdev — REZULTATI v2.1: trka čeka da je posjetilac vidi
 ════════════════════════════════════════════════════════════════════
 
-Traži lib/useReveal.ts iz velikog paketa popravki.
-
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Results.tsx
+  components/sections/Results.tsx  (zamjenjuje v2)
 
-────────────────────────────────────────────────────────────────────
-ZAŠTO SU IZBAČENE STARE BROJKE (bitno da razumiješ)
-────────────────────────────────────────────────────────────────────
-"98% zadovoljstva, 95% na vrijeme, 92% ROI" su statistike koje
-agencija s par projekata matematički ne može imati. Svaki iskusniji
-klijent to prepozna i onda posumnja i u ISTINITE tvrdnje na sajtu.
-Nova sekcija koristi samo brojke koje se mogu provjeriti, i baš to
-kaže u naslovu: "Brojke koje možete provjeriti."
-
-────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO
-────────────────────────────────────────────────────────────────────
-1) TRKA UČITAVANJA (glavni "wow" element, custom, ovo nema niko):
-   Kad sekcija uđe u ekran, dvije trake krenu da se pune u STVARNOM
-   omjeru: "Naša aplikacija" se učita za sekundu (3,2s, zelena
-   kvačica "Učitano"), a "Stari sajt klijenta" se vuče još 6 sekundi
-   uz "još se učitava…" dok brojač melje do 21,6s. Posjetilac
-   FIZIČKI OSJETI razliku umjesto da je pročita. Uz to zelena
-   "6,7× brže" oznaka i rečenica zašto je to novac (pola ljudi
-   odustane poslije 3 sekunde).
-
-2) GAUGES S PRAVIM OCJENAMA: Performanse 100, SEO 100, Pristupačnost
-   100, Na telefonu 90 (Google PageSpeed, Maximum). Ispod piše da
-   mjerenje svako može ponoviti sam, s linkom na pagespeed.web.dev.
-   To je poziv na provjeru kakav lažne brojke nikad ne bi smjele dati,
-   i baš zato gradi povjerenje.
-
-3) TRI ISKRENE ČINJENICE u pilulama: svi projekti uživo u produkciji,
-   0 poziva potrebno za rezervaciju, odgovor u roku 24 sata.
-
-Mobilno: trake su pune širine (trka radi odlično i na telefonu),
-gauges 2×2, činjenice jedna ispod druge. Lagano za čitanje.
-
-Tehnički: animacije kreću kad blok uđe u ekran (tačno jednom),
-poštuju "reduced motion" (tada se sve prikaže odmah, bez čekanja),
-preživljavaju promjenu jezika/teme. Decimale su "3,2" na BS i "3.2"
-na EN. Graf "rast online prisustva" (+312%) je uklonjen jer je bio
-ilustracija bez izvora.
+ŠTA JE POPRAVLJENO:
+  • Trka učitavanja više NE kreće čim proviri vrh kartice. Sada čeka
+    da je oko 45% kartice u ekranu, pa napravi još 0,8 sekundi pauze
+    da se pogled smjesti, i TEK ONDA trake krenu.
+  • Brza traka ("Naša aplikacija") traje 1,3s umjesto 1s, taman da se
+    trenutno učitavanje stigne i doživjeti; stara traka se
+    automatski skalira u istom omjeru (~8,8s).
+  • Ako korisnik ima isključene animacije (reduced motion), sve se
+    i dalje prikaže odmah, bez čekanja.
 
 KORACI:
   1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → skrolaj do Rezultata i GLEDAJ TRKU :) pa telefon,
-     oba jezika, obje teme
-  3. git add . && git commit -m "feat: rezultati v2, provjerljive brojke + trka" && git push
+  2. npm run dev → skrolaj POLAKO do sekcije: trka sada kreće tek kad
+     je stvarno gledaš
+  3. git add . && git commit -m "fix: trka ceka viewport + pauza" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
