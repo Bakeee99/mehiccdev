@@ -1,60 +1,55 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — VALUE v2: kompaktna sekcija, cijene usklađene s paketima
+  mehiccdev — FLAGSHIP v3: premium redizajn sekcije (nekretnine)
 ════════════════════════════════════════════════════════════════════
 
-Traži lib/useReveal.ts iz velikog paketa popravki (mora biti ubačen
-prije ovoga, kao i za Portfolio).
+Zamjenjuje prethodni flagship ZIP. Traži lib/useReveal.ts iz velikog
+paketa popravki (mora biti unutra prije ovoga).
 
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Value.tsx
+  components/sections/SaasTeaser.tsx
 
 ────────────────────────────────────────────────────────────────────
-1) NOVE BROJKE, USKLAĐENE S CJENOVNIKOM APLIKACIJA
+ŠTA JE NOVO (tekstovi su ISTI kao v2, promijenjen je dizajn)
 ────────────────────────────────────────────────────────────────────
-Stare brojke (€4,50 i €2,63 dnevno) bile su iz starog cjenovnika za
-sajtove i nisu se slagale s paketima aplikacija iznad. Nova računica:
+Stara sekcija: jedna kartica, tekst lijevo, lista desno. Šablonski.
+Nova sekcija pokazuje PROIZVOD umjesto da ga samo opisuje:
 
-  Starter paket:  €900 + 12 × €49  =  €1.488 u prvoj godini
-                  €1.488 ÷ 365     =  €4,08  →  prikazano "od €4,10/dan"
+  1. MOCKUP PLATFORME (desno): browser okvir s feedom oglasa,
+     pretragom i karticama nekretnina (jedna ima "Boost" oznaku).
+     Blago zarotiran u 3D perspektivi, ispravi se na hover.
 
-  Održavanje:     €49 mjesečno ÷ 30 dana  =  €1,61  →  "od €1,70/dan"
-                  (i dalje istinito "manje od jedne kafe dnevno")
+  2. TRI PLUTAJUĆE GLASS KARTICE oko mockupa, svaka pokazuje jednu
+     funkcionalnost "uživo": AI opis (generisan jednim klikom),
+     XML sync (142 oglasa objavljena sama) i kreditni kalkulator
+     (rata od 486 KM/mj). Lagano lebde gore-dolje, svaka u svom
+     ritmu, sa zelenom "živom" tačkicom.
 
-Piše "od" jer je računica za najjeftiniji paket, a ispod kartica
-stoji jasna napomena: "Računica za Starter paket (€900 + €49/mj).
-Business i Premium paketi su u cjenovniku iznad." Sve provjerljivo,
-ništa napuhano.
+  3. ROADMAP umjesto dva suha datuma: dva čvora s ikonicama (čekić =
+     početak razvoja Novembar 2026, raketa = lansiranje Oktobar 2027)
+     povezana vertikalnom gradijentnom linijom.
 
-Naslov je promijenjen u "Zvuči kao velika investicija? Nije." jer
-stara tvrdnja "manje od kafe dnevno" za cijelu aplikaciju više ne
-stoji s novim cijenama. Za održavanje i dalje stoji, pa je kafa
-zadržana tamo gdje je istinita.
+  4. BENTO GRID funkcionalnosti: 6 mini kartica s ikonicama umjesto
+     checkliste (2 kolone na telefonu, 3 na desktopu). Svaka se na
+     hover podigne, a ikonica blago uveća.
 
-────────────────────────────────────────────────────────────────────
-2) UPOLA MANJA NA MOBITELU
-────────────────────────────────────────────────────────────────────
-  • Dvije cjenovne kartice sada stoje JEDNA UZ DRUGU i na telefonu
-    (prije su se slagale jedna ispod druge, svaka ogromna).
-  • Šest check-stavki iz kartica je spojeno u jedan red malih čipova
-    (Custom dizajn · 100% vlasništvo · Podrška 24/7 · Hosting ·
-    Izmjene u 2 klika).
-  • Tabela "Od haosa do potpune kontrole" je sabijena sa 8 velikih
-    kartica na 4 reda u jednoj listi: precrtani stari problem,
-    strelica, zeleno rješenje. Ista poruka, trećina visine.
-  • Završna traka je tanja: tekst lijevo, dugme desno (na telefonu
-    jedno ispod drugog, bez viška).
+  5. EARLY ACCESS TRAKA preko cijele širine na dnu, s gradijentnim
+     okvirom (isti kakav je imala stara kartica) i formom.
 
-Ukupno: sekcija na telefonu zauzima otprilike upola manje skrolanja
-nego prije, a sve ključne informacije su ostale.
+  6. Pozadina sekcije: suptilni grid + radijalni sjaj, kontinuitet
+     s Hero sekcijom.
+
+Tehnički:
+  • Plutanje ide kroz framer-motion i poštuje "reduced motion"
+    (korisnici koji su isključili animacije vide statične kartice).
+  • useReveal na svih 5 blokova, dark/light tema, BS/EN, bez crtica.
 
 ────────────────────────────────────────────────────────────────────
 KORACI:
 ────────────────────────────────────────────────────────────────────
   1. Raspakuj u KORIJEN projekta → "Zamijeni" DA
-  2. npm run dev
-  3. Provjeri na telefonu: kartice jedna uz drugu, čipovi, lista
-     transformacije; pa oba jezika i obje teme
-  4. git add . && git commit -m "feat: value v2, kompaktno + cijene po paketima" && git push
+  2. npm run dev → provjeri: hover na mockup, plutajuće kartice,
+     bento na telefonu (2 kolone), forma, oba jezika, obje teme
+  3. git add . && git commit -m "feat: flagship v3, premium redizajn" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
