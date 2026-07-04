@@ -1,57 +1,59 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — KONTAKT v2: premium redizajn
+  mehiccdev — TIM v2: premium redizajn + kvadratne slike (LinkedIn)
 ════════════════════════════════════════════════════════════════════
 
 Traži lib/useReveal.ts iz velikog paketa popravki (mora biti unutra
 prije ovoga).
 
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Contact.tsx
+  components/sections/About.tsx
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO
+GLAVNA STVAR: SLIKE VIŠE NEĆE BITI IZREZANE
 ────────────────────────────────────────────────────────────────────
-Stara sekcija: forma + dvije sive kutije. Nova sekcija prodaje
-saradnju, ne samo skuplja poruke:
+Stari dizajn je imao ŠIROKI foto baner preko cijele kartice, pa bi
+kvadratna LinkedIn slika (400×400) bila odsječena po pola glave.
+Novi dizajn ima KVADRATNI foto okvir (176×176 na desktopu) s
+gradijentnim rubom, u koji LinkedIn slika sjeda 1:1, bez rezanja.
 
-  1. "KAKO IZGLEDA SARADNJA S NAMA": 3 numerisana koraka povezana
-     gradijentnom linijom (Pošaljete upit → Besplatne konsultacije
-     u 24h → Ponuda i plan). Skida strah od javljanja jer čovjek
-     odmah vidi šta ga čeka i da nema obaveze.
+KAKO UBACITI SLIKE (3 koraka):
+  1. Skini profilnu sliku s LinkedIn-a: otvori svoj profil → klikni
+     na sliku → desni klik → "Sačuvaj sliku kao" → bakir.jpg
+     (isto Nedim → nedim.jpg)
+  2. Spremi obje u  public/team/  (taj folder VEĆ POSTOJI u projektu)
+  3. U About.tsx, pri vrhu u PHOTOS, upiši:
+       src: "/team/bakir.jpg"   (prvi red, BM)
+       src: "/team/nedim.jpg"   (drugi red, NK)
+     Placeholder s inicijalima se sam sakrije.
 
-  2. LJUDI UMJESTO KUTIJA: Bakir i Nedim kao kartice s avatarima od
-     inicijala (gradijent), ulogom u piluli (Development / Marketing)
-     i emailom. Klik otvara mail program. Kartica klizne na hover.
+Savjet: ako LinkedIn ponudi malu sliku, otvori profil u browseru,
+zumiraj sliku (klik na nju) pa tek onda sačuvaj, dobiješ veću
+rezoluciju. Sve preko 400×400 piksela je sasvim dovoljno.
 
-  3. INFO PILULE umjesto praznih kartica: lokacija ("Mostar, BiH ·
-     radimo s klijentima iz cijelog regiona") i zelena pulsirajuća
-     "Obično odgovorimo isti dan". Ono generičko "24/7" je izbačeno,
-     ovo je konkretnije i uvjerljivije.
-
-  4. FORMA U GRADIJENTNOM OKVIRU: isti brand okvir kao flagship
-     traka (vizuelni kontinuitet), polja na tamnijoj podlozi s focus
-     prstenom, veliki submit na punu širinu. Uspješno slanje sada
-     prikazuje veliku zelenu potvrdu preko cijele kartice.
-
-  5. Tip projekta AŽURIRAN: "Web sajt, Web aplikacija, Digitalni
-     marketing, AI integracija, Ostalo" (staro "SaaS / Rent-a-Car"
-     više ne odgovara ponudi).
-
-Tehnički:
-  • Logika slanja forme je NETAKNUTA (i dalje simulacija + uputa za
-    Formspree u komentaru; kad budeš htio pravo slanje, javi).
-  • Tekstovi self-contained (BS/EN); stari t.contact ključevi u
-    i18n.ts se više ne koriste.
-  • useReveal na sva 3 bloka, dark/light, bez crtica.
+────────────────────────────────────────────────────────────────────
+ŠTA JE JOŠ NOVO U DIZAJNU
+────────────────────────────────────────────────────────────────────
+  • Naslov: "Ljudi iza mehiccdev-a" (serif gradient akcenat, kao
+    ostale sekcije). Ličnije od "Ko smo mi".
+  • Kartice: slika lijevo (s gradijentnim rubom i blagim zumom na
+    hover), sadržaj desno; na telefonu slika centrirana iznad.
+  • Uloga sada ima svoju ikonicu (kod za tebe, megafon za Nedima).
+  • Dodano LinkedIn dugme na svakoj kartici ("LinkedIn profil") koje
+    otvara profil u novom tabu. Prije je cijela kartica bila link,
+    što niko ne skonta; jasno dugme je bolje.
+  • Dekor: grid šara + sjaj koji se pojača na hover, kartica se
+    podigne.
+  • Prebačeno na useReveal pattern, tekstovi self-contained (BS/EN),
+    id sekcije ostaje "o-nama" pa navigacija radi kao prije.
 
 ────────────────────────────────────────────────────────────────────
 KORACI:
 ────────────────────────────────────────────────────────────────────
   1. Raspakuj u KORIJEN projekta → "Zamijeni" DA
-  2. npm run dev → provjeri: koraci, klik na Bakir/Nedim kartice
-     (otvara mail), forma + poruka uspjeha, oba jezika, obje teme,
-     telefon (kolone se slažu jedna ispod druge)
-  3. git add . && git commit -m "feat: kontakt v2, premium redizajn" && git push
+  2. Ubaci slike po uputi gore (možeš i poslije, placeholder je uredan)
+  3. npm run dev → provjeri: slike (bez rezanja!), LinkedIn dugmad,
+     oba jezika, obje teme, telefon
+  4. git add . && git commit -m "feat: tim v2, kvadratne slike + redizajn" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
