@@ -235,10 +235,19 @@ export function Value() {
       <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div ref={headRef} className={`text-center mb-16 ${revealCls(headIn)}`}>
-          <p className="text-brand-600 dark:text-brand-400 text-sm font-bold tracking-widest uppercase mb-3.5">{d.eyebrow}</p>
+          <div className="flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                             border border-brand-600/30 dark:border-brand-500/30
+                             bg-brand-600/8 dark:bg-brand-500/10
+                             text-brand-700 dark:text-brand-300
+                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
+              {d.eyebrow}
+            </span>
+          </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 leading-[1.1]">
             {d.h[0]}
-            <span className="bg-[linear-gradient(120deg,#2563EB,#60A5FA)] bg-clip-text text-transparent">{d.h[1]}</span>
+            <span className="bg-[linear-gradient(120deg,#2563EB,#60A5FA)] bg-clip-text text-transparent font-serif italic font-semibold tracking-normal">{d.h[1]}</span>
             {d.h[2]}
           </h2>
           <p className="max-w-xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">{d.sub}</p>

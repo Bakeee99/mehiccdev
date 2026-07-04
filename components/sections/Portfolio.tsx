@@ -39,9 +39,16 @@ export function Portfolio() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
         >
           <div>
-            <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
+            <motion.div variants={fadeUp} className="flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                             border border-brand-600/30 dark:border-brand-500/30
+                             bg-brand-600/8 dark:bg-brand-500/10
+                             text-brand-700 dark:text-brand-300
+                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {t.portfolio.label}
-            </motion.p>
+            </span>
+          </motion.div>
             <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight">
               {t.portfolio.heading}
             </motion.h2>

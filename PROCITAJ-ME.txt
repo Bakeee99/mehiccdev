@@ -1,37 +1,49 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — NOVI Hero (split layout + 3D sfera tačkica)
+  mehiccdev — Kontinuitet dizajna: cijeli sajt usklađen s novim herom
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE NOVO:
-  • Split layout: tekst lijevo (badge, naslov, opis, CTA, statistike),
-    3D sfera tačkica desno U POZADINI.
-  • Naslov ima elegantan italic serif akcenat na "transformiran kodom"
-    (kao na referentnom dizajnu).
-  • Sfera = mreža svjetlećih tačkica s tankim linijama (tvoj "network
-    s klijentima"), rotira se lagano.
-  • Statistike su sad tanki red brojeva (ne velike kartice).
-  • Tech pills (Next.js, React...) su izbačeni iz hera — čišći prvi dojam.
+ŠTA JE PROMIJENJENO (kroz cijeli sajt):
 
-TEHNIČKI DETALJI (bitno):
-  • Sfera je čisti canvas + JavaScript — NEMA novih biblioteka,
-    ništa se ne instalira, sajt ostaje brz.
-  • NE ODSIJECA SE: veličina je matematički izračunata tako da sfera
-    kroz CIJELU rotaciju ostaje unutar okvira (testirano na više
-    veličina ekrana — 0px prekoračenja).
-  • U pozadini je (pointer-events: none) — ne smeta klikovima ni čitanju.
-  • Na mobitelu je iza sadržaja na 28% vidljivosti — suptilno, ne smeta.
-  • Poštuje "reduced motion" postavku (statična za osjetljive korisnike).
-  • Koristi postojeće i18n tekstove — NIŠTA drugo ne treba mijenjati.
+  1) PILL BADGE NASLOVI — mali natpisi iznad naslova sekcija
+     ("Šta radimo", "Rezultati", "Web aplikacije"...) sad su elegantne
+     pilule s tačkicom — isti stil kao badge u heru. Marketing dio
+     cjenovnika ima zelenu pilulu (u skladu sa zelenim karticama).
 
-ŠTA JE U ZIP-U:
-  components/sections/Hero.tsx   (jedan fajl — kompletan novi hero)
+  2) SERIF ITALIC AKCENTI — ključne riječi u naslovima sekcija sad
+     imaju isti elegantni italic serif gradijent kao "transformiran
+     kodom" u heru:
+       • Rezultati koji govore «sami za sebe»
+       • Poslovne aplikacije «po mjeri»
+       • Vrijednost: «kafe dnevno»
+       • SaaS: «Rent-a-Car industriji»
+
+  3) GRID POZADINA NA KONTAKTU — ista suptilna mreža kao u heru,
+     da stranica ima "okvir" (hero na vrhu ↔ kontakt na dnu).
+
+  4) NOVI HERO je uključen u ovaj zip (split layout + 3D sfera) —
+     ako si ga već ubacio, samo se prepiše istim sadržajem.
+
+ŠTA JE U ZIP-U (10 fajlova):
+  components/sections/Hero.tsx          (novi hero)
+  components/sections/Services.tsx      (pill naslov)
+  components/sections/Results.tsx       (pill + serif akcent)
+  components/sections/About.tsx         (pill naslov)
+  components/sections/Portfolio.tsx     (pill naslov)
+  components/sections/Pricing.tsx       (pill ×2 + serif akcent)
+  components/sections/Value.tsx         (pill + serif akcent)
+  components/sections/SaasTeaser.tsx    (pill + serif akcent)
+  components/sections/Contact.tsx       (pill + grid pozadina)
+  components/sections/Satisfaction.tsx  (pill — za slučaj da je vratiš)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. "Replace / Zamijeni?" → DA.
-  3. npm run dev  → provjeri hero (BS/EN, dark/light, mobitel).
-  4. git add . && git commit -m "Novi hero: split layout + 3D network sfera" && git push
+  2. "Replace / Zamijeni?" → DA za sve.
+  3. npm run dev → prođi kroz cijeli sajt (BS/EN, dark/light, mobitel).
+  4. git add . && git commit -m "Kontinuitet dizajna: sekcije uskladjene s novim herom" && git push
 
-NAPOMENA:
+NAPOMENE:
   • Provjereno: cijeli projekat se uspješno builda (npm run build).
+  • Sve je responzivno — pilule i naslovi se uredno slažu na mobitelu.
+  • i18n NIJE mijenjan — tekstovi ostaju isti, samo je prezentacija nova.
+  • Skraćivanje teksta po sekcijama radimo kasnije, kako si rekao.
 ═══════════════════════════════════════════════════════════

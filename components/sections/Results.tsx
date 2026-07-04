@@ -21,13 +21,14 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 /* ── Bilingual content ─────────────────────────────────────────────────────── */
 type Gauge = { val: number; lbl: string; desc: string; top?: boolean };
 type Content = {
-  eyebrow: string; heading: string; sub: string; top: string;
+  eyebrow: string; heading: string; headingAccent: string; sub: string; top: string;
   gauges: Gauge[]; chartTitle: string; chartSub: string; growthLabel: string; months: string[];
 };
 const T: { bs: Content; en: Content } = {
   bs: {
     eyebrow: "REZULTATI",
-    heading: "Rezultati koji govore sami za sebe",
+    heading: "Rezultati koji govore",
+    headingAccent: "sami za sebe",
     sub: "Ne vjerujte nam na riječ — vjerujte brojevima koje isporučujemo svakom klijentu.",
     top: "TOP",
     gauges: [
@@ -43,7 +44,8 @@ const T: { bs: Content; en: Content } = {
   },
   en: {
     eyebrow: "RESULTS",
-    heading: "Results that speak for themselves",
+    heading: "Results that speak",
+    headingAccent: "for themselves",
     sub: "Don't take our word for it — trust the numbers we deliver to every client.",
     top: "TOP",
     gauges: [
@@ -146,8 +148,20 @@ export function Results() {
       <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-brand-600 dark:text-brand-400 text-sm font-bold tracking-widest uppercase mb-3.5">{d.eyebrow}</p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">{d.heading}</h2>
+          <div className="flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                             border border-brand-600/30 dark:border-brand-500/30
+                             bg-brand-600/8 dark:bg-brand-500/10
+                             text-brand-700 dark:text-brand-300
+                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
+              {d.eyebrow}
+            </span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+            {d.heading}{" "}
+            <span className="bg-[linear-gradient(120deg,#2563EB,#60A5FA)] bg-clip-text text-transparent font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
+          </h2>
           <p className="max-w-xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">{d.sub}</p>
         </div>
 

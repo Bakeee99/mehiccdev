@@ -28,7 +28,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 type AppPlan = { name: string; tag: string; price: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
-  eyebrow: string; heading: string; subtitle: string;
+  eyebrow: string; heading: string; headingAccent: string; subtitle: string;
   buildLabel: string; once: string; monthlyLabel: string; monthlySub: string;
   perMonth: string; from: string; popular: string;
   giftPre: string; giftPost: string; cta: string; appNote: string; apps: AppPlan[];
@@ -39,7 +39,8 @@ type PricingData = {
 const PRICING: Record<"bs" | "en", PricingData> = {
   bs: {
     eyebrow: "WEB APLIKACIJE",
-    heading: "Poslovne aplikacije po mjeri",
+    heading: "Poslovne aplikacije",
+    headingAccent: "po mjeri",
     subtitle:
       "Dashboard, rezervacije, evidencija ili interni alat — gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket: prvi mjesec marketinga gratis.",
     buildLabel: "Razvoj (jednokratno)",
@@ -118,7 +119,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
   },
   en: {
     eyebrow: "WEB APPLICATIONS",
-    heading: "Custom business applications",
+    heading: "Business applications,",
+    headingAccent: "custom-built",
     subtitle:
       "Dashboard, bookings, records or internal tool — we build the app that runs your business. With every package: the first month of marketing free.",
     buildLabel: "Development (one-time)",
@@ -228,11 +230,19 @@ export function Pricing() {
           onViewportEnter={() => setSeen(true)}
           className="text-center mb-14"
         >
-          <motion.p variants={fadeUp} className="text-brand-600 dark:text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
-            {d.eyebrow}
-          </motion.p>
+          <motion.div variants={fadeUp} className="flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                             border border-brand-600/30 dark:border-brand-500/30
+                             bg-brand-600/8 dark:bg-brand-500/10
+                             text-brand-700 dark:text-brand-300
+                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
+              {d.eyebrow}
+            </span>
+          </motion.div>
           <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            {d.heading}
+            {d.heading}{" "}
+            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">
             {d.subtitle}
@@ -353,9 +363,16 @@ export function Pricing() {
           onViewportEnter={() => setSeen(true)}
           className="text-center mb-14 mt-24"
         >
-          <motion.p variants={fadeUp} className="text-green-600 dark:text-green-400 text-sm font-semibold tracking-widest uppercase mb-3">
-            {d.mktEyebrow}
-          </motion.p>
+          <motion.div variants={fadeUp} className="flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                             border border-green-600/30 dark:border-green-500/30
+                             bg-green-600/8 dark:bg-green-500/10
+                             text-green-700 dark:text-green-300
+                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden />
+              {d.mktEyebrow}
+            </span>
+          </motion.div>
           <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
             {d.mktHeading}
           </motion.h2>
