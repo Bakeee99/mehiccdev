@@ -23,8 +23,8 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Services />
-      <Results />
       <About />
+      <Results />
       <Portfolio />
       <Pricing />
       <Value />
