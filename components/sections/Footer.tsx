@@ -1,116 +1,215 @@
 /**
  * components/sections/Footer.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Footer with branding, nav, contact, social links. Content from i18n.
+ * Footer (v2, premium redizajn).
+ *
+ *   • Brand kolona: logo, novi tagline (bez AI fraza), lokacija i zeleni
+ *     "Dostupni za nove projekte" status.
+ *   • Kolone: Navigacija i Usluge (usklađene s novim redoslijedom sekcije
+ *     Usluge), Kontakt s oba člana (email + Instagram + LinkedIn).
+ *   • Donja traka: copyright, "Dizajnirano i razvijeno u Mostaru", "Na vrh".
+ *   • Potpis: DŽINOVSKI "mehiccdev" watermark koji viri iz dna footera
+ *     (providan, dekorativan, ne smeta čitanju).
+ *
+ * Self-contained (BS/EN u fajlu), useReveal pattern, dark/light, bez crtica.
  */
 
 "use client";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
-import { Mail, Instagram, Linkedin, MapPin } from "lucide-react";
-import { staggerContainer, fadeUp, viewportOnce } from "@/lib/animations";
+import { Mail, Instagram, Linkedin, MapPin, ArrowUp } from "lucide-react";
+import { staggerContainer, fadeUp } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const TEAM_CONTACTS = [
   {
-    name: "Bakir Mehić", email: "bakir.mehic@mehiccdev.com",
-    instagram: "https://www.instagram.com/mehicbakir",   // ← update with real handle
-    linkedin:  "https://www.linkedin.com/in/bakir-mehic-qa-engineer/",  // ← update with real URL
+    name: "Bakir Mehić", role: "Development", email: "bakir.mehic@mehiccdev.com",
+    instagram: "https://www.instagram.com/mehicbakir",
+    linkedin:  "https://www.linkedin.com/in/bakir-mehic-qa-engineer/",
   },
   {
-    name: "Nedim Kupusija", email: "nedim.kupusija@mehiccdev.com",
-    instagram: "https://www.instagram.com/nedim.40", // ← update
-    linkedin:  "https://www.linkedin.com/in/nedim-kupusija-4632a533b/",// ← update
+    name: "Nedim Kupusija", role: "Marketing", email: "nedim.kupusija@mehiccdev.com",
+    instagram: "https://www.instagram.com/nedim.40",
+    linkedin:  "https://www.linkedin.com/in/nedim-kupusija-4632a533b/",
   },
 ];
 
+type Content = {
+  tagline: string; location: string; status: string;
+  navHeading: string; servicesHeading: string; contactHeading: string;
+  nav: { label: string; href: string }[];
+  services: { label: string; href: string }[];
+  rights: string; madeIn: string; toTop: string;
+};
+
+const T: Record<"bs" | "en", Content> = {
+  bs: {
+    tagline: "Sajt, aplikacija i marketing iz jedne ruke. Građeno u Mostaru, za cijeli region.",
+    location: "Mostar, Bosna i Hercegovina",
+    status: "Dostupni za nove projekte",
+    navHeading: "Navigacija",
+    servicesHeading: "Usluge",
+    contactHeading: "Kontakt",
+    nav: [
+      { label: "O nama",    href: "#o-nama"    },
+      { label: "Portfolio", href: "#portfolio" },
+      { label: "Cjenovnik", href: "#cjenovnik" },
+      { label: "Flagship",  href: "#saas"      },
+      { label: "Kontakt",   href: "#kontakt"   },
+    ],
+    services: [
+      { label: "Custom Web Aplikacije",      href: "#usluge" },
+      { label: "Webflow Development",        href: "#usluge" },
+      { label: "Digitalni Marketing",        href: "#usluge" },
+      { label: "AI Prompting & Integracije", href: "#usluge" },
+    ],
+    rights: "Sva prava zadržana.",
+    madeIn: "Dizajnirano i razvijeno u Mostaru",
+    toTop: "Na vrh",
+  },
+  en: {
+    tagline: "Website, app and marketing from one team. Built in Mostar, for the whole region.",
+    location: "Mostar, Bosnia and Herzegovina",
+    status: "Available for new projects",
+    navHeading: "Navigation",
+    servicesHeading: "Services",
+    contactHeading: "Contact",
+    nav: [
+      { label: "About",     href: "#o-nama"    },
+      { label: "Portfolio", href: "#portfolio" },
+      { label: "Pricing",   href: "#cjenovnik" },
+      { label: "Flagship",  href: "#saas"      },
+      { label: "Contact",   href: "#kontakt"   },
+    ],
+    services: [
+      { label: "Custom Web Apps",            href: "#usluge" },
+      { label: "Webflow Development",        href: "#usluge" },
+      { label: "Digital Marketing",          href: "#usluge" },
+      { label: "AI Prompting & Integrations",href: "#usluge" },
+    ],
+    rights: "All rights reserved.",
+    madeIn: "Designed and built in Mostar",
+    toTop: "Back to top",
+  },
+};
+
 export function Footer() {
-  const { t } = useLanguage();
-  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
-  const [seen, setSeen] = useState(false);
+  const { lang } = useLanguage();
+  const d = T[(lang as "bs" | "en")] ?? T.bs;
   const year = new Date().getFullYear();
 
-  const NAV_COLUMNS = [
-    {
-      heading: t.footer.companyHeading,
-      links: [
-        { label: t.nav.about,     href: "#o-nama"    },
-        { label: t.nav.portfolio, href: "#portfolio" },
-        { label: t.nav.saas,      href: "#saas"      },
-        { label: t.nav.contact,   href: "#kontakt"   },
-      ],
-    },
-    {
-      heading: t.footer.servicesHeading,
-      links: t.services.items.map((s) => ({ label: s.title, href: "#usluge" })),
-    },
-  ];
+  // One reveal per motion block — fires exactly once, survives language/theme switches
+  const revealMain = useReveal();
+
+  const linkCls = `text-[13.5px] text-[var(--text-muted)] hover:text-brand-600 dark:hover:text-brand-400
+                   transition-colors duration-200 inline-flex items-center gap-1.5 group/link`;
 
   return (
-    <footer className="relative border-t border-[var(--border)] bg-[var(--surface)]">
+    <footer className="relative border-t border-[var(--border)] bg-[var(--surface)] overflow-hidden">
+      {/* sjaj + džinovski watermark koji viri iz dna */}
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-64 rounded-full bg-brand-600/6 blur-3xl pointer-events-none" aria-hidden />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 translate-y-[38%] text-center select-none pointer-events-none
+                   font-extrabold tracking-tighter leading-none whitespace-nowrap
+                   text-brand-600 opacity-[0.05] dark:opacity-[0.07]
+                   text-[clamp(88px,17vw,250px)]"
+      >
+        mehiccdev
+      </div>
+
       <motion.div
         variants={staggerContainer}
-        initial={seen ? false : "hidden"}
-        whileInView="visible"
-        viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
-        className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20"
+        {...revealMain}
+        className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-16 lg:pt-20 pb-8"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        {/* ── Gornji dio: brand + kolone ─────────────────────────────────── */}
+        <div className="grid gap-12 lg:gap-8 lg:grid-cols-[1.3fr_0.8fr_1fr_1.1fr] mb-14">
+
           {/* Brand */}
           <motion.div variants={fadeUp}>
-            <a href="#" className="inline-flex items-baseline mb-4">
-              <span className="text-2xl font-extrabold text-[var(--text)]">mehicc</span>
-              <span className="text-2xl font-extrabold text-brand-600 dark:text-brand-400">dev</span>
+            <a href="#" className="inline-flex items-baseline mb-4" aria-label="mehiccdev">
+              <span className="text-2xl font-extrabold tracking-tight text-[var(--text)]">
+                mehicc<span className="text-brand-600 dark:text-brand-400">dev</span>
+              </span>
             </a>
-            <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-xs">{t.footer.tagline}</p>
-            <p className="mt-4 text-xs text-[var(--text-muted)]">📍 {t.footer.location}</p>
+            <p className="text-[13.5px] text-[var(--text-muted)] leading-relaxed max-w-xs mb-5">
+              {d.tagline}
+            </p>
+            <div className="flex flex-col items-start gap-2.5">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
+                               text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
+                {d.status}
+              </span>
+              <span className="inline-flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                <MapPin size={12} className="text-brand-600 dark:text-brand-400" /> {d.location}
+              </span>
+            </div>
           </motion.div>
 
-          {/* Nav columns */}
-          {NAV_COLUMNS.map((col) => (
-            <motion.div key={col.heading} variants={fadeUp}>
-              <h3 className="text-xs font-semibold text-[var(--text)] tracking-widest uppercase mb-4">{col.heading}</h3>
-              <ul className="flex flex-col gap-3">
-                {col.links.map((link, idx) => (
-                  <li key={`${link.label}-${idx}`}>
-                    <a href={link.href} className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-
-          {/* Contact */}
+          {/* Navigacija */}
           <motion.div variants={fadeUp}>
-            <h3 className="text-xs font-semibold text-[var(--text)] tracking-widest uppercase mb-4">{t.footer.contactHeading}</h3>
-            <div className="flex flex-col gap-6">
-              {TEAM_CONTACTS.map((member) => (
-                <div key={member.name}>
-                  <p className="text-sm font-semibold text-[var(--text)] mb-1.5">{member.name}</p>
-                  <a href={`mailto:${member.email}`}
-                     className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]
-                                hover:text-brand-600 dark:hover:text-brand-400 transition-colors mb-2 break-all">
-                    <Mail size={11} className="flex-shrink-0" />
-                    {member.email}
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--text)] mb-4">{d.navHeading}</p>
+            <ul className="flex flex-col gap-2.5">
+              {d.nav.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className={linkCls}>
+                    <span className="w-0 group-hover/link:w-3 h-px bg-brand-500 transition-all duration-300" aria-hidden />
+                    {l.label}
                   </a>
-                  <div className="flex items-center gap-2">
-                    <a href={member.instagram} target="_blank" rel="noopener noreferrer"
-                       aria-label={`${member.name} Instagram`}
-                       className="w-7 h-7 rounded-lg border border-[var(--border)] flex items-center justify-center
-                                  text-[var(--text-muted)] hover:text-brand-600 dark:hover:text-brand-400
-                                  hover:border-brand-600/40 transition-all">
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Usluge */}
+          <motion.div variants={fadeUp}>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--text)] mb-4">{d.servicesHeading}</p>
+            <ul className="flex flex-col gap-2.5">
+              {d.services.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className={linkCls}>
+                    <span className="w-0 group-hover/link:w-3 h-px bg-brand-500 transition-all duration-300" aria-hidden />
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Kontakt */}
+          <motion.div variants={fadeUp}>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--text)] mb-4">{d.contactHeading}</p>
+            <div className="flex flex-col gap-5">
+              {TEAM_CONTACTS.map((m) => (
+                <div key={m.email}>
+                  <p className="flex items-center gap-2 mb-1.5">
+                    <span className="text-[13.5px] font-bold text-[var(--text)]">{m.name}</span>
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider
+                                     text-brand-700 dark:text-brand-300 bg-brand-600/10 border border-brand-600/25">
+                      {m.role}
+                    </span>
+                  </p>
+                  <a href={`mailto:${m.email}`}
+                     className="inline-flex items-center gap-1.5 text-[12.5px] text-[var(--text-muted)]
+                                hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200 mb-2">
+                    <Mail size={12} /> {m.email}
+                  </a>
+                  <div className="flex gap-2">
+                    <a href={m.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} Instagram`}
+                       className="w-8 h-8 rounded-lg flex items-center justify-center
+                                  bg-[var(--bg)]/70 border border-[var(--border)] text-[var(--text-muted)]
+                                  transition-all duration-200 hover:text-brand-600 dark:hover:text-brand-400
+                                  hover:border-brand-600/40 hover:-translate-y-0.5">
                       <Instagram size={13} />
                     </a>
-                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer"
-                       aria-label={`${member.name} LinkedIn`}
-                       className="w-7 h-7 rounded-lg border border-[var(--border)] flex items-center justify-center
-                                  text-[var(--text-muted)] hover:text-brand-600 dark:hover:text-brand-400
-                                  hover:border-brand-600/40 transition-all">
+                    <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} LinkedIn`}
+                       className="w-8 h-8 rounded-lg flex items-center justify-center
+                                  bg-[var(--bg)]/70 border border-[var(--border)] text-[var(--text-muted)]
+                                  transition-all duration-200 hover:text-brand-600 dark:hover:text-brand-400
+                                  hover:border-brand-600/40 hover:-translate-y-0.5">
                       <Linkedin size={13} />
                     </a>
                   </div>
@@ -119,17 +218,26 @@ export function Footer() {
             </div>
           </motion.div>
         </div>
-      </motion.div>
 
-      <div className="border-t border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[var(--text-muted)]">© {year} mehiccdev. {t.footer.rights}</p>
-          <p className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
-            <MapPin size={13} className="text-brand-600 dark:text-brand-400 flex-shrink-0" />
-            {t.footer.madeWith}
+        {/* ── Donja traka ────────────────────────────────────────────────── */}
+        <motion.div
+          variants={fadeUp}
+          className="pt-6 border-t border-[var(--border)]
+                     flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <p className="text-xs text-[var(--text-muted)] text-center sm:text-left">
+            © {year} mehiccdev. {d.rights}
           </p>
-        </div>
-      </div>
+          <p className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+            <MapPin size={11} className="text-brand-600 dark:text-brand-400" /> {d.madeIn}
+          </p>
+          <a href="#"
+             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--text-muted)]
+                        hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200">
+            {d.toTop} <ArrowUp size={12} />
+          </a>
+        </motion.div>
+      </motion.div>
     </footer>
   );
 }
