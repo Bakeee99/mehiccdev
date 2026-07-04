@@ -1,41 +1,37 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — NOVI cjenovnik: Web aplikacije + Marketing paketi
+  mehiccdev — NOVI Hero (split layout + 3D sfera tačkica)
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE PROMIJENJENO:
-  Stari cjenovnik (web paketi za rent-a-car stranice + stari marketing
-  dio) je U POTPUNOSTI ZAMIJENJEN novim sadržajem:
+ŠTA JE NOVO:
+  • Split layout: tekst lijevo (badge, naslov, opis, CTA, statistike),
+    3D sfera tačkica desno U POZADINI.
+  • Naslov ima elegantan italic serif akcenat na "transformiran kodom"
+    (kao na referentnom dizajnu).
+  • Sfera = mreža svjetlećih tačkica s tankim linijama (tvoj "network
+    s klijentima"), rotira se lagano.
+  • Statistike su sad tanki red brojeva (ne velike kartice).
+  • Tech pills (Next.js, React...) su izbačeni iz hera — čišći prvi dojam.
 
-  1) WEB APLIKACIJE (3 paketa):
-     • Starter   — €900 jednokratno + €49/mj
-     • Business  — €2.200 jednokratno + €99/mj   (najpopularniji)
-     • Premium   — od €4.500 jednokratno + od €179/mj
-     Business = tačno tvoj Maximum Rent a Car (i tako je napisano).
-     Svaki paket ima zelenu "Gratis marketing paket" oznaku (1. mjesec).
-     Svi CTA-ovi: "Zatraži ponudu".
-
-  2) MARKETING PAKETI (3 paketa, zeleni stil):
-     • Start €30/mj · Rast €75/mj (popularni) · Dominacija €125/mj
-     Naslov jasno kaže da je prvi mjesec gratis uz svaku aplikaciju.
-
-  Sekcija ostaje pod id="cjenovnik" — link u navigaciji i dalje radi.
-  Dvojezično (BS/EN), dark/light tema, responzivno (3 kolone → 1 na mobitelu),
-  i otporno na nestajanje pri promjeni jezika/teme.
+TEHNIČKI DETALJI (bitno):
+  • Sfera je čisti canvas + JavaScript — NEMA novih biblioteka,
+    ništa se ne instalira, sajt ostaje brz.
+  • NE ODSIJECA SE: veličina je matematički izračunata tako da sfera
+    kroz CIJELU rotaciju ostaje unutar okvira (testirano na više
+    veličina ekrana — 0px prekoračenja).
+  • U pozadini je (pointer-events: none) — ne smeta klikovima ni čitanju.
+  • Na mobitelu je iza sadržaja na 28% vidljivosti — suptilno, ne smeta.
+  • Poštuje "reduced motion" postavku (statična za osjetljive korisnike).
+  • Koristi postojeće i18n tekstove — NIŠTA drugo ne treba mijenjati.
 
 ŠTA JE U ZIP-U:
-  components/sections/Pricing.tsx   (kompletna nova sekcija — JEDAN fajl)
+  components/sections/Hero.tsx   (jedan fajl — kompletan novi hero)
 
 KAKO UBACITI:
   1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
   2. "Replace / Zamijeni?" → DA.
-  3. npm run dev  → provjeri sekciju "Cjenovnik" (BS/EN, dark/light, mobitel).
-  4. git add . && git commit -m "Novi cjenovnik: web aplikacije + marketing paketi" && git push
+  3. npm run dev  → provjeri hero (BS/EN, dark/light, mobitel).
+  4. git add . && git commit -m "Novi hero: split layout + 3D network sfera" && git push
 
-NAPOMENE:
+NAPOMENA:
   • Provjereno: cijeli projekat se uspješno builda (npm run build).
-  • Komponenta je SAMOSTALNA — svi tekstovi i cijene su unutar Pricing.tsx
-    (objekat PRICING, BS i EN). Mijenjaš cijenu/tekst? Samo tu, ništa drugo.
-  • i18n.ts NIJE mijenjan. Stari "pricing" ključevi u i18n.ts ostaju ali se
-    više ne koriste — ne smetaju. Možeš ih kasnije obrisati ako želiš.
-  • Dugmad vode na #kontakt — provjeri da kontakt sekcija ima id="kontakt".
 ═══════════════════════════════════════════════════════════
