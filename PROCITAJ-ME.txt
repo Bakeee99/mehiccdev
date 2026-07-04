@@ -1,55 +1,57 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — FLAGSHIP v3: premium redizajn sekcije (nekretnine)
+  mehiccdev — KONTAKT v2: premium redizajn
 ════════════════════════════════════════════════════════════════════
 
-Zamjenjuje prethodni flagship ZIP. Traži lib/useReveal.ts iz velikog
-paketa popravki (mora biti unutra prije ovoga).
+Traži lib/useReveal.ts iz velikog paketa popravki (mora biti unutra
+prije ovoga).
 
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/SaasTeaser.tsx
+  components/sections/Contact.tsx
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO (tekstovi su ISTI kao v2, promijenjen je dizajn)
+ŠTA JE NOVO
 ────────────────────────────────────────────────────────────────────
-Stara sekcija: jedna kartica, tekst lijevo, lista desno. Šablonski.
-Nova sekcija pokazuje PROIZVOD umjesto da ga samo opisuje:
+Stara sekcija: forma + dvije sive kutije. Nova sekcija prodaje
+saradnju, ne samo skuplja poruke:
 
-  1. MOCKUP PLATFORME (desno): browser okvir s feedom oglasa,
-     pretragom i karticama nekretnina (jedna ima "Boost" oznaku).
-     Blago zarotiran u 3D perspektivi, ispravi se na hover.
+  1. "KAKO IZGLEDA SARADNJA S NAMA": 3 numerisana koraka povezana
+     gradijentnom linijom (Pošaljete upit → Besplatne konsultacije
+     u 24h → Ponuda i plan). Skida strah od javljanja jer čovjek
+     odmah vidi šta ga čeka i da nema obaveze.
 
-  2. TRI PLUTAJUĆE GLASS KARTICE oko mockupa, svaka pokazuje jednu
-     funkcionalnost "uživo": AI opis (generisan jednim klikom),
-     XML sync (142 oglasa objavljena sama) i kreditni kalkulator
-     (rata od 486 KM/mj). Lagano lebde gore-dolje, svaka u svom
-     ritmu, sa zelenom "živom" tačkicom.
+  2. LJUDI UMJESTO KUTIJA: Bakir i Nedim kao kartice s avatarima od
+     inicijala (gradijent), ulogom u piluli (Development / Marketing)
+     i emailom. Klik otvara mail program. Kartica klizne na hover.
 
-  3. ROADMAP umjesto dva suha datuma: dva čvora s ikonicama (čekić =
-     početak razvoja Novembar 2026, raketa = lansiranje Oktobar 2027)
-     povezana vertikalnom gradijentnom linijom.
+  3. INFO PILULE umjesto praznih kartica: lokacija ("Mostar, BiH ·
+     radimo s klijentima iz cijelog regiona") i zelena pulsirajuća
+     "Obično odgovorimo isti dan". Ono generičko "24/7" je izbačeno,
+     ovo je konkretnije i uvjerljivije.
 
-  4. BENTO GRID funkcionalnosti: 6 mini kartica s ikonicama umjesto
-     checkliste (2 kolone na telefonu, 3 na desktopu). Svaka se na
-     hover podigne, a ikonica blago uveća.
+  4. FORMA U GRADIJENTNOM OKVIRU: isti brand okvir kao flagship
+     traka (vizuelni kontinuitet), polja na tamnijoj podlozi s focus
+     prstenom, veliki submit na punu širinu. Uspješno slanje sada
+     prikazuje veliku zelenu potvrdu preko cijele kartice.
 
-  5. EARLY ACCESS TRAKA preko cijele širine na dnu, s gradijentnim
-     okvirom (isti kakav je imala stara kartica) i formom.
-
-  6. Pozadina sekcije: suptilni grid + radijalni sjaj, kontinuitet
-     s Hero sekcijom.
+  5. Tip projekta AŽURIRAN: "Web sajt, Web aplikacija, Digitalni
+     marketing, AI integracija, Ostalo" (staro "SaaS / Rent-a-Car"
+     više ne odgovara ponudi).
 
 Tehnički:
-  • Plutanje ide kroz framer-motion i poštuje "reduced motion"
-    (korisnici koji su isključili animacije vide statične kartice).
-  • useReveal na svih 5 blokova, dark/light tema, BS/EN, bez crtica.
+  • Logika slanja forme je NETAKNUTA (i dalje simulacija + uputa za
+    Formspree u komentaru; kad budeš htio pravo slanje, javi).
+  • Tekstovi self-contained (BS/EN); stari t.contact ključevi u
+    i18n.ts se više ne koriste.
+  • useReveal na sva 3 bloka, dark/light, bez crtica.
 
 ────────────────────────────────────────────────────────────────────
 KORACI:
 ────────────────────────────────────────────────────────────────────
   1. Raspakuj u KORIJEN projekta → "Zamijeni" DA
-  2. npm run dev → provjeri: hover na mockup, plutajuće kartice,
-     bento na telefonu (2 kolone), forma, oba jezika, obje teme
-  3. git add . && git commit -m "feat: flagship v3, premium redizajn" && git push
+  2. npm run dev → provjeri: koraci, klik na Bakir/Nedim kartice
+     (otvara mail), forma + poruka uspjeha, oba jezika, obje teme,
+     telefon (kolone se slažu jedna ispod druge)
+  3. git add . && git commit -m "feat: kontakt v2, premium redizajn" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
