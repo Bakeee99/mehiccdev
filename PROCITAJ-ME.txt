@@ -1,57 +1,56 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — USLUGE v2: bento redizajn s mini vizualima
+  mehiccdev — REZULTATI v2: "Brojke koje možete provjeriti"
 ════════════════════════════════════════════════════════════════════
 
 Traži lib/useReveal.ts iz velikog paketa popravki.
 
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Services.tsx
+  components/sections/Results.tsx
+
+────────────────────────────────────────────────────────────────────
+ZAŠTO SU IZBAČENE STARE BROJKE (bitno da razumiješ)
+────────────────────────────────────────────────────────────────────
+"98% zadovoljstva, 95% na vrijeme, 92% ROI" su statistike koje
+agencija s par projekata matematički ne može imati. Svaki iskusniji
+klijent to prepozna i onda posumnja i u ISTINITE tvrdnje na sajtu.
+Nova sekcija koristi samo brojke koje se mogu provjeriti, i baš to
+kaže u naslovu: "Brojke koje možete provjeriti."
 
 ────────────────────────────────────────────────────────────────────
 ŠTA JE NOVO
 ────────────────────────────────────────────────────────────────────
-Staro: 4 identične kartice u redu (klasičan šablon). Novo:
+1) TRKA UČITAVANJA (glavni "wow" element, custom, ovo nema niko):
+   Kad sekcija uđe u ekran, dvije trake krenu da se pune u STVARNOM
+   omjeru: "Naša aplikacija" se učita za sekundu (3,2s, zelena
+   kvačica "Učitano"), a "Stari sajt klijenta" se vuče još 6 sekundi
+   uz "još se učitava…" dok brojač melje do 21,6s. Posjetilac
+   FIZIČKI OSJETI razliku umjesto da je pročita. Uz to zelena
+   "6,7× brže" oznaka i rečenica zašto je to novac (pola ljudi
+   odustane poslije 3 sekunde).
 
-  1. ASIMETRIČNI BENTO: prvi red velika + mala kartica (7+5 kolona),
-     drugi red mala + velika (5+7). Raspored diše i ne liči ni na
-     jedan generator.
+2) GAUGES S PRAVIM OCJENAMA: Performanse 100, SEO 100, Pristupačnost
+   100, Na telefonu 90 (Google PageSpeed, Maximum). Ispod piše da
+   mjerenje svako može ponoviti sam, s linkom na pagespeed.web.dev.
+   To je poziv na provjeru kakav lažne brojke nikad ne bi smjele dati,
+   i baš zato gradi povjerenje.
 
-  2. MINI VIZUAL U SVAKOJ KARTICI, usluga se POKAZUJE umjesto da se
-     samo opisuje:
-       • Web aplikacije: admin tabela rezervacija sa statusima i
-         dugmadima (eho Maximuma)
-       • Webflow: browser s hero rasporedom stranice
-       • Marketing: rastući graf sa zelenom "+184% upita" oznakom
-       • AI: chat, pitanje kupca i AI odgovor sa iskricom
-     Ovo je isti vizuelni jezik kao flagship sekcija, pa sajt djeluje
-     kao jedna cjelina. I zbog ovoga mobilno listanje nije dosadno:
-     svaka kartica ima nešto da se pogleda.
+3) TRI ISKRENE ČINJENICE u pilulama: svi projekti uživo u produkciji,
+   0 poziva potrebno za rezervaciju, odgovor u roku 24 sata.
 
-  3. EDITORIAL BROJEVI: ogromni 01 02 03 04 u serif italic gradijentu
-     u uglu svake kartice, providni, pojačaju se na hover.
+Mobilno: trake su pune širine (trka radi odlično i na telefonu),
+gauges 2×2, činjenice jedna ispod druge. Lagano za čitanje.
 
-  4. REDOSLIJED: Web aplikacije su sada PRVA i najveća kartica sa
-     "★ Najtraženije" oznakom, jer su glavni proizvod (cjenovnik je
-     oko njih građen). Webflow, Marketing, AI slijede.
-
-  5. Feature liste su sada male pilule s kvačicama umjesto tačaka.
-
-  6. Hover: kartica se podigne, ikonica se uveća i blago zarotira,
-     broj se pojača, vizual se podigne. Živo ali ne cirkus.
-
-NAPOMENA: "+184% upita" u marketing vizualu je ILUSTRACIJA (kao i
-+312% na grafu u Rezultatima), dio dekorativnog mockupa, ne stvarna
-tvrdnja. Ako ti smeta, javi pa stavimo neutralnu oznaku bez broja.
-
-Tehnički: useReveal, self-contained BS/EN (stari t.services ključevi
-u i18n.ts se više ne koriste), dark/light, bez crtica, id sekcije
-ostaje "usluge" pa navigacija radi.
+Tehnički: animacije kreću kad blok uđe u ekran (tačno jednom),
+poštuju "reduced motion" (tada se sve prikaže odmah, bez čekanja),
+preživljavaju promjenu jezika/teme. Decimale su "3,2" na BS i "3.2"
+na EN. Graf "rast online prisustva" (+312%) je uklonjen jer je bio
+ilustracija bez izvora.
 
 KORACI:
   1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → obavezno pogledaj i na telefonu (jedna kolona,
-     vizuali ispod teksta), oba jezika, obje teme
-  3. git add . && git commit -m "feat: usluge v2, bento + vizuali" && git push
+  2. npm run dev → skrolaj do Rezultata i GLEDAJ TRKU :) pa telefon,
+     oba jezika, obje teme
+  3. git add . && git commit -m "feat: rezultati v2, provjerljive brojke + trka" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
