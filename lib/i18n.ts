@@ -27,7 +27,7 @@ export const translations = {
       title1:      "Vaš biznis,",
       titleAccent: "transformiran kodom",
       title2:      "i inteligencijom.",
-      subtitle:    "Spajamo preciznost modernog web razvoja s moći AI-a i strateškim digitalnim marketingom — da vaš brend ne samo preživi online, nego dominira.",
+      subtitle:    "Spajamo preciznost modernog web razvoja s moći AI-a i strateškim digitalnim marketingom, da vaš brend ne samo preživi online, nego dominira.",
       ctaPrimary:   "Započnimo projekat",
       ctaSecondary: "Naš Portfolio",
     },
@@ -45,16 +45,16 @@ export const translations = {
     services: {
       label:    "Šta radimo",
       heading:  "Naše Usluge",
-      subtitle: "Sajt, aplikacija i marketing na jednom mjestu — umjesto da žonglirate između tri različita izvođača.",
+      subtitle: "Sajt, aplikacija i marketing na jednom mjestu, umjesto da žonglirate između tri različita izvođača.",
       items: [
         {
           title:    "Webflow Development",
-          desc:     "Brzi, moderni sajtovi koje kasnije sami uređujete — bez zvanja programera za svaku sitnicu. Dizajn koji liči na vaš brend, a ne na šablon.",
+          desc:     "Brzi, moderni sajtovi koje kasnije sami uređujete, bez zvanja programera za svaku sitnicu. Dizajn koji liči na vaš brend, a ne na šablon.",
           features: ["CMS & e-commerce", "SEO optimizacija", "Animacije & micro-interactions", "Performanse 95+"],
         },
         {
           title:    "Custom Web Aplikacije",
-          desc:     "Rezervacije, evidencije, admin paneli — aplikacija građena oko načina na koji vaša firma stvarno radi, i spremna da raste s njom.",
+          desc:     "Rezervacije, evidencije, admin paneli. Aplikacija građena oko načina na koji vaša firma stvarno radi, i spremna da raste s njom.",
           features: ["React / Next.js 14", "REST & GraphQL API", "Autentifikacija", "Deployment & DevOps"],
         },
         {
@@ -64,7 +64,7 @@ export const translations = {
         },
         {
           title:    "AI Prompting & Integracije",
-          desc:     "Chatbot koji odgovara kupcima, automatski izvještaji, brža obrada upita — AI uposlen tamo gdje vam stvarno štedi vrijeme.",
+          desc:     "Chatbot koji odgovara kupcima, automatski izvještaji, brža obrada upita. AI uposlen tamo gdje vam stvarno štedi vrijeme.",
           features: ["GPT / Claude integracije", "AI automatizacija", "Custom chatbotovi", "Prompt optimizacija"],
         },
       ],
@@ -72,7 +72,7 @@ export const translations = {
     satisfaction: {
       label:    "Rezultati",
       heading:  "Zadovoljstvo klijenata",
-      subtitle: "Ne vjerujte nam na riječ — vjerujte brojevima koje isporučujemo.",
+      subtitle: "Ne vjerujte nam na riječ, vjerujte brojevima koje isporučujemo.",
       metrics: [
         { label: "Zadovoljstvo klijenata",   value: 98 },
         { label: "Projekti na vrijeme",      value: 95 },
@@ -86,19 +86,19 @@ export const translations = {
     about: {
       label:    "Tim",
       heading:  "Ko smo mi",
-      subtitle: "Developer i marketer u istom timu: jedan gradi, drugi dovodi klijente. Razgovarate direktno s ljudima koji rade posao — bez posrednika.",
+      subtitle: "Developer i marketer u istom timu: jedan gradi, drugi dovodi klijente. Razgovarate direktno s ljudima koji rade posao, bez posrednika.",
       photoHint: "Vaša slika ovdje",
       members: [
         {
           name: "Bakir Mehić",
           role: "Lead Developer & UI/UX Architect",
-          bio:  "Vodim projekat od prve skice do objave — Webflow sajtovi, custom Next.js aplikacije i QA testiranje koje hvata greške prije nego što ih vaši kupci vide. Zadnji veći projekat: kompletna rent-a-car aplikacija koja danas radi u produkciji.",
+          bio:  "Vodim projekat od prve skice do objave: Webflow sajtovi, custom Next.js aplikacije i QA testiranje koje hvata greške prije nego što ih vaši kupci vide. Zadnji veći projekat: kompletna rent-a-car aplikacija koja danas radi u produkciji.",
           tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automatizacija"],
         },
         {
           name: "Nedim Kupusija",
           role: "Digital Marketing & Social Media Manager",
-          bio:  "Vodim društvene mreže i reklame tako da se svaki uloženi euro može pratiti: šta je objavljeno, ko je to vidio i koliko je upita stiglo. Bez marketinškog žargona — jasan plan i mjesečni izvještaj koji se razumije iz prve.",
+          bio:  "Vodim društvene mreže i reklame tako da se svaki uloženi euro može pratiti: šta je objavljeno, ko je to vidio i koliko je upita stiglo. Bez marketinškog žargona, samo jasan plan i mjesečni izvještaj koji se razumije iz prve.",
           tags: ["Brand Scaling", "Content Strategija", "Online Optimizacija"],
         },
       ],
@@ -106,13 +106,13 @@ export const translations = {
     portfolio: {
       label:    "Naš rad",
       heading:  "Portfolio",
-      subtitle: "Umjesto obećanja — projekti koje možete otvoriti i probati. Evo dijela onoga što smo izgradili.",
+      subtitle: "Umjesto obećanja, projekti koje možete otvoriti i probati. Evo dijela onoga što smo izgradili.",
       featured: "Izdvojeno",
       viewProject: "Pogledaj projekat",
       details:  "Detalji projekta",
       items: [
         { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",  category: "Webflow Development",  desc: "Sajt centra za hiperbaričnu terapiju u Mostaru: jasno objašnjene usluge, brzo učitavanje i lokalni SEO koji dovodi pacijente iz Google pretrage." },
-        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Klijent", category: "Web Development",      desc: "Landing stranica s rezervacijskim sistemom — posjetilac odabere vozilo i termin, vlasnik dobije spreman upit sa svim podacima." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Klijent", category: "Web Development",      desc: "Landing stranica s rezervacijskim sistemom: posjetilac odabere vozilo i termin, a vlasnik dobije spreman upit sa svim podacima." },
         { title: "Fitness Trainer Website",  client: "Personal Trainer",   category: "UI/UX & Development",  desc: "Sajt ličnog brenda za fitness trenera, s online zakazivanjem termina umjesto dogovaranja porukama." },
       ],
     },
@@ -122,7 +122,7 @@ export const translations = {
       headingAccent: "Rent-a-Car industriji",
       badge:       "Rent-a-Car SaaS Platforma",
       title:       "Sve-u-jednom SaaS platforma dizajnirana za Balkanska tržišta",
-      desc:        "Gradimo naprednu cloud platformu specijalno prilagođenu izazovima rent-a-car industrije u BiH, Srbiji, Hrvatskoj i Crnoj Gori — s planom ekspanzije na EU tržište. Nema više excela i WhatsApp rezervacija. Dobrodošli u 21. vijek.",
+      desc:        "Gradimo naprednu cloud platformu specijalno prilagođenu izazovima rent-a-car industrije u BiH, Srbiji, Hrvatskoj i Crnoj Gori, s planom ekspanzije na EU tržište. Nema više excela i WhatsApp rezervacija. Dobrodošli u 21. vijek.",
       launch:      "Planirano lansiranje:",
       launchDate:  "Januar 2027",
       featuresTitle: "Ključne funkcionalnosti",
@@ -144,7 +144,7 @@ export const translations = {
     pricing: {
       label:    "Cjenovnik",
       heading:  "Web paketi + gratis marketing",
-      subtitle: "Uz svaki paket — mjesec dana marketinga besplatno",
+      subtitle: "Uz svaki paket: mjesec dana marketinga besplatno",
       once:     "jednokratno",
       perDay:   "/dan",
       dailyNote:"puna cijena, prva godina",
@@ -155,7 +155,7 @@ export const translations = {
       maintLabel:   "Opcionalno održavanje:",
       popular:  "Najpopularniji",
       contNotePre:  "Nakon gratis mjeseca marketing se nastavlja za",
-      contNotePost: "— samo ako želite.",
+      contNotePost: ", samo ako želite.",
       perMonth: "/mj",
       webFooter: "Uz svaki paket dobijate mjesec dana marketinga besplatno. Nastavlja se samo uz vašu saglasnost. Budžet za reklame (Meta/Google) plaća se zasebno. Cijene su orijentacione.",
       webPlans: [
@@ -168,21 +168,21 @@ export const translations = {
       ],
       mktLabel:    "Marketing Add-on",
       mktHeading:  "Marketing paketi",
-      mktSubtitle: "Mjesečna pretplata — nastavak nakon gratis mjeseca",
+      mktSubtitle: "Mjesečna pretplata koja se nastavlja nakon gratis mjeseca",
       mktFooter:   "Marketing paketi su opcionalni i dodaju se na bilo koji web paket. Budžet koji ide direktno Meti/Google-u za reklame plaća klijent zasebno.",
       mktPlans: [
         { name: "Start",      tag: "Osnovno prisustvo da vas ljudi nađu",            price: "€30",  note: "bez ugovorne obaveze",
           features: ["1 platforma (Instagram ili Facebook)", "8 objava mjesečno", "Postavka Google Business profila", "Osnovni mjesečni izvještaj"] },
         { name: "Rast",       tag: "Aktivan rast i prve reklame koje donose upite",  price: "€75",  note: "budžet za reklame zaseban",
           features: ["2 platforme (Instagram + Facebook)", "16 objava + Stories / Reels", "1 aktivna reklamna kampanja", "Mjesečna content strategija", "Analytics + mjesečni izvještaj"] },
-        { name: "Dominacija", tag: "Pun nastup — dominacija u vašem gradu",          price: "€125", note: "budžet za reklame zaseban",
+        { name: "Dominacija", tag: "Pun nastup: dominacija u vašem gradu",          price: "€125", note: "budžet za reklame zaseban",
           features: ["Sve iz paketa Rast", "Pun content kalendar (do 30 objava)", "Više reklamnih kampanja (Meta + Google)", "Reels produkcija + community management", "Strateški pozivi + prioritetna podrška"] },
       ],
     },
     contact: {
       label:    "Kontakt",
       heading:  "Započnimo saradnju",
-      subtitle: "Imate projekat na umu? Javite nam se — odgovaramo u roku od 24 sata.",
+      subtitle: "Imate projekat na umu? Javite nam se, odgovaramo u roku od 24 sata.",
       nameLabel:    "Ime i prezime",
       namePlaceholder: "Vaše ime",
       emailLabel:   "Email adresa",
@@ -224,7 +224,7 @@ export const translations = {
       title1:      "Your business,",
       titleAccent: "transformed by code",
       title2:      "and intelligence.",
-      subtitle:    "We blend the precision of modern web development with the power of AI and strategic digital marketing — so your brand doesn't just survive online, it dominates.",
+      subtitle:    "We blend the precision of modern web development with the power of AI and strategic digital marketing, so your brand doesn't just survive online, it dominates.",
       ctaPrimary:   "Start a project",
       ctaSecondary: "Our Portfolio",
     },
@@ -242,16 +242,16 @@ export const translations = {
     services: {
       label:    "What we do",
       heading:  "Our Services",
-      subtitle: "Website, app and marketing under one roof — instead of juggling three different vendors.",
+      subtitle: "Website, app and marketing under one roof, instead of juggling three different vendors.",
       items: [
         {
           title:    "Webflow Development",
-          desc:     "Fast, modern websites you can edit yourself — no calling a developer for every small change. Design that looks like your brand, not a template.",
+          desc:     "Fast, modern websites you can edit yourself, without calling a developer for every small change. Design that looks like your brand, not a template.",
           features: ["CMS & e-commerce", "SEO optimization", "Animations & micro-interactions", "Performance 95+"],
         },
         {
           title:    "Custom Web Apps",
-          desc:     "Bookings, records, admin panels — an app built around how your business actually works, and ready to grow with it.",
+          desc:     "Bookings, records, admin panels. An app built around how your business actually works, and ready to grow with it.",
           features: ["React / Next.js 14", "REST & GraphQL API", "Authentication", "Deployment & DevOps"],
         },
         {
@@ -261,7 +261,7 @@ export const translations = {
         },
         {
           title:    "AI Prompting & Integrations",
-          desc:     "A chatbot that answers customers, automated reports, faster inquiry handling — AI put to work where it actually saves you time.",
+          desc:     "A chatbot that answers customers, automated reports, faster inquiry handling. AI put to work where it actually saves you time.",
           features: ["GPT / Claude integrations", "AI automation", "Custom chatbots", "Prompt optimization"],
         },
       ],
@@ -269,7 +269,7 @@ export const translations = {
     satisfaction: {
       label:    "Results",
       heading:  "Client Satisfaction",
-      subtitle: "Don't take our word for it — trust the numbers we deliver.",
+      subtitle: "Don't take our word for it, trust the numbers we deliver.",
       metrics: [
         { label: "Client satisfaction",     value: 98 },
         { label: "On-time delivery",        value: 95 },
@@ -283,19 +283,19 @@ export const translations = {
     about: {
       label:    "Team",
       heading:  "Who we are",
-      subtitle: "A developer and a marketer on the same team: one builds, the other brings in clients. You talk directly to the people doing the work — no middlemen.",
+      subtitle: "A developer and a marketer on the same team: one builds, the other brings in clients. You talk directly to the people doing the work, with no middlemen.",
       photoHint: "Your photo here",
       members: [
         {
           name: "Bakir Mehić",
           role: "Lead Developer & UI/UX Architect",
-          bio:  "I take projects from first sketch to launch — Webflow sites, custom Next.js apps, and QA testing that catches bugs before your customers do. Most recent build: a complete rent-a-car application now running in production.",
+          bio:  "I take projects from first sketch to launch: Webflow sites, custom Next.js apps, and QA testing that catches bugs before your customers do. Most recent build: a complete rent-a-car application now running in production.",
           tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automation"],
         },
         {
           name: "Nedim Kupusija",
           role: "Digital Marketing & Social Media Manager",
-          bio:  "I run social media and ads so every euro can be tracked: what was posted, who saw it, and how many inquiries it brought. No marketing jargon — a clear plan and a monthly report you can actually read.",
+          bio:  "I run social media and ads so every euro can be tracked: what was posted, who saw it, and how many inquiries it brought. No marketing jargon, just a clear plan and a monthly report you can actually read.",
           tags: ["Brand Scaling", "Content Strategy", "Online Optimization"],
         },
       ],
@@ -303,13 +303,13 @@ export const translations = {
     portfolio: {
       label:    "Our work",
       heading:  "Portfolio",
-      subtitle: "Instead of promises — projects you can open and try. Here's some of what we've built.",
+      subtitle: "Instead of promises, projects you can open and try. Here's some of what we've built.",
       featured: "Featured",
       viewProject: "View project",
       details:  "Project details",
       items: [
         { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",   category: "Webflow Development",  desc: "Website for a hyperbaric therapy center in Mostar: clearly explained treatments, fast loading, and local SEO that brings patients in from Google search." },
-        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Client",   category: "Web Development",      desc: "Landing page with a booking system — visitors pick a car and dates, the owner receives a ready-to-answer inquiry with all the details." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Client",   category: "Web Development",      desc: "Landing page with a booking system: visitors pick a car and dates, and the owner receives a ready-to-answer inquiry with all the details." },
         { title: "Fitness Trainer Website",  client: "Personal Trainer",    category: "UI/UX & Development",  desc: "Personal brand site for a fitness trainer, with online session booking instead of back-and-forth messaging." },
       ],
     },
@@ -319,7 +319,7 @@ export const translations = {
       headingAccent: "Rent-a-Car industry",
       badge:       "Rent-a-Car SaaS Platform",
       title:       "An all-in-one SaaS platform built for the Balkan markets",
-      desc:        "We're building an advanced cloud platform specifically tailored to the challenges of the rent-a-car industry in Bosnia, Serbia, Croatia, and Montenegro — with planned EU expansion. No more Excel sheets and WhatsApp bookings. Welcome to the 21st century.",
+      desc:        "We're building an advanced cloud platform specifically tailored to the challenges of the rent-a-car industry in Bosnia, Serbia, Croatia, and Montenegro, with planned EU expansion. No more Excel sheets and WhatsApp bookings. Welcome to the 21st century.",
       launch:      "Expected launch:",
       launchDate:  "January 2027",
       featuresTitle: "Key features",
@@ -341,7 +341,7 @@ export const translations = {
     pricing: {
       label:    "Pricing",
       heading:  "Web packages + free marketing",
-      subtitle: "Each package includes one month of marketing — free",
+      subtitle: "Each package includes one month of marketing, free",
       once:     "one-time",
       perDay:   "/day",
       dailyNote:"full price, first year",
@@ -352,7 +352,7 @@ export const translations = {
       maintLabel:   "Optional maintenance:",
       popular:  "Most popular",
       contNotePre:  "After the free month, marketing continues at",
-      contNotePost: "— only if you want.",
+      contNotePost: ", only if you want.",
       perMonth: "/mo",
       webFooter: "Each package includes one free month of marketing. It continues only with your consent. Ad budget (Meta/Google) is paid separately. Prices are indicative.",
       webPlans: [
@@ -365,21 +365,21 @@ export const translations = {
       ],
       mktLabel:    "Marketing Add-on",
       mktHeading:  "Marketing packages",
-      mktSubtitle: "Monthly subscription — continues after the free month",
+      mktSubtitle: "Monthly subscription that continues after the free month",
       mktFooter:   "Marketing packages are optional and add on to any web package. The budget that goes directly to Meta/Google for ads is paid separately by the client.",
       mktPlans: [
         { name: "Start",      tag: "Basic presence so people find you",                  price: "€30",  note: "no contract commitment",
           features: ["1 platform (Instagram or Facebook)", "8 posts per month", "Google Business profile setup", "Basic monthly report"] },
         { name: "Growth",     tag: "Active growth and first ads that drive inquiries",   price: "€75",  note: "ad budget separate",
           features: ["2 platforms (Instagram + Facebook)", "16 posts + Stories / Reels", "1 active ad campaign", "Monthly content strategy", "Analytics + monthly report"] },
-        { name: "Domination", tag: "Full presence — dominate your city",                 price: "€125", note: "ad budget separate",
+        { name: "Domination", tag: "Full presence: dominate your city",                 price: "€125", note: "ad budget separate",
           features: ["Everything in Growth", "Full content calendar (up to 30 posts)", "Multiple ad campaigns (Meta + Google)", "Reels production + community management", "Strategy calls + priority support"] },
       ],
     },
     contact: {
       label:    "Contact",
       heading:  "Let's work together",
-      subtitle: "Have a project in mind? Reach out — we reply within 24 hours.",
+      subtitle: "Have a project in mind? Reach out, we reply within 24 hours.",
       nameLabel:    "Full name",
       namePlaceholder: "Your name",
       emailLabel:   "Email address",

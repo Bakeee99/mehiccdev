@@ -153,7 +153,7 @@ export function Contact() {
                                text-[var(--text)] focus:outline-none focus:border-brand-600/60
                                focus:ring-2 focus:ring-brand-600/15 transition-all"
                   >
-                    <option value="" disabled>—</option>
+                    <option value="" disabled>…</option>
                     {t.contact.subjectOptions.map((opt) => (
                       <option key={opt} value={opt}>{opt}</option>
                     ))}

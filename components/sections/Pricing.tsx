@@ -42,7 +42,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Poslovne aplikacije",
     headingAccent: "po mjeri",
     subtitle:
-      "Dashboard, rezervacije, evidencija ili interni alat — gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket: prvi mjesec marketinga gratis.",
+      "Dashboard, rezervacije, evidencija ili interni alat: gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket: prvi mjesec marketinga gratis.",
     buildLabel: "Razvoj (jednokratno)",
     once: "jednokratno",
     monthlyLabel: "Hosting + podrška",
@@ -51,13 +51,13 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     from: "od",
     popular: "Najpopularniji",
     giftPre: "Gratis marketing paket",
-    giftPost: "— prvi mjesec",
+    giftPost: "za prvi mjesec",
     cta: "Zatraži ponudu",
     appNote:
-      "Cijene su početne — finalna ponuda ovisi o obimu i složenosti aplikacije. Uz svaku aplikaciju prvi mjesec marketinga je besplatan; nastavlja se samo uz vašu saglasnost.",
+      "Cijene su početne, a finalna ponuda ovisi o obimu i složenosti aplikacije. Uz svaku aplikaciju prvi mjesec marketinga je besplatan; nastavlja se samo uz vašu saglasnost.",
     apps: [
       {
-        name: "Starter", tag: "Jedan alat koji rješava jedan problem — npr. evidencija ili jednostavan katalog.",
+        name: "Starter", tag: "Jedan alat koji rješava jedan problem, npr. evidencija ili jednostavan katalog.",
         price: "900", monthly: "49", gift: "Start",
         features: [
           "Jedna glavna funkcija (npr. katalog vozila ili evidencija klijenata)",
@@ -65,16 +65,16 @@ const PRICING: Record<"bs" | "en", PricingData> = {
           "Dodavanje, izmjena i brisanje podataka kroz jednostavan panel",
           "Forma preko koje vam klijenti šalju upite na email",
           "Radi savršeno na mobitelu i računaru",
-          "Hosting, SSL i domena podešeni — ništa tehničko ne radite vi",
+          "Hosting, SSL i domena podešeni, ništa tehničko ne radite vi",
         ],
       },
       {
-        name: "Business", tag: "Kompletna aplikacija za firmu — kao Maximum Rent a Car kojeg smo izgradili.",
+        name: "Business", tag: "Kompletna aplikacija za firmu, kao Maximum Rent a Car kojeg smo izgradili.",
         price: "2.200", monthly: "99", gift: "Rast",
         features: [
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog + upiti + admin panel)",
-          "Više uloga — vlasnik vidi sve, osoblje samo svoje",
+          "Više uloga: vlasnik vidi sve, osoblje samo svoje",
           "Galerija slika s upload-om i pregledom",
           "Upiti s datumima, lokacijama i statusom (novo / obrađeno)",
           "Obavijesti na email i WhatsApp kad stigne novi upit",
@@ -83,14 +83,14 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         ],
       },
       {
-        name: "Premium", tag: "Aplikacija bez ograničenja — kreirana tačno oko vašeg procesa.",
+        name: "Premium", tag: "Aplikacija bez ograničenja, kreirana tačno oko vašeg procesa.",
         price: "4.500", monthly: "179", from: true, gift: "Dominacija",
         features: [
           "SVE iz Business paketa, plus:",
           "Neograničeni dijelovi i funkcije po vašoj želji",
           "Online plaćanje i depozit",
           "Povezivanje s drugim alatima (Google Calendar, računovodstvo, API)",
-          "Automatizacije — sistem sam radi rutinske poslove umjesto vas",
+          "Automatizacije: sistem sam radi rutinske poslove umjesto vas",
           "Detaljne dozvole po članu tima",
           "Prioritetna podrška i dedikovani developer",
         ],
@@ -112,7 +112,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         features: ["2 platforme (Instagram + Facebook)", "16 objava + Stories / Reels", "1 aktivna reklamna kampanja", "Mjesečna content strategija", "Analytics + mjesečni izvještaj"],
       },
       {
-        name: "Dominacija", tag: "Pun nastup — dominacija u vašem gradu.", price: "125", note: "budžet za reklame zaseban",
+        name: "Dominacija", tag: "Pun nastup: dominacija u vašem gradu.", price: "125", note: "budžet za reklame zaseban",
         features: ["SVE iz paketa Rast, plus:", "Pun content kalendar (do 30 objava)", "Više reklamnih kampanja (Meta + Google)", "Reels produkcija + community management", "Strateški pozivi + prioritetna podrška"],
       },
     ],
@@ -122,7 +122,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Business applications,",
     headingAccent: "custom-built",
     subtitle:
-      "Dashboard, bookings, records or internal tool — we build the app that runs your business. With every package: the first month of marketing free.",
+      "Dashboard, bookings, records or internal tool: we build the app that runs your business. With every package: the first month of marketing free.",
     buildLabel: "Development (one-time)",
     once: "one-time",
     monthlyLabel: "Hosting + support",
@@ -131,13 +131,13 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     from: "from",
     popular: "Most popular",
     giftPre: "Free marketing package",
-    giftPost: "— first month",
+    giftPost: "for the first month",
     cta: "Request a quote",
     appNote:
-      "Prices are starting points — the final quote depends on the scope and complexity of the app. With every app the first month of marketing is free; it continues only with your consent.",
+      "Prices are starting points, and the final quote depends on the scope and complexity of the app. With every app the first month of marketing is free; it continues only with your consent.",
     apps: [
       {
-        name: "Starter", tag: "One tool that solves one problem — e.g. records or a simple catalog.",
+        name: "Starter", tag: "One tool that solves one problem, e.g. records or a simple catalog.",
         price: "900", monthly: "49", gift: "Start",
         features: [
           "One main feature (e.g. vehicle catalog or client records)",
@@ -145,16 +145,16 @@ const PRICING: Record<"bs" | "en", PricingData> = {
           "Add, edit and delete data through a simple panel",
           "A form your clients use to send you inquiries by email",
           "Works perfectly on mobile and desktop",
-          "Hosting, SSL and domain set up — no tech work for you",
+          "Hosting, SSL and domain set up, no tech work for you",
         ],
       },
       {
-        name: "Business", tag: "A complete app for your company — like the Maximum Rent a Car we built.",
+        name: "Business", tag: "A complete app for your company, like the Maximum Rent a Car we built.",
         price: "2,200", monthly: "99", gift: "Growth",
         features: [
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
-          "Multiple roles — owner sees all, staff see their own",
+          "Multiple roles: owner sees all, staff see their own",
           "Image gallery with upload and preview",
           "Inquiries with dates, locations and status (new / handled)",
           "Email and WhatsApp alerts on every new inquiry",
@@ -163,14 +163,14 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         ],
       },
       {
-        name: "Premium", tag: "An app without limits — built exactly around your process.",
+        name: "Premium", tag: "An app without limits, built exactly around your process.",
         price: "4,500", monthly: "179", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
           "Online payment and deposit",
           "Connections to other tools (Google Calendar, accounting, API)",
-          "Automations — the system handles routine work for you",
+          "Automations: the system handles routine work for you",
           "Detailed permissions per team member",
           "Priority support and a dedicated developer",
         ],
@@ -192,7 +192,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         features: ["2 platforms (Instagram + Facebook)", "16 posts + Stories / Reels", "1 active ad campaign", "Monthly content strategy", "Analytics + monthly report"],
       },
       {
-        name: "Domination", tag: "Full presence — dominate your city.", price: "125", note: "ad budget separate",
+        name: "Domination", tag: "Full presence: dominate your city.", price: "125", note: "ad budget separate",
         features: ["EVERYTHING in Growth, plus:", "Full content calendar (up to 30 posts)", "Multiple ad campaigns (Meta + Google)", "Reels production + community management", "Strategy calls + priority support"],
       },
     ],

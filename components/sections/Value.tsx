@@ -45,7 +45,7 @@ const T: { bs: Content; en: Content } = {
   bs: {
     eyebrow: "ZAŠTO SE ISPLATI",
     h: ["Manje od ", "kafe dnevno", ". Vrijednost za cijeli biznis."],
-    sub: "Razvučeno na dan, vaš sajt košta sitnicu. A radi za vas non-stop — donosi klijente, štedi vrijeme i sam se isplati.",
+    sub: "Razvučeno na dan, vaš sajt košta sitnicu. A radi za vas non-stop: donosi klijente, štedi vrijeme i sam se isplati.",
     project: {
       label: "KOMPLETAN PROJEKAT", lt: "manje od", big: 4.5, per: "/dan",
       cap: { pre: "u prvoj godini · zatim je ", strong: "zauvijek vaše", post: "" },
@@ -67,7 +67,7 @@ const T: { bs: Content; en: Content } = {
       ],
     },
     trHead: "Od haosa do potpune kontrole",
-    trSub: "Svaki problem koji ste imali — mi smo zamijenili rješenjem koje radi samo.",
+    trSub: "Svaki problem koji ste imali zamijenili smo rješenjem koje radi samo.",
     beforeH: "PRIJE", afterH: "SA NAMA",
     pairs: [
       { bIcon: Table2, b: "Excel tabele i ručne bilješke", bd: "sve razbacano na više mjesta", aIcon: Zap, a: "Sve automatizovano", ad: "jedan sistem, radi samo" },
@@ -75,15 +75,15 @@ const T: { bs: Content; en: Content } = {
       { bIcon: TriangleAlert, b: "Propušteni upiti i greške", bd: "klijenti koji odu konkurenciji", aIcon: ShieldCheck, a: "Ništa se ne gubi", ad: "svaki upit zabilježen i siguran" },
       { bIcon: RefreshCw, b: "Sve ručno, sve sporo", bd: "svaka izmjena je muka", aIcon: MousePointerClick, a: "Gotovo u 2 klika", ad: "brzo, jednostavno, odmah" },
     ],
-    summary: ["Rezultat: ", "više vremena, manje stresa", " i sistem koji radi za vas — non-stop."],
-    banner: ["Plaćate manje od kafe dnevno — a dobijate ", "digitalnu mašinu", " koja radi za vas 24/7."],
+    summary: ["Rezultat: ", "više vremena, manje stresa", " i sistem koji radi za vas, non-stop."],
+    banner: ["Plaćate manje od kafe dnevno, a dobijate ", "digitalnu mašinu", " koja radi za vas 24/7."],
     bannerSub: "Investicija koja se vrati već u prvih mjesec dana.",
     btn: "Zakaži besplatne konsultacije",
   },
   en: {
     eyebrow: "WHY IT PAYS OFF",
     h: ["Less than ", "a coffee a day", ". Value for your whole business."],
-    sub: "Spread over a day, your website costs pennies. But it works for you non-stop — brings clients, saves time and pays for itself.",
+    sub: "Spread over a day, your website costs pennies. But it works for you non-stop: it brings clients, saves time and pays for itself.",
     project: {
       label: "COMPLETE PROJECT", lt: "less than", big: 4.5, per: "/day",
       cap: { pre: "in the first year · then it's ", strong: "yours forever", post: "" },
@@ -105,7 +105,7 @@ const T: { bs: Content; en: Content } = {
       ],
     },
     trHead: "From chaos to full control",
-    trSub: "Every problem you used to have — we replaced it with a solution that runs itself.",
+    trSub: "Every problem you used to have, we replaced with a solution that runs itself.",
     beforeH: "BEFORE", afterH: "WITH US",
     pairs: [
       { bIcon: Table2, b: "Spreadsheets and manual notes", bd: "everything scattered everywhere", aIcon: Zap, a: "Everything automated", ad: "one system, runs itself" },
@@ -113,8 +113,8 @@ const T: { bs: Content; en: Content } = {
       { bIcon: TriangleAlert, b: "Missed inquiries and errors", bd: "clients who go to competitors", aIcon: ShieldCheck, a: "Nothing gets lost", ad: "every inquiry captured and safe" },
       { bIcon: RefreshCw, b: "All manual, all slow", bd: "every change is a hassle", aIcon: MousePointerClick, a: "Done in 2 clicks", ad: "fast, simple, instant" },
     ],
-    summary: ["The result: ", "more time, less stress", " and a system that works for you — non-stop."],
-    banner: ["You pay less than a coffee a day — and get a ", "digital machine", " that works for you 24/7."],
+    summary: ["The result: ", "more time, less stress", " and a system that works for you, non-stop."],
+    banner: ["You pay less than a coffee a day and get a ", "digital machine", " that works for you 24/7."],
     bannerSub: "An investment that pays off in the very first month.",
     btn: "Book a free consultation",
   },
@@ -201,8 +201,8 @@ function ValueCard({ card, inView, comma, accent }: { card: Card; inView: boolea
               <Check size={12} strokeWidth={3} />
             </span>
             <span>
-              <b className="text-[var(--text)] font-semibold">{title}</b>{" "}
-              <span className="text-[var(--text-muted)]">— {desc}</span>
+              <b className="text-[var(--text)] font-semibold">{title}:</b>{" "}
+              <span className="text-[var(--text-muted)]">{desc}</span>
             </span>
           </div>
         ))}

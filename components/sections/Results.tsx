@@ -29,7 +29,7 @@ const T: { bs: Content; en: Content } = {
     eyebrow: "REZULTATI",
     heading: "Rezultati koji govore",
     headingAccent: "sami za sebe",
-    sub: "Ne vjerujte nam na riječ — vjerujte brojevima koje isporučujemo svakom klijentu.",
+    sub: "Ne vjerujte nam na riječ, vjerujte brojevima koje isporučujemo svakom klijentu.",
     top: "TOP",
     gauges: [
       { val: 98, lbl: "Zadovoljstvo klijenata", desc: "koji bi nas preporučili", top: true },
@@ -46,7 +46,7 @@ const T: { bs: Content; en: Content } = {
     eyebrow: "RESULTS",
     heading: "Results that speak",
     headingAccent: "for themselves",
-    sub: "Don't take our word for it — trust the numbers we deliver to every client.",
+    sub: "Don't take our word for it, trust the numbers we deliver to every client.",
     top: "TOP",
     gauges: [
       { val: 98, lbl: "Client satisfaction", desc: "who would recommend us", top: true },

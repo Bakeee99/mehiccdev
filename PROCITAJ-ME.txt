@@ -1,34 +1,85 @@
-═══════════════════════════════════════════════════════════
-  mehiccdev — Hero fix 2: sporija i još glađa rotacija sfere
-═══════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+  mehiccdev — VELIKI PAKET: 3 popravke + uklonjene sve crtice "—"
+════════════════════════════════════════════════════════════════════
 
-ŠTA JE PROMIJENJENO:
+Ovaj ZIP sadrži SVE iz prethodne isporuke (mobilni graf, dupla
+animacija, novi tekstovi) PLUS: sa cijele stranice su uklonjene
+duge crtice "—" iz svih vidljivih tekstova, na oba jezika.
 
-  1) ROTACIJA JE SAD SPORA I SMIRENA (~4× sporija)
-     • Puni krug traje ~90 sekundi — lagani "premium drift".
-     • Brzina je sad VREMENSKI bazirana: konstantna je bez obzira
-       na frame rate uređaja (nema ubrzavanja/usporavanja).
+ŠTA JE U ZIP-u (9 fajlova):
 
-  2) DODATNE OPTIMIZACIJE PROTIV LAGA:
-     • Linije mreže se crtaju grupno u 6 poteza umjesto 100+
-       pojedinačnih — velika ušteda po frame-u.
-     • Rezolucija crtanja ograničena (dpr 1.5) — i dalje oštro na
-       retina ekranima, ali znatno manje piksela za render.
-     • Izmjereno: 61 FPS (maksimum ekrana) — potpuno glatko.
+  lib/useReveal.ts                      → NOVI fajl (fix animacija)
+  lib/i18n.ts                           → novi tekstovi + bez crtica
+  components/sections/Services.tsx      → fix animacija
+  components/sections/About.tsx         → fix animacija
+  components/sections/Portfolio.tsx     → fix animacija
+  components/sections/Pricing.tsx       → fix animacija + bez crtica
+  components/sections/Results.tsx       → fix grafa + bez crtica
+  components/sections/Value.tsx         → bez crtica
+  components/sections/Contact.tsx       → sitnica: prazna opcija u
+                                          formi imala "—", sad "…"
 
-  3) Ako korisnik ima uključen "reduced motion" u sistemu,
-     sfera je statična (pristupačnost).
+────────────────────────────────────────────────────────────────────
+NOVO: UKLONJENE CRTICE (66 mjesta, BS + EN)
+────────────────────────────────────────────────────────────────────
+Svaka rečenica je pregledana ručno i crtica zamijenjena onim što
+prirodno paše, nije rađena slijepa zamjena:
 
-ŠTA JE U ZIP-U:
-  components/sections/Hero.tsx
+  • zarez, kad rečenica samo teče dalje:
+    "Javite nam se — odgovaramo u roku od 24h"
+    → "Javite nam se, odgovaramo u roku od 24 sata."
 
-KAKO UBACITI:
-  1. Raspakuj U KORIJEN projekta.
-  2. "Replace / Zamijeni?" → DA.
-  3. npm run dev → rotacija spora i glatka.
-  4. git add . && git commit -m "Hero: sporija i gladja rotacija sfere" && git push
+  • dvotačka, kad iza slijedi objašnjenje ili nabrajanje:
+    "Više uloga — vlasnik vidi sve..."
+    → "Više uloga: vlasnik vidi sve, osoblje samo svoje"
 
-PODEŠAVANJE BRZINE (ako želiš):
-  U Hero.tsx nađi liniju:  const SPEED = 0.07;
-  • sporije: 0.04   • brže: 0.12
-═══════════════════════════════════════════════════════════
+  • tačka + nova rečenica, kad su dvije misli:
+    "...admin paneli — aplikacija građena..."
+    → "...admin paneli. Aplikacija građena..."
+
+  • preformulacija, gdje je crtica bila štaka:
+    "Svaki problem koji ste imali — mi smo zamijenili..."
+    → "Svaki problem koji ste imali zamijenili smo rješenjem
+       koje radi samo."
+
+U kartici "Vrijednost" (Value) su stavke tipa "Naslov — opis"
+sada "Naslov: opis".
+
+Crtice u komentarima unutar koda NISU dirane, njih posjetioci
+ne vide, a programerima pomažu.
+
+────────────────────────────────────────────────────────────────────
+IZ PRETHODNE RUNDE (uključeno u ovaj ZIP):
+────────────────────────────────────────────────────────────────────
+1) GRAF NA MOBITELU (Results.tsx): tačkice i mjeseci su sada HTML
+   elementi u procentima pa ostaju okrugli i čitki na svakom ekranu;
+   linija ima stalnu debljinu; mjerači su manji na mobitelu pa
+   2 kolone ne pucaju.
+
+2) DUPLA ANIMACIJA (Services/About/Portfolio/Pricing): novi fajl
+   lib/useReveal.ts, svaki blok se animira TAČNO JEDNOM, sadržaj ne
+   nestaje pri promjeni jezika/teme. Uklonjen i sudar Tailwind
+   "transition-all" klase s Framer animacijom. Svaka NOVA sekcija
+   ubuduće koristi useReveal (primjer u komentaru na vrhu fajla).
+
+3) NOVI TEKSTOVI (i18n.ts, BS+EN): Usluge, O nama, Portfolio,
+   prirodno i konkretno, bez AI fraza. U Pricingu ispravljena 2 EN
+   buga ("Rast"/"Dominacija" → "Growth"/"Domination").
+
+────────────────────────────────────────────────────────────────────
+KORACI ZA UBACIVANJE:
+────────────────────────────────────────────────────────────────────
+  1. Raspakuj ZIP u KORIJEN projekta (folder gdje je package.json)
+  2. "Replace / Zamijeni" → DA za sve (useReveal.ts je nov, doda se)
+  3. npm run dev
+  4. Provjeri:
+     • nigdje na stranici nema "—" (probaj i BS i EN)
+     • graf u "Rezultati" na suženom prozoru/telefonu
+     • skrolanje kroz sekcije: kartice ulaze glatko, jednom
+     • promjena jezika i teme: ništa ne nestaje
+  5. git add .
+     git commit -m "fix: graf, animacije, novi tekstovi, bez crtica"
+     git push
+
+Build verifikovan prije slanja: npm run build ✓ (bez grešaka).
+════════════════════════════════════════════════════════════════════
