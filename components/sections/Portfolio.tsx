@@ -46,7 +46,7 @@ const T: Record<"bs" | "en", Content> = {
     heading: "Projekti koji",
     headingAccent: "rade posao",
     subtitle: "Sve što vidite ovdje je uživo i donosi rezultate stvarnim klijentima. Slobodno otvorite i probajte.",
-    badge: "Pilot · Business plan",
+    badge: "Perjanica · Business plan",
     title: "Maximum Rent a Car",
     desc: "Kompletna web aplikacija za iznajmljivanje vozila. Gost izabere auto i datume, sistem provjeri dostupnost i spriječi dupla rezervisanja, a vlasnik sve potvrđuje u dva klika iz svog privatnog panela.",
     stats: [
@@ -66,7 +66,7 @@ const T: Record<"bs" | "en", Content> = {
     livePill: "Uživo",
     minis: [
       { title: "OxyBaric Mostar", cat: "Webflow · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
-      { title: "Rent a Car Landing", cat: "Web Development", desc: "Landing s rezervacijama: upit stiže spreman za odgovor." },
+      { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
   },
@@ -94,18 +94,20 @@ const T: Record<"bs" | "en", Content> = {
     ctaWant: "I want an app like this",
     livePill: "Live",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Webflow · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
-      { title: "Rent a Car Landing", cat: "Web Development", desc: "Landing with a booking system: inquiries arrive ready to answer." },
+      { title: "OxyBaric Mostar | In progress", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
   },
 };
 
 // Visual meta for mini cards (order matches T.minis)
+// img: putanja do screenshota u /public/portfolio/ (npr. "/portfolio/oxybaric.png").
+// Ostavi "" da se prikazuje gradijent. Slika se sama pojavi kad upišeš putanju.
 const MINI_META = [
-  { gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
-  { gradient: "from-blue-500 via-cyan-500 to-teal-500",   href: "#portfolio" },
-  { gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
+  { img: "/portfolio/oxybaric.png", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
+  { img: "/portfolio/roobet.png", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "https://roobet.com/" },
+  { img: "", gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
 ];
 
 /* ── Placeholder ekrani (dok ne stignu pravi screenshotovi) ─────────────────
@@ -349,9 +351,22 @@ export function Portfolio() {
                              transition-[border-color,box-shadow] duration-300
                              hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10"
                 >
-                  {/* vizual popunjava svu preostalu visinu */}
+                  {/* vizual popunjava svu preostalu visinu: screenshot ili gradijent */}
                   <span className={`relative flex-1 min-h-[110px] bg-gradient-to-br ${meta.gradient} overflow-hidden`}>
-                    <span className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20 transition-transform duration-500 group-hover/mini:scale-110" aria-hidden />
+                    {meta.img ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={meta.img}
+                          alt={m.title}
+                          className="absolute inset-0 w-full h-full object-cover object-top
+                                     transition-transform duration-500 group-hover/mini:scale-105"
+                        />
+                        <span className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/45 to-transparent" aria-hidden />
+                      </>
+                    ) : (
+                      <span className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20 transition-transform duration-500 group-hover/mini:scale-110" aria-hidden />
+                    )}
                     <span className="absolute top-3.5 left-4 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-[10.5px] font-semibold">
                       {m.cat}
                     </span>
