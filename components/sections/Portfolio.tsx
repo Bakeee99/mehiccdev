@@ -1,20 +1,19 @@
 /**
  * components/sections/Portfolio.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Naš rad" — Hero Case Study Fuzija (Koncept 1).
+ * "Naš rad" — Hero Case Study Fuzija (Koncept 1, v2).
  *
- * Maximum Rent a Car dominira kao featured case study blok (veći dio širine):
- * badge, opis, stvarne izmjerene brojke (PageSpeed prije/poslije), lista
- * ključnih funkcionalnosti i browser mockup. Ostali projekti su svedena,
- * elegantna bočna lista.
+ * • Maximum Rent a Car: featured blok s laptop mockupom (naslovna aplikacije)
+ *   i telefon mockupom preko njega (admin panel).
+ * • Bočni projekti: vertikalne kartice čiji vizual popunjava visinu
+ *   (nema više praznog prostora).
  *
- * Self-contained: svi tekstovi (BS/EN) žive u ovom fajlu, i18n se ne dira.
- * Koristi useReveal pattern (animacija tačno jednom, preživljava promjenu
- * jezika/teme).
+ * SCREENSHOTOVI: slike spremi u /public/portfolio/ pa upiši putanje ispod:
+ *   SCREEN_DESKTOP → screenshot naslovne (širi format, npr. 1600×1000)
+ *   SCREEN_MOBILE  → screenshot admin panela u USPRAVNOM (telefon) formatu
+ * Dok su prazne, prikazuju se uredni CSS placeholderi.
  *
- * SCREENSHOT: kad bude spreman pravi screenshot aplikacije, ubaci ga u
- * /public/portfolio/ (npr. maximum-hero.png) i upiši putanju u
- * FEATURE_SCREENSHOT ispod. Dok je prazno, prikazuje se CSS mockup.
+ * Self-contained (BS/EN u ovom fajlu), useReveal pattern, dark/light tema.
  */
 
 "use client";
@@ -25,12 +24,13 @@ import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/a
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-// ── Screenshot slot (prazno = CSS mockup placeholder) ───────────────────────
-const FEATURE_SCREENSHOT = ""; // npr. "/portfolio/maximum-hero.png"
+// ── Screenshot slotovi (prazno = CSS placeholder) ────────────────────────────
+const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png"; // npr. "/portfolio/maximum-naslovna.png"
+const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png"; // npr. "/portfolio/maximum-admin-mobitel.png"
 const FEATURE_URL = "https://maximum-rent.vercel.app";
 
 // ── Bilingual content ────────────────────────────────────────────────────────
-type Mini = { title: string; desc: string; live?: boolean };
+type Mini = { title: string; cat: string; desc: string; live?: boolean };
 type Content = {
   label: string; heading: string; headingAccent: string; subtitle: string;
   badge: string; title: string; desc: string;
@@ -46,7 +46,7 @@ const T: Record<"bs" | "en", Content> = {
     heading: "Projekti koji",
     headingAccent: "rade posao",
     subtitle: "Sve što vidite ovdje je uživo i donosi rezultate stvarnim klijentima. Slobodno otvorite i probajte.",
-    badge: "Perjanica · Business plan",
+    badge: "Pilot · Business plan",
     title: "Maximum Rent a Car",
     desc: "Kompletna web aplikacija za iznajmljivanje vozila. Gost izabere auto i datume, sistem provjeri dostupnost i spriječi dupla rezervisanja, a vlasnik sve potvrđuje u dva klika iz svog privatnog panela.",
     stats: [
@@ -65,9 +65,9 @@ const T: Record<"bs" | "en", Content> = {
     ctaWant: "Želim ovakvu aplikaciju",
     livePill: "Uživo",
     minis: [
-      { title: "OxyBaric Mostar", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
-      { title: "Rent a Car Landing", desc: "Landing s rezervacijama: upit stiže spreman za odgovor." },
-      { title: "Fitness Trainer", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
+      { title: "OxyBaric Mostar", cat: "Webflow · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
+      { title: "Rent a Car Landing", cat: "Web Development", desc: "Landing s rezervacijama: upit stiže spreman za odgovor." },
+      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
   },
   en: {
@@ -94,9 +94,9 @@ const T: Record<"bs" | "en", Content> = {
     ctaWant: "I want an app like this",
     livePill: "Live",
     minis: [
-      { title: "OxyBaric Mostar", desc: "A medical site that brings patients in from Google search.", live: true },
-      { title: "Rent a Car Landing", desc: "Landing with a booking system: inquiries arrive ready to answer." },
-      { title: "Fitness Trainer", desc: "A personal brand site with online booking instead of endless messaging." },
+      { title: "OxyBaric Mostar", cat: "Webflow · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
+      { title: "Rent a Car Landing", cat: "Web Development", desc: "Landing with a booking system: inquiries arrive ready to answer." },
+      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
   },
 };
@@ -108,38 +108,95 @@ const MINI_META = [
   { gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
 ];
 
-// ── CSS mockup (placeholder dok ne stigne pravi screenshot) ──────────────────
-function BrowserMock() {
+/* ── Placeholder ekrani (dok ne stignu pravi screenshotovi) ─────────────────
+   Namjerno tamni bez obzira na temu sajta: glume screenshot aplikacije.    */
+
+function DesktopPlaceholder() {
   return (
-    <div className="rounded-2xl overflow-hidden border border-brand-600/25 bg-[var(--surface)] shadow-2xl shadow-brand-600/25">
-      {/* traka browsera */}
-      <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-[var(--border)] bg-[var(--bg)]/60">
-        <span className="w-2 h-2 rounded-full bg-[var(--border)]" />
-        <span className="w-2 h-2 rounded-full bg-[var(--border)]" />
-        <span className="w-2 h-2 rounded-full bg-[var(--border)]" />
-        <span className="flex-1 ml-2 px-3 py-1 rounded-md bg-[var(--border)]/40 text-[10px] text-[var(--text-muted)] tracking-wide">
-          maximum-rent.vercel.app
-        </span>
-      </div>
-      {/* tijelo: naslov + kalendar dostupnosti */}
-      <div className="p-5">
-        <div className="h-2 w-1/2 rounded bg-[var(--text-muted)]/30 mb-2" />
-        <div className="h-2 w-1/3 rounded bg-[var(--text-muted)]/20 mb-4" />
-        <div className="grid grid-cols-7 gap-1.5 mb-4" aria-hidden>
-          {Array.from({ length: 21 }).map((_, i) => {
-            const busy = [2, 3, 9, 15].includes(i);
-            const sel = [11, 12, 13].includes(i);
-            return (
-              <span
-                key={i}
-                className={`aspect-square rounded-md ${
-                  sel ? "bg-brand-600" : busy ? "bg-red-500/25" : "bg-[var(--border)]/50"
-                }`}
-              />
-            );
-          })}
+    <div className="w-full h-full bg-gradient-to-br from-[#0B1533] to-[#070C1D] p-[6%] flex flex-col" aria-hidden>
+      {/* nav */}
+      <div className="flex items-center justify-between mb-[7%]">
+        <div className="h-[8px] w-[22%] rounded bg-white/25" />
+        <div className="flex gap-[4%] w-[40%] justify-end">
+          <span className="h-[6px] w-[18%] rounded bg-white/12" />
+          <span className="h-[6px] w-[18%] rounded bg-white/12" />
+          <span className="h-[6px] w-[18%] rounded bg-white/12" />
         </div>
-        <span className="inline-block h-7 w-32 rounded-lg bg-brand-600 shadow-lg shadow-brand-600/40" />
+      </div>
+      {/* hero naslov + CTA */}
+      <div className="h-[10px] w-[55%] rounded bg-white/30 mb-[3%]" />
+      <div className="h-[10px] w-[38%] rounded bg-blue-400/50 mb-[5%]" />
+      <div className="h-[7px] w-[46%] rounded bg-white/12 mb-[7%]" />
+      <div className="h-[22px] w-[26%] rounded-md bg-blue-600 shadow-lg shadow-blue-600/50 mb-auto" />
+      {/* red kartica vozila */}
+      <div className="grid grid-cols-3 gap-[4%]">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="rounded-lg border border-white/10 bg-white/[.04] p-[6%]">
+            <div className="aspect-[16/9] rounded bg-gradient-to-br from-blue-400/30 to-blue-600/10 mb-[8%]" />
+            <div className="h-[6px] w-[70%] rounded bg-white/18 mb-[6%]" />
+            <div className="h-[6px] w-[42%] rounded bg-blue-400/45" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobilePlaceholder() {
+  return (
+    <div className="w-full h-full bg-gradient-to-b from-[#0C1631] to-[#070B1A] p-[8%] flex flex-col gap-[6%]" aria-hidden>
+      <div className="h-[7px] w-[58%] rounded bg-white/28 mb-[2%]" />
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="rounded-lg border border-white/10 bg-white/[.05] p-[7%] flex items-center gap-[6%]">
+          <span className={`w-[9px] h-[9px] rounded-full flex-shrink-0 ${i === 0 ? "bg-amber-400" : "bg-green-500"}`} />
+          <span className="flex-1">
+            <span className="block h-[6px] w-[75%] rounded bg-white/22 mb-[8%]" />
+            <span className="block h-[5px] w-[50%] rounded bg-white/10" />
+          </span>
+        </div>
+      ))}
+      <div className="mt-auto h-[18px] rounded-md bg-blue-600/90" />
+    </div>
+  );
+}
+
+/* ── Laptop + telefon kompozicija ───────────────────────────────────────── */
+function DeviceShowcase({ title }: { title: string }) {
+  return (
+    <div className="relative pr-[13%] sm:pr-[15%]">
+      {/* LAPTOP */}
+      <div className="relative">
+        <div className="rounded-t-2xl border border-[var(--border)] bg-zinc-900 dark:bg-zinc-950 p-2 sm:p-2.5 pb-0">
+          <div className="rounded-t-lg overflow-hidden aspect-[16/10] bg-[#070C1D]">
+            {SCREEN_DESKTOP ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={SCREEN_DESKTOP} alt={title} className="w-full h-full object-cover object-top" />
+            ) : (
+              <DesktopPlaceholder />
+            )}
+          </div>
+        </div>
+        {/* baza laptopa */}
+        <div className="relative h-3 sm:h-3.5 rounded-b-xl bg-zinc-800 dark:bg-zinc-900 border border-t-0 border-[var(--border)]
+                        shadow-[0_24px_50px_-18px_rgba(37,99,235,0.45)]">
+          <span className="absolute left-1/2 -translate-x-1/2 top-0 w-[14%] h-1.5 rounded-b-md bg-zinc-700 dark:bg-zinc-800" aria-hidden />
+        </div>
+      </div>
+
+      {/* TELEFON (admin panel), preklapa laptop zdesna */}
+      <div className="absolute right-0 -bottom-3 sm:-bottom-4 w-[24%] min-w-[86px] max-w-[150px] rotate-[2.5deg]
+                      rounded-[20px] border border-[var(--border)] bg-zinc-900 dark:bg-zinc-950 p-1.5
+                      shadow-[0_22px_44px_-14px_rgba(2,8,30,0.85)]">
+        <div className="relative rounded-[14px] overflow-hidden aspect-[9/19] bg-[#070B1A]">
+          {/* notch */}
+          <span className="absolute top-1 left-1/2 -translate-x-1/2 w-[36%] h-[9px] rounded-full bg-black/80 z-10" aria-hidden />
+          {SCREEN_MOBILE ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={SCREEN_MOBILE} alt={`${title} · admin`} className="w-full h-full object-cover object-top" />
+          ) : (
+            <MobilePlaceholder />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -199,7 +256,6 @@ export function Portfolio() {
                        transition-[border-color,box-shadow] duration-300
                        hover:border-brand-600/45 hover:shadow-2xl hover:shadow-brand-600/15"
           >
-            {/* pozadinski sjaj + grid */}
             <div className="absolute -top-24 -right-24 w-[420px] h-[320px] rounded-full bg-brand-600/12 blur-3xl pointer-events-none" aria-hidden />
             <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.045] pointer-events-none" aria-hidden />
 
@@ -240,7 +296,7 @@ export function Portfolio() {
               </ul>
 
               {/* CTA */}
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap gap-3 mb-9">
                 <a
                   href={FEATURE_URL}
                   target="_blank"
@@ -261,30 +317,21 @@ export function Portfolio() {
                 </a>
               </div>
 
-              {/* screenshot / mockup s blagim 3D nagibom koji se ispravlja na hover */}
+              {/* laptop + telefon, blagi 3D nagib koji se ispravi na hover */}
               <div
-                className="[transform:perspective(1200px)_rotateX(3deg)] group-hover:[transform:perspective(1200px)_rotateX(0deg)_translateY(-3px)]
+                className="[transform:perspective(1300px)_rotateX(4deg)] group-hover:[transform:perspective(1300px)_rotateX(0deg)_translateY(-4px)]
                            transition-transform duration-500 will-change-transform"
               >
-                {FEATURE_SCREENSHOT ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={FEATURE_SCREENSHOT}
-                    alt={d.title}
-                    className="rounded-2xl border border-brand-600/25 shadow-2xl shadow-brand-600/25 w-full"
-                  />
-                ) : (
-                  <BrowserMock />
-                )}
+                <DeviceShowcase title={d.title} />
               </div>
             </div>
           </motion.article>
 
-          {/* BOČNA LISTA */}
+          {/* BOČNE KARTICE: vertikalne, vizual popunjava visinu */}
           <motion.div
             variants={staggerContainerSlow}
             {...revealSide}
-            className="flex flex-col gap-5"
+            className="flex flex-col gap-6"
           >
             {d.minis.map((m, i) => {
               const meta = MINI_META[i];
@@ -293,32 +340,40 @@ export function Portfolio() {
                 <motion.a
                   key={m.title}
                   variants={fadeUp}
-                  whileHover={{ x: 6 }}
+                  whileHover={{ y: -5 }}
                   href={meta.href}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  className="group/mini relative flex items-center gap-4 p-5 rounded-2xl flex-1
-                             bg-[var(--surface)] border border-[var(--border)] overflow-hidden
+                  className="group/mini relative flex flex-col flex-1 min-h-[200px] rounded-2xl overflow-hidden
+                             bg-[var(--surface)] border border-[var(--border)]
                              transition-[border-color,box-shadow] duration-300
                              hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10"
                 >
-                  <span className={`relative flex-shrink-0 w-[86px] h-16 rounded-xl bg-gradient-to-br ${meta.gradient} overflow-hidden`}>
-                    <span className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-25" aria-hidden />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[15px] font-bold text-[var(--text)] mb-0.5">{m.title}</span>
-                    <span className="block text-[12.5px] text-[var(--text-muted)] leading-snug">{m.desc}</span>
-                  </span>
-                  {m.live && (
-                    <span className="absolute top-3 right-4 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-green-500">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden /> {d.livePill}
+                  {/* vizual popunjava svu preostalu visinu */}
+                  <span className={`relative flex-1 min-h-[110px] bg-gradient-to-br ${meta.gradient} overflow-hidden`}>
+                    <span className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20 transition-transform duration-500 group-hover/mini:scale-110" aria-hidden />
+                    <span className="absolute top-3.5 left-4 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-[10.5px] font-semibold">
+                      {m.cat}
                     </span>
-                  )}
-                  <span className="ml-auto flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center
-                                   bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400
-                                   transition-[background-color,transform] duration-300
-                                   group-hover/mini:bg-brand-600/25 group-hover/mini:translate-x-0.5 group-hover/mini:-translate-y-0.5">
-                    <ArrowUpRight size={16} />
+                    {m.live && (
+                      <span className="absolute top-3.5 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm
+                                       text-[10px] font-bold uppercase tracking-wider text-green-400">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" aria-hidden /> {d.livePill}
+                      </span>
+                    )}
+                  </span>
+                  {/* sadržaj */}
+                  <span className="flex items-center gap-3 p-5">
+                    <span className="min-w-0">
+                      <span className="block text-[15px] font-bold text-[var(--text)] mb-0.5">{m.title}</span>
+                      <span className="block text-[12.5px] text-[var(--text-muted)] leading-snug">{m.desc}</span>
+                    </span>
+                    <span className="ml-auto flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center
+                                     bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400
+                                     transition-[background-color,transform] duration-300
+                                     group-hover/mini:bg-brand-600/25 group-hover/mini:translate-x-0.5 group-hover/mini:-translate-y-0.5">
+                      <ArrowUpRight size={16} />
+                    </span>
                   </span>
                 </motion.a>
               );

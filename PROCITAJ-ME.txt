@@ -1,61 +1,57 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — NOVI PORTFOLIO (Koncept 1: Hero Case Study Fuzija)
+  mehiccdev — PORTFOLIO v2: laptop + telefon mockup, pune bočne kartice
 ════════════════════════════════════════════════════════════════════
 
-VAŽNO: Ova isporuka ide POVRH prethodnog velikog ZIP-a
-(mehiccdev-popravke-i-crtice.zip). Ako njega još nisi ubacio,
-prvo ubaci njega, pa onda ovaj, jer novi Portfolio koristi
-lib/useReveal.ts iz tog paketa. Bez njega build puca.
+Zamjenjuje prethodni Portfolio (mehiccdev-novi-portfolio.zip).
+I dalje traži lib/useReveal.ts iz velikog paketa popravki, pa taj
+paket mora biti ubačen prije ovoga.
 
 ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Portfolio.tsx   → kompletno nova sekcija
+  components/sections/Portfolio.tsx
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO
+ŠTA JE PROMIJENJENO U ODNOSU NA v1
 ────────────────────────────────────────────────────────────────────
-Portfolio više nije mreža od 3 jednake kartice. Sada:
+1) LAPTOP + TELEFON MOCKUP (umjesto onog grubog kalendara)
+   • Laptop okvir s ekranom u 16:10 formatu: tu ide screenshot
+     NASLOVNE stranice aplikacije.
+   • Preko laptopa, zdesna, nagnut telefon okvir (s notchom):
+     tu ide screenshot ADMIN PANELA u uspravnom formatu.
+   • Dok screenshotovi ne stignu, u okvirima su uredni placeholderi
+     koji glume aplikaciju (nav, naslov, kartice vozila; na telefonu
+     lista rezervacija sa statusima).
+   • Cijela kompozicija ima blagi 3D nagib koji se ispravi na hover.
 
-  • MAXIMUM RENT A CAR dominira kao veliki case study blok:
-    badge "Perjanica · Business plan", opis šta sistem radi,
-    4 IZMJERENE brojke (3,2s učitavanje na telefonu koje je prije
-    bilo 21,6s; Google ocjena 100; 2 jezika; 24/7 upiti), lista
-    4 ključne funkcionalnosti sa zelenim kvačicama, 2 dugmeta
-    ("Pogledaj uživo" vodi na aplikaciju, "Želim ovakvu aplikaciju"
-    vodi na kontakt formu) i browser mockup s blagim 3D nagibom
-    koji se ispravi kad se pređe mišem.
-
-  • Ostala 3 projekta su elegantna bočna lista: sličica, naslov,
-    jedna rečenica, strelica. Kartica klizne udesno na hover.
-    OxyBaric ima zelenu "Uživo" oznaku jer mu link stvarno radi.
-
-  • Sve dvojezično (BS/EN), tamna i svijetla tema, mobilni prvo
-    (ispod ~1024px bočna lista ide ispod glavnog bloka).
-  • Tekstovi bez crtica, konverzijski: brojke iz stvarnog
-    PageSpeed mjerenja, ništa izmišljeno.
-  • Koristi novi useReveal pattern: animacija tačno jednom,
-    ništa ne nestaje pri promjeni jezika/teme.
-  • i18n.ts se NE dira: svi tekstovi sekcije su u samom fajlu
-    (stari t.portfolio tekstovi u i18n.ts ostaju, ali se više
-    ne koriste; počistimo ih u nekom sljedećem krugu).
+2) BOČNE KARTICE BEZ PRAZNOG PROSTORA
+   • Kartice su sada vertikalne: gornji dio je vizual (gradijent s
+     grid šarom) koji se RASTEŽE i popunjava svu visinu, dolje su
+     naslov, opis i strelica.
+   • Na vizualu stoji kategorija projekta (pilula), a OxyBaric ima
+     i zelenu "Uživo" oznaku.
+   • Na hover: kartica se podigne, šara na vizualu se blago zumira.
 
 ────────────────────────────────────────────────────────────────────
-UBACIVANJE PRAVOG SCREENSHOTA (kad ga pošalješ / snimiš)
+UBACIVANJE PRAVIH SCREENSHOTOVA (2 minute posla)
 ────────────────────────────────────────────────────────────────────
-  1. Sliku spremi u  public/portfolio/  npr. maximum-hero.png
-  2. U Portfolio.tsx, pri vrhu, promijeni:
-       const FEATURE_SCREENSHOT = "";
-     u
-       const FEATURE_SCREENSHOT = "/portfolio/maximum-hero.png";
-  3. To je sve, CSS mockup se sam sakrije i pojavi se prava slika.
+  1. Slike spremi u  public/portfolio/  npr.:
+       maximum-naslovna.png        (naslovna, širi format, 1600×1000)
+       maximum-admin-mobitel.png   (admin panel, USPRAVNI/telefon format)
+  2. U Portfolio.tsx pri vrhu upiši putanje:
+       const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png";
+       const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png";
+  3. Placeholderi se sami sakriju.
+
+  VAŽNO za admin screenshot: zamagli imena, telefone i emailove
+  gostiju prije nego što slika ode na javni sajt!
 
 ────────────────────────────────────────────────────────────────────
 KORACI:
 ────────────────────────────────────────────────────────────────────
-  1. Raspakuj ZIP u KORIJEN projekta → "Zamijeni" DA
+  1. Raspakuj u KORIJEN projekta → "Zamijeni" DA
   2. npm run dev
-  3. Provjeri: oba jezika, obje teme, suzi prozor za mobilni raspored,
-     probaj oba dugmeta i sve tri bočne kartice
-  4. git add . && git commit -m "feat: novi portfolio, Maximum case study" && git push
+  3. Provjeri oba jezika, obje teme, mobilni raspored (bočne kartice
+     idu ispod glavnog bloka), hover na mockup i kartice
+  4. git add . && git commit -m "feat: portfolio v2, device mockup + pune kartice" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
