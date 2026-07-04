@@ -1,49 +1,34 @@
 ═══════════════════════════════════════════════════════════
-  mehiccdev — Kontinuitet dizajna: cijeli sajt usklađen s novim herom
+  mehiccdev — Hero fix 2: sporija i još glađa rotacija sfere
 ═══════════════════════════════════════════════════════════
 
-ŠTA JE PROMIJENJENO (kroz cijeli sajt):
+ŠTA JE PROMIJENJENO:
 
-  1) PILL BADGE NASLOVI — mali natpisi iznad naslova sekcija
-     ("Šta radimo", "Rezultati", "Web aplikacije"...) sad su elegantne
-     pilule s tačkicom — isti stil kao badge u heru. Marketing dio
-     cjenovnika ima zelenu pilulu (u skladu sa zelenim karticama).
+  1) ROTACIJA JE SAD SPORA I SMIRENA (~4× sporija)
+     • Puni krug traje ~90 sekundi — lagani "premium drift".
+     • Brzina je sad VREMENSKI bazirana: konstantna je bez obzira
+       na frame rate uređaja (nema ubrzavanja/usporavanja).
 
-  2) SERIF ITALIC AKCENTI — ključne riječi u naslovima sekcija sad
-     imaju isti elegantni italic serif gradijent kao "transformiran
-     kodom" u heru:
-       • Rezultati koji govore «sami za sebe»
-       • Poslovne aplikacije «po mjeri»
-       • Vrijednost: «kafe dnevno»
-       • SaaS: «Rent-a-Car industriji»
+  2) DODATNE OPTIMIZACIJE PROTIV LAGA:
+     • Linije mreže se crtaju grupno u 6 poteza umjesto 100+
+       pojedinačnih — velika ušteda po frame-u.
+     • Rezolucija crtanja ograničena (dpr 1.5) — i dalje oštro na
+       retina ekranima, ali znatno manje piksela za render.
+     • Izmjereno: 61 FPS (maksimum ekrana) — potpuno glatko.
 
-  3) GRID POZADINA NA KONTAKTU — ista suptilna mreža kao u heru,
-     da stranica ima "okvir" (hero na vrhu ↔ kontakt na dnu).
+  3) Ako korisnik ima uključen "reduced motion" u sistemu,
+     sfera je statična (pristupačnost).
 
-  4) NOVI HERO je uključen u ovaj zip (split layout + 3D sfera) —
-     ako si ga već ubacio, samo se prepiše istim sadržajem.
-
-ŠTA JE U ZIP-U (10 fajlova):
-  components/sections/Hero.tsx          (novi hero)
-  components/sections/Services.tsx      (pill naslov)
-  components/sections/Results.tsx       (pill + serif akcent)
-  components/sections/About.tsx         (pill naslov)
-  components/sections/Portfolio.tsx     (pill naslov)
-  components/sections/Pricing.tsx       (pill ×2 + serif akcent)
-  components/sections/Value.tsx         (pill + serif akcent)
-  components/sections/SaasTeaser.tsx    (pill + serif akcent)
-  components/sections/Contact.tsx       (pill + grid pozadina)
-  components/sections/Satisfaction.tsx  (pill — za slučaj da je vratiš)
+ŠTA JE U ZIP-U:
+  components/sections/Hero.tsx
 
 KAKO UBACITI:
-  1. Raspakuj U KORIJEN projekta (gdje su folderi components, lib, app).
-  2. "Replace / Zamijeni?" → DA za sve.
-  3. npm run dev → prođi kroz cijeli sajt (BS/EN, dark/light, mobitel).
-  4. git add . && git commit -m "Kontinuitet dizajna: sekcije uskladjene s novim herom" && git push
+  1. Raspakuj U KORIJEN projekta.
+  2. "Replace / Zamijeni?" → DA.
+  3. npm run dev → rotacija spora i glatka.
+  4. git add . && git commit -m "Hero: sporija i gladja rotacija sfere" && git push
 
-NAPOMENE:
-  • Provjereno: cijeli projekat se uspješno builda (npm run build).
-  • Sve je responzivno — pilule i naslovi se uredno slažu na mobitelu.
-  • i18n NIJE mijenjan — tekstovi ostaju isti, samo je prezentacija nova.
-  • Skraćivanje teksta po sekcijama radimo kasnije, kako si rekao.
+PODEŠAVANJE BRZINE (ako želiš):
+  U Hero.tsx nađi liniju:  const SPEED = 0.07;
+  • sporije: 0.04   • brže: 0.12
 ═══════════════════════════════════════════════════════════

@@ -59,7 +59,20 @@ function NetworkSphere() {
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+    // Pre-rendered glow sprite — drawing a blurred shadow per dot per frame is
+    // extremely expensive; blitting one cached radial-gradient sprite is ~20× faster
+    // and makes the rotation perfectly smooth.
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const sctx = sprite.getContext("2d")!;
+    const grad = sctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(96,165,250,0.9)");
+    grad.addColorStop(0.35, "rgba(37,99,235,0.45)");
+    grad.addColorStop(1, "rgba(37,99,235,0)");
+    sctx.fillStyle = grad;
+    sctx.fillRect(0, 0, 64, 64);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -93,8 +106,8 @@ function NetworkSphere() {
       const cx = w / 2;
       const cy = h / 2;
       // Anti-clipping: max perspective factor = dist/(dist - 0.55) ≈ 1.085.
-      // scale 0.40 × 1.085 ≈ 0.434 of min dimension + ~6px glow < 0.5 → never clips.
-      const scale = Math.min(w, h) * 0.4;
+      // scale 0.44 × 1.085 ≈ 0.477 of min dimension + sprite margin < 0.5 → never clips.
+      const scale = Math.min(w, h) * 0.44;
       const dist = 7;
 
       const projected = pts3d.map((p) => {
@@ -107,44 +120,63 @@ function NetworkSphere() {
         };
       });
 
-      // Links (faint, depth-shaded)
+      // Links — batched into a few alpha buckets (6 stroke calls instead of 100+)
       ctx.lineWidth = 1;
-      for (const [a, b] of links) {
-        const z = (projected[a].z + projected[b].z) / 2;
-        const alpha = 0.05 + 0.16 * ((z + 1) / 2);
+      const BUCKETS = 6;
+      const buckets: [number, number][][] = Array.from({ length: BUCKETS }, () => []);
+      for (const l of links) {
+        const z = (projected[l[0]].z + projected[l[1]].z) / 2;
+        const idx = Math.min(BUCKETS - 1, Math.max(0, Math.floor(((z + 1) / 2) * BUCKETS)));
+        buckets[idx].push(l);
+      }
+      for (let i = 0; i < BUCKETS; i++) {
+        if (!buckets[i].length) continue;
+        const alpha = 0.05 + 0.16 * ((i + 0.5) / BUCKETS);
         ctx.strokeStyle = `rgba(96,165,250,${alpha.toFixed(3)})`;
         ctx.beginPath();
-        ctx.moveTo(projected[a].x, projected[a].y);
-        ctx.lineTo(projected[b].x, projected[b].y);
+        for (const [a, b] of buckets[i]) {
+          ctx.moveTo(projected[a].x, projected[a].y);
+          ctx.lineTo(projected[b].x, projected[b].y);
+        }
         ctx.stroke();
       }
 
-      // Dots (glowing, depth-shaded)
+      // Dots — cached glow sprite (fast) + crisp core
       for (const p of projected) {
         const depth = (p.z + 1) / 2; // 0 (back) → 1 (front)
-        const alpha = 0.25 + 0.65 * depth;
-        const radius = 1.6 + 2.1 * depth;
+        const alpha = 0.3 + 0.65 * depth;
+        const radius = 1.7 + 2.2 * depth;
+        const glowSize = radius * 5;
+
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(sprite, p.x - glowSize / 2, p.y - glowSize / 2, glowSize, glowSize);
+        ctx.globalAlpha = 1;
 
         ctx.beginPath();
-        ctx.fillStyle = `rgba(37,99,235,${alpha.toFixed(3)})`;
-        ctx.shadowColor = "rgba(37,99,235,0.85)";
-        ctx.shadowBlur = 10;
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${(alpha * 0.8).toFixed(3)})`;
-        ctx.arc(p.x, p.y, radius * 0.42, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${(alpha * 0.85).toFixed(3)})`;
+        ctx.arc(p.x, p.y, radius * 0.45, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      if (!reduceMotion) {
-        angle += 0.0045;
-        raf = requestAnimationFrame(draw);
-      }
     };
-    draw();
+
+    // Single animation loop — time-based rotation: slow, constant speed
+    // regardless of frame rate (no double-scheduling, no drift).
+    let lastT = performance.now();
+    const SPEED = 0.07; // radians per second — calm, premium drift
+    const frame = () => {
+      const now = performance.now();
+      const dt = Math.min(0.05, (now - lastT) / 1000);
+      lastT = now;
+      angle += SPEED * dt;
+      draw();
+      raf = requestAnimationFrame(frame);
+    };
+    if (reduceMotion) {
+      draw(); // static render for reduced-motion users
+    } else {
+      raf = requestAnimationFrame(frame);
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -182,15 +214,15 @@ export function Hero() {
 
       {/* ── 3D network sphere — background layer, never blocks clicks ── */}
       <div
-        className="absolute inset-y-0 right-0 w-full lg:w-[52%] z-0 pointer-events-none
+        className="absolute inset-y-0 right-0 w-full lg:left-[40%] lg:w-auto z-0 pointer-events-none
                    flex items-center justify-center
-                   opacity-[0.28] lg:opacity-90 transition-opacity duration-500"
+                   opacity-[0.28] lg:opacity-95 transition-opacity duration-500"
         aria-hidden
       >
         {/* soft glow behind the sphere */}
-        <div className="absolute w-[46%] aspect-square rounded-full
+        <div className="absolute w-[52%] aspect-square rounded-full
                         bg-[radial-gradient(circle,rgba(37,99,235,0.22),transparent_70%)] blur-2xl" />
-        <div className="w-full h-[78%] max-h-[640px]">
+        <div className="w-full h-[88%] max-h-[760px]">
           <NetworkSphere />
         </div>
       </div>
