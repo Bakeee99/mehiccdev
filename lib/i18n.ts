@@ -45,26 +45,26 @@ export const translations = {
     services: {
       label:    "Šta radimo",
       heading:  "Naše Usluge",
-      subtitle: "Od prve linije koda do finalne reklame — pokrivamo cijeli digitalni spektar koji vaš biznis treba.",
+      subtitle: "Sajt, aplikacija i marketing na jednom mjestu — umjesto da žonglirate između tri različita izvođača.",
       items: [
         {
           title:    "Webflow Development",
-          desc:     "Vizualno impresivni, brzinski optimizirani sajtovi koji konvertuju posjetioce u kupce — bez kompromisa u dizajnu.",
+          desc:     "Brzi, moderni sajtovi koje kasnije sami uređujete — bez zvanja programera za svaku sitnicu. Dizajn koji liči na vaš brend, a ne na šablon.",
           features: ["CMS & e-commerce", "SEO optimizacija", "Animacije & micro-interactions", "Performanse 95+"],
         },
         {
           title:    "Custom Web Aplikacije",
-          desc:     "Skalabilne React/Next.js aplikacije prilagođene vašim poslovnim procesima — od MVP-a do enterprise platformi.",
+          desc:     "Rezervacije, evidencije, admin paneli — aplikacija građena oko načina na koji vaša firma stvarno radi, i spremna da raste s njom.",
           features: ["React / Next.js 14", "REST & GraphQL API", "Autentifikacija", "Deployment & DevOps"],
         },
         {
           title:    "Digitalni Marketing",
-          desc:     "Data-driven strategije koje povećavaju vidljivost brenda, grade zajednicu i generiraju mjerljive rezultate.",
+          desc:     "Objave, reklame i strategija koje dovode upite, a ne samo lajkove. Svaki mjesec znate šta je urađeno i šta je od toga stiglo.",
           features: ["Paid Ads (Meta, Google)", "Content strategija", "Community management", "Analitika & izvještaji"],
         },
         {
           title:    "AI Prompting & Integracije",
-          desc:     "Iskoristite moć velikih jezičnih modela. Od automatizacije do naprednih AI funkcionalnosti u vašem produktu.",
+          desc:     "Chatbot koji odgovara kupcima, automatski izvještaji, brža obrada upita — AI uposlen tamo gdje vam stvarno štedi vrijeme.",
           features: ["GPT / Claude integracije", "AI automatizacija", "Custom chatbotovi", "Prompt optimizacija"],
         },
       ],
@@ -86,19 +86,19 @@ export const translations = {
     about: {
       label:    "Tim",
       heading:  "Ko smo mi",
-      subtitle: "Dvoje stručnjaka s jednom misijom — pomoći ambicioznim brendovima da dominiraju digitalnim prostorom.",
+      subtitle: "Developer i marketer u istom timu: jedan gradi, drugi dovodi klijente. Razgovarate direktno s ljudima koji rade posao — bez posrednika.",
       photoHint: "Vaša slika ovdje",
       members: [
         {
           name: "Bakir Mehić",
           role: "Lead Developer & UI/UX Architect",
-          bio:  "Gradim digitalna iskustva koja oduzimaju dah — od preciznih Webflow sajtova do kompleksnih custom web aplikacija. Specijaliziran za AI Prompt Engineering i QA Automatizaciju koja eliminira bugove prije produkcije.",
+          bio:  "Vodim projekat od prve skice do objave — Webflow sajtovi, custom Next.js aplikacije i QA testiranje koje hvata greške prije nego što ih vaši kupci vide. Zadnji veći projekat: kompletna rent-a-car aplikacija koja danas radi u produkciji.",
           tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automatizacija"],
         },
         {
           name: "Nedim Kupusija",
           role: "Digital Marketing & Social Media Manager",
-          bio:  "Pomažem brendovima da pronađu pravi glas u digitalnom prostoru. Kroz data-driven strategije, kreativni sadržaj i precizno targetiranje gradimo online prisustvo koje generira stvarne rezultate.",
+          bio:  "Vodim društvene mreže i reklame tako da se svaki uloženi euro može pratiti: šta je objavljeno, ko je to vidio i koliko je upita stiglo. Bez marketinškog žargona — jasan plan i mjesečni izvještaj koji se razumije iz prve.",
           tags: ["Brand Scaling", "Content Strategija", "Online Optimizacija"],
         },
       ],
@@ -106,14 +106,14 @@ export const translations = {
     portfolio: {
       label:    "Naš rad",
       heading:  "Portfolio",
-      subtitle: "Svaki projekt je pažljivo izgrađen s jasnim ciljem — izvrsni digitalni rezultati.",
+      subtitle: "Umjesto obećanja — projekti koje možete otvoriti i probati. Evo dijela onoga što smo izgradili.",
       featured: "Izdvojeno",
       viewProject: "Pogledaj projekat",
       details:  "Detalji projekta",
       items: [
-        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",  category: "Webflow Development",  desc: "Profesionalni medicinski website za hiperbaričnu terapiju — optimiziran za konverzije i lokalni SEO." },
-        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Klijent", category: "Web Development",      desc: "Visoko-konvertirajuća landing page sa naprednom integracijom rezervacionog sistema." },
-        { title: "Fitness Trainer Website",  client: "Personal Trainer",   category: "UI/UX & Development",  desc: "Dinamičan osobni brend website za fitness trenera sa online booking sistemom." },
+        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",  category: "Webflow Development",  desc: "Sajt centra za hiperbaričnu terapiju u Mostaru: jasno objašnjene usluge, brzo učitavanje i lokalni SEO koji dovodi pacijente iz Google pretrage." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Klijent", category: "Web Development",      desc: "Landing stranica s rezervacijskim sistemom — posjetilac odabere vozilo i termin, vlasnik dobije spreman upit sa svim podacima." },
+        { title: "Fitness Trainer Website",  client: "Personal Trainer",   category: "UI/UX & Development",  desc: "Sajt ličnog brenda za fitness trenera, s online zakazivanjem termina umjesto dogovaranja porukama." },
       ],
     },
     saas: {
@@ -242,26 +242,26 @@ export const translations = {
     services: {
       label:    "What we do",
       heading:  "Our Services",
-      subtitle: "From the first line of code to the final ad — we cover the entire digital spectrum your business needs.",
+      subtitle: "Website, app and marketing under one roof — instead of juggling three different vendors.",
       items: [
         {
           title:    "Webflow Development",
-          desc:     "Visually stunning, speed-optimized websites that convert visitors into customers — with no compromise on design.",
+          desc:     "Fast, modern websites you can edit yourself — no calling a developer for every small change. Design that looks like your brand, not a template.",
           features: ["CMS & e-commerce", "SEO optimization", "Animations & micro-interactions", "Performance 95+"],
         },
         {
           title:    "Custom Web Apps",
-          desc:     "Scalable React/Next.js applications tailored to your business processes — from MVP to enterprise platforms.",
+          desc:     "Bookings, records, admin panels — an app built around how your business actually works, and ready to grow with it.",
           features: ["React / Next.js 14", "REST & GraphQL API", "Authentication", "Deployment & DevOps"],
         },
         {
           title:    "Digital Marketing",
-          desc:     "Data-driven strategies that boost brand visibility, build community, and generate measurable results.",
+          desc:     "Posts, ads and strategy that bring in inquiries, not just likes. Every month you know what was done and what came of it.",
           features: ["Paid Ads (Meta, Google)", "Content strategy", "Community management", "Analytics & reporting"],
         },
         {
           title:    "AI Prompting & Integrations",
-          desc:     "Harness the power of large language models. From automation to advanced AI features built into your product.",
+          desc:     "A chatbot that answers customers, automated reports, faster inquiry handling — AI put to work where it actually saves you time.",
           features: ["GPT / Claude integrations", "AI automation", "Custom chatbots", "Prompt optimization"],
         },
       ],
@@ -283,19 +283,19 @@ export const translations = {
     about: {
       label:    "Team",
       heading:  "Who we are",
-      subtitle: "Two experts with one mission — helping ambitious brands dominate the digital space.",
+      subtitle: "A developer and a marketer on the same team: one builds, the other brings in clients. You talk directly to the people doing the work — no middlemen.",
       photoHint: "Your photo here",
       members: [
         {
           name: "Bakir Mehić",
           role: "Lead Developer & UI/UX Architect",
-          bio:  "I build breathtaking digital experiences — from precise Webflow sites to complex custom web apps. Specialized in AI Prompt Engineering and QA Automation that eliminates bugs before production.",
+          bio:  "I take projects from first sketch to launch — Webflow sites, custom Next.js apps, and QA testing that catches bugs before your customers do. Most recent build: a complete rent-a-car application now running in production.",
           tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automation"],
         },
         {
           name: "Nedim Kupusija",
           role: "Digital Marketing & Social Media Manager",
-          bio:  "I help brands find their true voice in the digital space. Through data-driven strategies, creative content, and precise targeting, we build an online presence that generates real results.",
+          bio:  "I run social media and ads so every euro can be tracked: what was posted, who saw it, and how many inquiries it brought. No marketing jargon — a clear plan and a monthly report you can actually read.",
           tags: ["Brand Scaling", "Content Strategy", "Online Optimization"],
         },
       ],
@@ -303,14 +303,14 @@ export const translations = {
     portfolio: {
       label:    "Our work",
       heading:  "Portfolio",
-      subtitle: "Every project is carefully crafted with a clear goal — exceptional digital results.",
+      subtitle: "Instead of promises — projects you can open and try. Here's some of what we've built.",
       featured: "Featured",
       viewProject: "View project",
       details:  "Project details",
       items: [
-        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",   category: "Webflow Development",  desc: "Professional medical website for hyperbaric therapy — optimized for conversions and local SEO." },
-        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Client",   category: "Web Development",      desc: "High-converting landing page with advanced booking system integration." },
-        { title: "Fitness Trainer Website",  client: "Personal Trainer",    category: "UI/UX & Development",  desc: "Dynamic personal brand website for a fitness trainer with an online booking system." },
+        { title: "OxyBaric Mostar",          client: "oxybaricmostar.ba",   category: "Webflow Development",  desc: "Website for a hyperbaric therapy center in Mostar: clearly explained treatments, fast loading, and local SEO that brings patients in from Google search." },
+        { title: "Rent-a-Car Landing Page",  client: "Rent-a-Car Client",   category: "Web Development",      desc: "Landing page with a booking system — visitors pick a car and dates, the owner receives a ready-to-answer inquiry with all the details." },
+        { title: "Fitness Trainer Website",  client: "Personal Trainer",    category: "UI/UX & Development",  desc: "Personal brand site for a fitness trainer, with online session booking instead of back-and-forth messaging." },
       ],
     },
     saas: {

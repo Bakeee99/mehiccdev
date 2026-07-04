@@ -117,8 +117,12 @@ export function Results() {
   // Chart geometry (viewBox 800 x 240)
   const linePts = "M40,200 L192,170 L344,140 L496,95 L648,55 L760,25";
   const areaPts = "M40,210 L40,200 L192,170 L344,140 L496,95 L648,55 L760,25 L760,210 Z";
-  const dots = [
-    [40, 200], [192, 170], [344, 140], [496, 95], [648, 55],
+  // All 6 data points (last one is the highlighted "end" dot).
+  // Rendered as HTML (positioned in %), not SVG circles — with
+  // preserveAspectRatio="none" SVG circles get squashed into ellipses
+  // on narrow screens. HTML dots stay perfectly round at any width.
+  const points: [number, number][] = [
+    [40, 200], [192, 170], [344, 140], [496, 95], [648, 55], [760, 25],
   ];
 
   return (
@@ -166,11 +170,11 @@ export function Results() {
         </div>
 
         {/* Gauges */}
-        <div ref={gaugesRef} className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-16">
+        <div ref={gaugesRef} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 mb-16">
           {d.gauges.map((g, i) => (
             <div
               key={g.lbl}
-              className="group relative text-center rounded-[22px] p-7 bg-[var(--surface)] border border-[var(--border)]
+              className="group relative text-center rounded-[22px] p-4 sm:p-7 bg-[var(--surface)] border border-[var(--border)]
                          backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5
                          hover:border-brand-600/40 hover:shadow-2xl hover:shadow-brand-600/15"
             >
@@ -182,8 +186,8 @@ export function Results() {
                   ▲ {d.top}
                 </span>
               )}
-              <div className="relative w-[130px] h-[130px] mx-auto mb-4">
-                <svg width="130" height="130" viewBox="0 0 130 130" style={{ transform: "rotate(-90deg)" }}>
+              <div className="relative w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] mx-auto mb-4">
+                <svg className="w-full h-full" viewBox="0 0 130 130" style={{ transform: "rotate(-90deg)" }}>
                   <circle cx="65" cy="65" r="52" fill="none" stroke="var(--border)" strokeWidth="9" />
                   <circle
                     cx="65" cy="65" r="52" fill="none" stroke="url(#ringGrad)" strokeWidth="9" strokeLinecap="round"
@@ -195,7 +199,7 @@ export function Results() {
                     }}
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center text-[30px] font-extrabold tracking-tight text-[var(--text)]">
+                <div className="absolute inset-0 flex items-center justify-center text-2xl sm:text-[30px] font-extrabold tracking-tight text-[var(--text)]">
                   <Counter target={g.val} inView={gaugesIn} suffix="%" />
                 </div>
               </div>
@@ -220,11 +224,11 @@ export function Results() {
             </div>
           </div>
 
-          <div className="relative h-[240px]">
+          <div className="relative h-[190px] sm:h-[240px]">
             <svg viewBox="0 0 800 240" preserveAspectRatio="none" className="w-full h-full overflow-visible">
               {/* gridlines */}
               {[60, 120, 180].map((y) => (
-                <line key={y} x1="0" y1={y} x2="800" y2={y} stroke="var(--border)" strokeWidth="1" strokeDasharray="3 5" />
+                <line key={y} x1="0" y1={y} x2="800" y2={y} stroke="var(--border)" strokeWidth="1" strokeDasharray="3 5" vectorEffect="non-scaling-stroke" />
               ))}
               {/* area */}
               <path
@@ -240,35 +244,47 @@ export function Results() {
                 strokeWidth="3.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
                 style={{
                   strokeDasharray: 1400,
                   strokeDashoffset: chartIn ? 0 : 1400,
                   transition: "stroke-dashoffset 2s cubic-bezier(.4,0,.2,1) .2s",
                 }}
               />
-              {/* dots */}
-              {dots.map(([x, y], i) => (
-                <circle
-                  key={i} cx={x} cy={y} r="5" fill="var(--bg)" stroke="#60A5FA" strokeWidth="3"
-                  style={{ opacity: chartIn ? 1 : 0, transition: `opacity .4s ease ${0.3 + i * 0.18}s` }}
+            </svg>
+            {/* data dots — HTML, positioned in % so they stay round on every screen width */}
+            {points.map(([x, y], i) => {
+              const isEnd = i === points.length - 1;
+              return (
+                <span
+                  key={i}
+                  aria-hidden
+                  className={
+                    isEnd
+                      ? "absolute w-3.5 h-3.5 rounded-full bg-[#60A5FA] shadow-[0_0_10px_#60A5FA]"
+                      : "absolute w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[var(--bg)] border-[3px] border-[#60A5FA]"
+                  }
+                  style={{
+                    left: `${(x / 800) * 100}%`,
+                    top: `${(y / 240) * 100}%`,
+                    transform: "translate(-50%, -50%)",
+                    opacity: chartIn ? 1 : 0,
+                    transition: isEnd ? "opacity .5s ease 1.6s" : `opacity .4s ease ${0.3 + i * 0.18}s`,
+                  }}
                 />
+              );
+            })}
+            <div className="relative h-5 mt-2.5" aria-hidden>
+              {d.months.map((m, i) => (
+                <span
+                  key={m}
+                  className="absolute -translate-x-1/2 whitespace-nowrap text-[11px] sm:text-xs font-medium text-[var(--text-muted)]"
+                  style={{ left: `${(points[i][0] / 800) * 100}%` }}
+                >
+                  {m}
+                </span>
               ))}
-              {/* end glow dot */}
-              <circle
-                cx="760" cy="25" r="7" fill="#60A5FA"
-                style={{ opacity: chartIn ? 1 : 0, transition: "opacity .5s ease 1.6s", filter: "drop-shadow(0 0 8px #60A5FA)" }}
-              />
-            </svg>
-            <svg viewBox="0 0 800 20" preserveAspectRatio="none" className="w-full h-5 mt-1.5">
-              {d.months.map((m, i) => {
-                const xs = [40, 192, 344, 496, 648, 760];
-                return (
-                  <text key={m} x={xs[i]} y="14" textAnchor="middle" className="fill-[var(--text-muted)]" style={{ fontSize: "12px", fontWeight: 500 }}>
-                    {m}
-                  </text>
-                );
-              })}
-            </svg>
+            </div>
           </div>
         </div>
       </div>

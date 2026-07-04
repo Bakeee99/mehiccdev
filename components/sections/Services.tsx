@@ -6,11 +6,10 @@
 
 "use client";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
 import { Globe, AppWindow, LineChart, BrainCircuit } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
+import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // Icons + gradient map by index (order matches i18n items)
@@ -23,8 +22,9 @@ const META = [
 
 export function Services() {
   const { t } = useLanguage();
-  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
-  const [seen, setSeen] = useState(false);
+  // One reveal per motion block — fires exactly once, survives language/theme switches
+  const revealHead = useReveal();
+  const revealGrid = useReveal();
 
   return (
     <section id="usluge" className="py-28 lg:py-36 relative overflow-hidden">
@@ -34,10 +34,7 @@ export function Services() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealHead}
           className="text-center mb-16"
         >
           <motion.div variants={fadeUp} className="flex justify-center mb-5">
@@ -60,10 +57,7 @@ export function Services() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealGrid}
           className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5"
         >
           {t.services.items.map((service, i) => {
@@ -72,10 +66,11 @@ export function Services() {
               <motion.article
                 key={service.title}
                 variants={scaleIn}
+                whileHover={{ y: -8 }}
                 className="group relative flex flex-col p-6 rounded-2xl border border-[var(--border)]
                            bg-[var(--surface)] hover:border-brand-600/40 dark:hover:border-brand-500/30
-                           transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/10
-                           hover:-translate-y-2 cursor-default overflow-hidden"
+                           transition-[border-color,box-shadow] duration-300 hover:shadow-2xl hover:shadow-brand-600/10
+                           cursor-default overflow-hidden"
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${META[i].accent}
                                  opacity-0 group-hover:opacity-100 transition-opacity duration-300`} aria-hidden />

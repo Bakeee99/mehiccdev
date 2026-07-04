@@ -15,13 +15,13 @@
 
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Car, Crown, Rocket, TrendingUp, Star,
   Gift, Check, ArrowRight,
 } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
+import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete app for your company — like the Maximum Rent a Car we built.",
-        price: "2,200", monthly: "99", gift: "Rast",
+        price: "2,200", monthly: "99", gift: "Growth",
         features: [
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
@@ -164,7 +164,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "An app without limits — built exactly around your process.",
-        price: "4,500", monthly: "179", from: true, gift: "Dominacija",
+        price: "4,500", monthly: "179", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
@@ -206,8 +206,13 @@ const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING"
 
 export function Pricing() {
   const { lang } = useLanguage();
-  // Keeps the section visible after a language/theme switch (no re-hide on re-render)
-  const [seen, setSeen] = useState(false);
+  // One reveal per motion block — fires exactly once, survives language/theme switches
+  const revealAppsHead = useReveal();
+  const revealAppsGrid = useReveal();
+  const revealAppsNote = useReveal();
+  const revealMktHead  = useReveal();
+  const revealMktGrid  = useReveal();
+  const revealMktNote  = useReveal();
   const d = PRICING[(lang as "bs" | "en")] ?? PRICING.bs;
 
   return (
@@ -224,10 +229,7 @@ export function Pricing() {
         {/* ════ WEB APPLICATION PACKAGES ════ */}
         <motion.div
           variants={staggerContainer}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealAppsHead}
           className="text-center mb-14"
         >
           <motion.div variants={fadeUp} className="flex justify-center mb-5">
@@ -251,10 +253,7 @@ export function Pricing() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealAppsGrid}
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
         >
           {d.apps.map((plan, i) => {
@@ -264,8 +263,9 @@ export function Pricing() {
               <motion.div
                 key={plan.name}
                 variants={scaleIn}
+                whileHover={{ y: -8 }}
                 className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]/80 backdrop-blur-sm
-                            transition-all duration-300 hover:-translate-y-2
+                            transition-[border-color,box-shadow] duration-300
                             ${popular
                               ? "border-2 border-brand-600 shadow-2xl shadow-brand-600/20"
                               : "border border-[var(--border)] hover:shadow-xl hover:shadow-brand-600/10"}`}
@@ -345,10 +345,7 @@ export function Pricing() {
 
         <motion.p
           variants={fadeUp}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealAppsNote}
           className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
         >
           {d.appNote}
@@ -357,10 +354,7 @@ export function Pricing() {
         {/* ════ MARKETING PACKAGES ════ */}
         <motion.div
           variants={staggerContainer}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealMktHead}
           className="text-center mb-14 mt-24"
         >
           <motion.div variants={fadeUp} className="flex justify-center mb-5">
@@ -383,10 +377,7 @@ export function Pricing() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealMktGrid}
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
         >
           {d.mkt.map((plan, i) => {
@@ -396,8 +387,9 @@ export function Pricing() {
               <motion.div
                 key={plan.name}
                 variants={scaleIn}
+                whileHover={{ y: -8 }}
                 className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]/80 backdrop-blur-sm
-                            transition-all duration-300 hover:-translate-y-2
+                            transition-[border-color,box-shadow] duration-300
                             ${popular
                               ? "border-2 border-green-500 shadow-2xl shadow-green-500/20"
                               : "border border-green-500/20 hover:shadow-xl hover:shadow-green-500/10"}`}
@@ -454,10 +446,7 @@ export function Pricing() {
 
         <motion.p
           variants={fadeUp}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealMktNote}
           className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
         >
           {d.mktNote}

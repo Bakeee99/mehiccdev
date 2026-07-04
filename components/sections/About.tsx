@@ -15,11 +15,10 @@
 
 "use client";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
 import { Code2, Megaphone, ImageIcon, Linkedin } from "lucide-react";
-import { staggerContainerSlow, fadeUp, slideInLeft, slideInRight, viewportOnce } from "@/lib/animations";
+import { staggerContainerSlow, fadeUp, slideInLeft, slideInRight } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Photo config — leave src empty ("") to show the placeholder ────────────────
@@ -30,8 +29,9 @@ const PHOTOS = [
 
 export function About() {
   const { t } = useLanguage();
-  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
-  const [seen, setSeen] = useState(false);
+  // One reveal per motion block — fires exactly once, survives language/theme switches
+  const revealHead = useReveal();
+  const revealGrid = useReveal();
 
   return (
     <section id="o-nama" className="py-28 lg:py-36 relative overflow-hidden">
@@ -41,10 +41,7 @@ export function About() {
         {/* Header */}
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealHead}
           className="text-center mb-16"
         >
           <motion.div variants={fadeUp} className="flex justify-center mb-5">
@@ -68,10 +65,7 @@ export function About() {
         {/* Team cards */}
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealGrid}
           className="grid md:grid-cols-2 gap-6 lg:gap-8"
         >
           {t.about.members.map((member, i) => {
@@ -84,10 +78,9 @@ export function About() {
                 rel="noopener noreferrer"
                 aria-label={member.name + " LinkedIn"}
                 variants={i === 0 ? slideInLeft : slideInRight}
-                whileHover={{ boxShadow: "0 0 0 2px #2563EB, 0 20px 44px rgba(37,99,235,0.3)" }}
+                whileHover={{ y: -4, boxShadow: "0 0 0 2px #2563EB, 0 20px 44px rgba(37,99,235,0.3)" }}
                 className="group relative block rounded-2xl border border-[var(--border)]
-                           bg-[var(--surface)] overflow-hidden transition-all duration-300
-                           hover:-translate-y-1"
+                           bg-[var(--surface)] overflow-hidden"
               >
                 {/* ── Photo area (zooms on hover) ─────────────────────────────── */}
                 <div className="relative h-72 overflow-hidden">

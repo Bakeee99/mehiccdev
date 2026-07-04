@@ -6,11 +6,10 @@
 
 "use client";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
+import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // Visual meta per project (order matches i18n items)
@@ -22,8 +21,9 @@ const META = [
 
 export function Portfolio() {
   const { t } = useLanguage();
-  // Keeps sections visible after a language/theme switch (no re-hide on re-render)
-  const [seen, setSeen] = useState(false);
+  // One reveal per motion block — fires exactly once, survives language/theme switches
+  const revealHead = useReveal();
+  const revealGrid = useReveal();
 
   return (
     <section id="portfolio" className="py-28 lg:py-36 relative overflow-hidden">
@@ -32,10 +32,7 @@ export function Portfolio() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealHead}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
         >
           <div>
@@ -60,10 +57,7 @@ export function Portfolio() {
 
         <motion.div
           variants={staggerContainerSlow}
-          initial={seen ? false : "hidden"}
-          whileInView="visible"
-          viewport={viewportOnce}
-          onViewportEnter={() => setSeen(true)}
+          {...revealGrid}
           className="grid md:grid-cols-2 xl:grid-cols-3 gap-6"
         >
           {t.portfolio.items.map((project, i) => {
@@ -73,10 +67,10 @@ export function Portfolio() {
               <motion.article
                 key={project.title}
                 variants={scaleIn}
+                whileHover={{ y: -6 }}
                 className="group relative rounded-2xl border border-[var(--border)] bg-[var(--surface)]
                            overflow-hidden hover:border-brand-600/30 dark:hover:border-brand-500/30
-                           transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/10
-                           hover:-translate-y-1.5"
+                           transition-[border-color,box-shadow] duration-300 hover:shadow-2xl hover:shadow-brand-600/10"
               >
                 <div className={`relative h-48 bg-gradient-to-br ${meta.gradient} overflow-hidden`}>
                   <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20" aria-hidden />
