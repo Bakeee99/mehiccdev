@@ -18,15 +18,16 @@
 
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowUpRight, Check, Star } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, Check, Star, ZoomIn, X } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Screenshot slotovi (prazno = CSS placeholder) ────────────────────────────
-const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png"; // npr. "/portfolio/maximum-naslovna.png"
-const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png"; // npr. "/portfolio/maximum-admin-mobitel.png"
+const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png";
+const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png";
 const FEATURE_URL = "https://maximum-rent.vercel.app";
 
 // ── Bilingual content ────────────────────────────────────────────────────────
@@ -37,6 +38,7 @@ type Content = {
   stats: { v: string; l: string }[];
   features: string[];
   ctaLive: string; ctaWant: string; livePill: string;
+  zoomHint: string; closeLabel: string;
   minis: Mini[];
 };
 
@@ -64,6 +66,8 @@ const T: Record<"bs" | "en", Content> = {
     ctaLive: "Pogledaj uživo",
     ctaWant: "Želim ovakvu aplikaciju",
     livePill: "Uživo",
+    zoomHint: "Klikni za uvećanje",
+    closeLabel: "Zatvori",
     minis: [
       { title: "OxyBaric Mostar", cat: "Webflow · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
       { title: "Roobet Rewards", cat: "UI/UX Dizajn", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed." },
@@ -93,6 +97,8 @@ const T: Record<"bs" | "en", Content> = {
     ctaLive: "See it live",
     ctaWant: "I want an app like this",
     livePill: "Live",
+    zoomHint: "Click to enlarge",
+    closeLabel: "Close",
     minis: [
       { title: "OxyBaric Mostar", cat: "Webflow · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
       { title: "Roobet Rewards", cat: "UI/UX Design", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward." },
@@ -163,16 +169,32 @@ function MobilePlaceholder() {
 }
 
 /* ── Laptop + telefon kompozicija ───────────────────────────────────────── */
-function DeviceShowcase({ title }: { title: string }) {
+function DeviceShowcase({
+  title, zoomHint, onOpen,
+}: { title: string; zoomHint: string; onOpen: (src: string, alt: string) => void }) {
   return (
     <div className="relative pr-[13%] sm:pr-[15%]">
       {/* LAPTOP */}
       <div className="relative">
         <div className="rounded-t-2xl border border-[var(--border)] bg-zinc-900 dark:bg-zinc-950 p-2 sm:p-2.5 pb-0">
-          <div className="rounded-t-lg overflow-hidden aspect-[16/10] bg-[#070C1D]">
+          <div className="relative rounded-t-lg overflow-hidden aspect-[16/10] bg-[#070C1D]">
             {SCREEN_DESKTOP ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={SCREEN_DESKTOP} alt={title} className="w-full h-full object-cover object-top" />
+              <button
+                type="button"
+                onClick={() => onOpen(SCREEN_DESKTOP, title)}
+                aria-label={zoomHint}
+                className="group/zoom block w-full h-full cursor-zoom-in"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={SCREEN_DESKTOP} alt={title} className="w-full h-full object-cover object-top" />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0
+                                 transition-all duration-300 group-hover/zoom:bg-black/35 group-hover/zoom:opacity-100">
+                  <span className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold text-white
+                                   bg-black/50 border border-white/20">
+                    <ZoomIn size={13} /> {zoomHint}
+                  </span>
+                </span>
+              </button>
             ) : (
               <DesktopPlaceholder />
             )}
@@ -193,8 +215,21 @@ function DeviceShowcase({ title }: { title: string }) {
           {/* notch */}
           <span className="absolute top-1 left-1/2 -translate-x-1/2 w-[36%] h-[9px] rounded-full bg-black/80 z-10" aria-hidden />
           {SCREEN_MOBILE ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={SCREEN_MOBILE} alt={`${title} · admin`} className="w-full h-full object-cover object-top" />
+            <button
+              type="button"
+              onClick={() => onOpen(SCREEN_MOBILE, `${title} · admin`)}
+              aria-label={zoomHint}
+              className="group/zoom block w-full h-full cursor-zoom-in"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={SCREEN_MOBILE} alt={`${title} · admin`} className="w-full h-full object-cover object-top" />
+              <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0
+                               transition-all duration-300 group-hover/zoom:bg-black/35 group-hover/zoom:opacity-100">
+                <span className="p-2 rounded-lg bg-black/50 border border-white/20 text-white">
+                  <ZoomIn size={13} />
+                </span>
+              </span>
+            </button>
           ) : (
             <MobilePlaceholder />
           )}
@@ -212,6 +247,20 @@ export function Portfolio() {
   const revealHead    = useReveal();
   const revealFeature = useReveal();
   const revealSide    = useReveal();
+
+  // Lightbox: klik na screenshot u mockupu otvara sliku preko cijelog ekrana
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLightbox(null); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox]);
 
   return (
     <section id="portfolio" className="py-28 lg:py-36 relative overflow-hidden">
@@ -324,7 +373,11 @@ export function Portfolio() {
                 className="[transform:perspective(1300px)_rotateX(4deg)] group-hover:[transform:perspective(1300px)_rotateX(0deg)_translateY(-4px)]
                            transition-transform duration-500 will-change-transform"
               >
-                <DeviceShowcase title={d.title} />
+                <DeviceShowcase
+                  title={d.title}
+                  zoomHint={d.zoomHint}
+                  onOpen={(imgSrc, imgAlt) => setLightbox({ src: imgSrc, alt: imgAlt })}
+                />
               </div>
             </div>
           </motion.article>
@@ -396,6 +449,44 @@ export function Portfolio() {
           </motion.div>
         </div>
       </div>
+
+      {/* ── Lightbox: uvećani screenshot preko cijelog ekrana ─────────────── */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={lightbox.alt}
+            onClick={() => setLightbox(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 cursor-zoom-out"
+          >
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              aria-label={d.closeLabel}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-xl flex items-center justify-center
+                         bg-white/10 border border-white/20 text-white
+                         transition-colors duration-200 hover:bg-white/20"
+            >
+              <X size={18} />
+            </button>
+            <motion.img
+              initial={{ scale: 0.94, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              src={lightbox.src}
+              alt={lightbox.alt}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-[94vw] max-h-[88vh] rounded-xl border border-white/15 shadow-2xl object-contain cursor-default"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

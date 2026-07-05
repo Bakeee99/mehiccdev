@@ -1,56 +1,34 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — VELIKI PERF PAKET: mobilna dijeta za cijeli sajt
+  mehiccdev — PUTANJE SLIKA TRAJNO UPISANE U KOD
 ════════════════════════════════════════════════════════════════════
 
-Ovaj ZIP sadrži SVE sekcije (najnovije verzije svega do sada) +
-lib/useCoarsePointer.ts. Raspakuj preko svega, zamijeni sve.
-(lib/useReveal.ts iz ranijeg paketa i dalje mora postojati.)
+ŠTA JE U ZIP-u (2 fajla):
+  components/sections/Portfolio.tsx
+  components/sections/About.tsx
 
-────────────────────────────────────────────────────────────────────
-ŠTA JE OVAJ PUT NAĐENO (pravi razmjer problema)
-────────────────────────────────────────────────────────────────────
-Prebrojali smo skupe efekte na CIJELOJ stranici:
-  • ~20 elemenata sa staklom (backdrop-blur), uključujući SVE
-    kartice u cjenovniku
-  • 21 veliki zamućeni sloj (blur-3xl "sjaj" divovi po sekcijama)
+ŠTA JE PROMIJENJENO:
+Putanje do slika su sada TRAJNO upisane (više ih nijedna moja
+isporuka neće pregaziti praznim vrijednostima). Očekivani fajlovi:
 
-Svaki od njih je poseban GPU sloj koji telefon drži u memoriji i
-preračunava. Pojedinačno nevini, ZBIRNO su gušili i skrolanje i
-promjenu teme (tema mora prefarbati svaki taj sloj odjednom).
+  public/portfolio/maximum-naslovna.png        → laptop (naslovna)
+  public/portfolio/maximum-admin-mobitel.png   → telefon (admin)
+  public/portfolio/oxybaric.png                → OxyBaric kartica
+  public/portfolio/roobet.png                  → Roobet kartica
+  public/team/bakir.jpg                        → tvoja slika
+  public/team/nedim.jpg                        → Nedimova slika
 
-────────────────────────────────────────────────────────────────────
-ŠTA JE URAĐENO (izgled ostaje praktično identičan)
-────────────────────────────────────────────────────────────────────
-  1. Staklo (backdrop-blur) skinuto sa svih sitnih pilula i sa
-     kartica cjenovnika (tamo je bilo neprimjetno, a skupo).
-     Gdje staklo vizuelno znači (navbar, plutajuće kartice, pilule
-     preko slika u Portfoliju) ostaje SAMO NA DESKTOPU, a mobilni
-     dobija čvršću podlogu koja izgleda isto.
+VAŽNO, PROVJERI NAZIVE: ako se tvoji fajlovi zovu i MALO drugačije
+(npr. .jpg umjesto .png, veliko slovo, crtica), slika se neće
+prikazati. Dvije opcije: preimenuj fajl da bude identičan gore
+navedenom, ILI u kodu promijeni putanju (Portfolio.tsx vrh fajla i
+MINI_META; About.tsx u PHOTOS).
 
-  2. SVIH 21 zamućenih "sjaj" slojeva pretvoreno u radial gradijente:
-     isti mekani sjaj golim okom, ali nula filter troška, jer
-     gradijent grafička kartica crta besplatno, a blur mora računati.
-     Ovo drastično ubrzava i promjenu teme.
-
-  3. + sve iz prethodnog paketa (animacije miruju na touch
-     uređajima, navbar bez blura na mobitelu).
-
-────────────────────────────────────────────────────────────────────
-VAŽNO: KAKO TESTIRATI (možda je i ovo dio problema!)
-────────────────────────────────────────────────────────────────────
-Ako si performanse gledao preko "npm run dev" (dev server otvoren
-s telefona), znaj da je DEV MOD 5-10 PUTA SPORIJI od produkcije:
-bez optimizacija, s razvojnim alatima. Pravi test je:
-  1. Ubaci ovaj paket → git push
-  2. Sačekaj da Vercel objavi (1-2 min)
-  3. Otvori PRAVI mehiccdev.com na telefonu i tek to ocjenjuj.
+Ako neki fajl još ne postoji (npr. roobet.png), ta kartica će
+privremeno prikazati praznu/slomljenu sliku umjesto gradijenta,
+pa ili ubaci fajl ili vrati "" za taj jedan red.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA za sve
-  2. npm run dev (samo da se uvjeriš da radi) → git add . &&
-     git commit -m "perf: mobilna dijeta cijelog sajta" && git push
-  3. Testiraj PRODUKCIJU na telefonu (skrol + tema)
-
-Build verifikovan prije slanja: npm run build ✓
-Kontrolni sken: 0 preostalih blur-3xl, 0 backdrop-blur van desktopa.
+  1. Raspakuj u KORIJEN → "Zamijeni" DA
+  2. npm run dev → provjeri svih 6 slika (portfolio + tim)
+  3. git add . && git commit -m "chore: trajne putanje slika" && git push
 ════════════════════════════════════════════════════════════════════

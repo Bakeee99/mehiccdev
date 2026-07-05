@@ -28,8 +28,8 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Foto konfiguracija: ostavi src prazan ("") za placeholder ────────────────
 const PHOTOS = [
-  { src: "", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2 as LucideIcon,     linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
-  { src: "", gradient: "from-indigo-500 to-blue-500", initials: "NK", icon: Megaphone as LucideIcon, linkedin: "https://www.linkedin.com/in/nedim-kupusija-4632a533b/" },
+  { src: "/team/bakir.jpg", gradient: "from-blue-600 to-blue-400",   initials: "BM", icon: Code2 as LucideIcon,     linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
+  { src: "/team/nedim.jpg", gradient: "from-indigo-500 to-blue-500", initials: "NK", icon: Megaphone as LucideIcon, linkedin: "https://www.linkedin.com/in/nedim-kupusija-4632a533b/" },
 ];
 
 type Member = { name: string; role: string; bio: string; tags: string[] };
