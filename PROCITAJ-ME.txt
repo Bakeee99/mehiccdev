@@ -1,51 +1,18 @@
-════════════════════════════════════════════════════════════════════
-  mehiccdev — FOOTER v2: premium redizajn
-════════════════════════════════════════════════════════════════════
+════════════════════════════════════════════════
+ mehiccdev — NAVBAR v2.2: rub po mjeri
+════════════════════════════════════════════════
 
-Traži lib/useReveal.ts iz velikog paketa popravki.
+ŠTA JE U ZIP-u: components/sections/Navbar.tsx
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Footer.tsx
+ŠTA JE PROMIJENJENO:
+  • NA SKROLU: vraćen raniji izgled koji ti se svidio
+    (blagi plavi rub + jača pozadina i sjena).
+  • NA VRHU STRANICE: rub je sada još diskretniji
+    (25% prozirnosti), neutralan, jedva se naslućuje,
+    ne bode oči.
 
-────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO
-────────────────────────────────────────────────────────────────────
-  1. DŽINOVSKI "mehiccdev" WATERMARK koji viri iz samog dna footera:
-     providan, u brand plavoj, čisto dekorativan. Ovo je potpis-potez
-     koji footer pretvara iz spiska linkova u brend momenat.
+KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
+(provjeri OBA stanja: vrh stranice pa skrolaj)
+→ git add . && git commit -m "fix: navbar rubovi" && git push
 
-  2. NOVI TAGLINE, zadnja AI fraza na sajtu je otišla:
-     staro: "pretvara poslovne vizije u izvanredne digitalne realnosti"
-     novo:  "Sajt, aplikacija i marketing iz jedne ruke. Građeno u
-             Mostaru, za cijeli region."
-
-  3. ZELENI STATUS "Dostupni za nove projekte" s pulsirajućom
-     tačkicom, mali konverzijski signal na mjestu gdje ga niko ne
-     očekuje.
-
-  4. LINKOVI S MIKRO-INTERAKCIJOM: na hover se ispred linka izvuče
-     mala plava crtica. Kolona Usluge je usklađena s novim
-     redoslijedom sekcije (Web aplikacije prve), a Navigacija sada
-     ima i Cjenovnik.
-
-  5. KONTAKTI UREDNIJI: ime + uloga u piluli (Development/Marketing),
-     email, pa Instagram i LinkedIn ikonice koje se podignu na hover.
-
-  6. DONJA TRAKA: copyright lijevo, "Dizajnirano i razvijeno u
-     Mostaru" u sredini, "Na vrh ↑" desno (skrola na početak).
-
-Mobilno: kolone se slažu jedna ispod druge (brand → navigacija →
-usluge → kontakt), donja traka centrirana, watermark se skalira
-(17vw) pa je uredan i na malom ekranu.
-
-Tehnički: useReveal, self-contained BS/EN (stari t.footer ključevi u
-i18n.ts se više ne koriste), dark/light, bez crtica.
-
-KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → skrolaj do dna: watermark, hover na linkove,
-     "Na vrh", oba jezika, obje teme, telefon
-  3. git add . && git commit -m "feat: footer v2" && git push
-
-Build verifikovan prije slanja: npm run build ✓
-════════════════════════════════════════════════════════════════════
+Build verifikovan: npm run build ✓

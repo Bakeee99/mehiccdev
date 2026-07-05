@@ -1,329 +1,283 @@
 /**
  * components/sections/Hero.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Modern split hero:
- *   • Left  — badge, headline (with italic serif accent), subtitle, CTAs,
- *             slim inline stats row.
- *   • Right — rotating 3D "network sphere" of glowing dots (pure canvas,
- *             zero dependencies), sitting BEHIND content (pointer-events: none).
+ * Hero (v2, premium redizajn).
  *
- * The sphere is sized so it can never clip during rotation:
- *   max projected radius = scale × maxPerspective (≈1.09) + dot glow margin,
- *   kept safely below half of the canvas' smaller dimension.
+ * Staro: split layout s 3D sferom tačkica (canvas). Novo:
+ *   • AURORA pozadina: tri velika, spora, providna gradijentna oblaka u brand
+ *     plavoj + fini grid s radijalnom maskom. Nema canvasa, nema biblioteka.
+ *   • Centrirani tipografski hero sa snažnim naslovom:
+ *       "Vašem biznisu ne treba sajt. Treba mu sistem."
+ *   • ISKREN dokazni red umjesto izmišljenih brojki (15+, 100%…):
+ *     "Uživo u produkciji" pilule (Maximum, OxyBaric) + PageSpeed 100 značka
+ *     koja vodi na sekciju Rezultati.
+ *   • Dvije plutajuće glass kartice (samo desktop): notifikacija o novoj
+ *     rezervaciji i PageSpeed prsten, vizuelni jezik flagship sekcije.
  *
- * Respects prefers-reduced-motion (renders a static sphere).
- * Cleans up rAF + resize listeners on unmount.
+ * Animacije poštuju reduced-motion. Self-contained (BS/EN), dark/light,
+ * bez crtica, mobile-first (kartice sakrivene ispod lg, sve centrirano).
  */
 
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
+import { useEffect } from "react";
+import { motion, useReducedMotion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowRight, ArrowUpRight, ChevronDown, BellRing, Gauge } from "lucide-react";
 import { staggerContainer, fadeUp } from "@/lib/animations";
+import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-// ─── 3D network sphere (canvas) ──────────────────────────────────────────────
-function NetworkSphere() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+type Content = {
+  status: string; eyebrow: string;
+  h1a: string; h1b: string;
+  sub: string;
+  ctaPrimary: string; ctaSecondary: string;
+  liveLabel: string; liveProjects: string[];
+  psBadge: string;
+  notifTitle: string; notifBody: string;
+  gaugeLabel: string;
+};
+
+const T: Record<"bs" | "en", Content> = {
+  bs: {
+    status: "Dostupni za nove projekte",
+    eyebrow: "Digitalna agencija · Web · AI · Marketing",
+    h1a: "Vašem biznisu ne treba sajt.",
+    h1b: "Treba mu sistem.",
+    sub: "Web aplikacije koje primaju rezervacije, sajtovi koje sami uređujete i marketing koji dovodi upite. Sve iz jedne ruke, iz Mostara za cijeli region.",
+    ctaPrimary: "Započni projekat",
+    ctaSecondary: "Pogledaj naš rad",
+    liveLabel: "Uživo u produkciji",
+    liveProjects: ["Maximum Rent a Car", "OxyBaric Mostar"],
+    psBadge: "Google PageSpeed 100",
+    notifTitle: "Nova rezervacija",
+    notifBody: "Upit stigao vlasniku za 2 sekunde",
+    gaugeLabel: "PageSpeed",
+  },
+  en: {
+    status: "Available for new projects",
+    eyebrow: "Digital agency · Web · AI · Marketing",
+    h1a: "Your business doesn't need a website.",
+    h1b: "It needs a system.",
+    sub: "Web apps that take bookings, websites you can edit yourself, and marketing that brings inquiries. All from one team, from Mostar for the whole region.",
+    ctaPrimary: "Start a project",
+    ctaSecondary: "See our work",
+    liveLabel: "Live in production",
+    liveProjects: ["Maximum Rent a Car", "OxyBaric Mostar"],
+    psBadge: "Google PageSpeed 100",
+    notifTitle: "New booking",
+    notifBody: "Inquiry reached the owner in 2 seconds",
+    gaugeLabel: "PageSpeed",
+  },
+};
+
+/* ── Plutajuća kartica: dubinski parallax na miš + mekano lebdenje ──────────
+   Dva sloja transformacija:
+     • vanjski sloj prati miš kroz spring (opruga: bez trzaja, s inercijom);
+       "depth" određuje koliko se kartica pomjera, različit depth po kartici
+       daje osjećaj dubine (bliže = više, dalje = manje)
+     • unutrašnji sloj sporo lebdi po y osi uz jedva vidljivu rotaciju,
+       dugačak period (10s+) i easeInOut daju organski, gladak pokret
+   Reduced motion: sve statično.                                             */
+function FloatingCard({
+  children, className, depth, floatDur, delay, reduce,
+}: {
+  children: React.ReactNode; className: string;
+  depth: number; floatDur: number; delay: number; reduce: boolean;
+}) {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // ── Static geometry: Fibonacci sphere (evenly spread points) ──
-    const N = 110;
-    const pts3d: [number, number, number][] = [];
-    for (let i = 0; i < N; i++) {
-      const y = 1 - (i / (N - 1)) * 2;
-      const r = Math.sqrt(Math.max(0, 1 - y * y));
-      const th = i * 2.399963229728653; // golden angle
-      pts3d.push([Math.cos(th) * r, y, Math.sin(th) * r]);
-    }
-    // Pre-compute "network" links between nearby points (static, cheap)
-    const links: [number, number][] = [];
-    for (let i = 0; i < N; i++) {
-      for (let j = i + 1; j < N; j++) {
-        const dx = pts3d[i][0] - pts3d[j][0];
-        const dy = pts3d[i][1] - pts3d[j][1];
-        const dz = pts3d[i][2] - pts3d[j][2];
-        if (dx * dx + dy * dy + dz * dz < 0.16) links.push([i, j]);
-      }
-    }
-
-    let raf = 0;
-    let angle = 0.6;
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-    // Pre-rendered glow sprite — drawing a blurred shadow per dot per frame is
-    // extremely expensive; blitting one cached radial-gradient sprite is ~20× faster
-    // and makes the rotation perfectly smooth.
-    const sprite = document.createElement("canvas");
-    sprite.width = sprite.height = 64;
-    const sctx = sprite.getContext("2d")!;
-    const grad = sctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, "rgba(96,165,250,0.9)");
-    grad.addColorStop(0.35, "rgba(37,99,235,0.45)");
-    grad.addColorStop(1, "rgba(37,99,235,0)");
-    sctx.fillStyle = grad;
-    sctx.fillRect(0, 0, 64, 64);
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = Math.max(1, Math.round(rect.width * dpr));
-      canvas.height = Math.max(1, Math.round(rect.height * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduce) return;
+    const onMove = (e: MouseEvent) => {
+      mx.set(e.clientX / window.innerWidth - 0.5);
+      my.set(e.clientY / window.innerHeight - 0.5);
     };
-    resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [reduce, mx, my]);
 
-    const rotate = (
-      p: [number, number, number],
-      ax: number,
-      ay: number
-    ): [number, number, number] => {
-      const [x, y, z] = p;
-      const cy = Math.cos(ay), sy = Math.sin(ay);
-      const x1 = x * cy + z * sy;
-      const z1 = -x * sy + z * cy;
-      const cx = Math.cos(ax), sx = Math.sin(ax);
-      const y1 = y * cx - z1 * sx;
-      const z2 = y * sx + z1 * cx;
-      return [x1, y1, z2];
-    };
-
-    const draw = () => {
-      const w = canvas.width / dpr;
-      const h = canvas.height / dpr;
-      ctx.clearRect(0, 0, w, h);
-
-      const cx = w / 2;
-      const cy = h / 2;
-      // Anti-clipping: max perspective factor = dist/(dist - 0.55) ≈ 1.085.
-      // scale 0.44 × 1.085 ≈ 0.477 of min dimension + sprite margin < 0.5 → never clips.
-      const scale = Math.min(w, h) * 0.44;
-      const dist = 7;
-
-      const projected = pts3d.map((p) => {
-        const r = rotate(p, angle * 0.35, angle);
-        const persp = dist / (dist - r[2] * 0.55);
-        return {
-          x: cx + r[0] * scale * persp,
-          y: cy + r[1] * scale * persp,
-          z: r[2],
-        };
-      });
-
-      // Links — batched into a few alpha buckets (6 stroke calls instead of 100+)
-      ctx.lineWidth = 1;
-      const BUCKETS = 6;
-      const buckets: [number, number][][] = Array.from({ length: BUCKETS }, () => []);
-      for (const l of links) {
-        const z = (projected[l[0]].z + projected[l[1]].z) / 2;
-        const idx = Math.min(BUCKETS - 1, Math.max(0, Math.floor(((z + 1) / 2) * BUCKETS)));
-        buckets[idx].push(l);
-      }
-      for (let i = 0; i < BUCKETS; i++) {
-        if (!buckets[i].length) continue;
-        const alpha = 0.05 + 0.16 * ((i + 0.5) / BUCKETS);
-        ctx.strokeStyle = `rgba(96,165,250,${alpha.toFixed(3)})`;
-        ctx.beginPath();
-        for (const [a, b] of buckets[i]) {
-          ctx.moveTo(projected[a].x, projected[a].y);
-          ctx.lineTo(projected[b].x, projected[b].y);
-        }
-        ctx.stroke();
-      }
-
-      // Dots — cached glow sprite (fast) + crisp core
-      for (const p of projected) {
-        const depth = (p.z + 1) / 2; // 0 (back) → 1 (front)
-        const alpha = 0.3 + 0.65 * depth;
-        const radius = 1.7 + 2.2 * depth;
-        const glowSize = radius * 5;
-
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(sprite, p.x - glowSize / 2, p.y - glowSize / 2, glowSize, glowSize);
-        ctx.globalAlpha = 1;
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${(alpha * 0.85).toFixed(3)})`;
-        ctx.arc(p.x, p.y, radius * 0.45, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-    };
-
-    // Single animation loop — time-based rotation: slow, constant speed
-    // regardless of frame rate (no double-scheduling, no drift).
-    let lastT = performance.now();
-    const SPEED = 0.07; // radians per second — calm, premium drift
-    const frame = () => {
-      const now = performance.now();
-      const dt = Math.min(0.05, (now - lastT) / 1000);
-      lastT = now;
-      angle += SPEED * dt;
-      draw();
-      raf = requestAnimationFrame(frame);
-    };
-    if (reduceMotion) {
-      draw(); // static render for reduced-motion users
-    } else {
-      raf = requestAnimationFrame(frame);
-    }
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="w-full h-full" aria-hidden />;
-}
-
-// ─── Hero section ─────────────────────────────────────────────────────────────
-export function Hero() {
-  const { t } = useLanguage();
-
-  const STATS = [
-    { value: t.stats.projectsValue, label: t.stats.projects },
-    { value: t.stats.clientsValue,  label: t.stats.clients  },
-    { value: t.stats.marketsValue,  label: t.stats.markets  },
-    { value: t.stats.supportValue,  label: t.stats.support  },
-  ];
+  const px = useSpring(useTransform(mx, [-0.5, 0.5], [depth, -depth]),
+                       { stiffness: 42, damping: 19, mass: 0.7 });
+  const py = useSpring(useTransform(my, [-0.5, 0.5], [depth * 0.65, -depth * 0.65]),
+                       { stiffness: 42, damping: 19, mass: 0.7 });
 
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-16"
-    >
-      {/* ── Backgrounds ── */}
-      <div className="absolute inset-0 bg-grid-pattern bg-grid-md" aria-hidden />
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_70%_25%,rgba(37,99,235,0.14),transparent)]
-                   dark:bg-[radial-gradient(ellipse_55%_45%_at_70%_25%,rgba(59,130,246,0.18),transparent)]"
-        aria-hidden
-      />
-      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[var(--bg)] to-transparent" aria-hidden />
-
-      {/* ── 3D network sphere — background layer, never blocks clicks ── */}
-      <div
-        className="absolute inset-y-0 right-0 w-full lg:left-[40%] lg:w-auto z-0 pointer-events-none
-                   flex items-center justify-center
-                   opacity-[0.28] lg:opacity-95 transition-opacity duration-500"
-        aria-hidden
+    <motion.div aria-hidden style={reduce ? undefined : { x: px, y: py }} className={className}>
+      <motion.div
+        animate={reduce ? undefined : { y: [0, -9, 0], rotate: [0, 0.9, 0, -0.9, 0] }}
+        transition={{ duration: floatDur, repeat: Infinity, ease: "easeInOut", delay }}
+        style={{ willChange: "transform" }}
+        className="flex items-center gap-3 pl-2.5 pr-4 py-2.5 rounded-2xl
+                   border border-brand-500/25 bg-[var(--surface)]/80 backdrop-blur-md
+                   shadow-[0_18px_40px_-12px_rgba(2,8,30,0.5)]"
       >
-        {/* soft glow behind the sphere */}
-        <div className="absolute w-[52%] aspect-square rounded-full
-                        bg-[radial-gradient(circle,rgba(37,99,235,0.22),transparent_70%)] blur-2xl" />
-        <div className="w-full h-[88%] max-h-[760px]">
-          <NetworkSphere />
-        </div>
-      </div>
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+}
 
-      {/* ── Content ── */}
+/* ── Aurora oblak ───────────────────────────────────────────────────────────── */
+function Aurora({ className, delay, reduce }: { className: string; delay: number; reduce: boolean }) {
+  return (
+    <motion.div
+      aria-hidden
+      animate={reduce ? undefined : { y: [0, -26, 0], x: [0, 16, 0], scale: [1, 1.08, 1] }}
+      transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay }}
+      className={`absolute rounded-full blur-3xl pointer-events-none ${className}`}
+    />
+  );
+}
+
+export function Hero() {
+  const { lang } = useLanguage();
+  const d = T[(lang as "bs" | "en")] ?? T.bs;
+  const reduce = useReducedMotion() ?? false;
+
+  const revealMain = useReveal();
+
+  return (
+    <section className="relative min-h-[100svh] flex flex-col overflow-hidden">
+
+      {/* ── Pozadina: grid + aurora ─────────────────────────────────────── */}
+      <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
+                      [mask-image:radial-gradient(75%_60%_at_50%_38%,black,transparent)]" aria-hidden />
+      <Aurora reduce={reduce} delay={0}
+              className="w-[560px] h-[560px] -top-40 left-1/2 -translate-x-[65%] bg-brand-600/[.16] dark:bg-brand-500/[.14]" />
+      <Aurora reduce={reduce} delay={5}
+              className="w-[460px] h-[460px] top-1/4 -right-40 bg-indigo-500/[.12] dark:bg-indigo-400/[.10]" />
+      <Aurora reduce={reduce} delay={9}
+              className="w-[420px] h-[420px] bottom-0 -left-40 bg-sky-500/[.10] dark:bg-sky-400/[.08]" />
+      {/* horizontalni svjetlosni snop ispod navbara */}
+      <div className="absolute top-24 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent" aria-hidden />
+
+      {/* ── Sadržaj ─────────────────────────────────────────────────────── */}
       <motion.div
         variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8
-                   grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center"
+        {...revealMain}
+        className="relative flex-1 flex flex-col items-center justify-center text-center
+                   max-w-4xl mx-auto px-6 pt-32 pb-16"
       >
-        <div className="text-center lg:text-left">
-          <motion.div variants={fadeUp} className="flex justify-center lg:justify-start mb-7">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
-              <Sparkles size={12} />
-              {t.hero.badge}
-            </span>
-          </motion.div>
+        {/* status + eyebrow */}
+        <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-2 mb-7">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
+                           text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/30">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
+            {d.status}
+          </span>
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
+                           border border-brand-600/30 dark:border-brand-500/30
+                           bg-brand-600/8 dark:bg-brand-500/10
+                           text-brand-700 dark:text-brand-300
+                           text-xs font-semibold tracking-wide uppercase backdrop-blur-sm">
+            {d.eyebrow}
+          </span>
+        </motion.div>
 
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl sm:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.05] mb-7"
-          >
-            {t.hero.title1}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">
-              {t.hero.titleAccent}
-            </span>{" "}
-            {t.hero.title2}
-          </motion.h1>
+        {/* naslov */}
+        <motion.h1 variants={fadeUp}
+          className="text-[40px] leading-[1.06] sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[var(--text)]">
+          {d.h1a}
+          <br />
+          <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
+        </motion.h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl leading-relaxed text-[var(--text-muted)] mb-10"
-          >
-            {t.hero.subtitle}
-          </motion.p>
+        {/* podnaslov */}
+        <motion.p variants={fadeUp}
+          className="mt-6 max-w-2xl text-[15.5px] sm:text-lg text-[var(--text-muted)] leading-relaxed">
+          {d.sub}
+        </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 mb-12"
-          >
-            <a
-              href="#kontakt"
-              className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-4 rounded-xl
-                         bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[15px]
-                         transition-all duration-200 hover:shadow-xl hover:shadow-brand-600/30
-                         hover:-translate-y-0.5"
-            >
-              {t.hero.ctaPrimary}
-              <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
-            </a>
-            <a
-              href="#portfolio"
-              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-4 rounded-xl
-                         border border-[var(--border)] bg-[var(--surface)]/60 backdrop-blur-sm
-                         hover:bg-[var(--surface)] hover:border-brand-600/40
-                         text-[var(--text)] font-semibold text-[15px]
-                         transition-all duration-200 hover:-translate-y-0.5"
-            >
-              {t.hero.ctaSecondary}
-            </a>
-          </motion.div>
+        {/* CTA */}
+        <motion.div variants={fadeUp} className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <a href="#kontakt"
+             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                        bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
+                        shadow-xl shadow-brand-600/30
+                        transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
+            {d.ctaPrimary} <ArrowRight size={16} />
+          </a>
+          <a href="#portfolio"
+             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                        border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
+                        backdrop-blur-sm
+                        transition-all duration-300 hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
+            {d.ctaSecondary}
+          </a>
+        </motion.div>
 
-          {/* Slim inline stats */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-wrap items-center justify-center lg:justify-start
-                       gap-x-8 gap-y-4 sm:gap-x-10"
-          >
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center lg:text-left">
-                <p className="text-2xl sm:text-[28px] font-extrabold text-gradient leading-none mb-1">
-                  {stat.value}
-                </p>
-                <p className="text-xs text-[var(--text-muted)] font-medium">{stat.label}</p>
-              </div>
+        {/* iskren dokazni red (umjesto izmišljenih brojki) */}
+        <motion.div variants={fadeUp} className="mt-12 flex flex-col items-center gap-3">
+          <span className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+            {d.liveLabel}
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {d.liveProjects.map((p) => (
+              <a key={p} href="#portfolio"
+                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
+                            text-[var(--text)] bg-[var(--surface)]/80 border border-[var(--border)] backdrop-blur-sm
+                            transition-[border-color,transform] duration-300 hover:border-brand-600/40 hover:-translate-y-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
+                {p}
+              </a>
             ))}
-          </motion.div>
-        </div>
-
-        {/* Right column is intentionally empty — the sphere lives in the
-            background layer so it can never overlap or block the content. */}
-        <div className="hidden lg:block" aria-hidden />
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
-      >
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-          <ChevronDown size={20} className="text-[var(--text-muted)]" />
+            <a href="#rezultati"
+               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold
+                          text-brand-700 dark:text-brand-300 bg-brand-600/10 border border-brand-600/30
+                          transition-[border-color,transform] duration-300 hover:border-brand-600/50 hover:-translate-y-0.5">
+              ⚡ {d.psBadge} <ArrowUpRight size={11} />
+            </a>
+          </div>
         </motion.div>
       </motion.div>
+
+      {/* ── Plutajuće kartice (samo veliki ekrani) ──────────────────────── */}
+      <FloatingCard reduce={reduce} depth={22} floatDur={11} delay={0}
+                    className="hidden lg:block absolute left-[6%] top-[34%]">
+        <span className="w-9 h-9 rounded-xl flex items-center justify-center
+                         bg-green-500/12 border border-green-500/35 text-green-500">
+          <BellRing size={15} />
+        </span>
+        <span>
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400 leading-tight">
+            {d.notifTitle}
+          </span>
+          <span className="block text-[11.5px] font-medium text-[var(--text-muted)] leading-tight">{d.notifBody}</span>
+        </span>
+      </FloatingCard>
+
+      <FloatingCard reduce={reduce} depth={14} floatDur={13} delay={3.5}
+                    className="hidden lg:block absolute right-[7%] top-[56%]">
+        <span className="relative w-10 h-10 flex items-center justify-center">
+          <svg viewBox="0 0 40 40" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="var(--border)" strokeWidth="3.5" />
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#60A5FA" strokeWidth="3.5" strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 16} strokeDashoffset="0" />
+          </svg>
+          <span className="absolute text-[11px] font-extrabold text-[var(--text)]">100</span>
+        </span>
+        <span>
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 leading-tight">
+            <Gauge size={10} className="inline mr-1" />{d.gaugeLabel}
+          </span>
+          <span className="block text-[11.5px] font-medium text-[var(--text-muted)] leading-tight">Google</span>
+        </span>
+      </FloatingCard>
+
+      {/* scroll indikator */}
+      <div className="relative pb-7 flex justify-center">
+        <motion.a
+          href="#usluge"
+          aria-label="Scroll"
+          animate={reduce ? undefined : { y: [0, 7, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="text-[var(--text-muted)] hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+        >
+          <ChevronDown size={22} />
+        </motion.a>
+      </div>
     </section>
   );
 }
