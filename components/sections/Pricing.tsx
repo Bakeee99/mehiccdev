@@ -304,7 +304,7 @@ export function Pricing() {
                 </div>
 
                 {/* Monthly hosting + support */}
-                <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg)]/40 px-3.5 py-3 mb-5">
+                <div className="rounded-xl border border-dashed border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_40%,transparent)] px-3.5 py-3 mb-5">
                   <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">{d.monthlyLabel}</p>
                   <p className="text-lg font-extrabold text-[var(--text)] mt-0.5">
                     {plan.from && <span className="text-sm font-semibold text-[var(--text-muted)]">{d.from} </span>}

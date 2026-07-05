@@ -275,7 +275,7 @@ export function Services() {
                 <div className={`relative flex flex-wrap gap-1.5 mb-5 ${wide ? "max-w-md" : ""}`}>
                   {s.features.map((f) => (
                     <span key={f} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] font-semibold
-                                             text-[var(--text)] bg-[var(--bg)]/70 border border-[var(--border)]">
+                                             text-[var(--text)] bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] border border-[var(--border)]">
                       <Check size={9} strokeWidth={3.5} className="text-brand-600 dark:text-brand-400" /> {f}
                     </span>
                   ))}

@@ -174,7 +174,7 @@ function FloatChip({
       animate={calm ? undefined : { y: [0, -9, 0] }}
       transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay }}
       className={`absolute z-10 flex items-center gap-2.5 pl-2.5 pr-3.5 py-2.5 rounded-2xl
-                  border border-brand-500/30 bg-[var(--surface)]/95 md:bg-[var(--surface)]/85 md:backdrop-blur-md
+                  border border-brand-500/30 bg-[color-mix(in_srgb,var(--surface)_95%,transparent)] md:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] md:backdrop-blur-md
                   shadow-[0_18px_40px_-12px_rgba(2,8,30,0.6)] ${className}`}
     >
       <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0

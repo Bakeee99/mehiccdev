@@ -187,7 +187,7 @@ export function About() {
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-5">
                       {m.tags.map((tag) => (
                         <span key={tag} className="px-2.5 py-1 rounded-full text-[10.5px] font-semibold
-                                                   text-[var(--text)] bg-[var(--bg)]/70 border border-[var(--border)]">
+                                                   text-[var(--text)] bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] border border-[var(--border)]">
                           {tag}
                         </span>
                       ))}

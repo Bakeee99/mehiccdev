@@ -111,7 +111,7 @@ function FloatingCard({
         transition={{ duration: floatDur, repeat: Infinity, ease: "easeInOut", delay }}
         style={{ willChange: "transform" }}
         className="flex items-center gap-3 pl-2.5 pr-4 py-2.5 rounded-2xl
-                   border border-brand-500/25 bg-[var(--surface)]/95 md:bg-[var(--surface)]
+                   border border-brand-500/25 bg-[color-mix(in_srgb,var(--surface)_95%,transparent)] md:bg-[var(--surface)]
                    shadow-[0_18px_40px_-12px_rgba(2,8,30,0.5)]"
       >
         {children}
@@ -222,7 +222,7 @@ export function Hero() {
             {d.liveProjects.map((p) => (
               <a key={p} href="#portfolio"
                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
-                            text-[var(--text)] bg-[var(--surface)]/80 border border-[var(--border)]
+                            text-[var(--text)] bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] border border-[var(--border)]
                             transition-[border-color,transform] duration-300 hover:border-brand-600/40 hover:-translate-y-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
                 {p}

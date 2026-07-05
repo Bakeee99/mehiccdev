@@ -144,7 +144,7 @@ function RaceBar({
     <div className={`rounded-2xl border p-4 sm:p-5 transition-colors duration-500
                      ${isNew
                        ? "bg-brand-600/[.06] border-brand-600/30"
-                       : "bg-[var(--bg)]/60 border-[var(--border)]"}`}>
+                       : "bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border-[var(--border)]"}`}>
       <div className="flex items-baseline justify-between gap-3 mb-3">
         <span className={`text-[12.5px] font-bold uppercase tracking-wider
                           ${isNew ? "text-brand-600 dark:text-brand-400" : "text-[var(--text-muted)]"}`}>
@@ -158,7 +158,7 @@ function RaceBar({
         </span>
       </div>
       {/* traka */}
-      <div className="relative h-3 rounded-full bg-[var(--border)]/60 overflow-hidden">
+      <div className="relative h-3 rounded-full bg-[color-mix(in_srgb,var(--border)_60%,transparent)] overflow-hidden">
         <div
           className={`absolute inset-y-0 left-0 rounded-full
                       ${isNew

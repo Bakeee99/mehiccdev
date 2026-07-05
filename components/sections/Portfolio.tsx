@@ -324,7 +324,7 @@ export function Portfolio() {
                 {d.stats.map((s) => (
                   <div
                     key={s.l}
-                    className="flex flex-col gap-0.5 px-4 py-2.5 rounded-xl bg-[var(--bg)]/60 border border-[var(--border)]
+                    className="flex flex-col gap-0.5 px-4 py-2.5 rounded-xl bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border border-[var(--border)]
                                transition-[border-color,transform] duration-300 hover:border-brand-600/40 hover:-translate-y-0.5"
                   >
                     <b className="text-xl font-extrabold text-brand-600 dark:text-brand-400 leading-none">{s.v}</b>

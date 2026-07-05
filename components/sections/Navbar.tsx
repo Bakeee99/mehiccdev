@@ -55,8 +55,8 @@ export function Navbar() {
             "max-w-6xl mx-auto h-14 px-3 sm:px-4 lg:px-5 flex items-center justify-between",
             "rounded-2xl border transition-all duration-300 md:backdrop-blur-xl",
             scrolled
-              ? "bg-[var(--bg)]/95 md:bg-[var(--bg)]/85 border-brand-600/20 shadow-lg shadow-black/10"
-              : "bg-[var(--bg)]/80 md:bg-[var(--bg)]/45 border-[var(--border)]/25"
+              ? "bg-[color-mix(in_srgb,var(--bg)_95%,transparent)] md:bg-[color-mix(in_srgb,var(--bg)_85%,transparent)] border-brand-600/20 shadow-lg shadow-black/10"
+              : "bg-[color-mix(in_srgb,var(--bg)_80%,transparent)] md:bg-[color-mix(in_srgb,var(--bg)_45%,transparent)] border-[color-mix(in_srgb,var(--border)_25%,transparent)]"
           )}
         >
           {/* Logo */}
@@ -139,7 +139,7 @@ export function Navbar() {
             transition={{ duration: 0.2 }}
             className="fixed top-[74px] inset-x-3 z-40 md:hidden
                        rounded-2xl border border-[var(--border)]
-                       bg-[var(--bg)]/[.98] shadow-2xl shadow-black/20 overflow-hidden"
+                       bg-[var(--bg)] shadow-2xl shadow-black/20 overflow-hidden"
           >
             <nav className="px-5 py-4 flex flex-col">
               {NAV_LINKS.map((link) => (

@@ -1,34 +1,42 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — PUTANJE SLIKA TRAJNO UPISANE U KOD
+  mehiccdev — FIX: providni mobilni meni + nevidljive prozirnosti
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  components/sections/Portfolio.tsx
-  components/sections/About.tsx
+ŠTA JE U ZIP-u: svih 10 sekcija (najnovije verzije svega do sada).
+Raspakuj preko svega, zamijeni sve.
 
-ŠTA JE PROMIJENJENO:
-Putanje do slika su sada TRAJNO upisane (više ih nijedna moja
-isporuka neće pregaziti praznim vrijednostima). Očekivani fajlovi:
+────────────────────────────────────────────────────────────────────
+ŠTA JE BIO PROBLEM (i zašto je meni bio providan)
+────────────────────────────────────────────────────────────────────
+Tailwind NE ZNA napraviti prozirnost od boje koja je CSS varijabla:
+klase poput "bg-[var(--bg)]/85" je TIHO ODBACIVAO, pa ti elementi
+uopšte nisu imali pozadinu. Na sajtu je bilo 17 takvih klasa.
 
-  public/portfolio/maximum-naslovna.png        → laptop (naslovna)
-  public/portfolio/maximum-admin-mobitel.png   → telefon (admin)
-  public/portfolio/oxybaric.png                → OxyBaric kartica
-  public/portfolio/roobet.png                  → Roobet kartica
-  public/team/bakir.jpg                        → tvoja slika
-  public/team/nedim.jpg                        → Nedimova slika
+Dok je navbar imao blur, staklo je vizuelno glumilo pozadinu pa se
+nije primjećivalo. Kad smo blur uklonili radi mobilnih performansi,
+istina je isplivala: mobilni meni bez pozadine = tekst hero sekcije
+probija kroz meni (tvoj screenshot).
 
-VAŽNO, PROVJERI NAZIVE: ako se tvoji fajlovi zovu i MALO drugačije
-(npr. .jpg umjesto .png, veliko slovo, crtica), slika se neće
-prikazati. Dvije opcije: preimenuj fajl da bude identičan gore
-navedenom, ILI u kodu promijeni putanju (Portfolio.tsx vrh fajla i
-MINI_META; About.tsx u PHOTOS).
+Bonus otkriće: iz istog razloga NI podešavanja ruba navbara od
+ranije nisu nikad radila (border-...(--border)]/25 je takođe bio
+odbačen), pa je rub bio default boja. Sada i to stvarno radi.
 
-Ako neki fajl još ne postoji (npr. roobet.png), ta kartica će
-privremeno prikazati praznu/slomljenu sliku umjesto gradijenta,
-pa ili ubaci fajl ili vrati "" za taj jedan red.
+────────────────────────────────────────────────────────────────────
+ŠTA JE URAĐENO
+────────────────────────────────────────────────────────────────────
+  • Svih 17 klasa prepisano u "color-mix" sintaksu koju Tailwind
+    ispravno kompajlira. Provjereno u finalnom CSS-u: 12 color-mix
+    pravila sada postoji (prije: nula).
+  • Mobilni meni je uz to POTPUNO neproziran (meni i treba da bude),
+    pa više ništa ne probija kroz njega.
+  • Bez ikakvih novih blur efekata: mobilne performanse ostaju.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → provjeri svih 6 slika (portfolio + tim)
-  3. git add . && git commit -m "chore: trajne putanje slika" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA za sve
+  2. npm run dev → otvori mobilni meni (suzi prozor ili telefon):
+     mora biti potpuno neproziran; provjeri i navbar pilulu na vrhu
+     i poslije skrola, u OBJE teme
+  3. git add . && git commit -m "fix: color-mix prozirnosti + neproziran meni" && git push
+
+Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════

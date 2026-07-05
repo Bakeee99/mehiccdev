@@ -200,14 +200,14 @@ export function Footer() {
                   <div className="flex gap-2">
                     <a href={m.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} Instagram`}
                        className="w-8 h-8 rounded-lg flex items-center justify-center
-                                  bg-[var(--bg)]/70 border border-[var(--border)] text-[var(--text-muted)]
+                                  bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] border border-[var(--border)] text-[var(--text-muted)]
                                   transition-all duration-200 hover:text-brand-600 dark:hover:text-brand-400
                                   hover:border-brand-600/40 hover:-translate-y-0.5">
                       <Instagram size={13} />
                     </a>
                     <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} LinkedIn`}
                        className="w-8 h-8 rounded-lg flex items-center justify-center
-                                  bg-[var(--bg)]/70 border border-[var(--border)] text-[var(--text-muted)]
+                                  bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] border border-[var(--border)] text-[var(--text-muted)]
                                   transition-all duration-200 hover:text-brand-600 dark:hover:text-brand-400
                                   hover:border-brand-600/40 hover:-translate-y-0.5">
                       <Linkedin size={13} />
