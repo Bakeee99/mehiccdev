@@ -25,8 +25,8 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Screenshot slotovi (prazno = CSS placeholder) ────────────────────────────
-const SCREEN_DESKTOP = ""; // npr. "/portfolio/maximum-naslovna.png"
-const SCREEN_MOBILE  = ""; // npr. "/portfolio/maximum-admin-mobitel.png"
+const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png"; // npr. "/portfolio/maximum-naslovna.png"
+const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png"; // npr. "/portfolio/maximum-admin-mobitel.png"
 const FEATURE_URL = "https://maximum-rent.vercel.app";
 
 // ── Bilingual content ────────────────────────────────────────────────────────
@@ -105,8 +105,8 @@ const T: Record<"bs" | "en", Content> = {
 // img: putanja do screenshota u /public/portfolio/ (npr. "/portfolio/oxybaric.png").
 // Ostavi "" da se prikazuje gradijent. Slika se sama pojavi kad upišeš putanju.
 const MINI_META = [
-  { img: "", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
-  { img: "", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "#portfolio" },
+  { img: "/portfolio/oxybaric.png", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
+  { img: "/portfolio/roobet.png", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "#portfolio" },
   { img: "", gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
 ];
 
