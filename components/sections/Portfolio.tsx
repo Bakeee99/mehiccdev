@@ -69,8 +69,8 @@ const T: Record<"bs" | "en", Content> = {
     zoomHint: "Klikni za uvećanje",
     closeLabel: "Zatvori",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Webflow · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Dizajn", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed." },
+      { title: "OxyBaric Mostar", cat: "Custo Website · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
   },
@@ -100,9 +100,9 @@ const T: Record<"bs" | "en", Content> = {
     zoomHint: "Click to enlarge",
     closeLabel: "Close",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Webflow · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Design", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward." },
-      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
+      { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward.", live: true },
+      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging."},
     ],
   },
 };
@@ -112,7 +112,7 @@ const T: Record<"bs" | "en", Content> = {
 // Ostavi "" da se prikazuje gradijent. Slika se sama pojavi kad upišeš putanju.
 const MINI_META = [
   { img: "/portfolio/oxybaric.png", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
-  { img: "/portfolio/roobet.png", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "#portfolio" },
+  { img: "/portfolio/roobet.png", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "https://roobet.com/" },
   { img: "", gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
 ];
 
