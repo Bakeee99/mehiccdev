@@ -103,7 +103,7 @@ export function Value() {
 
   return (
     <section id="vrijednost" className="py-20 lg:py-28 relative overflow-hidden">
-      <div className="absolute -right-48 top-1/4 w-96 h-96 rounded-full bg-brand-600/5 blur-3xl pointer-events-none" aria-hidden />
+      <div className="absolute -right-48 top-1/4 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
 
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
 
@@ -114,7 +114,7 @@ export function Value() {
                              border border-brand-600/30 dark:border-brand-500/30
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.eyebrow}
             </span>
@@ -215,7 +215,7 @@ export function Value() {
                        bg-[var(--surface)] px-6 py-6 sm:px-9 sm:py-7
                        flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8"
           >
-            <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-brand-600/12 blur-3xl pointer-events-none" aria-hidden />
+            <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
             <div className="relative flex-1">
               <p className="text-base sm:text-lg font-bold leading-snug">
                 {d.banner[0]}

@@ -25,8 +25,8 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Screenshot slotovi (prazno = CSS placeholder) ────────────────────────────
-const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png"; // npr. "/portfolio/maximum-naslovna.png"
-const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png"; // npr. "/portfolio/maximum-admin-mobitel.png"
+const SCREEN_DESKTOP = ""; // npr. "/portfolio/maximum-naslovna.png"
+const SCREEN_MOBILE  = ""; // npr. "/portfolio/maximum-admin-mobitel.png"
 const FEATURE_URL = "https://maximum-rent.vercel.app";
 
 // ── Bilingual content ────────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ const T: Record<"bs" | "en", Content> = {
     livePill: "Uživo",
     minis: [
       { title: "OxyBaric Mostar", cat: "Webflow · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Dizajn", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed." },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
   },
@@ -94,8 +94,8 @@ const T: Record<"bs" | "en", Content> = {
     ctaWant: "I want an app like this",
     livePill: "Live",
     minis: [
-      { title: "OxyBaric Mostar | In progress", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward.", live: true },
+      { title: "OxyBaric Mostar", cat: "Webflow · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Design", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward." },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
   },
@@ -105,8 +105,8 @@ const T: Record<"bs" | "en", Content> = {
 // img: putanja do screenshota u /public/portfolio/ (npr. "/portfolio/oxybaric.png").
 // Ostavi "" da se prikazuje gradijent. Slika se sama pojavi kad upišeš putanju.
 const MINI_META = [
-  { img: "/portfolio/oxybaric.png", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
-  { img: "/portfolio/roobet.png", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "https://roobet.com/" },
+  { img: "", gradient: "from-sky-400 via-blue-500 to-indigo-600",  href: "https://oxybaricmostar.ba" },
+  { img: "", gradient: "from-yellow-400 via-amber-500 to-orange-600", href: "#portfolio" },
   { img: "", gradient: "from-indigo-500 via-blue-600 to-blue-700", href: "#portfolio" },
 ];
 
@@ -216,7 +216,7 @@ export function Portfolio() {
   return (
     <section id="portfolio" className="py-28 lg:py-36 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="absolute -left-48 top-1/3 w-96 h-96 rounded-full bg-brand-600/5 blur-3xl pointer-events-none" aria-hidden />
+      <div className="absolute -left-48 top-1/3 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -231,7 +231,7 @@ export function Portfolio() {
                                border border-brand-600/30 dark:border-brand-500/30
                                bg-brand-600/8 dark:bg-brand-500/10
                                text-brand-700 dark:text-brand-300
-                               text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                               text-xs font-semibold tracking-wider uppercase">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
                 {d.label}
               </span>
@@ -258,7 +258,7 @@ export function Portfolio() {
                        transition-[border-color,box-shadow] duration-300
                        hover:border-brand-600/45 hover:shadow-2xl hover:shadow-brand-600/15"
           >
-            <div className="absolute -top-24 -right-24 w-[420px] h-[320px] rounded-full bg-brand-600/12 blur-3xl pointer-events-none" aria-hidden />
+            <div className="absolute -top-24 -right-24 w-[420px] h-[320px] rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
             <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.045] pointer-events-none" aria-hidden />
 
             <div className="relative">
@@ -367,11 +367,11 @@ export function Portfolio() {
                     ) : (
                       <span className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-20 transition-transform duration-500 group-hover/mini:scale-110" aria-hidden />
                     )}
-                    <span className="absolute top-3.5 left-4 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-[10.5px] font-semibold">
+                    <span className="absolute top-3.5 left-4 px-2.5 py-1 rounded-full bg-black/45 text-white text-[10.5px] font-semibold">
                       {m.cat}
                     </span>
                     {m.live && (
-                      <span className="absolute top-3.5 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm
+                      <span className="absolute top-3.5 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/45
                                        text-[10px] font-bold uppercase tracking-wider text-green-400">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" aria-hidden /> {d.livePill}
                       </span>

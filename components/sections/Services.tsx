@@ -194,8 +194,8 @@ export function Services() {
   return (
     <section id="usluge" className="py-28 lg:py-36 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="absolute -right-56 top-16 w-96 h-96 rounded-full bg-brand-600/5 blur-3xl pointer-events-none" aria-hidden />
-      <div className="absolute -left-56 bottom-16 w-96 h-96 rounded-full bg-brand-600/5 blur-3xl pointer-events-none" aria-hidden />
+      <div className="absolute -right-56 top-16 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
+      <div className="absolute -left-56 bottom-16 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
@@ -206,7 +206,7 @@ export function Services() {
                              border border-brand-600/30 dark:border-brand-500/30
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.label}
             </span>

@@ -111,7 +111,7 @@ function FloatingCard({
         transition={{ duration: floatDur, repeat: Infinity, ease: "easeInOut", delay }}
         style={{ willChange: "transform" }}
         className="flex items-center gap-3 pl-2.5 pr-4 py-2.5 rounded-2xl
-                   border border-brand-500/25 bg-[var(--surface)]/80 backdrop-blur-md
+                   border border-brand-500/25 bg-[var(--surface)]/95 md:bg-[var(--surface)]
                    shadow-[0_18px_40px_-12px_rgba(2,8,30,0.5)]"
       >
         {children}
@@ -121,13 +121,14 @@ function FloatingCard({
 }
 
 /* ── Aurora oblak ───────────────────────────────────────────────────────────── */
-function Aurora({ className, delay, reduce }: { className: string; delay: number; reduce: boolean }) {
+function Aurora({ className, delay, reduce, glow }: { className: string; delay: number; reduce: boolean; glow: string }) {
   return (
     <motion.div
       aria-hidden
       animate={reduce ? undefined : { y: [0, -26, 0], x: [0, 16, 0], scale: [1, 1.08, 1] }}
       transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay }}
-      className={`absolute rounded-full blur-3xl pointer-events-none ${className}`}
+      style={{ background: `radial-gradient(closest-side, ${glow}, transparent 72%)` }}
+      className={`absolute rounded-full pointer-events-none ${className}`}
     />
   );
 }
@@ -148,12 +149,12 @@ export function Hero() {
       {/* ── Pozadina: grid + aurora ─────────────────────────────────────── */}
       <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
                       [mask-image:radial-gradient(75%_60%_at_50%_38%,black,transparent)]" aria-hidden />
-      <Aurora reduce={calm} delay={0}
-              className="w-[560px] h-[560px] -top-40 left-1/2 -translate-x-[65%] bg-brand-600/[.16] dark:bg-brand-500/[.14]" />
-      <Aurora reduce={calm} delay={5}
-              className="w-[460px] h-[460px] top-1/4 -right-40 bg-indigo-500/[.12] dark:bg-indigo-400/[.10]" />
-      <Aurora reduce={calm} delay={9}
-              className="w-[420px] h-[420px] bottom-0 -left-40 bg-sky-500/[.10] dark:bg-sky-400/[.08]" />
+      <Aurora reduce={calm} delay={0} glow="rgba(37,99,235,0.30)"
+              className="w-[560px] h-[560px] -top-40 left-1/2 -translate-x-[65%]" />
+      <Aurora reduce={calm} delay={5} glow="rgba(99,102,241,0.22)"
+              className="w-[460px] h-[460px] top-1/4 -right-40" />
+      <Aurora reduce={calm} delay={9} glow="rgba(14,165,233,0.18)"
+              className="w-[420px] h-[420px] bottom-0 -left-40" />
       {/* horizontalni svjetlosni snop ispod navbara */}
       <div className="absolute top-24 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent" aria-hidden />
 
@@ -175,7 +176,7 @@ export function Hero() {
                            border border-brand-600/30 dark:border-brand-500/30
                            bg-brand-600/8 dark:bg-brand-500/10
                            text-brand-700 dark:text-brand-300
-                           text-xs font-semibold tracking-wide uppercase backdrop-blur-sm">
+                           text-xs font-semibold tracking-wide uppercase">
             {d.eyebrow}
           </span>
         </motion.div>
@@ -206,7 +207,7 @@ export function Hero() {
           <a href="#portfolio"
              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                         border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
-                        backdrop-blur-sm
+                       
                         transition-all duration-300 hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
             {d.ctaSecondary}
           </a>
@@ -221,7 +222,7 @@ export function Hero() {
             {d.liveProjects.map((p) => (
               <a key={p} href="#portfolio"
                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
-                            text-[var(--text)] bg-[var(--surface)]/80 border border-[var(--border)] backdrop-blur-sm
+                            text-[var(--text)] bg-[var(--surface)]/80 border border-[var(--border)]
                             transition-[border-color,transform] duration-300 hover:border-brand-600/40 hover:-translate-y-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
                 {p}

@@ -41,11 +41,10 @@ export function Navbar() {
 
   const NAV_LINKS = [
     { label: L.services,  href: "#usluge"    },
-    { label: L.about,     href: "#o-nama"    },
     { label: L.portfolio, href: "#portfolio" },
-    { label: L.pricing,   href: "#cjenovnik" },
+    { label: L.about,     href: "#o-nama"    },
     { label: L.saas,      href: "#saas"      },
-    
+    { label: L.pricing,   href: "#cjenovnik" },
   ];
 
   return (

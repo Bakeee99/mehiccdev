@@ -237,7 +237,7 @@ export function Results() {
   return (
     <section id="rezultati" className="py-28 lg:py-32 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="absolute -left-56 top-24 w-96 h-96 rounded-full bg-brand-600/5 blur-3xl pointer-events-none" aria-hidden />
+      <div className="absolute -left-56 top-24 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
 
       <svg width="0" height="0" aria-hidden><defs>
         <linearGradient id="resGrad" x1="0" y1="0" x2="1" y2="1">
@@ -254,7 +254,7 @@ export function Results() {
                              border border-brand-600/30 dark:border-brand-500/30
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.label}
             </span>
@@ -278,7 +278,7 @@ export function Results() {
           className="relative rounded-3xl p-6 sm:p-9 overflow-hidden mb-6
                      bg-[var(--surface)] border border-brand-600/25"
         >
-          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-brand-600/10 blur-3xl pointer-events-none" aria-hidden />
+          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_72%)] pointer-events-none" aria-hidden />
           <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.035] pointer-events-none" aria-hidden />
 
           <div className="relative flex flex-wrap items-start justify-between gap-3 mb-6">

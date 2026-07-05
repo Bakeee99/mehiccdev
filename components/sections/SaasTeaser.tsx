@@ -174,7 +174,7 @@ function FloatChip({
       animate={calm ? undefined : { y: [0, -9, 0] }}
       transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay }}
       className={`absolute z-10 flex items-center gap-2.5 pl-2.5 pr-3.5 py-2.5 rounded-2xl
-                  border border-brand-500/30 bg-[var(--surface)]/85 backdrop-blur-md
+                  border border-brand-500/30 bg-[var(--surface)]/95 md:bg-[var(--surface)]/85 md:backdrop-blur-md
                   shadow-[0_18px_40px_-12px_rgba(2,8,30,0.6)] ${className}`}
     >
       <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0
@@ -238,7 +238,7 @@ export function SaasTeaser() {
                              border border-brand-600/30 dark:border-brand-500/30
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.label}
             </span>
@@ -304,7 +304,7 @@ export function SaasTeaser() {
           <motion.div variants={slideInRight} {...revealMock} className="relative lg:pl-4">
             <div className="relative px-2 sm:px-6 pt-8 pb-10">
               {/* sjaj iza mockupa */}
-              <div className="absolute inset-x-8 top-10 bottom-4 rounded-full bg-brand-600/15 blur-3xl pointer-events-none" aria-hidden />
+              <div className="absolute inset-x-8 top-10 bottom-4 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.26),transparent_72%)] pointer-events-none" aria-hidden />
 
               <div className="relative [transform:perspective(1400px)_rotateY(-5deg)_rotateX(2deg)]
                               hover:[transform:perspective(1400px)_rotateY(0deg)_rotateX(0deg)]
@@ -362,7 +362,7 @@ export function SaasTeaser() {
               border: "1.5px solid transparent",
             }}
           >
-            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-600/12 blur-3xl pointer-events-none" aria-hidden />
+            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
             <div className="relative px-6 py-7 sm:px-10 sm:py-8 grid lg:grid-cols-[1fr_auto] gap-6 items-center">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">

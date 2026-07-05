@@ -1,49 +1,56 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — MOBILNE PERFORMANSE: vraćen smoothness skrolanja
+  mehiccdev — VELIKI PERF PAKET: mobilna dijeta za cijeli sajt
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla):
-  lib/useCoarsePointer.ts               → NOVI fajl (objašnjeno ispod)
-  components/sections/Hero.tsx
-  components/sections/SaasTeaser.tsx
-  components/sections/Navbar.tsx
+Ovaj ZIP sadrži SVE sekcije (najnovije verzije svega do sada) +
+lib/useCoarsePointer.ts. Raspakuj preko svega, zamijeni sve.
+(lib/useReveal.ts iz ranijeg paketa i dalje mora postojati.)
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE BIO PROBLEM
+ŠTA JE OVAJ PUT NAĐENO (pravi razmjer problema)
 ────────────────────────────────────────────────────────────────────
-Redizajn je nagomilao dvije stvari koje desktop ne osjeti, a
-telefon plaća punu cijenu:
+Prebrojali smo skupe efekte na CIJELOJ stranici:
+  • ~20 elemenata sa staklom (backdrop-blur), uključujući SVE
+    kartice u cjenovniku
+  • 21 veliki zamućeni sloj (blur-3xl "sjaj" divovi po sekcijama)
 
-  1. Navbar je STALNO imao staklo (backdrop-blur), a fiksirani blur
-     preko sadržaja koji se pomjera tjera telefon da ponovo računa
-     zamućenje na svaki frame skrolanja. Glavni krivac za laganje.
-
-  2. Aurora oblaci u Hero sekciji i plutajuće kartice (Hero +
-     Flagship) se BESKONAČNO animiraju, a animirati ogromne zamućene
-     slojeve znači računati blur 60 puta u sekundi. Zato je i
-     promjena teme bila spora: tema mora prefarbati sve te slojeve.
+Svaki od njih je poseban GPU sloj koji telefon drži u memoriji i
+preračunava. Pojedinačno nevini, ZBIRNO su gušili i skrolanje i
+promjenu teme (tema mora prefarbati svaki taj sloj odjednom).
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE URAĐENO
+ŠTA JE URAĐENO (izgled ostaje praktično identičan)
 ────────────────────────────────────────────────────────────────────
-Novi mali fajl lib/useCoarsePointer.ts prepoznaje touch uređaje
-(telefone/tablete). Na njima:
+  1. Staklo (backdrop-blur) skinuto sa svih sitnih pilula i sa
+     kartica cjenovnika (tamo je bilo neprimjetno, a skupo).
+     Gdje staklo vizuelno znači (navbar, plutajuće kartice, pilule
+     preko slika u Portfoliju) ostaje SAMO NA DESKTOPU, a mobilni
+     dobija čvršću podlogu koja izgleda isto.
 
-  • Aurora oblaci, plutajuće kartice i strelica za skrol MIRUJU
-    (sve ostaje vidljivo, samo statično: izgled je isti).
-  • Navbar na mobitelu nema blur nego čvršću pozadinu (95%
-    neprozirnosti), izgleda praktično isto, a skrol je gladak.
-    Na desktopu je staklo netaknuto.
-  • Mobilni meni takođe bez blura (ionako ima punu pozadinu).
+  2. SVIH 21 zamućenih "sjaj" slojeva pretvoreno u radial gradijente:
+     isti mekani sjaj golim okom, ali nula filter troška, jer
+     gradijent grafička kartica crta besplatno, a blur mora računati.
+     Ovo drastično ubrzava i promjenu teme.
 
-NA DESKTOPU SE NIŠTA NE MIJENJA: aurora, parallax, lebdenje, staklo,
-sve radi kao do sada.
+  3. + sve iz prethodnog paketa (animacije miruju na touch
+     uređajima, navbar bez blura na mobitelu).
+
+────────────────────────────────────────────────────────────────────
+VAŽNO: KAKO TESTIRATI (možda je i ovo dio problema!)
+────────────────────────────────────────────────────────────────────
+Ako si performanse gledao preko "npm run dev" (dev server otvoren
+s telefona), znaj da je DEV MOD 5-10 PUTA SPORIJI od produkcije:
+bez optimizacija, s razvojnim alatima. Pravi test je:
+  1. Ubaci ovaj paket → git push
+  2. Sačekaj da Vercel objavi (1-2 min)
+  3. Otvori PRAVI mehiccdev.com na telefonu i tek to ocjenjuj.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA (useCoarsePointer.ts je nov)
-  2. npm run dev → OBAVEZNO TESTIRAJ NA PRAVOM TELEFONU:
-     skrolanje kroz cijeli sajt + promjena teme par puta
-  3. git add . && git commit -m "perf: mobilni smoothness" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA za sve
+  2. npm run dev (samo da se uvjeriš da radi) → git add . &&
+     git commit -m "perf: mobilna dijeta cijelog sajta" && git push
+  3. Testiraj PRODUKCIJU na telefonu (skrol + tema)
 
 Build verifikovan prije slanja: npm run build ✓
+Kontrolni sken: 0 preostalih blur-3xl, 0 backdrop-blur van desktopa.
 ════════════════════════════════════════════════════════════════════

@@ -221,8 +221,8 @@ export function Pricing() {
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       {/* Subtle background glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full
-                      bg-brand-600/8 blur-3xl pointer-events-none" aria-hidden />
-      <div className="absolute bottom-0 -right-40 w-96 h-96 rounded-full bg-brand-500/5 blur-3xl pointer-events-none" aria-hidden />
+                      bg-[radial-gradient(closest-side,rgba(37,99,235,0.15),transparent_72%)] pointer-events-none" aria-hidden />
+      <div className="absolute bottom-0 -right-40 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.10),transparent_72%)] pointer-events-none" aria-hidden />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
 
@@ -237,7 +237,7 @@ export function Pricing() {
                              border border-brand-600/30 dark:border-brand-500/30
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.eyebrow}
             </span>
@@ -264,7 +264,7 @@ export function Pricing() {
                 key={plan.name}
                 variants={scaleIn}
                 whileHover={{ y: -8 }}
-                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]/80 backdrop-blur-sm
+                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]
                             transition-[border-color,box-shadow] duration-300
                             ${popular
                               ? "border-2 border-brand-600 shadow-2xl shadow-brand-600/20"
@@ -362,7 +362,7 @@ export function Pricing() {
                              border border-green-600/30 dark:border-green-500/30
                              bg-green-600/8 dark:bg-green-500/10
                              text-green-700 dark:text-green-300
-                             text-xs font-semibold tracking-wider uppercase backdrop-blur-sm">
+                             text-xs font-semibold tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden />
               {d.mktEyebrow}
             </span>
@@ -388,7 +388,7 @@ export function Pricing() {
                 key={plan.name}
                 variants={scaleIn}
                 whileHover={{ y: -8 }}
-                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]/80 backdrop-blur-sm
+                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]
                             transition-[border-color,box-shadow] duration-300
                             ${popular
                               ? "border-2 border-green-500 shadow-2xl shadow-green-500/20"
