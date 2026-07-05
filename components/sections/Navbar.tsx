@@ -41,10 +41,10 @@ export function Navbar() {
 
   const NAV_LINKS = [
     { label: L.services,  href: "#usluge"    },
-    { label: L.about,     href: "#o-nama"    },
     { label: L.portfolio, href: "#portfolio" },
-    { label: L.pricing,   href: "#cjenovnik" },
+    { label: L.about,     href: "#o-nama"    },
     { label: L.saas,      href: "#saas"      },
+    { label: L.pricing,   href: "#cjenovnik" },
   ];
 
   return (
@@ -53,10 +53,10 @@ export function Navbar() {
         <nav
           className={cn(
             "max-w-6xl mx-auto h-14 px-3 sm:px-4 lg:px-5 flex items-center justify-between",
-            "rounded-2xl border backdrop-blur-xl transition-all duration-300",
+            "rounded-2xl border transition-all duration-300 md:backdrop-blur-xl",
             scrolled
-              ? "bg-[var(--bg)]/85 border-brand-600/20 shadow-lg shadow-black/10"
-              : "bg-[var(--bg)]/45 border-[var(--border)]/25"
+              ? "bg-[var(--bg)]/95 md:bg-[var(--bg)]/85 border-brand-600/20 shadow-lg shadow-black/10"
+              : "bg-[var(--bg)]/80 md:bg-[var(--bg)]/45 border-[var(--border)]/25"
           )}
         >
           {/* Logo */}
@@ -139,7 +139,7 @@ export function Navbar() {
             transition={{ duration: 0.2 }}
             className="fixed top-[74px] inset-x-3 z-40 md:hidden
                        rounded-2xl border border-[var(--border)]
-                       bg-[var(--bg)]/95 backdrop-blur-xl shadow-2xl shadow-black/20 overflow-hidden"
+                       bg-[var(--bg)]/[.98] shadow-2xl shadow-black/20 overflow-hidden"
           >
             <nav className="px-5 py-4 flex flex-col">
               {NAV_LINKS.map((link) => (

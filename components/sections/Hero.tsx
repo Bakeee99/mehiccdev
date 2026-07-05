@@ -25,6 +25,7 @@ import { motion, useReducedMotion, useMotionValue, useSpring, useTransform } fro
 import { ArrowRight, ArrowUpRight, ChevronDown, BellRing, Gauge } from "lucide-react";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
+import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 type Content = {
@@ -135,6 +136,9 @@ export function Hero() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
   const reduce = useReducedMotion() ?? false;
+  const coarse = useCoarsePointer();
+  // na touch uređajima dekorativne animacije miruju (performanse skrolanja)
+  const calm = reduce || coarse;
 
   const revealMain = useReveal();
 
@@ -144,11 +148,11 @@ export function Hero() {
       {/* ── Pozadina: grid + aurora ─────────────────────────────────────── */}
       <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
                       [mask-image:radial-gradient(75%_60%_at_50%_38%,black,transparent)]" aria-hidden />
-      <Aurora reduce={reduce} delay={0}
+      <Aurora reduce={calm} delay={0}
               className="w-[560px] h-[560px] -top-40 left-1/2 -translate-x-[65%] bg-brand-600/[.16] dark:bg-brand-500/[.14]" />
-      <Aurora reduce={reduce} delay={5}
+      <Aurora reduce={calm} delay={5}
               className="w-[460px] h-[460px] top-1/4 -right-40 bg-indigo-500/[.12] dark:bg-indigo-400/[.10]" />
-      <Aurora reduce={reduce} delay={9}
+      <Aurora reduce={calm} delay={9}
               className="w-[420px] h-[420px] bottom-0 -left-40 bg-sky-500/[.10] dark:bg-sky-400/[.08]" />
       {/* horizontalni svjetlosni snop ispod navbara */}
       <div className="absolute top-24 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent" aria-hidden />
@@ -234,7 +238,7 @@ export function Hero() {
       </motion.div>
 
       {/* ── Plutajuće kartice (samo veliki ekrani) ──────────────────────── */}
-      <FloatingCard reduce={reduce} depth={22} floatDur={11} delay={0}
+      <FloatingCard reduce={calm} depth={22} floatDur={11} delay={0}
                     className="hidden lg:block absolute left-[6%] top-[34%]">
         <span className="w-9 h-9 rounded-xl flex items-center justify-center
                          bg-green-500/12 border border-green-500/35 text-green-500">
@@ -248,7 +252,7 @@ export function Hero() {
         </span>
       </FloatingCard>
 
-      <FloatingCard reduce={reduce} depth={14} floatDur={13} delay={3.5}
+      <FloatingCard reduce={calm} depth={14} floatDur={13} delay={3.5}
                     className="hidden lg:block absolute right-[7%] top-[56%]">
         <span className="relative w-10 h-10 flex items-center justify-center">
           <svg viewBox="0 0 40 40" className="w-full h-full" style={{ transform: "rotate(-90deg)" }}>
@@ -271,7 +275,7 @@ export function Hero() {
         <motion.a
           href="#usluge"
           aria-label="Scroll"
-          animate={reduce ? undefined : { y: [0, 7, 0] }}
+          animate={calm ? undefined : { y: [0, 7, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="text-[var(--text-muted)] hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
         >

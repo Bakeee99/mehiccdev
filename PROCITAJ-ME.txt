@@ -1,18 +1,49 @@
-════════════════════════════════════════════════
- mehiccdev — NAVBAR v2.2: rub po mjeri
-════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+  mehiccdev — MOBILNE PERFORMANSE: vraćen smoothness skrolanja
+════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u: components/sections/Navbar.tsx
+ŠTA JE U ZIP-u (4 fajla):
+  lib/useCoarsePointer.ts               → NOVI fajl (objašnjeno ispod)
+  components/sections/Hero.tsx
+  components/sections/SaasTeaser.tsx
+  components/sections/Navbar.tsx
 
-ŠTA JE PROMIJENJENO:
-  • NA SKROLU: vraćen raniji izgled koji ti se svidio
-    (blagi plavi rub + jača pozadina i sjena).
-  • NA VRHU STRANICE: rub je sada još diskretniji
-    (25% prozirnosti), neutralan, jedva se naslućuje,
-    ne bode oči.
+────────────────────────────────────────────────────────────────────
+ŠTA JE BIO PROBLEM
+────────────────────────────────────────────────────────────────────
+Redizajn je nagomilao dvije stvari koje desktop ne osjeti, a
+telefon plaća punu cijenu:
 
-KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
-(provjeri OBA stanja: vrh stranice pa skrolaj)
-→ git add . && git commit -m "fix: navbar rubovi" && git push
+  1. Navbar je STALNO imao staklo (backdrop-blur), a fiksirani blur
+     preko sadržaja koji se pomjera tjera telefon da ponovo računa
+     zamućenje na svaki frame skrolanja. Glavni krivac za laganje.
 
-Build verifikovan: npm run build ✓
+  2. Aurora oblaci u Hero sekciji i plutajuće kartice (Hero +
+     Flagship) se BESKONAČNO animiraju, a animirati ogromne zamućene
+     slojeve znači računati blur 60 puta u sekundi. Zato je i
+     promjena teme bila spora: tema mora prefarbati sve te slojeve.
+
+────────────────────────────────────────────────────────────────────
+ŠTA JE URAĐENO
+────────────────────────────────────────────────────────────────────
+Novi mali fajl lib/useCoarsePointer.ts prepoznaje touch uređaje
+(telefone/tablete). Na njima:
+
+  • Aurora oblaci, plutajuće kartice i strelica za skrol MIRUJU
+    (sve ostaje vidljivo, samo statično: izgled je isti).
+  • Navbar na mobitelu nema blur nego čvršću pozadinu (95%
+    neprozirnosti), izgleda praktično isto, a skrol je gladak.
+    Na desktopu je staklo netaknuto.
+  • Mobilni meni takođe bez blura (ionako ima punu pozadinu).
+
+NA DESKTOPU SE NIŠTA NE MIJENJA: aurora, parallax, lebdenje, staklo,
+sve radi kao do sada.
+
+KORACI:
+  1. Raspakuj u KORIJEN → "Zamijeni" DA (useCoarsePointer.ts je nov)
+  2. npm run dev → OBAVEZNO TESTIRAJ NA PRAVOM TELEFONU:
+     skrolanje kroz cijeli sajt + promjena teme par puta
+  3. git add . && git commit -m "perf: mobilni smoothness" && git push
+
+Build verifikovan prije slanja: npm run build ✓
+════════════════════════════════════════════════════════════════════

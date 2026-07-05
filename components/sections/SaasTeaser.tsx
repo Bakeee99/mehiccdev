@@ -27,6 +27,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInRight } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
+import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const MARKETS = ["🇧🇦 BiH", "🇷🇸 Srbija", "🇭🇷 Hrvatska", "🇲🇪 Crna Gora"];
@@ -164,10 +165,13 @@ function PlatformMock({ search }: { search: string }) {
 function FloatChip({
   title, value, className, delay, icon: Icon,
 }: { title: string; value: string; className: string; delay: number; icon: LucideIcon }) {
+  // miruje i za reduced-motion i na touch uređajima (performanse skrolanja)
   const reduce = useReducedMotion();
+  const coarse = useCoarsePointer();
+  const calm = reduce || coarse;
   return (
     <motion.div
-      animate={reduce ? undefined : { y: [0, -9, 0] }}
+      animate={calm ? undefined : { y: [0, -9, 0] }}
       transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay }}
       className={`absolute z-10 flex items-center gap-2.5 pl-2.5 pr-3.5 py-2.5 rounded-2xl
                   border border-brand-500/30 bg-[var(--surface)]/85 backdrop-blur-md
