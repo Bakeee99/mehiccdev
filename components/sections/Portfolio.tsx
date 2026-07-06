@@ -102,7 +102,7 @@ const T: Record<"bs" | "en", Content> = {
     minis: [
       { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
       { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward.", live: true },
-      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging."},
+      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
   },
 };
