@@ -70,7 +70,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletna aplikacija za firmu, kao Maximum Rent a Car kojeg smo izgradili.",
-        price: "2.200", monthly: "99", gift: "Rast",
+        price: "2.400", monthly: "99", gift: "Rast",
         features: [
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog + upiti + admin panel)",
@@ -150,7 +150,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete app for your company, like the Maximum Rent a Car we built.",
-        price: "2,200", monthly: "99", gift: "Growth",
+        price: "2,400", monthly: "99", gift: "Growth",
         features: [
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
