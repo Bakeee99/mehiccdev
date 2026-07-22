@@ -25,7 +25,7 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type AppPlan = { name: string; tag: string; price: string; monthly: string; from?: boolean; gift: string; features: string[] };
+type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
@@ -45,8 +45,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       "Dashboard, rezervacije, evidencija ili interni alat: gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket: prvi mjesec marketinga gratis.",
     buildLabel: "Razvoj (jednokratno)",
     once: "jednokratno",
-    monthlyLabel: "Hosting + podrška",
-    monthlySub: "hosting · održavanje · podrška",
+    monthlyLabel: "Hosting + podrška · opciono",
+    monthlySub: "nije obavezno, samo ako želite našu podršku i održavanje",
     perMonth: "/mj",
     from: "od",
     popular: "Najpopularniji",
@@ -58,7 +58,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "Jedan alat koji rješava jedan problem, npr. evidencija ili jednostavan katalog.",
-        price: "900", monthly: "49", gift: "Start",
+        price: "550", monthly: "50", gift: "Start",
         features: [
           "Jedna glavna funkcija (npr. katalog vozila ili evidencija klijenata)",
           "Vi i vaš tim se prijavljujete lozinkom",
@@ -69,8 +69,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         ],
       },
       {
-        name: "Business", tag: "Kompletna aplikacija za firmu, kao Maximum Rent a Car kojeg smo izgradili.",
-        price: "2.400", monthly: "99", gift: "Rast",
+        name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
+        price: "1.400", oldPrice: "1.800", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
         features: [
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog + upiti + admin panel)",
@@ -84,7 +84,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "Aplikacija bez ograničenja, kreirana tačno oko vašeg procesa.",
-        price: "4.500", monthly: "179", from: true, gift: "Dominacija",
+        price: "2.400", monthly: "100", from: true, gift: "Dominacija",
         features: [
           "SVE iz Business paketa, plus:",
           "Neograničeni dijelovi i funkcije po vašoj želji",
@@ -125,8 +125,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       "Dashboard, bookings, records or internal tool: we build the app that runs your business. With every package: the first month of marketing free.",
     buildLabel: "Development (one-time)",
     once: "one-time",
-    monthlyLabel: "Hosting + support",
-    monthlySub: "hosting · maintenance · support",
+    monthlyLabel: "Hosting + support · optional",
+    monthlySub: "not required, only if you want our support and maintenance",
     perMonth: "/mo",
     from: "from",
     popular: "Most popular",
@@ -138,7 +138,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "One tool that solves one problem, e.g. records or a simple catalog.",
-        price: "900", monthly: "49", gift: "Start",
+        price: "550", monthly: "50", gift: "Start",
         features: [
           "One main feature (e.g. vehicle catalog or client records)",
           "You and your team log in with a password",
@@ -149,8 +149,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         ],
       },
       {
-        name: "Business", tag: "A complete app for your company, like the Maximum Rent a Car we built.",
-        price: "2,400", monthly: "99", gift: "Growth",
+        name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
+        price: "1,400", oldPrice: "1,800", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
         features: [
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
@@ -164,7 +164,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "An app without limits, built exactly around your process.",
-        price: "4,500", monthly: "179", from: true, gift: "Domination",
+        price: "2,400", monthly: "100", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
@@ -288,17 +288,33 @@ export function Pricing() {
 
                 {/* Build (one-time) price */}
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)] mb-1">{d.buildLabel}</p>
-                <div className="flex items-baseline gap-1 mb-1">
+                <div className="flex items-baseline gap-2 mb-1 flex-wrap">
                   {plan.from && <span className="text-base font-semibold text-[var(--text-muted)]">{d.from}</span>}
                   <span className="text-4xl font-extrabold text-[var(--text)]">€{plan.price}</span>
+                  {plan.oldPrice && (
+                    <span className="text-lg font-bold text-[var(--text-muted)] line-through decoration-red-500/60 decoration-2">
+                      €{plan.oldPrice}
+                    </span>
+                  )}
                 </div>
-                <p className="text-xs text-[var(--text-muted)] mb-4">{d.once}</p>
+                <p className="text-xs text-[var(--text-muted)] mb-2">{d.once}</p>
+                {plan.promoNote && (
+                  <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30
+                                px-3 py-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 mb-3 leading-snug">
+                    ⏳ {plan.promoNote}
+                  </p>
+                )}
 
                 {/* Free marketing banner */}
                 <div className="flex items-center gap-2 rounded-xl bg-green-500/10 border border-green-500/25 px-3 py-2.5 mb-3">
                   <Gift size={16} className="text-green-600 dark:text-green-400 flex-shrink-0" />
                   <p className="text-xs leading-snug">
-                    <span className="font-bold text-green-600 dark:text-green-400">{d.giftPre} «{plan.gift}»</span>{" "}
+                    <span className="font-bold text-green-600 dark:text-green-400">
+                      {d.giftPre}{" "}
+                      <span className="inline-block px-1.5 py-px rounded-md bg-green-500/15 border border-green-500/30 leading-tight">
+                        {plan.gift}
+                      </span>
+                    </span>{" "}
                     <span className="text-[var(--text-muted)]">{d.giftPost}</span>
                   </p>
                 </div>
