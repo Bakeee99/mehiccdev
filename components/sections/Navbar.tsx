@@ -43,7 +43,7 @@ export function Navbar() {
     { label: L.services,  href: "#usluge"    },
     { label: L.about,     href: "#o-nama"    },
     { label: L.portfolio, href: "#portfolio" },
-    { label: L.pricing,   href: "#cjenovnik" },
+    { label: L.pricing,   href: "#cjenovnik", promo: true },
     { label: L.saas,      href: "#saas"      },
   ];
 
@@ -73,11 +73,20 @@ export function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="px-3 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)]
+                  className="relative px-3 py-2 rounded-xl text-sm font-medium text-[var(--text-muted)]
                              hover:text-[var(--text)] hover:bg-[var(--surface)]
                              transition-all duration-200"
                 >
                   {link.label}
+                  {"promo" in link && link.promo && (
+                    <span className="absolute -top-0.5 right-0 w-[15px] h-[15px] rounded-full
+                                     flex items-center justify-center
+                                     bg-red-500 text-white text-[8px] font-extrabold
+                                     shadow-sm shadow-red-500/40 animate-pulse pointer-events-none"
+                          aria-label="Akcijske cijene">
+                      %
+                    </span>
+                  )}
                 </a>
               </li>
             ))}
@@ -150,7 +159,17 @@ export function Navbar() {
                   className="flex items-center justify-between text-[15px] font-semibold text-[var(--text)] py-3.5
                              border-b border-[var(--border)] last:border-0"
                 >
-                  {link.label}
+                  <span className="relative inline-block">
+                    {link.label}
+                    {"promo" in link && link.promo && (
+                      <span className="absolute -top-1.5 -right-4 w-[15px] h-[15px] rounded-full
+                                       flex items-center justify-center
+                                       bg-red-500 text-white text-[8px] font-extrabold pointer-events-none"
+                            aria-label="Akcijske cijene">
+                        %
+                      </span>
+                    )}
+                  </span>
                   <ArrowUpRight size={14} className="text-[var(--text-muted)]" />
                 </a>
               ))}

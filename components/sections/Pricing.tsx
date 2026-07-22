@@ -25,7 +25,7 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; monthly: string; from?: boolean; gift: string; features: string[] };
+type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; discountBadge?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
@@ -70,7 +70,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "1.400", oldPrice: "1.800", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
+        price: "1.400", oldPrice: "1.800", discountBadge: "-22%", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
         features: [
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog + upiti + admin panel)",
@@ -150,7 +150,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "1,400", oldPrice: "1,800", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
+        price: "1,400", oldPrice: "1,800", discountBadge: "-22%", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
         features: [
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
@@ -294,6 +294,13 @@ export function Pricing() {
                   {plan.oldPrice && (
                     <span className="text-lg font-bold text-[var(--text-muted)] line-through decoration-red-500/60 decoration-2">
                       €{plan.oldPrice}
+                    </span>
+                  )}
+                  {plan.discountBadge && (
+                    <span className="inline-flex items-center px-2 py-0.5 -rotate-3 rounded-lg
+                                     bg-red-500 text-white text-xs font-extrabold
+                                     shadow-md shadow-red-500/40 select-none">
+                      {plan.discountBadge}
                     </span>
                   )}
                 </div>
