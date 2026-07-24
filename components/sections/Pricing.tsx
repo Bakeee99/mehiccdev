@@ -70,8 +70,9 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "1.400", oldPrice: "1.800", discountBadge: "-22%", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
+        price: "1.800", oldPrice: "2.400", discountBadge: "-25%", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
         features: [
+          "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog + upiti + admin panel)",
           "Više uloga: vlasnik vidi sve, osoblje samo svoje",
@@ -150,8 +151,9 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "1,400", oldPrice: "1,800", discountBadge: "-22%", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
+        price: "1,800", oldPrice: "2,400", discountBadge: "-25%", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
         features: [
+          "3 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
           "Multiple roles: owner sees all, staff see their own",
