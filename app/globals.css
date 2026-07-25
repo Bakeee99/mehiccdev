@@ -51,6 +51,18 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+/* ── Puls kroz šine: signal koji putuje od vrha do dna ekrana ──────────────
+   Samo transform (jeftino), različita trajanja za lijevu/desnu šinu da
+   nikad ne budu sinhronizovane. motion-reduce klasa na elementu gasi. */
+@keyframes rail-pulse {
+  0%   { transform: translateY(-20vh); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(105vh); opacity: 0; }
+}
+.animate-rail-pulse      { animation: rail-pulse 9s  cubic-bezier(.4,0,.6,1) infinite; }
+.animate-rail-pulse-slow { animation: rail-pulse 14s cubic-bezier(.4,0,.6,1) infinite 4s; }
+
 @layer utilities {
   /* Potpisni sloj: statično zrno (SVG šum) preko cijele stranice.
      Jedna sitna slika koja se ponavlja: nula JS, nula filtera, nula

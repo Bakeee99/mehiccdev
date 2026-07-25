@@ -1,41 +1,47 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — POTPISNI SLOJ: "inženjerski papir + studijsko svjetlo"
+  mehiccdev — POZADINA v2: "ŽIVI SISTEM"
 ════════════════════════════════════════════════════════════════════
 
+Zamjenjuje prethodni "potpisni sloj" ZIP (sve iz njega je unutra i
+nadograđeno). Hero.tsx iz prethodnog ZIP-a i dalje vrijedi ako si ga
+već ubacio; ako nisi, ubaci i njega (konsolidovana aurora).
+
 ŠTA JE U ZIP-u (3 fajla):
-  app/layout.tsx          → tri nova fiksna pozadinska sloja
-  app/globals.css         → nova .bg-noise (zrno) utility klasa
-  components/sections/Hero.tsx → aurora konsolidovana (3 oblaka → 1)
+  components/ui/BackgroundFX.tsx  → NOVA komponenta, sva pozadina
+  app/layout.tsx                  → koristi novu komponentu
+  app/globals.css                 → keyframes za puls + zrno
 
 ────────────────────────────────────────────────────────────────────
-ŠTA OVO RADI (vidljivo na CIJELOM sajtu, ne samo hero)
+ŠTA JE NOVO (liječi "monotono i repetitivno")
 ────────────────────────────────────────────────────────────────────
-1. ZRNO (grain): ultra-suptilna šum tekstura preko cijele stranice.
-   Ovo je razlika između "AI plastike" i materijala: digitalna
-   savršenost djeluje generisano, zrno djeluje kao papir/film.
-   Statična SVG slika, nula troška pri skrolanju.
+1. PULS KROZ ŠINE: kratki svijetli signal putuje niz lijevu šinu
+   (plavi, 9s ciklus) i desnu (svjetliji, 14s, pomaknut start), kao
+   podatak koji teče kroz sistem. Nikad nisu sinhronizovani pa
+   pozadina stalno "radi". Čist CSS transform, nula troška.
 
-2. EDITORIJALNE ŠINE: dvije tanke vertikalne linije uz rubove
-   sadržajnog stupca, od vrha do dna sajta. Sve sekcije sada vise
-   na vidljivom "skeletu" kao u švajcarskom grafičkom dizajnu.
-   Ovo skoro nijedan sajt nema i odmah čita kao ruka dizajnera.
-   (Na telefonu sakrivene: tamo bi smetale sadržaju.)
+2. BLUEPRINT SKICE PO DUBINI STRANICE: pet blijedih wireframe
+   crteža (browser s kotom "320px", telefon s REZERVIŠI dugmetom,
+   dijagram toka UPIT → SISTEM → ✓ 2s) na različitim visinama
+   (115vh, 240vh, 390vh, 540vh, 680vh), naizmjenično lijevo/desno,
+   svaka blago zarotirana. Skroluju SA sadržajem, pa svaki dio
+   stranice ima drugačiju pozadinu. Ovo je "IT fazon" bez klišeja:
+   ne sija, ne treperi, nego izgleda kao stol arhitekte softvera.
 
-3. JEDNO SVJETLO: umjesto raštrkanih sjajeva, jedan veliki mekan
-   svjetlosni zahvat s vrha stranice, kao studijska rasvjeta.
-   Hero-ova tri plutajuća oblaka su svedena na jedan tihi bočni
-   akcenat; vrh stranice sada nosi globalno svjetlo.
+3. Svjetlo s vrha, šine i zrno ostaju kao podloga.
 
-Performanse: SVE statično, nula JavaScripta, nula blur filtera.
-Mobilna dijeta koju smo prošli ostaje netaknuta. Boje rade u obje
-teme, slojevi ne diraju tekst (bilingvalno neosjetljivo).
+Performanse: nula JavaScripta, nula blur filtera, animacija je samo
+transform. Na telefonu: samo svjetlo + zrno (šine, puls i skice su
+desktop detalj, mobilna dijeta netaknuta). motion-reduce gasi puls.
+
+NAPOMENA: pozicije skica su u vh jedinicama (dubina stranice). Ako
+ti neka sjedne ružno preko sekcije, pomjeranje je trivijalno: u
+BackgroundFX.tsx u BlueprintLayer promijeni top-[XXXvh] vrijednosti.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA za sva 3 fajla
-  2. npm run dev → prođi CIJELI sajt: zrno se vidi najbolje na
-     praznim tamnim površinama, šine na desktopu, svjetlo na vrhu.
-     Provjeri OBJE teme (u svijetloj je zrno tiše).
-  3. git add . && git commit -m "feat: potpisni pozadinski sloj" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA (BackgroundFX.tsx je nov)
+  2. npm run dev → skrolaj CIJELI sajt na desktopu: puls kroz šine,
+     skice na različitim dubinama; provjeri obje teme pa telefon
+  3. git add . && git commit -m "feat: pozadina v2, zivi sistem" && git push
 
-Build verifikovan prije slanja (svjež klon): npm run build ✓
+Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
