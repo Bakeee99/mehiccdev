@@ -149,12 +149,10 @@ export function Hero() {
       {/* ── Pozadina: grid + aurora ─────────────────────────────────────── */}
       <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
                       [mask-image:radial-gradient(75%_60%_at_50%_38%,black,transparent)]" aria-hidden />
-      <Aurora reduce={calm} delay={0} glow="rgba(37,99,235,0.30)"
-              className="w-[560px] h-[560px] -top-40 left-1/2 -translate-x-[65%]" />
-      <Aurora reduce={calm} delay={5} glow="rgba(99,102,241,0.22)"
-              className="w-[460px] h-[460px] top-1/4 -right-40" />
-      <Aurora reduce={calm} delay={9} glow="rgba(14,165,233,0.18)"
-              className="w-[420px] h-[420px] bottom-0 -left-40" />
+      {/* Globalno "studijsko svjetlo" iz layout-a sada nosi vrh stranice;
+          hero zadržava samo jedan tihi bočni akcenat radi dubine. */}
+      <Aurora reduce={calm} delay={5} glow="rgba(99,102,241,0.16)"
+              className="w-[460px] h-[460px] top-1/3 -right-44" />
       {/* horizontalni svjetlosni snop ispod navbara */}
       <div className="absolute top-24 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent" aria-hidden />
 

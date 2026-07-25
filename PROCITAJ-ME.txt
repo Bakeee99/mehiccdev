@@ -1,39 +1,41 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — NOVE CIJENE + AKCIJA ZA PRVE KLIJENTE
+  mehiccdev — POTPISNI SLOJ: "inženjerski papir + studijsko svjetlo"
 ════════════════════════════════════════════════════════════════════
 
-Rađeno na SVJEŽEM kodu s GitHuba (uključuje tvoje zadnje izmjene).
+ŠTA JE U ZIP-u (3 fajla):
+  app/layout.tsx          → tri nova fiksna pozadinska sloja
+  app/globals.css         → nova .bg-noise (zrno) utility klasa
+  components/sections/Hero.tsx → aurora konsolidovana (3 oblaka → 1)
 
-ŠTA JE U ZIP-u (2 fajla):
-  components/sections/Pricing.tsx
-  components/sections/Value.tsx
+────────────────────────────────────────────────────────────────────
+ŠTA OVO RADI (vidljivo na CIJELOM sajtu, ne samo hero)
+────────────────────────────────────────────────────────────────────
+1. ZRNO (grain): ultra-suptilna šum tekstura preko cijele stranice.
+   Ovo je razlika između "AI plastike" i materijala: digitalna
+   savršenost djeluje generisano, zrno djeluje kao papir/film.
+   Statična SVG slika, nula troška pri skrolanju.
 
-NOVE CIJENE:
-  Starter:   €550  (bilo 900)   ·  hosting €50/mj
-  Business:  €1.800 precrtano → €1.400 s narandžastom oznakom
-             "⏳ Cijena za prve klijente dok gradimo portfolio"
-             ·  hosting €75/mj
-  Premium:   od €2.400          ·  hosting €100/mj
+2. EDITORIJALNE ŠINE: dvije tanke vertikalne linije uz rubove
+   sadržajnog stupca, od vrha do dna sajta. Sve sekcije sada vise
+   na vidljivom "skeletu" kao u švajcarskom grafičkom dizajnu.
+   Ovo skoro nijedan sajt nema i odmah čita kao ruka dizajnera.
+   (Na telefonu sakrivene: tamo bi smetale sadržaju.)
 
-HOSTING JE SADA JASNO OPCION: naslov kaže "Hosting + podrška ·
-opciono", a ispod piše "nije obavezno, samo ako želite našu podršku
-i održavanje". (BS i EN)
+3. JEDNO SVJETLO: umjesto raštrkanih sjajeva, jedan veliki mekan
+   svjetlosni zahvat s vrha stranice, kao studijska rasvjeta.
+   Hero-ova tri plutajuća oblaka su svedena na jedan tihi bočni
+   akcenat; vrh stranice sada nosi globalno svjetlo.
 
-VALUE SEKCIJA USKLAĐENA: računica €/dan sada prati nove cijene
-(€550 + €50/mj = oko €3,20/dan u prvoj godini; podrška €1,70/dan),
-uz napomenu da je hosting opcion.
-
-NAPOMENA (moja preporuka, javi ako želiš drugačije): na Premium sam
-ZADRŽAO "od" (od €2.400) jer je to paket "bez ograničenja po vašem
-procesu": fiksna cijena za neograničen obim te pravno i poslovno
-izlaže. "od" te štiti, a klijentu i dalje jasno kaže red veličine.
-Ako ipak želiš fiksno €2.400 bez "od", to je brisanje jedne riječi.
+Performanse: SVE statično, nula JavaScripta, nula blur filtera.
+Mobilna dijeta koju smo prošli ostaje netaknuta. Boje rade u obje
+teme, slojevi ne diraju tekst (bilingvalno neosjetljivo).
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → provjeri cjenovnik (precrtana cijena + oznaka na
-     Business!), Value sekciju ispod, oba jezika, obje teme
-  3. git add . && git commit -m "feat: nove cijene + akcija za prve klijente" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA za sva 3 fajla
+  2. npm run dev → prođi CIJELI sajt: zrno se vidi najbolje na
+     praznim tamnim površinama, šine na desktopu, svjetlo na vrhu.
+     Provjeri OBJE teme (u svijetloj je zrno tiše).
+  3. git add . && git commit -m "feat: potpisni pozadinski sloj" && git push
 
-Build verifikovan prije slanja (na svježem klonu): npm run build ✓
+Build verifikovan prije slanja (svjež klon): npm run build ✓
 ════════════════════════════════════════════════════════════════════

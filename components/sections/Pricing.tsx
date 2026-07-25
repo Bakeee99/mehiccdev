@@ -30,6 +30,8 @@ type MktPlan = { name: string; tag: string; price: string; note: string; feature
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
   buildLabel: string; once: string; monthlyLabel: string; monthlySub: string;
+  afterHeading: string; afterSub: string;
+  afterBoxes: { label: string; price: string; per: string; sub: string }[];
   perMonth: string; from: string; popular: string;
   giftPre: string; giftPost: string; cta: string; appNote: string; apps: AppPlan[];
   mktEyebrow: string; mktHeading: string; mktSubtitle: string; mktCta: string; mktNote: string; mkt: MktPlan[];
@@ -47,6 +49,12 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     once: "jednokratno",
     monthlyLabel: "Hosting + podrška · opciono",
     monthlySub: "nije obavezno, samo ako želite našu podršku i održavanje",
+    afterHeading: "Nakon isporuke",
+    afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije, sve je opciono:",
+    afterBoxes: [
+      { label: "Hosting + podrška + održavanje", price: "€60", per: "/mj", sub: "fiksno, otkažite bilo kad" },
+      { label: "Izmjene i dorade", price: "€25", per: "/h", sub: "nove funkcije van dogovorenog obima" },
+    ],
     perMonth: "/mj",
     from: "od",
     popular: "Najpopularniji",
@@ -128,6 +136,12 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     once: "one-time",
     monthlyLabel: "Hosting + support · optional",
     monthlySub: "not required, only if you want our support and maintenance",
+    afterHeading: "After launch",
+    afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional:",
+    afterBoxes: [
+      { label: "Hosting + support + maintenance", price: "€60", per: "/mo", sub: "flat rate, cancel anytime" },
+      { label: "Changes and upgrades", price: "€25", per: "/h", sub: "new features beyond the agreed scope" },
+    ],
     perMonth: "/mo",
     from: "from",
     popular: "Most popular",
@@ -212,6 +226,7 @@ export function Pricing() {
   const revealAppsHead = useReveal();
   const revealAppsGrid = useReveal();
   const revealAppsNote = useReveal();
+  const revealAfter    = useReveal();
   const revealMktHead  = useReveal();
   const revealMktGrid  = useReveal();
   const revealMktNote  = useReveal();
@@ -256,7 +271,7 @@ export function Pricing() {
         <motion.div
           variants={staggerContainerSlow}
           {...revealAppsGrid}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-start"
         >
           {d.apps.map((plan, i) => {
             const Icon = APP_ICONS[i] ?? Star;
@@ -328,16 +343,6 @@ export function Pricing() {
                   </p>
                 </div>
 
-                {/* Monthly hosting + support */}
-                <div className="rounded-xl border border-dashed border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_40%,transparent)] px-3.5 py-3 mb-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">{d.monthlyLabel}</p>
-                  <p className="text-lg font-extrabold text-[var(--text)] mt-0.5">
-                    {plan.from && <span className="text-sm font-semibold text-[var(--text-muted)]">{d.from} </span>}
-                    €{plan.monthly}<span className="text-sm font-semibold text-[var(--text-muted)]">{d.perMonth}</span>
-                  </p>
-                  <p className="text-[11px] text-[var(--text-muted)] mt-0.5">{d.monthlySub}</p>
-                </div>
-
                 <ul className="flex flex-col gap-2.5 mb-6 flex-1">
                   {plan.features.map((f) =>
                     isHeader(f) ? (
@@ -375,6 +380,30 @@ export function Pricing() {
         >
           {d.appNote}
         </motion.p>
+
+        {/* ════ NAKON ISPORUKE: fiksne dodatne usluge ════ */}
+        <motion.div variants={staggerContainer} {...revealAfter} className="mt-14 max-w-2xl mx-auto text-center">
+          <motion.p variants={fadeUp} className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] mb-2">
+            {d.afterHeading}
+          </motion.p>
+          <motion.p variants={fadeUp} className="text-sm text-[var(--text-muted)] mb-6">
+            {d.afterSub}
+          </motion.p>
+          <motion.div variants={fadeUp} className="grid sm:grid-cols-2 gap-3.5">
+            {d.afterBoxes.map((b) => (
+              <div key={b.label}
+                   className="rounded-2xl border border-dashed border-[var(--border)]
+                              bg-[color-mix(in_srgb,var(--bg)_40%,transparent)] px-5 py-4 text-center
+                              transition-[border-color] duration-300 hover:border-brand-600/40">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-1">{b.label}</p>
+                <p className="text-2xl font-extrabold text-[var(--text)]">
+                  {b.price}<span className="text-sm font-semibold text-[var(--text-muted)]">{b.per}</span>
+                </p>
+                <p className="text-[11px] text-[var(--text-muted)] mt-1">{b.sub}</p>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
 
         {/* ════ MARKETING PACKAGES ════ */}
         <motion.div
