@@ -1,40 +1,33 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — POZADINA v3: "AMBIJENT KOJI PUTUJE + REFLEKTOR"
+  mehiccdev — USLUGE v4: tri kolone, sve vidljivo odmah, bez AI
 ════════════════════════════════════════════════════════════════════
 
-Zamjenjuje BackgroundFX.tsx iz v2 ("živi sistem"). Layout i globals
-iz prethodnog ZIP-a ostaju kakvi jesu, ovaj put se mijenja SAMO:
+Zamjenjuje Usluge v3 (pozornicu). 1 fajl:
+  components/sections/Services.tsx
 
-  components/ui/BackgroundFX.tsx
+ŠTA JE NOVO:
+  • AI USLUGA IZBAČENA (tvoja odluka): ostale su 3 usluge.
+  • TRI ČISTE KOLONE: sve informacije vidljive ODMAH, bez klikanja
+    i bez rotacije. Svaka kolona, odozgo prema dole:
+    broj + ikonica (+ "Najtraženije" na aplikaciji) → ljudski
+    naslov → jedna rečenica → vizual s natpisom ("Ovako izgleda
+    vaš admin panel") → Šta dobijate (3 stavke) → linija
+    povjerenja na dnu (Nike/TikTok, Dell/NYT, Meta/Google).
+  • Ljudski jezik iz v3 ZADRŽAN (nula žargona).
+  • Kartice iste visine, hover podizanje, editorial brojevi u uglu.
 
-────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO: dva PONAŠANJA (ne nove teksture)
-────────────────────────────────────────────────────────────────────
-1. REFLEKTOR KOJI PRATI MIŠ (desktop): mekan plavi sjaj od ~900px
-   klizi po stranici za kursorom, s oprugom (glatko, bez trzaja).
-   Gdje god posjetilac krene, sajt "svijetli" s njim. Ovo se
-   primijeti u prvoj sekundi i niko ga nema.
+MOBILNO: iste kartice jedna ispod druge, ništa se ne krije.
 
-2. AMBIJENT KOJI PUTUJE SA SKROLOM: na vrhu sajta svjetlo dolazi
-   odozgo (plavo); kako skrolaš prema dnu, ono blijedi a iz dna
-   izvire novo, indigo/cijan svjetlo (dva izvora, lijevo i desno).
-   Stranica postaje putovanje kroz svjetlo: nijedan ekran nema istu
-   pozadinu. Tehnički se mijenja SAMO prozirnost dva sloja (GPU,
-   jeftino), nikad sami gradijenti.
-
-Šine s pulsom, blueprint skice i zrno ostaju ispod svega (v2).
-
-TELEFON / REDUCED MOTION: reflektor i putovanje ambijenta su
-isključeni (statično gornje svjetlo + zrno). Mobilna dijeta
-netaknuta: skrol handler je pasivan i rAF-ograničen, radi samo
-na desktopu.
+⚠ NAPOMENA: AI je izbačen SAMO iz ove sekcije. AI se i dalje
+spominje u: Footer (lista usluga), Hero (eyebrow "Web · AI ·
+Marketing") i Kontakt formi (opcija "AI integracija"). Reci ako
+želiš da ga uklonimo svugdje, ili ostaje kao sporedna ponuda.
 
 KORACI:
   1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → desktop: mrdaj mišem (reflektor), pa POLAKO
-     skrolaj od vrha do footera i gledaj kako se svjetlo seli;
-     obje teme; pa telefon (statično, glatko)
-  3. git add . && git commit -m "feat: pozadina v3, ambijent + reflektor" && git push
+  2. npm run dev → obje teme (posebno SVIJETLU, tu ti je prošla
+     verzija zasmetala), pa telefon
+  3. git add . && git commit -m "feat: usluge v4, tri kolone" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════

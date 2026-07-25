@@ -1,41 +1,36 @@
 /**
  * components/sections/Services.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Šta radimo" (v3: interaktivna pozornica + ljudski jezik).
+ * "Šta radimo" (v4: tri kolone, sve vidljivo odmah).
  *
- * Dvije ključne promjene u odnosu na v2 (bento):
- *   1. JEZIK: nula developerskog žargona. Svaka usluga ima naslov i koristi
- *      napisane za vlasnika biznisa, ne za programera ("Gosti sami provjere
- *      šta je slobodno" umjesto "REST & GraphQL API"). Tehnologija je svedena
- *      na jednu malu liniju povjerenja na dnu.
- *   2. FORMA: desktop ima POZORNICU: lijevo 4 reda za izbor usluge, desno
- *      veliki vizual + "Šta dobijate" lista za aktivnu uslugu. Pozornica se
- *      sama rotira svakih 7s (traka napretka na aktivnom redu) dok korisnik
- *      prvi put ne klikne; tada preuzima kontrolu. Na telefonu: jednostavne
- *      naslagane kartice bez interakcije (sve se vidi odmah).
+ * Lekcije iz prethodnih verzija:
+ *   • v2 bento: djelovao šablonski.  • v3 pozornica: sakrivala 3/4 sadržaja.
+ * v4: AI usluga je izbačena (odluka vlasnika), pa 3 usluge = 3 čiste kolone
+ * gdje se SVE vidi na prvi pogled, bez ikakvog klikanja:
+ *   broj + ljudski naslov → jedna rečenica → vizual s natpisom →
+ *   "Šta dobijate" (3 stavke) → linija povjerenja na dnu.
+ * Ljudski jezik iz v3 je zadržan (nula žargona).
  *
- * Performanse: bez blura, animacije su transform/opacity, autoplay se gasi
- * za reduced-motion. Self-contained BS/EN, id ostaje "usluge".
+ * Mobile: iste kartice, jedna ispod druge. Bez interakcija, bez autoplaya.
+ * Self-contained BS/EN, useReveal, dark/light, bez crtica, id "usluge".
  */
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { AppWindow, Globe, LineChart, BrainCircuit, Check, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { AppWindow, Globe, LineChart, Check, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { staggerContainer, fadeUp } from "@/lib/animations";
+import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-const ICONS: LucideIcon[] = [AppWindow, Globe, LineChart, BrainCircuit];
-const ROTATE_MS = 7000;
+const ICONS: LucideIcon[] = [AppWindow, Globe, LineChart];
 
-type Service = { title: string; hook: string; benefits: string[]; trust: string; caption: string };
+type Service = { title: string; hook: string; benefits: string[]; trust: string; caption: string; badge?: string };
 type Content = {
   label: string; heading1: string; headingAccent: string; subtitle: string;
   benefitsTitle: string;
-  items: [Service, Service, Service, Service];
+  items: [Service, Service, Service];
 };
 
 const T: Record<"bs" | "en", Content> = {
@@ -48,6 +43,7 @@ const T: Record<"bs" | "en", Content> = {
     items: [
       {
         title: "Aplikacija za vaš biznis",
+        badge: "Najtraženije",
         hook: "Program u kojem vodite rezervacije, klijente i posao. Umjesto sveske, poziva i Excela.",
         benefits: [
           "Gosti sami provjere šta je slobodno i pošalju upit, i u 3 ujutro",
@@ -72,23 +68,12 @@ const T: Record<"bs" | "en", Content> = {
         title: "Marketing koji dovodi goste",
         hook: "Objave i reklame koje vode do upita i rezervacija, ne samo do lajkova.",
         benefits: [
-          "Reklame na Instagramu i Googlu vođene ispravno, bez bacanja budžeta",
-          "Svaki mjesec jasan izvještaj: šta je urađeno i šta je stiglo od toga",
+          "Instagram i Google reklame vođene ispravno, bez bacanja budžeta",
+          "Svaki mjesec jasan izvještaj: šta je urađeno i šta je stiglo",
           "Sadržaj koji zvuči kao vi, ne kao agencija",
         ],
         trust: "Meta i Google oglašavanje, mjerljivo do zadnjeg upita",
         caption: "Rast upita, mjesec po mjesec",
-      },
-      {
-        title: "AI koji radi za vas",
-        hook: "Pametni pomoćnici koji preuzmu ono što vam krade vrijeme: odgovore, izvještaje, obradu upita.",
-        benefits: [
-          "Chatbot odgovara gostima i kad vi spavate",
-          "Izvještaji se pišu sami umjesto ručnog prekucavanja",
-          "Uvodimo AI samo tamo gdje vam stvarno štedi sate",
-        ],
-        trust: "GPT i Claude integracije, uposlene s razlogom",
-        caption: "Vaš AI asistent u razgovoru s gostom",
       },
     ],
   },
@@ -101,6 +86,7 @@ const T: Record<"bs" | "en", Content> = {
     items: [
       {
         title: "An app for your business",
+        badge: "Most popular",
         hook: "A system where you run bookings, clients and daily work. Instead of notebooks, calls and Excel.",
         benefits: [
           "Guests check availability and send inquiries on their own, even at 3 AM",
@@ -132,34 +118,22 @@ const T: Record<"bs" | "en", Content> = {
         trust: "Meta and Google advertising, measurable to the last inquiry",
         caption: "Inquiry growth, month by month",
       },
-      {
-        title: "AI that works for you",
-        hook: "Smart assistants that take over what steals your time: replies, reports, inquiry handling.",
-        benefits: [
-          "A chatbot answers guests while you sleep",
-          "Reports write themselves instead of manual retyping",
-          "We add AI only where it truly saves you hours",
-        ],
-        trust: "GPT and Claude integrations, employed with a purpose",
-        caption: "Your AI assistant talking to a guest",
-      },
     ],
   },
 };
 
-/* ── Vizuali (isti jezik kao flagship: aplikacija "na djelu") ─────────────── */
+/* ── Vizuali: usluga "na djelu", isti jezik kao flagship sekcija ──────────── */
 
 function VisualApps() {
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0A122B] p-4" aria-hidden>
-      {[["bg-amber-400", "w-28"], ["bg-green-500", "w-24"], ["bg-green-500", "w-32"], ["bg-green-500", "w-20"]].map(([dot, w], i) => (
-        <div key={i} className={`flex items-center gap-3 py-2.5 ${i < 3 ? "border-b border-white/[.06]" : ""}`}>
+    <div className="rounded-xl border border-white/10 bg-[#0A122B] p-3.5" aria-hidden>
+      {[["bg-amber-400", "w-24"], ["bg-green-500", "w-20"], ["bg-green-500", "w-28"]].map(([dot, w], i) => (
+        <div key={i} className={`flex items-center gap-2.5 py-2.5 ${i < 2 ? "border-b border-white/[.06]" : ""}`}>
           <span className={`w-2 h-2 rounded-full ${dot} flex-shrink-0`} />
           <span className={`h-2 ${w} rounded bg-white/20`} />
-          <span className="h-2 w-12 rounded bg-white/10 hidden sm:block" />
           <span className="ml-auto flex gap-1.5 flex-shrink-0">
-            <span className="w-11 h-5 rounded bg-blue-600/90" />
-            <span className="w-11 h-5 rounded bg-white/10" />
+            <span className="w-10 h-5 rounded bg-blue-600/90" />
+            <span className="w-10 h-5 rounded bg-white/10" />
           </span>
         </div>
       ))}
@@ -171,13 +145,13 @@ function VisualWebflow() {
     <div className="rounded-xl border border-white/10 bg-[#0A122B] overflow-hidden" aria-hidden>
       <div className="flex items-center gap-1 px-3 py-2 border-b border-white/[.06]">
         <span className="w-1.5 h-1.5 rounded-full bg-white/20" /><span className="w-1.5 h-1.5 rounded-full bg-white/20" /><span className="w-1.5 h-1.5 rounded-full bg-white/20" />
-        <span className="ml-1.5 h-3 flex-1 rounded bg-white/[.07]" />
+        <span className="ml-1.5 h-2.5 flex-1 rounded bg-white/[.07]" />
       </div>
-      <div className="p-4 flex gap-4 items-center">
+      <div className="p-3.5 flex gap-3 items-center">
         <div className="flex-1">
-          <div className="h-2.5 w-3/4 rounded bg-white/25 mb-2" />
-          <div className="h-2.5 w-1/2 rounded bg-blue-400/50 mb-3" />
-          <div className="h-5 w-20 rounded bg-blue-600/90" />
+          <div className="h-2 w-3/4 rounded bg-white/25 mb-1.5" />
+          <div className="h-2 w-1/2 rounded bg-blue-400/50 mb-2.5" />
+          <div className="h-4 w-16 rounded bg-blue-600/90" />
         </div>
         <div className="w-2/5 aspect-[4/3] rounded-lg bg-gradient-to-br from-blue-400/40 to-indigo-600/20" />
       </div>
@@ -187,8 +161,8 @@ function VisualWebflow() {
 function VisualMarketing() {
   const bars = [28, 42, 38, 56, 70, 100];
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0A122B] p-4" aria-hidden>
-      <div className="flex items-end gap-2 h-24">
+    <div className="rounded-xl border border-white/10 bg-[#0A122B] p-3.5" aria-hidden>
+      <div className="flex items-end gap-1.5 h-[74px]">
         {bars.map((h, i) => (
           <span key={i} style={{ height: `${h}%` }}
                 className={`flex-1 rounded-t ${i === bars.length - 1
@@ -196,60 +170,23 @@ function VisualMarketing() {
                   : "bg-white/12"}`} />
         ))}
       </div>
-      <div className="flex items-center justify-between mt-2.5">
-        <span className="h-2 w-20 rounded bg-white/15" />
-        <span className="px-2 py-0.5 rounded text-[10px] font-bold text-green-400 bg-green-500/10 border border-green-500/30">
+      <div className="flex items-center justify-between mt-2">
+        <span className="h-1.5 w-16 rounded bg-white/15" />
+        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold text-green-400 bg-green-500/10 border border-green-500/30">
           +184% upita
         </span>
       </div>
     </div>
   );
 }
-function VisualAI() {
-  return (
-    <div className="rounded-xl border border-white/10 bg-[#0A122B] p-4 flex flex-col gap-2.5" aria-hidden>
-      <div className="self-end max-w-[70%] rounded-xl rounded-br-sm bg-white/[.08] px-3 py-2">
-        <span className="block h-2 w-28 rounded bg-white/25" />
-      </div>
-      <div className="self-start max-w-[78%] rounded-xl rounded-bl-sm bg-blue-600/25 border border-blue-500/30 px-3 py-2">
-        <span className="flex items-center gap-1.5 mb-1.5">
-          <Sparkles size={10} className="text-blue-300" />
-          <span className="h-1.5 w-10 rounded bg-blue-300/60" />
-        </span>
-        <span className="block h-2 w-36 rounded bg-white/25 mb-1.5" />
-        <span className="block h-2 w-24 rounded bg-white/15" />
-      </div>
-      <div className="self-end max-w-[70%] rounded-xl rounded-br-sm bg-white/[.08] px-3 py-2">
-        <span className="block h-2 w-20 rounded bg-white/25" />
-      </div>
-    </div>
-  );
-}
-const VISUALS = [VisualApps, VisualWebflow, VisualMarketing, VisualAI];
+const VISUALS = [VisualApps, VisualWebflow, VisualMarketing];
 
 export function Services() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
-  const reduce = useReducedMotion() ?? false;
 
-  const revealHead  = useReveal();
-  const revealStage = useReveal();
-  const revealStack = useReveal();
-
-  const [active, setActive] = useState(0);
-  const [locked, setLocked] = useState(false); // korisnik preuzeo kontrolu
-
-  // auto-rotacija dok korisnik prvi put ne klikne (i nikad uz reduced-motion)
-  useEffect(() => {
-    if (locked || reduce) return;
-    const t = setInterval(() => setActive((a) => (a + 1) % 4), ROTATE_MS);
-    return () => clearInterval(t);
-  }, [locked, reduce]);
-
-  const pick = (i: number) => { setLocked(true); setActive(i); };
-
-  const ActiveVisual = VISUALS[active];
-  const s = d.items[active];
+  const revealHead = useReveal();
+  const revealGrid = useReveal();
 
   return (
     <section id="usluge" className="py-28 lg:py-36 relative overflow-hidden">
@@ -265,7 +202,7 @@ export function Services() {
                              bg-brand-600/8 dark:bg-brand-500/10
                              text-brand-700 dark:text-brand-300
                              text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
               {d.label}
             </span>
           </motion.div>
@@ -278,125 +215,81 @@ export function Services() {
           </motion.p>
         </motion.div>
 
-        {/* ── DESKTOP: pozornica s izborom ───────────────────────────────── */}
-        <motion.div variants={fadeUp} {...revealStage}
-                    className="hidden lg:grid grid-cols-[0.85fr_1.15fr] gap-8 items-stretch">
-
-          {/* izbor usluga */}
-          <div className="flex flex-col gap-3" role="tablist" aria-label={d.label}>
-            {d.items.map((item, i) => {
-              const Icon = ICONS[i];
-              const on = i === active;
-              return (
-                <button
-                  key={item.title}
-                  role="tab"
-                  aria-selected={on}
-                  onClick={() => pick(i)}
-                  className={`relative text-left p-5 rounded-2xl border overflow-hidden
-                              transition-[border-color,background-color] duration-300
-                              ${on
-                                ? "bg-brand-600/[.07] border-brand-600/40"
-                                : "bg-[var(--surface)] border-[var(--border)] hover:border-brand-600/30"}`}
-                >
-                  <span className="flex items-center gap-4">
-                    <span className={`text-[28px] leading-none font-serif italic font-semibold select-none
-                                      ${on ? "text-gradient" : "text-[var(--text-muted)] opacity-40"}`}>
-                      0{i + 1}
-                    </span>
-                    <span className="min-w-0">
-                      <span className={`flex items-center gap-2 text-[16px] font-extrabold tracking-tight
-                                        ${on ? "text-[var(--text)]" : "text-[var(--text-muted)]"}`}>
-                        <Icon size={15} className={on ? "text-brand-600 dark:text-brand-400" : ""} />
-                        {item.title}
-                      </span>
-                      {on && (
-                        <span className="block text-[12.5px] text-[var(--text-muted)] leading-snug mt-1">
-                          {item.hook}
-                        </span>
-                      )}
-                    </span>
-                  </span>
-
-                  {/* traka napretka auto-rotacije */}
-                  {on && !locked && !reduce && (
-                    <motion.span
-                      key={`progress-${active}`}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: ROTATE_MS / 1000, ease: "linear" }}
-                      className="absolute bottom-0 left-0 h-[2.5px] w-full origin-left bg-brand-500/60"
-                    />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* pozornica */}
-          <div className="relative rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-7 overflow-hidden">
-            <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full
-                            bg-[radial-gradient(closest-side,rgba(37,99,235,0.15),transparent_72%)] pointer-events-none" aria-hidden />
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="relative"
-              >
-                <ActiveVisual />
-                <p className="mt-3 mb-5 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-center">
-                  {s.caption}
-                </p>
-
-                <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--text-muted)] mb-3">
-                  {d.benefitsTitle}
-                </p>
-                <ul className="flex flex-col gap-2.5 mb-5">
-                  {s.benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2.5 text-[14px] text-[var(--text)] leading-snug">
-                      <span className="mt-0.5 w-[18px] h-[18px] rounded-full flex items-center justify-center flex-shrink-0
-                                       bg-brand-600/12 border border-brand-600/30 text-brand-600 dark:text-brand-400">
-                        <Check size={10} strokeWidth={3.5} />
-                      </span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-[11.5px] text-[var(--text-muted)] border-t border-[var(--border)] pt-3.5">
-                  {s.trust}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
-
-        {/* ── MOBILE: jednostavne naslagane kartice, sve vidljivo odmah ──── */}
-        <motion.div variants={staggerContainer} {...revealStack} className="lg:hidden flex flex-col gap-5">
-          {d.items.map((item, i) => {
+        {/* ── Tri kolone: sve vidljivo odmah ─────────────────────────────── */}
+        <motion.div variants={staggerContainerSlow} {...revealGrid}
+                    className="grid md:grid-cols-3 gap-5 items-stretch">
+          {d.items.map((s, i) => {
             const Icon = ICONS[i];
             const Visual = VISUALS[i];
+            const featured = i === 0;
             return (
-              <motion.article key={item.title} variants={fadeUp}
-                              className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 overflow-hidden">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[26px] leading-none font-serif italic font-semibold text-gradient select-none">0{i + 1}</span>
-                  <h3 className="flex items-center gap-2 text-[17px] font-extrabold tracking-tight text-[var(--text)]">
-                    <Icon size={15} className="text-brand-600 dark:text-brand-400" /> {item.title}
-                  </h3>
+              <motion.article
+                key={s.title}
+                variants={scaleIn}
+                whileHover={{ y: -5 }}
+                className={`group relative flex flex-col rounded-3xl p-6 overflow-hidden
+                            bg-[var(--surface)] border
+                            transition-[border-color,box-shadow] duration-300
+                            ${featured
+                              ? "border-brand-600/35 hover:border-brand-600/55 hover:shadow-2xl hover:shadow-brand-600/15"
+                              : "border-[var(--border)] hover:border-brand-600/40 hover:shadow-2xl hover:shadow-brand-600/10"}`}
+              >
+                {/* broj u uglu, editorial potpis */}
+                <span className="absolute -top-2 right-4 text-[64px] leading-none font-serif italic font-semibold
+                                 text-gradient opacity-[0.13] select-none pointer-events-none
+                                 transition-opacity duration-500 group-hover:opacity-25" aria-hidden>
+                  0{i + 1}
+                </span>
+
+                <div className="relative flex items-center gap-3 mb-3">
+                  <span className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0
+                                   bg-gradient-to-br from-brand-600 to-brand-400 text-white
+                                   shadow-lg shadow-brand-600/30
+                                   transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <Icon size={17} />
+                  </span>
+                  {s.badge && (
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
+                                     text-brand-700 dark:text-brand-300 bg-brand-600/10 border border-brand-600/30">
+                      ★ {s.badge}
+                    </span>
+                  )}
                 </div>
-                <p className="text-[13px] text-[var(--text-muted)] leading-relaxed mb-4">{item.hook}</p>
-                <Visual />
-                <ul className="flex flex-col gap-2 mt-4">
-                  {item.benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-[12.5px] text-[var(--text)] leading-snug">
-                      <Check size={12} strokeWidth={3.5} className="mt-0.5 flex-shrink-0 text-brand-600 dark:text-brand-400" />
+
+                <h3 className="relative text-[19px] font-extrabold tracking-tight text-[var(--text)] mb-2 leading-tight">
+                  {s.title}
+                </h3>
+                <p className="relative text-[13px] text-[var(--text-muted)] leading-relaxed mb-4">
+                  {s.hook}
+                </p>
+
+                <div className="relative">
+                  <Visual />
+                  <p className="mt-2.5 mb-4 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-center">
+                    {s.caption}
+                  </p>
+                </div>
+
+                <p className="relative text-[10.5px] font-bold uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2.5">
+                  {d.benefitsTitle}
+                </p>
+                <ul className="relative flex flex-col gap-2 mb-5">
+                  {s.benefits.map((b) => (
+                    <li key={b} className="flex items-start gap-2.5 text-[13px] text-[var(--text)] leading-snug">
+                      <span className="mt-0.5 w-[17px] h-[17px] rounded-full flex items-center justify-center flex-shrink-0
+                                       bg-brand-600/12 border border-brand-600/30 text-brand-600 dark:text-brand-400">
+                        <Check size={9} strokeWidth={3.5} />
+                      </span>
                       {b}
                     </li>
                   ))}
                 </ul>
+
+                <p className="relative mt-auto flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]
+                              border-t border-[var(--border)] pt-3.5">
+                  <Sparkles size={11} className="text-brand-600 dark:text-brand-400 flex-shrink-0" />
+                  {s.trust}
+                </p>
               </motion.article>
             );
           })}

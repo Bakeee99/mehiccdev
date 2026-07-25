@@ -1,7 +1,11 @@
 /**
  * components/ui/BackgroundFX.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Potpisna pozadina v3: "AMBIJENT KOJI PUTUJE + REFLEKTOR".
+ * Potpisna pozadina v4: "ČISTI MINIMUM".
+ *
+ * v4 = v3 minus blueprint skice (osjećaj nabacanosti), uz stišan reflektor.
+ * Ostaju tri tiha sloja: ambijent koji putuje sa skrolom, šine s pulsom
+ * (naš "binarni kod, samo odrastao") i zrno.
  *
  * Novo u v3 (dva PONAŠANJA umjesto novih tekstura):
  *   • REFLEKTOR: mekan brand sjaj (~900px) koji prati miš kroz spring
@@ -96,8 +100,8 @@ export function BackgroundLayers() {
           aria-hidden
           style={{ x: sx, y: sy, width: SPOT, height: SPOT }}
           className="hidden lg:block fixed top-0 left-0 z-0 pointer-events-none rounded-full
-                     bg-[radial-gradient(closest-side,rgba(59,130,246,0.085),transparent_66%)]
-                     dark:bg-[radial-gradient(closest-side,rgba(96,165,250,0.11),transparent_66%)]"
+                     bg-[radial-gradient(closest-side,rgba(59,130,246,0.06),transparent_66%)]
+                     dark:bg-[radial-gradient(closest-side,rgba(96,165,250,0.08),transparent_66%)]"
         />
       )}
 
@@ -117,65 +121,8 @@ export function BackgroundLayers() {
   );
 }
 
-/* ── Blueprint fragmenti (nepromijenjeno iz v2): skice po dubini stranice ── */
-
-function WireBrowser() {
-  return (
-    <svg width="230" height="150" viewBox="0 0 230 150" fill="none" stroke="currentColor" strokeWidth="1">
-      <rect x="1" y="1" width="228" height="148" rx="8" />
-      <line x1="1" y1="24" x2="229" y2="24" />
-      <circle cx="14" cy="12.5" r="3" /><circle cx="26" cy="12.5" r="3" /><circle cx="38" cy="12.5" r="3" />
-      <rect x="14" y="38" width="120" height="10" rx="3" />
-      <rect x="14" y="56" width="80" height="8" rx="3" />
-      <rect x="14" y="76" width="56" height="18" rx="5" />
-      <rect x="150" y="38" width="66" height="56" rx="6" strokeDasharray="4 4" />
-      <line x1="150" y1="106" x2="216" y2="106" /><line x1="150" y1="101" x2="150" y2="111" /><line x1="216" y1="101" x2="216" y2="111" />
-      <text x="168" y="120" fontSize="9" stroke="none" fill="currentColor">320px</text>
-    </svg>
-  );
-}
-
-function WirePhone() {
-  return (
-    <svg width="110" height="200" viewBox="0 0 110 200" fill="none" stroke="currentColor" strokeWidth="1">
-      <rect x="1" y="1" width="108" height="198" rx="16" />
-      <line x1="40" y1="12" x2="70" y2="12" strokeLinecap="round" />
-      <rect x="14" y="30" width="82" height="44" rx="6" strokeDasharray="4 4" />
-      <rect x="14" y="84" width="60" height="8" rx="3" />
-      <rect x="14" y="98" width="44" height="8" rx="3" />
-      <rect x="14" y="150" width="82" height="22" rx="8" />
-      <text x="34" y="165" fontSize="9" stroke="none" fill="currentColor">REZERVIŠI</text>
-    </svg>
-  );
-}
-
-function WireFlow() {
-  return (
-    <svg width="260" height="120" viewBox="0 0 260 120" fill="none" stroke="currentColor" strokeWidth="1">
-      <rect x="1" y="40" width="70" height="34" rx="7" />
-      <text x="14" y="61" fontSize="9" stroke="none" fill="currentColor">UPIT</text>
-      <line x1="71" y1="57" x2="105" y2="57" strokeDasharray="4 4" />
-      <path d="M100 52 L108 57 L100 62" />
-      <rect x="108" y="40" width="70" height="34" rx="7" />
-      <text x="118" y="61" fontSize="9" stroke="none" fill="currentColor">SISTEM</text>
-      <line x1="178" y1="57" x2="212" y2="57" strokeDasharray="4 4" />
-      <path d="M207 52 L215 57 L207 62" />
-      <rect x="215" y="40" width="44" height="34" rx="7" />
-      <text x="224" y="61" fontSize="9" stroke="none" fill="currentColor">✓ 2s</text>
-      <line x1="1" y1="94" x2="259" y2="94" strokeDasharray="2 6" />
-    </svg>
-  );
-}
-
+/* ── v4: blueprint skice uklonjene ("čisti minimum"). Prazna komponenta
+     ostaje da layout.tsx ne mora mijenjati import. ── */
 export function BlueprintLayer() {
-  const base = "absolute pointer-events-none hidden lg:block text-[var(--text-muted)] opacity-[0.08] dark:opacity-[0.1]";
-  return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className={`${base} top-[115vh] left-[3%] -rotate-6`}><WireBrowser /></div>
-      <div className={`${base} top-[240vh] right-[4%] rotate-3`}><WirePhone /></div>
-      <div className={`${base} top-[390vh] left-[5%] -rotate-2`}><WireFlow /></div>
-      <div className={`${base} top-[540vh] right-[3%] rotate-6`}><WireBrowser /></div>
-      <div className={`${base} top-[680vh] left-[4%] rotate-2`}><WirePhone /></div>
-    </div>
-  );
+  return null;
 }
