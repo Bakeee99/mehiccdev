@@ -22,8 +22,8 @@ export default function HomePage() {
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Navbar />
       <Hero />
-      <Services />
       <About />
+      <Services />
       <Results />
       <Portfolio />
       <Pricing />

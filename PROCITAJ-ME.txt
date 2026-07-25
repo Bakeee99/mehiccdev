@@ -1,37 +1,26 @@
-════════════════════════════════════════════════════════════════════
-  mehiccdev — CJENOVNIK KOMPLET: bez praznina + sve dosadašnje
-════════════════════════════════════════════════════════════════════
-
-⚠ OVAJ ZIP ZAMJENJUJE SVE PRETHODNE CJENOVNIČKE ZIP-ove.
-Jedan raniji paket (fiksni hosting €60 + traka "Nakon isporuke")
-bio je ispao iz toka pa su se mjesečne kutije i praznine vratile;
-ovdje je SVE spojeno u jedno konačno stanje.
+════════════════════════════════════════════════════
+ mehiccdev — REDOSLIJED: O nama prije Usluga
+════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (2 fajla):
-  components/sections/Pricing.tsx
-  components/sections/Value.tsx
+  app/page.tsx
+  components/sections/Navbar.tsx
 
-KONAČNO STANJE CJENOVNIKA:
-  • Kartice: visina po sadržaju (NEMA praznih rupa iznad dugmadi)
-  • Mjesečne "Hosting" kutije IZBAČENE iz kartica
-  • Ispod kartica traka "NAKON ISPORUKE": €60/mj fiksno (hosting +
-    podrška + održavanje) i €25/h (izmjene i dorade)
-  • Business: €1.600 (precrtano €2.400), ugaona crvena -33%
-    naljepnica, "⏳ Za prve klijente · vrijedi do 30.09." u jednom
-    redu, CTA "Zakažimo razgovor", 3 mjeseca besplatne podrške kao
-    prva stavka
-  • Bez zelenih gift banera; umjesto njih rečenica u podnaslovu:
-    "Uz svaki paket razvoja dolazi mjesec besplatnog marketing
-    paketa Rast."
-  • Value sekcija: preračunata na €60/mj (€3,50/dan prva godina,
-    €2,00/dan podrška)
+ŠTA JE PROMIJENJENO:
+  • Na stranici: sekcija O NAMA (vase slike) sada dolazi
+    ODMAH POSLIJE HERO-a, prije Usluga. Posjetilac prvo
+    vidi KO ste, pa tek onda STA radite.
+  • U navbaru: isti redoslijed (O nama pa Usluge).
+  • Footer vec pocinje sa O nama, njega ne diramo.
 
-KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA za oba fajla
-  2. npm run dev → provjeri: NEMA praznina u Starter/Premium,
-     traka ispod kartica postoji, Business ima sve gore navedeno
-  3. git add . && git commit -m "feat: cjenovnik komplet" && git push
-     (OBAVEZNO pushaj da se ovo više ne izgubi!)
+VAZNO: da bi ovo imalo puni efekat, slike (bakir.jpg i
+nedim.jpg u public/team/) moraju biti ubacene: sekcija
+s placeholder inicijalima na ovako istaknutom mjestu
+djelovala bi nedovrseno.
 
-Build verifikovan prije slanja: npm run build ✓
-════════════════════════════════════════════════════════════════════
+KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
+(skrolaj: Hero → Tim → Usluge; provjeri i klik na "O
+nama" i "Usluge" u navbaru) → git add . && git commit
+-m "feat: o nama prije usluga" && git push
+
+Build verifikovan: npm run build ✓
