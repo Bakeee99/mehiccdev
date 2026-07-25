@@ -25,7 +25,7 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; discountBadge?: string; monthly: string; from?: boolean; gift: string; features: string[] };
+type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
@@ -44,7 +44,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Poslovne aplikacije",
     headingAccent: "po mjeri",
     subtitle:
-      "Dashboard, rezervacije, evidencija ili interni alat: gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket: prvi mjesec marketinga gratis.",
+      "Dashboard, rezervacije, evidencija ili interni alat: gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket razvoja dolazi mjesec besplatnog marketing paketa Rast.",
     buildLabel: "Razvoj (jednokratno)",
     once: "jednokratno",
     monthlyLabel: "Hosting + podrška · opciono",
@@ -78,7 +78,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "1.800", oldPrice: "2.400", discountBadge: "-25%", promoNote: "Cijena za prve klijente dok gradimo portfolio", monthly: "75", gift: "Rast",
+        price: "1.600", oldPrice: "2.400", discountBadge: "-33%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -131,7 +131,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Business applications,",
     headingAccent: "custom-built",
     subtitle:
-      "Dashboard, bookings, records or internal tool: we build the app that runs your business. With every package: the first month of marketing free.",
+      "Dashboard, bookings, records or internal tool: we build the app that runs your business. Every development package comes with a free month of the Rast marketing package.",
     buildLabel: "Development (one-time)",
     once: "one-time",
     monthlyLabel: "Hosting + support · optional",
@@ -165,7 +165,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "1,800", oldPrice: "2,400", discountBadge: "-25%", promoNote: "Early-client price while we build our portfolio", monthly: "75", gift: "Growth",
+        price: "1,600", oldPrice: "2,400", discountBadge: "-33%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "3 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
@@ -287,6 +287,13 @@ export function Pricing() {
                               ? "border-2 border-brand-600 shadow-2xl shadow-brand-600/20"
                               : "border border-[var(--border)] hover:shadow-xl hover:shadow-brand-600/10"}`}
               >
+                {plan.discountBadge && (
+                  <span className="absolute top-3 right-3 z-10 inline-flex items-center px-2.5 py-1 rotate-3 rounded-lg
+                                   bg-red-500 text-white text-xs font-extrabold
+                                   shadow-lg shadow-red-500/40 select-none pointer-events-none">
+                    {plan.discountBadge}
+                  </span>
+                )}
                 {popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-brand-600 text-white text-xs font-bold shadow-lg whitespace-nowrap">
@@ -313,13 +320,7 @@ export function Pricing() {
                       €{plan.oldPrice}
                     </span>
                   )}
-                  {plan.discountBadge && (
-                    <span className="inline-flex items-center px-2 py-0.5 -rotate-3 rounded-lg
-                                     bg-red-500 text-white text-xs font-extrabold
-                                     shadow-md shadow-red-500/40 select-none">
-                      {plan.discountBadge}
-                    </span>
-                  )}
+
                 </div>
                 <p className="text-xs text-[var(--text-muted)] mb-2">{d.once}</p>
                 {plan.promoNote && (
@@ -330,19 +331,6 @@ export function Pricing() {
                 )}
 
                 {/* Free marketing banner */}
-                <div className="flex items-center gap-2 rounded-xl bg-green-500/10 border border-green-500/25 px-3 py-2.5 mb-3">
-                  <Gift size={16} className="text-green-600 dark:text-green-400 flex-shrink-0" />
-                  <p className="text-xs leading-snug">
-                    <span className="font-bold text-green-600 dark:text-green-400">
-                      {d.giftPre}{" "}
-                      <span className="inline-block px-1.5 py-px rounded-md bg-green-500/15 border border-green-500/30 leading-tight">
-                        {plan.gift}
-                      </span>
-                    </span>{" "}
-                    <span className="text-[var(--text-muted)]">{d.giftPost}</span>
-                  </p>
-                </div>
-
                 <ul className="flex flex-col gap-2.5 mb-6 flex-1">
                   {plan.features.map((f) =>
                     isHeader(f) ? (
@@ -365,7 +353,7 @@ export function Pricing() {
                                 ? "bg-brand-600 hover:bg-brand-700 text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
                                 : "border border-[var(--border)] text-[var(--text)] hover:border-brand-600/40"}`}
                 >
-                  <span>{d.cta}</span>
+                  <span>{plan.ctaLabel ?? d.cta}</span>
                   <ArrowRight size={17} className="flex-shrink-0" />
                 </a>
               </motion.div>
