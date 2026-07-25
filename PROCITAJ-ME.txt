@@ -1,47 +1,40 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — POZADINA v2: "ŽIVI SISTEM"
+  mehiccdev — POZADINA v3: "AMBIJENT KOJI PUTUJE + REFLEKTOR"
 ════════════════════════════════════════════════════════════════════
 
-Zamjenjuje prethodni "potpisni sloj" ZIP (sve iz njega je unutra i
-nadograđeno). Hero.tsx iz prethodnog ZIP-a i dalje vrijedi ako si ga
-već ubacio; ako nisi, ubaci i njega (konsolidovana aurora).
+Zamjenjuje BackgroundFX.tsx iz v2 ("živi sistem"). Layout i globals
+iz prethodnog ZIP-a ostaju kakvi jesu, ovaj put se mijenja SAMO:
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/ui/BackgroundFX.tsx  → NOVA komponenta, sva pozadina
-  app/layout.tsx                  → koristi novu komponentu
-  app/globals.css                 → keyframes za puls + zrno
+  components/ui/BackgroundFX.tsx
 
 ────────────────────────────────────────────────────────────────────
-ŠTA JE NOVO (liječi "monotono i repetitivno")
+ŠTA JE NOVO: dva PONAŠANJA (ne nove teksture)
 ────────────────────────────────────────────────────────────────────
-1. PULS KROZ ŠINE: kratki svijetli signal putuje niz lijevu šinu
-   (plavi, 9s ciklus) i desnu (svjetliji, 14s, pomaknut start), kao
-   podatak koji teče kroz sistem. Nikad nisu sinhronizovani pa
-   pozadina stalno "radi". Čist CSS transform, nula troška.
+1. REFLEKTOR KOJI PRATI MIŠ (desktop): mekan plavi sjaj od ~900px
+   klizi po stranici za kursorom, s oprugom (glatko, bez trzaja).
+   Gdje god posjetilac krene, sajt "svijetli" s njim. Ovo se
+   primijeti u prvoj sekundi i niko ga nema.
 
-2. BLUEPRINT SKICE PO DUBINI STRANICE: pet blijedih wireframe
-   crteža (browser s kotom "320px", telefon s REZERVIŠI dugmetom,
-   dijagram toka UPIT → SISTEM → ✓ 2s) na različitim visinama
-   (115vh, 240vh, 390vh, 540vh, 680vh), naizmjenično lijevo/desno,
-   svaka blago zarotirana. Skroluju SA sadržajem, pa svaki dio
-   stranice ima drugačiju pozadinu. Ovo je "IT fazon" bez klišeja:
-   ne sija, ne treperi, nego izgleda kao stol arhitekte softvera.
+2. AMBIJENT KOJI PUTUJE SA SKROLOM: na vrhu sajta svjetlo dolazi
+   odozgo (plavo); kako skrolaš prema dnu, ono blijedi a iz dna
+   izvire novo, indigo/cijan svjetlo (dva izvora, lijevo i desno).
+   Stranica postaje putovanje kroz svjetlo: nijedan ekran nema istu
+   pozadinu. Tehnički se mijenja SAMO prozirnost dva sloja (GPU,
+   jeftino), nikad sami gradijenti.
 
-3. Svjetlo s vrha, šine i zrno ostaju kao podloga.
+Šine s pulsom, blueprint skice i zrno ostaju ispod svega (v2).
 
-Performanse: nula JavaScripta, nula blur filtera, animacija je samo
-transform. Na telefonu: samo svjetlo + zrno (šine, puls i skice su
-desktop detalj, mobilna dijeta netaknuta). motion-reduce gasi puls.
-
-NAPOMENA: pozicije skica su u vh jedinicama (dubina stranice). Ako
-ti neka sjedne ružno preko sekcije, pomjeranje je trivijalno: u
-BackgroundFX.tsx u BlueprintLayer promijeni top-[XXXvh] vrijednosti.
+TELEFON / REDUCED MOTION: reflektor i putovanje ambijenta su
+isključeni (statično gornje svjetlo + zrno). Mobilna dijeta
+netaknuta: skrol handler je pasivan i rAF-ograničen, radi samo
+na desktopu.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA (BackgroundFX.tsx je nov)
-  2. npm run dev → skrolaj CIJELI sajt na desktopu: puls kroz šine,
-     skice na različitim dubinama; provjeri obje teme pa telefon
-  3. git add . && git commit -m "feat: pozadina v2, zivi sistem" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA
+  2. npm run dev → desktop: mrdaj mišem (reflektor), pa POLAKO
+     skrolaj od vrha do footera i gledaj kako se svjetlo seli;
+     obje teme; pa telefon (statično, glatko)
+  3. git add . && git commit -m "feat: pozadina v3, ambijent + reflektor" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
