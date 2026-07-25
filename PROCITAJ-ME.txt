@@ -1,33 +1,32 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — USLUGE v4: tri kolone, sve vidljivo odmah, bez AI
+  mehiccdev — SAMO TAMNA TEMA + JEZIČKI SLIDER SA ZASTAVICAMA
 ════════════════════════════════════════════════════════════════════
 
-Zamjenjuje Usluge v3 (pozornicu). 1 fajl:
-  components/sections/Services.tsx
+ŠTA JE U ZIP-u (2 fajla):
+  app/layout.tsx
+  components/sections/Navbar.tsx
 
-ŠTA JE NOVO:
-  • AI USLUGA IZBAČENA (tvoja odluka): ostale su 3 usluge.
-  • TRI ČISTE KOLONE: sve informacije vidljive ODMAH, bez klikanja
-    i bez rotacije. Svaka kolona, odozgo prema dole:
-    broj + ikonica (+ "Najtraženije" na aplikaciji) → ljudski
-    naslov → jedna rečenica → vizual s natpisom ("Ovako izgleda
-    vaš admin panel") → Šta dobijate (3 stavke) → linija
-    povjerenja na dnu (Nike/TikTok, Dell/NYT, Meta/Google).
-  • Ljudski jezik iz v3 ZADRŽAN (nula žargona).
-  • Kartice iste visine, hover podizanje, editorial brojevi u uglu.
+ŠTA JE PROMIJENJENO:
+1. SVIJETLA TEMA JE UGAŠENA: sajt je trajno u tamnoj temi
+   (forcedTheme="dark"). Ovo važi i za posjetioce kojima je ranije
+   ostala zapamćena svijetla tema u browseru: prisilno se pregazi.
+   Sunce/mjesec dugme je uklonjeno iz navbara.
 
-MOBILNO: iste kartice jedna ispod druge, ništa se ne krije.
+2. JEZIK KAO SLIDER SA ZASTAVICAMA: umjesto "🌐 BS" teksta, sada je
+   pilula s dvije zastavice (BiH i UK) i klizačem koji označava
+   aktivni jezik. Klik na zastavicu bira taj jezik (nema slijepog
+   prebacivanja), neaktivna zastavica je prigušena. Na prvi pogled
+   je jasno čemu služi.
 
-⚠ NAPOMENA: AI je izbačen SAMO iz ove sekcije. AI se i dalje
-spominje u: Footer (lista usluga), Hero (eyebrow "Web · AI ·
-Marketing") i Kontakt formi (opcija "AI integracija"). Reci ako
-želiš da ga uklonimo svugdje, ili ostaje kao sporedna ponuda.
+   Tehnički detalj: zastavice su mini SVG crteži, NE emoji, jer se
+   emoji zastave na Windowsu prikažu kao slova ("BA", "GB").
 
 KORACI:
   1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → obje teme (posebno SVIJETLU, tu ti je prošla
-     verzija zasmetala), pa telefon
-  3. git add . && git commit -m "feat: usluge v4, tri kolone" && git push
+  2. npm run dev → klikni obje zastavice (klizač prelazi, jezik se
+     mijenja), provjeri da teme dugmeta više nema i da je sajt taman
+     čak i ako ti je ranije bila upaljena svijetla tema
+  3. git add . && git commit -m "feat: samo tamna tema + jezicki slider" && git push
 
 Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════

@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="bs" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
           <LanguageProvider>
             {/* ── Potpisna pozadina v2 "ŽIVI SISTEM": svjetlo, šine s pulsom
                    koji putuje kroz njih, zrno, i blueprint skice po dubini

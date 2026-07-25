@@ -12,9 +12,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTheme }            from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, Menu, X, ArrowUpRight, Globe } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -26,12 +25,8 @@ const LABELS = {
 export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mounted,    setMounted]    = useState(false);
-  const { theme, setTheme }         = useTheme();
-  const { lang, toggleLang }        = useLanguage();
+  const { lang, setLang }           = useLanguage();
   const L = LABELS[(lang as "bs" | "en")] ?? LABELS.bs;
-
-  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -94,25 +89,26 @@ export function Navbar() {
 
           {/* Right controls */}
           <div className="flex items-center gap-1.5">
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-bold
-                         text-[var(--text-muted)] hover:text-[var(--text)]
-                         hover:bg-[var(--surface)] transition-all duration-200"
-              aria-label="Change language"
-            >
-              <Globe size={14} />
-              <span className="uppercase">{lang}</span>
-            </button>
-
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text)]
-                         hover:bg-[var(--surface)] transition-all duration-200"
-              aria-label="Toggle theme"
-            >
-              {mounted && (theme === "dark" ? <Sun size={16} /> : <Moon size={16} />)}
-            </button>
+            {/* Jezik: slider s zastavicama (klik na zastavicu bira jezik) */}
+            <div className="relative flex items-center rounded-full border border-[var(--border)]
+                            bg-[var(--surface)] p-0.5"
+                 role="group" aria-label="Language">
+              <span aria-hidden
+                    className={`absolute top-0.5 bottom-0.5 left-0.5 w-8 rounded-full
+                                bg-brand-600/15 border border-brand-600/35
+                                transition-transform duration-300 ease-out
+                                ${lang === "en" ? "translate-x-8" : ""}`} />
+              <button onClick={() => setLang("bs")} aria-label="Bosanski"
+                      className={`relative z-10 w-8 h-7 flex items-center justify-center rounded-full
+                                  transition-opacity duration-200 ${lang === "en" ? "opacity-45 hover:opacity-80" : ""}`}>
+                <FlagBA />
+              </button>
+              <button onClick={() => setLang("en")} aria-label="English"
+                      className={`relative z-10 w-8 h-7 flex items-center justify-center rounded-full
+                                  transition-opacity duration-200 ${lang === "bs" ? "opacity-45 hover:opacity-80" : ""}`}>
+                <FlagGB />
+              </button>
+            </div>
 
             <a
               href="#kontakt"
@@ -187,5 +183,36 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+
+/* ── Mini SVG zastavice (emoji zastave na Windowsu ne rade, prikažu se slova) ── */
+
+function FlagBA() {
+  // Crtano u 2x rezoluciji (viewBox 40x28) radi oštrine na malim dimenzijama.
+  // 4 veće zvijezde (umjesto sitnih 9 s prave zastave) uz hipotenuzu:
+  // na 20px širine manje-a-krupnije čita se kao zastava, više se ne mulja.
+  return (
+    <svg width="20" height="14" viewBox="0 0 40 28" aria-hidden className="rounded-[3px]">
+      <rect width="40" height="28" fill="#002395" />
+      <path d="M10 0 L30 0 L30 28 Z" fill="#FECB00" />
+      <circle cx="7.5"  cy="4"    r="2.6" fill="#fff" />
+      <circle cx="11.5" cy="9.5"  r="2.6" fill="#fff" />
+      <circle cx="15.5" cy="15"   r="2.6" fill="#fff" />
+      <circle cx="19.5" cy="20.5" r="2.6" fill="#fff" />
+    </svg>
+  );
+}
+
+function FlagGB() {
+  return (
+    <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden className="rounded-[3px]">
+      <rect width="20" height="14" fill="#012169" />
+      <path d="M0 0 L20 14 M20 0 L0 14" stroke="#fff" strokeWidth="2.6" />
+      <path d="M0 0 L20 14 M20 0 L0 14" stroke="#C8102E" strokeWidth="1.1" />
+      <path d="M10 0 V14 M0 7 H20" stroke="#fff" strokeWidth="4.4" />
+      <path d="M10 0 V14 M0 7 H20" stroke="#C8102E" strokeWidth="2.4" />
+    </svg>
   );
 }
