@@ -66,7 +66,7 @@ const T: Record<"bs" | "en", Content> = {
     ],
     facts: [
       { t: "Svi naši projekti su uživo i rade u produkciji" },
-      { t: "0 telefonskih poziva potrebno da klijent rezerviše" },
+      { t: "Gost rezerviše bez ijednog telefonskog poziva" },
       { t: "Odgovaramo u roku od 24 sata, obično isti dan" },
     ],
   },
@@ -93,7 +93,7 @@ const T: Record<"bs" | "en", Content> = {
     ],
     facts: [
       { t: "All of our projects are live and running in production" },
-      { t: "0 phone calls needed for a customer to book" },
+      { t: "A guest books without a single phone call" },
       { t: "We reply within 24 hours, usually the same day" },
     ],
   },

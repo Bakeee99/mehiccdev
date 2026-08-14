@@ -42,7 +42,7 @@ type Content = {
 const T: Record<"bs" | "en", Content> = {
   bs: {
     status: "Dostupni za nove projekte",
-    eyebrow: "Digitalna agencija · Web · AI · Marketing",
+    eyebrow: "Web aplikacije · Sajtovi · Marketing",
     h1a: "Vašem biznisu ne treba sajt.",
     h1b: "Treba mu sistem.",
     sub: "Web aplikacije koje primaju rezervacije, sajtovi koje sami uređujete i marketing koji dovodi upite. Sve iz jedne ruke, iz Mostara za cijeli region.",
@@ -57,7 +57,7 @@ const T: Record<"bs" | "en", Content> = {
   },
   en: {
     status: "Available for new projects",
-    eyebrow: "Digital agency · Web · AI · Marketing",
+    eyebrow: "Web apps · Websites · Marketing",
     h1a: "Your business doesn't need a website.",
     h1b: "It needs a system.",
     sub: "Web apps that take bookings, websites you can edit yourself, and marketing that brings inquiries. All from one team, from Mostar for the whole region.",

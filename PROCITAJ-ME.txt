@@ -1,26 +1,101 @@
-════════════════════════════════════════════════════
- mehiccdev — REDOSLIJED: O nama prije Usluga
-════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+  mehiccdev — COPY AUDIT: čišćenje generičkog tona, BS + EN
+════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  app/page.tsx
-  components/sections/Navbar.tsx
+ŠTA JE U ZIP-u (10 fajlova, sve sekcije s tekstom):
+  Hero, About, Services, Results, Portfolio,
+  SaasTeaser, Pricing, Contact, Footer, Value
 
-ŠTA JE PROMIJENJENO:
-  • Na stranici: sekcija O NAMA (vase slike) sada dolazi
-    ODMAH POSLIJE HERO-a, prije Usluga. Posjetilac prvo
-    vidi KO ste, pa tek onda STA radite.
-  • U navbaru: isti redoslijed (O nama pa Usluge).
-  • Footer vec pocinje sa O nama, njega ne diramo.
+────────────────────────────────────────────────────────────────────
+1. DVOTAČKE: 14 mjesta → 0
+────────────────────────────────────────────────────────────────────
+Obrazac "nešto: objašnjenje" bio je posvuda i to je ono što je
+davalo generički, mašinski ton. Sada ga NEMA nigdje na sajtu.
+Primjeri:
 
-VAZNO: da bi ovo imalo puni efekat, slike (bakir.jpg i
-nedim.jpg u public/team/) moraju biti ubacene: sekcija
-s placeholder inicijalima na ovako istaknutom mjestu
-djelovala bi nedovrseno.
+  prije: "Dashboard, rezervacije, evidencija ili interni alat:
+          gradimo aplikaciju koja vodi vaš biznis."
+  sada:  "Gradimo aplikaciju koja vodi vaš biznis, od rezervacija
+          i evidencije klijenata do internog alata za vaš tim."
+          (izbačen i "Dashboard", to je žargon)
 
-KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
-(skrolaj: Hero → Tim → Usluge; provjeri i klik na "O
-nama" i "Usluge" u navbaru) → git add . && git commit
--m "feat: o nama prije usluga" && git push
+  prije: "Privatni admin panel: vozila, cijene i slike bez developera"
+  sada:  "Vlasnik sam mijenja vozila, cijene i slike, bez zvanja
+          developera"
 
-Build verifikovan: npm run build ✓
+  prije: "Raste s vama: od 5 do 500 rezervacija, isti sistem"
+  sada:  "Isti sistem radi i za pet i za petsto rezervacija mjesečno"
+
+  prije: "Dvije minute posla: recite nam šta vam treba..."
+  sada:  "Recite nam šta vam treba, svojim riječima. Traje dvije
+          minute."
+
+Isto je odrađeno i na engleskom, ali NE doslovnim prevodom nego
+tako da rečenica zvuči prirodno izvornom govorniku.
+
+────────────────────────────────────────────────────────────────────
+2. NAĐENE I ISPRAVLJENE GREŠKE (nisu bile u zadatku, ali su bitne)
+────────────────────────────────────────────────────────────────────
+  • TIPFELER u portfoliju: "Custo Website · Medicina"
+    → sada "Web sajt · Medicina"
+  • KONTRADIKCIJA S CJENOVNIKOM: Value sekcija je tvrdila
+    "Hosting uključen", a cjenovnik kaže da je hosting opcion
+    (€60/mj) → sada "Hosting i domena podešeni"
+  • NEISTINITA TVRDNJA: "Podrška 24/7" (to niko od vas dvojice ne
+    može držati) → sada "3 mjeseca podrške", što je stvarno u
+    Business paketu
+  • ZBUNJUJUĆA OZNAKA: "Perjanica · Business plan" se čitalo kao
+    biznis plan → sada "Naš najveći projekat · Business paket"
+  • PREUVELIČAVANJE: "Sve automatizovano" → "Sve na jednom mjestu"
+
+────────────────────────────────────────────────────────────────────
+3. AI USKLAĐEN SA STVARNOM PONUDOM
+────────────────────────────────────────────────────────────────────
+AI uslugu smo izbacili iz Usluga, ali je ostala na tri mjesta i
+pravila nesklad. Sada je usklađeno:
+  • Hero oznaka: "Digitalna agencija · Web · AI · Marketing"
+    → "Web aplikacije · Sajtovi · Marketing"
+  • Footer lista usluga: AI stavka uklonjena, a ostale tri
+    preimenovane da odgovaraju Uslugama ("Aplikacija za vaš biznis",
+    "Sajt koji sami uređujete", "Marketing koji dovodi goste")
+  • Kontakt forma: "AI integracija" → "Sistem za rezervacije"
+    (ovo je i SEO plus, jer je to ono što ljudi traže)
+
+Ako AI želiš vratiti kao sporednu ponudu, javi pa vratim.
+
+────────────────────────────────────────────────────────────────────
+4. MANJE ŽARGONA ZA LJUDE VAN IT-a
+────────────────────────────────────────────────────────────────────
+  • Uloge u timu na bosanskom: "Lead Developer & UI/UX Architect"
+    → "Razvoj aplikacija i dizajn"; "Digital Marketing & Social
+    Media Manager" → "Marketing i društvene mreže".
+    (EN verzija zadržava profesionalne nazive, tamo su normalni.)
+  • Tvoja biografija: izbačeni "Webflow", "custom Next.js", "QA
+    testiranje" iz rečenice; sada piše šta to znači klijentu:
+    "Pravim sajtove i web aplikacije, pa ih testiram tako da greške
+    nađem ja, a ne vaši kupci."
+  • Podnaslov tima: "Nas dvojica radimo sve sami. Jedan gradi,
+    drugi dovodi klijente."
+
+────────────────────────────────────────────────────────────────────
+5. SEO
+────────────────────────────────────────────────────────────────────
+Ključne riječi su ušle prirodno, kroz rečenice koje ionako trebaju
+biti tu: "sistem za rezervacije" (kontakt forma), "web aplikacije"
+i "sajtovi" (Hero oznaka), "rezervacija i evidencija klijenata"
+(cjenovnik). Nema nabijanja ključnih riječi.
+
+PODSJETNIK: SEO paket (metadata, sitemap, robots) je isporučen
+ranije. Ovaj build pokazuje 6 stranica, što znači da sitemap i
+robots JOŠ NISU pushani. Provjeri jesi li ubacio taj ZIP.
+
+────────────────────────────────────────────────────────────────────
+KORACI
+────────────────────────────────────────────────────────────────────
+  1. Raspakuj u KORIJEN → "Zamijeni" DA za svih 10 fajlova
+  2. npm run dev → prođi sajt na OBA jezika (posebno engleski,
+     tamo je najviše prepisano)
+  3. git add . && git commit -m "copy: cisti ton, bez zargona, BS+EN" && git push
+
+Build verifikovan prije slanja: npm run build ✓
+════════════════════════════════════════════════════════════════════

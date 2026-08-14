@@ -48,7 +48,7 @@ const T: Record<"bs" | "en", Content> = {
     heading: "Projekti koji",
     headingAccent: "rade posao",
     subtitle: "Sve što vidite ovdje je uživo i donosi rezultate stvarnim klijentima. Slobodno otvorite i probajte.",
-    badge: "Perjanica · Business plan",
+    badge: "Naš najveći projekat · Business paket",
     title: "Maximum Rent a Car",
     desc: "Kompletna web aplikacija za iznajmljivanje vozila. Gost izabere auto i datume, sistem provjeri dostupnost i spriječi dupla rezervisanja, a vlasnik sve potvrđuje u dva klika iz svog privatnog panela.",
     stats: [
@@ -59,7 +59,7 @@ const T: Record<"bs" | "en", Content> = {
     ],
     features: [
       "Pretraga slobodnih vozila po datumima, bez duplih rezervacija",
-      "Privatni admin panel: vozila, cijene i slike bez developera",
+      "Vlasnik sam mijenja vozila, cijene i slike, bez zvanja developera",
       "Upit stiže odmah na Telegram i WhatsApp, gost dobija automatski email",
       "Dvojezično HR/EN, građeno prvo za telefon",
     ],
@@ -69,8 +69,8 @@ const T: Record<"bs" | "en", Content> = {
     zoomHint: "Klikni za uvećanje",
     closeLabel: "Zatvori",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Custo Website · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn rewards sistema za gaming platformu: nivoi, nagrade i progresija koja igrača vodi naprijed.", live: true },
+      { title: "OxyBaric Mostar", cat: "Web sajt · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn sistema nagrada za gaming platformu, s nivoima i napretkom koji igrača vodi naprijed.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
   },
@@ -79,7 +79,7 @@ const T: Record<"bs" | "en", Content> = {
     heading: "Projects that",
     headingAccent: "do the job",
     subtitle: "Everything you see here is live and delivering results for real clients. Feel free to open and try them.",
-    badge: "Flagship · Business plan",
+    badge: "Our biggest build · Business package",
     title: "Maximum Rent a Car",
     desc: "A complete car rental web application. Guests pick a car and dates, the system checks availability and prevents double bookings, and the owner confirms everything in two clicks from a private panel.",
     stats: [
@@ -90,7 +90,7 @@ const T: Record<"bs" | "en", Content> = {
     ],
     features: [
       "Search available cars by dates, with no double bookings",
-      "Private admin panel: cars, prices and photos without a developer",
+      "The owner updates cars, prices and photos without calling a developer",
       "Inquiries arrive instantly on Telegram and WhatsApp, guests get an automatic email",
       "Bilingual HR/EN, built mobile-first",
     ],
@@ -101,7 +101,7 @@ const T: Record<"bs" | "en", Content> = {
     closeLabel: "Close",
     minis: [
       { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
-      { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform: tiers, perks and a progression that pulls players forward.", live: true },
+      { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform, with tiers and progression that pull players forward.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
   },

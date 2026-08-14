@@ -64,9 +64,9 @@ const T: Record<"bs" | "en", Content> = {
     mockSearch: "Trosoban stan, Mostar…",
     features: [
       { t: "AI opisi oglasa",     d: "Agent unese parametre, prodajni tekst je gotov jednim klikom." },
-      { t: "XML sinhronizacija",  d: "Za velike agencije: oglasi se objavljuju potpuno sami." },
+      { t: "XML sinhronizacija",  d: "Kod velikih agencija se oglasi objavljuju potpuno sami." },
       { t: "Kreditni kalkulator", d: "Bankama donosi spremne klijente, direktno iz oglasa." },
-      { t: "4 tržišta od starta", d: "Više valuta i jezika: BiH, Srbija, Hrvatska i Crna Gora." },
+      { t: "4 tržišta od starta", d: "Više valuta i jezika, za BiH, Srbiju, Hrvatsku i Crnu Goru." },
       { t: "Boost oglasa",        d: "Isticanje i promocija za privatne korisnike." },
       { t: "Ispod sekunde",       d: "Čist mobile-first dizajn sa savršenim tamnim modom." },
     ],
@@ -96,9 +96,9 @@ const T: Record<"bs" | "en", Content> = {
     mockSearch: "2-bedroom apartment, Mostar…",
     features: [
       { t: "AI listing copy",      d: "The agent enters the parameters, sales copy is ready in one click." },
-      { t: "XML synchronization",  d: "For large agencies: listings publish themselves." },
+      { t: "XML synchronization",  d: "At large agencies, listings publish themselves." },
       { t: "Mortgage calculator",  d: "Delivers ready leads to partner banks, straight from the listing." },
-      { t: "4 markets from day 1", d: "Multiple currencies and languages: Bosnia, Serbia, Croatia, Montenegro." },
+      { t: "4 markets from day 1", d: "Multiple currencies and languages for Bosnia, Serbia, Croatia and Montenegro." },
       { t: "Listing boost",        d: "Featuring and promotion for private users." },
       { t: "Under a second",       d: "Clean mobile-first design with a flawless dark mode." },
     ],

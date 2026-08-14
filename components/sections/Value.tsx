@@ -52,11 +52,11 @@ const T: { bs: Content; en: Content } = {
       { label: "PODRŠKA + HOSTING", lt: "od", big: "€2,00", per: "/dan", capPre: "€60 mjesečno · ", capStrong: "otkažite bilo kad" },
     ],
     coffee: "održavanje košta manje od jedne kafe dnevno",
-    chips: ["Custom dizajn", "100% vaše vlasništvo", "Podrška 24/7", "Hosting uključen", "Izmjene u 2 klika"],
+    chips: ["Dizajn po mjeri", "Aplikacija je vaša", "3 mjeseca podrške", "Hosting i domena podešeni", "Izmjene bez developera"],
     note: "Računica za Starter paket (€550 + €60/mj hosting, koji je opcion). Business i Premium paketi su u cjenovniku iznad.",
     trHead: "Od haosa do potpune kontrole",
     pairs: [
-      { b: "Excel tabele i ručne bilješke", a: "Sve automatizovano" },
+      { b: "Excel tabele i ručne bilješke", a: "Sve na jednom mjestu" },
       { b: "Sati izgubljeni na administraciju", a: "Vrijeme za rast biznisa" },
       { b: "Propušteni upiti i greške", a: "Svaki upit zabilježen" },
       { b: "Sve ručno, sve sporo", a: "Gotovo u 2 klika" },
@@ -75,7 +75,7 @@ const T: { bs: Content; en: Content } = {
       { label: "SUPPORT + HOSTING", lt: "from", big: "€2.00", per: "/day", capPre: "€60 monthly · ", capStrong: "cancel anytime" },
     ],
     coffee: "support costs less than one coffee a day",
-    chips: ["Custom design", "100% your ownership", "24/7 support", "Hosting included", "Edits in 2 clicks"],
+    chips: ["Design made for you", "The app is yours", "3 months of support", "Hosting and domain set up", "Edits without a developer"],
     note: "Based on the Starter package (€550 + €60/mo optional hosting). Business and Premium packages are in the pricing above.",
     trHead: "From chaos to full control",
     pairs: [

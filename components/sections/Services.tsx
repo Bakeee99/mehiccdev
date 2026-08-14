@@ -48,7 +48,7 @@ const T: Record<"bs" | "en", Content> = {
         benefits: [
           "Gosti sami provjere šta je slobodno i pošalju upit, i u 3 ujutro",
           "Vi sve potvrdite jednim klikom, s telefona",
-          "Raste s vama: od 5 do 500 rezervacija, isti sistem",
+          "Isti sistem radi i za pet i za petsto rezervacija mjesečno",
         ],
         trust: "Građeno na tehnologiji koju koriste Nike i TikTok",
         caption: "Ovako izgleda vaš admin panel",
@@ -61,7 +61,7 @@ const T: Record<"bs" | "en", Content> = {
           "Izgleda vrhunski i na telefonu, gdje je većina vaših gostiju",
           "Google ga lako pronađe, pa vas nalaze i novi klijenti",
         ],
-        trust: "Webflow: platforma koju koriste Dell i The New York Times",
+        trust: "Webflow, ista platforma na kojoj rade Dell i The New York Times",
         caption: "Vaš sajt, vaša kontrola",
       },
       {
@@ -69,7 +69,7 @@ const T: Record<"bs" | "en", Content> = {
         hook: "Objave i reklame koje vode do upita i rezervacija, ne samo do lajkova.",
         benefits: [
           "Instagram i Google reklame vođene ispravno, bez bacanja budžeta",
-          "Svaki mjesec jasan izvještaj: šta je urađeno i šta je stiglo",
+          "Svaki mjesec dobijete jasan izvještaj, šta je urađeno i šta je od toga stiglo",
           "Sadržaj koji zvuči kao vi, ne kao agencija",
         ],
         trust: "Meta i Google oglašavanje, mjerljivo do zadnjeg upita",
@@ -91,7 +91,7 @@ const T: Record<"bs" | "en", Content> = {
         benefits: [
           "Guests check availability and send inquiries on their own, even at 3 AM",
           "You confirm everything in one click, from your phone",
-          "Grows with you: from 5 to 500 bookings, same system",
+          "The same system handles five bookings a month or five hundred",
         ],
         trust: "Built on technology used by Nike and TikTok",
         caption: "This is what your admin panel looks like",
@@ -104,7 +104,7 @@ const T: Record<"bs" | "en", Content> = {
           "Looks premium on phones, where most of your guests are",
           "Google finds it easily, so new clients find you",
         ],
-        trust: "Webflow: the platform used by Dell and The New York Times",
+        trust: "Webflow, the same platform Dell and The New York Times run on",
         caption: "Your website, your control",
       },
       {
@@ -112,7 +112,7 @@ const T: Record<"bs" | "en", Content> = {
         hook: "Posts and ads that lead to inquiries and bookings, not just likes.",
         benefits: [
           "Instagram and Google ads run properly, without wasted budget",
-          "A clear monthly report: what was done and what came of it",
+          "Every month you get a clear report on what was done and what it brought in",
           "Content that sounds like you, not like an agency",
         ],
         trust: "Meta and Google advertising, measurable to the last inquiry",

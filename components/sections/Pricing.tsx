@@ -44,13 +44,13 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Poslovne aplikacije",
     headingAccent: "po mjeri",
     subtitle:
-      "Dashboard, rezervacije, evidencija ili interni alat: gradimo aplikaciju koja vodi vaš biznis. Uz svaki paket razvoja dolazi mjesec besplatnog marketing paketa Rast.",
+      "Gradimo aplikaciju koja vodi vaš biznis, od rezervacija i evidencije klijenata do internog alata za vaš tim. Uz svaki paket dobijate i mjesec besplatnog marketing paketa Rast.",
     buildLabel: "Razvoj (jednokratno)",
     once: "jednokratno",
     monthlyLabel: "Hosting + podrška · opciono",
     monthlySub: "nije obavezno, samo ako želite našu podršku i održavanje",
     afterHeading: "Nakon isporuke",
-    afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije, sve je opciono:",
+    afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
     afterBoxes: [
       { label: "Hosting + podrška + održavanje", price: "€60", per: "/mj", sub: "fiksno, otkažite bilo kad" },
       { label: "Izmjene i dorade", price: "€25", per: "/h", sub: "nove funkcije van dogovorenog obima" },
@@ -131,13 +131,13 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     heading: "Business applications,",
     headingAccent: "custom-built",
     subtitle:
-      "Dashboard, bookings, records or internal tool: we build the app that runs your business. Every development package comes with a free month of the Rast marketing package.",
+      "We build the app that runs your business, from bookings and client records to an internal tool for your team. Every package includes a free month of our Rast marketing package.",
     buildLabel: "Development (one-time)",
     once: "one-time",
     monthlyLabel: "Hosting + support · optional",
     monthlySub: "not required, only if you want our support and maintenance",
     afterHeading: "After launch",
-    afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional:",
+    afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional.",
     afterBoxes: [
       { label: "Hosting + support + maintenance", price: "€60", per: "/mo", sub: "flat rate, cancel anytime" },
       { label: "Changes and upgrades", price: "€25", per: "/h", sub: "new features beyond the agreed scope" },
