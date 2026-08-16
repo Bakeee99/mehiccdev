@@ -13,18 +13,32 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const LABELS = {
-  bs: { services: "Usluge", portfolio: "Portfolio", about: "O nama", saas: "Flagship", pricing: "Cjenovnik", contact: "Kontakt" },
-  en: { services: "Services", portfolio: "Portfolio", about: "About", saas: "Flagship", pricing: "Pricing", contact: "Contact" },
+  bs: { services: "Usluge", portfolio: "Portfolio", about: "O nama", saas: "Flagship", pricing: "Cjenovnik", contact: "Kontakt", solutions: "Rješenja" },
+  en: { services: "Services", portfolio: "Portfolio", about: "About", saas: "Flagship", pricing: "Pricing", contact: "Contact", solutions: "Solutions" },
 };
+
+/**
+ * Rješenja (dropdown). Dodavanje novog rješenja = jedan red ovdje, ništa
+ * drugo se ne mijenja. Sljedeća planirana: vikendice i rezervacija termina.
+ */
+const SOLUTIONS = [
+  {
+    href: "/rjesenja/rent-a-car",
+    label: { bs: "Rent-a-Car sistem", en: "Car rental system" },
+    desc:  { bs: "Rezervacije, flota i kalendar", en: "Bookings, fleet and calendar" },
+  },
+];
 
 export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [solOpen,    setSolOpen]    = useState(false);   // desktop dropdown
+  const [solAccOpen, setSolAccOpen] = useState(false);   // mobilni accordion
   const { lang, setLang }           = useLanguage();
   const L = LABELS[(lang as "bs" | "en")] ?? LABELS.bs;
 
@@ -35,11 +49,11 @@ export function Navbar() {
   }, []);
 
   const NAV_LINKS = [
-    { label: L.about,     href: "#o-nama"    },
-    { label: L.services,  href: "#usluge"    },
-    { label: L.portfolio, href: "#portfolio" },
-    { label: L.pricing,   href: "#cjenovnik", promo: true },
-    { label: L.saas,      href: "#saas"      },
+    { label: L.about,     href: "/#o-nama"    },
+    { label: L.services,  href: "/#usluge"    },
+    { label: L.portfolio, href: "/#portfolio" },
+    { label: L.pricing,   href: "/#cjenovnik", promo: true },
+    { label: L.saas,      href: "/#saas"      },
   ];
 
   return (
@@ -64,6 +78,45 @@ export function Navbar() {
 
           {/* Desktop links */}
           <ul className="hidden md:flex items-center gap-1">
+            {/* Rješenja: dropdown, otvara se na hover i na klik (tipkovnica) */}
+            <li className="relative"
+                onMouseEnter={() => setSolOpen(true)}
+                onMouseLeave={() => setSolOpen(false)}>
+              <button
+                type="button"
+                onClick={() => setSolOpen((v) => !v)}
+                aria-expanded={solOpen}
+                aria-haspopup="true"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium
+                           text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface)]
+                           transition-colors duration-200"
+              >
+                {L.solutions}
+                <ChevronDown size={13} className={`transition-transform duration-200 ${solOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {solOpen && (
+                <div className="absolute left-0 top-full pt-2 w-72">
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)]
+                                  md:backdrop-blur-xl shadow-2xl shadow-black/25 p-2">
+                    {SOLUTIONS.map((s) => (
+                      <a key={s.href} href={s.href}
+                         onClick={() => setSolOpen(false)}
+                         className="flex flex-col gap-0.5 px-3.5 py-3 rounded-xl
+                                    transition-colors duration-200 hover:bg-[var(--surface)]">
+                        <span className="text-sm font-bold text-[var(--text)]">
+                          {s.label[(lang as "bs" | "en")] ?? s.label.bs}
+                        </span>
+                        <span className="text-[12px] text-[var(--text-muted)]">
+                          {s.desc[(lang as "bs" | "en")] ?? s.desc.bs}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </li>
+
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
@@ -111,7 +164,7 @@ export function Navbar() {
             </div>
 
             <a
-              href="#kontakt"
+              href="/#kontakt"
               className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl
                          bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold
                          shadow-lg shadow-brand-600/25
@@ -147,6 +200,29 @@ export function Navbar() {
                        bg-[var(--bg)] shadow-2xl shadow-black/20 overflow-hidden"
           >
             <nav className="px-5 py-4 flex flex-col">
+              {/* Rješenja: accordion unutar mobilnog menija */}
+              <button
+                type="button"
+                onClick={() => setSolAccOpen((v) => !v)}
+                aria-expanded={solAccOpen}
+                className="flex items-center justify-between text-[15px] font-semibold text-[var(--text)] py-3.5
+                           border-b border-[var(--border)]"
+              >
+                {L.solutions}
+                <ChevronDown size={15} className={`text-[var(--text-muted)] transition-transform duration-200 ${solAccOpen ? "rotate-180" : ""}`} />
+              </button>
+              {solAccOpen && (
+                <div className="flex flex-col border-b border-[var(--border)]">
+                  {SOLUTIONS.map((s) => (
+                    <a key={s.href} href={s.href} onClick={() => setMobileOpen(false)}
+                       className="flex items-center justify-between py-3 pl-3 text-[14px] text-[var(--text-muted)]">
+                      {s.label[(lang as "bs" | "en")] ?? s.label.bs}
+                      <ArrowUpRight size={13} />
+                    </a>
+                  ))}
+                </div>
+              )}
+
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
@@ -170,7 +246,7 @@ export function Navbar() {
                 </a>
               ))}
               <a
-                href="#kontakt"
+                href="/#kontakt"
                 onClick={() => setMobileOpen(false)}
                 className="mt-4 inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl
                            bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold
