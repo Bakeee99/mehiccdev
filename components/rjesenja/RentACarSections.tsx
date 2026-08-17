@@ -95,7 +95,7 @@ function Hero({ c }: { c: typeof COPY.bs }) {
                           transition-[box-shadow,transform] duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
               {d.ctaPrimary} <ArrowRight size={16} />
             </a>
-            <a href="#case-study"
+            <a href="#paketi"
                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                           border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
                           transition-[border-color,background-color,transform] duration-300

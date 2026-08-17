@@ -27,7 +27,7 @@ export const COPY = {
       h1b: "za vašu rent-a-car firmu",
       sub: "Sajt, admin panel i kalendar dostupnosti u jednom. Gost sam provjeri šta je slobodno i pošalje rezervaciju, vi je potvrdite iz panela.",
       ctaPrimary: "Zatražite ponudu",
-      ctaSecondary: "Pogledajte Maximum",
+      ctaSecondary: "Pogledajte cijene",
       points: ["Bez duplih termina", "Radi i van radnog vremena", "Sistem ostaje vaš"],
     },
     problem: {
@@ -191,7 +191,7 @@ export const COPY = {
       h1b: "for your car rental company",
       sub: "Website, admin panel and availability calendar in one. Guests check what is free and send a booking, you confirm it from your panel.",
       ctaPrimary: "Request a quote",
-      ctaSecondary: "See Maximum",
+      ctaSecondary: "See the prices",
       points: ["No double bookings", "Works outside office hours", "The system stays yours"],
     },
     problem: {

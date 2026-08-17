@@ -1,49 +1,26 @@
-════════════════════════════════════════════════════════════════════
-  mehiccdev — NOVA SEKCIJA: "Sistem radi, vi samo odlučujete"
-════════════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════
+ mehiccdev — HERO: sekundarno dugme vodi na cijene
+════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla, zamjenjuju postojeće; sadrže i paketi v2):
+ŠTA JE U ZIP-u (2 fajla; sadrže i sve prethodno:
+pakete v2 i sekciju automatizacije):
   components/rjesenja/RentACarSections.tsx
   components/rjesenja/rentACarCopy.ts
 
-════════ ŠTA JE DODANO ════════
-Nova sekcija između "Rješenje" i "Case study" koja objašnjava ono
-najvažnije, a nigdje nije pisalo: da sistem radi sam, a vlasnik
-samo prihvata ili odbija rezervacije i blokira vozilo kad zatreba.
+ŠTA JE PROMIJENJENO:
+  Sekundarno dugme u hero sekciji:
+    prije: "Pogledajte Maximum" → case study
+    sada:  "Pogledajte cijene" → sekcija Paketi
+  (EN: "See the prices")
 
-Naslov: "Sistem radi, vi samo odlučujete"
+  Primarno dugme "Zatražite ponudu" i dalje vodi na formu.
 
-PET KORAKA, OBOJENIH PO TOME KO IH RADI:
-  ⚡ SISTEM  Gost bira vozilo i datume
-            (prikazuju se samo stvarno slobodna vozila)
-  ⚡ SISTEM  Upit odmah stiže vama
-            (email i telefon, sa svim podacima, bez prepisivanja)
-  ✋ VI      Prihvatite ili odbijete
-            (jedan klik u panelu, to je cijeli vaš posao)
-  ⚡ SISTEM  Ostalo se dogodi samo
-            (termin se zaključa, vozilo nestaje iz ponude za te
-             datume, gost dobija potvrdu, kalendar se ažurira)
-  ✋ VI      Blokirate vozilo kad zatreba
-            (servis, registracija, privatna upotreba: jedan klik i
-             vozilo se sklanja iz ponude, bez diranja sajta)
+  Maximum case study OSTAJE na stranici kao dokaz, samo se do
+  njega više ne šalje s vrha. I dalje je linkovan iz poruke koja
+  se pojavi nakon uspješnog slanja forme, gdje ima više smisla:
+  čovjek je već poslao upit, pa mu tada pokazujemo gotov rad.
 
-Plavo su koraci sistema, zeleno vaši. Kada vlasnik pogleda sekciju,
-odmah vidi da su samo DVA od pet koraka njegova. To je poruka koja
-prodaje, a ne može se ispričati listom funkcija.
+KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
+→ git add . && git commit -m "feat: hero cta na cijene" && git push
 
-Ispod stoji zaključak u okviru:
-  "Vaš dio posla su dva klika. Sve ostalo sistem radi u pozadini,
-   i dok spavate."
-
-Koraci su povezani vertikalnom gradijentnom linijom (plavo prema
-zelenom), imaju editorial brojeve 01 do 05 i hover reakciju.
-Sve dvojezično, bez crtica, bez žargona.
-
-KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → /rjesenja/rent-a-car, nova sekcija je odmah
-     poslije "Rješenja"; provjeri oba jezika i telefon
-  3. git add . && git commit -m "feat: sekcija automatizacije" && git push
-
-Build verifikovan prije slanja: npm run build ✓ (10/10)
-════════════════════════════════════════════════════════════════════
+Build verifikovan: npm run build ✓ (10/10)
