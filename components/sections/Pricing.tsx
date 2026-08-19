@@ -18,8 +18,7 @@
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Car, Crown, Rocket, TrendingUp, Star,
-  Gift, Check, ArrowRight,
-} from "lucide-react";
+  Gift, Check, ArrowRight, CarFront } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
@@ -32,6 +31,8 @@ type PricingData = {
   buildLabel: string; once: string; monthlyLabel: string; monthlySub: string;
   afterHeading: string; afterSub: string;
   afterBoxes: { label: string; price: string; per: string; sub: string }[];
+  hostingNote: string;
+  rcBanner: { eyebrow: string; title: string; desc: string; cta: string };
   perMonth: string; from: string; popular: string;
   giftPre: string; giftPost: string; cta: string; appNote: string; apps: AppPlan[];
   mktEyebrow: string; mktHeading: string; mktSubtitle: string; mktCta: string; mktNote: string; mkt: MktPlan[];
@@ -52,9 +53,16 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterHeading: "Nakon isporuke",
     afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
     afterBoxes: [
-      { label: "Hosting + podrška + održavanje", price: "€60", per: "/mj", sub: "fiksno, otkažite bilo kad" },
-      { label: "Izmjene i dorade", price: "€25", per: "/h", sub: "nove funkcije van dogovorenog obima" },
+      { label: "Mjesečna podrška", price: "€50", per: "/mj", sub: "do 8 sati mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
+      { label: "Bez pretplate", price: "€25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
     ],
+    hostingNote: "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine sajtova je to vrlo mali iznos.",
+    rcBanner: {
+      eyebrow: "Za rent-a-car firme",
+      title: "Imate rent-a-car firmu?",
+      desc: "Napravili smo poseban paket sa svojim cijenama, prema veličini flote, i sve je objašnjeno na jednom mjestu.",
+      cta: "Pogledajte rent-a-car sistem",
+    },
     perMonth: "/mj",
     from: "od",
     popular: "Najpopularniji",
@@ -139,9 +147,16 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterHeading: "After launch",
     afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional.",
     afterBoxes: [
-      { label: "Hosting + support + maintenance", price: "€60", per: "/mo", sub: "flat rate, cancel anytime" },
-      { label: "Changes and upgrades", price: "€25", per: "/h", sub: "new features beyond the agreed scope" },
+      { label: "Monthly support", price: "€50", per: "/mo", sub: "up to 8 hours a month for changes, upgrades and help · priority response" },
+      { label: "No subscription", price: "€25", per: "/h", sub: "you pay only when you need something, for the time spent" },
     ],
+    hostingNote: "Hosting is billed separately based on actual usage, and for most sites it is a very small amount.",
+    rcBanner: {
+      eyebrow: "For car rental companies",
+      title: "Running a car rental company?",
+      desc: "We built a dedicated package with its own pricing based on fleet size, explained on one page.",
+      cta: "See the car rental system",
+    },
     perMonth: "/mo",
     from: "from",
     popular: "Most popular",
@@ -227,6 +242,7 @@ export function Pricing() {
   const revealAppsGrid = useReveal();
   const revealAppsNote = useReveal();
   const revealAfter    = useReveal();
+  const revealRc       = useReveal();
   const revealMktHead  = useReveal();
   const revealMktGrid  = useReveal();
   const revealMktNote  = useReveal();
@@ -391,6 +407,45 @@ export function Pricing() {
               </div>
             ))}
           </motion.div>
+          <motion.p variants={fadeUp} className="text-[11.5px] text-[var(--text-muted)] mt-4">
+            {d.hostingNote}
+          </motion.p>
+        </motion.div>
+
+        {/* ════ BANNER: rent-a-car landing ════════════════════════════════════
+           Rent-a-car firme imaju svoju stranicu s posebnim paketima, pa ih
+           odavde šaljemo tamo umjesto da im nudimo opšte pakete. */}
+        <motion.div variants={staggerContainer} {...revealRc} className="mt-14 max-w-4xl mx-auto">
+          <motion.a
+            variants={fadeUp}
+            href="/rjesenja/rent-a-car"
+            className="group relative flex flex-col sm:flex-row items-center gap-5 rounded-3xl p-6 sm:p-7 overflow-hidden
+                       bg-[var(--surface)] transition-[box-shadow,transform] duration-300
+                       hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-600/20"
+            style={{
+              background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",
+              border: "1.5px solid transparent",
+            }}
+          >
+            <span aria-hidden className="absolute -top-24 -right-16 w-64 h-64 rounded-full pointer-events-none
+                                         bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_72%)]" />
+            <span className="relative w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0
+                             bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/30">
+              <CarFront size={20} />
+            </span>
+            <span className="relative flex-1 text-center sm:text-left">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-brand-300 mb-1">
+                {d.rcBanner.eyebrow}
+              </span>
+              <span className="block text-lg font-extrabold text-[var(--text)] mb-1">{d.rcBanner.title}</span>
+              <span className="block text-[13px] text-[var(--text-muted)] leading-relaxed">{d.rcBanner.desc}</span>
+            </span>
+            <span className="relative inline-flex items-center gap-1.5 px-5 py-3 rounded-xl flex-shrink-0
+                             bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold
+                             shadow-lg shadow-brand-600/30 transition-transform duration-300 group-hover:translate-x-0.5">
+              {d.rcBanner.cta} <ArrowRight size={14} />
+            </span>
+          </motion.a>
         </motion.div>
 
         {/* ════ MARKETING PACKAGES ════ */}

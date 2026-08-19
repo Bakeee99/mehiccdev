@@ -1,26 +1,56 @@
-════════════════════════════════════════════════════
- mehiccdev — HERO: sekundarno dugme vodi na cijene
-════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+  mehiccdev — FIKSNE CIJENE + hosting po potrošnji (obje stranice)
+════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla; sadrže i sve prethodno:
-pakete v2 i sekciju automatizacije):
-  components/rjesenja/RentACarSections.tsx
-  components/rjesenja/rentACarCopy.ts
+ŠTA JE U ZIP-u (4 fajla):
+  components/sections/Pricing.tsx           naslovnica
+  components/sections/Value.tsx             naslovnica
+  components/rjesenja/RentACarSections.tsx  rent-a-car stranica
+  components/rjesenja/rentACarCopy.ts       rent-a-car stranica
 
-ŠTA JE PROMIJENJENO:
-  Sekundarno dugme u hero sekciji:
-    prije: "Pogledajte Maximum" → case study
-    sada:  "Pogledajte cijene" → sekcija Paketi
-  (EN: "See the prices")
+════════ 1. NOVE CIJENE, FIKSNE, BEZ RASPONA ════════
+  Start    3 do 9 vozila       1.500 KM   (oko €770)
+           oko 4 KM dnevno u prvoj godini
+  Pro      10 do 20 vozila     2.900 KM   (oko €1.480)
+           oko 8 KM dnevno u prvoj godini
+  Premium  20+, više lokacija  4.200 KM   (oko €2.150)
+           oko 11,50 KM dnevno u prvoj godini
 
-  Primarno dugme "Zatražite ponudu" i dalje vodi na formu.
+Rasponi ("3.200 do 3.500") su izbačeni. Jedna cifra djeluje
+samouvjereno i skida jedno pitanje sa sastanka.
+Na engleskoj verziji je euro glavna cifra, KM u napomeni.
 
-  Maximum case study OSTAJE na stranici kao dokaz, samo se do
-  njega više ne šalje s vrha. I dalje je linkovan iz poruke koja
-  se pojavi nakon uspješnog slanja forme, gdje ima više smisla:
-  čovjek je već poslao upit, pa mu tada pokazujemo gotov rad.
+════════ 2. HOSTING: PO POTROŠNJI, NE FIKSNA CIFRA ════════
+Umjesto "plaća se zasebno" sada piše kako stvarno funkcioniše:
 
-KORACI: raspakuj u korijen → Zamijeni DA → npm run dev
-→ git add . && git commit -m "feat: hero cta na cijene" && git push
+  rent-a-car stranica:
+  "Hosting se plaća zasebno, po stvarnoj potrošnji. Kod sajtova ove
+   veličine to je vrlo mali iznos, a tačnu cifru vidite prije nego
+   išta potpišete."
 
-Build verifikovan: npm run build ✓ (10/10)
+  naslovnica:
+  "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine
+   sajtova je to vrlo mali iznos."
+
+Namjerno nema konkretne cifre, jer je nemaš ni ti dok ne vidiš
+promet. Ovako je iskreno, a rečenica "tačnu cifru vidite prije nego
+išta potpišete" skida strah od skrivenog troška.
+
+════════ 3. VALUE SEKCIJA POPRAVLJENA ════════
+Value je i dalje računala sa €60/mj i tvrdila "PODRŠKA + HOSTING",
+što više nije tačno ni na jednom mjestu. Sada:
+  • "MJESEČNA PODRŠKA · od €1,70/dan · €50 mjesečno"
+  • prva godina Startera: od €3,20 dnevno (bilo €3,50)
+  • napomena kaže da se hosting plaća zasebno po potrošnji
+
+Time cijeli sajt konačno govori istu stvar: €50/mj podrška do 8
+sati, €25/h bez pretplate, hosting odvojeno po potrošnji.
+
+KORACI:
+  1. Raspakuj u KORIJEN → "Zamijeni" DA za sva 4 fajla
+  2. npm run dev → provjeri: rent-a-car paketi, naslovnica
+     (cjenovnik + Value ispod njega), oba jezika
+  3. git add . && git commit -m "feat: fiksne cijene + hosting po potrosnji" && git push
+
+Build verifikovan prije slanja: npm run build ✓ (10/10)
+════════════════════════════════════════════════════════════════════

@@ -20,7 +20,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
   Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search,
-  Plus, Minus, Gauge, Car, Zap, Hand,
+  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInLeft, slideInRight } from "@/lib/animations";
@@ -394,7 +394,16 @@ function Packages({ c }: { c: typeof COPY.bs }) {
                   <p className="text-[26px] sm:text-[28px] font-extrabold text-[var(--text)] tracking-tight leading-none">
                     {p.price}
                   </p>
-                  <p className="text-[11.5px] text-[var(--text-muted)] mt-2 mb-6">{p.priceNote}</p>
+                  <p className="text-[11.5px] text-[var(--text-muted)] mt-2">{p.priceNote}</p>
+
+                  {/* Dnevna računica: ista cifra, pristupačnija percepcija.
+                     Vlasniku je lakše odmjeriti "9,50 KM dnevno" nego 3.500 KM. */}
+                  <p className={`inline-flex items-center gap-1.5 mt-3 mb-5 px-3 py-1.5 rounded-full text-[11.5px] font-semibold
+                                 ${featured
+                                   ? "bg-brand-600/15 border border-brand-600/35 text-brand-200"
+                                   : "bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
+                    <CalendarDays size={12} /> {p.perDay}
+                  </p>
 
                   <div className="h-px bg-[var(--border)] mb-5" aria-hidden />
 
@@ -418,6 +427,11 @@ function Packages({ c }: { c: typeof COPY.bs }) {
                       );
                     })}
                   </ul>
+
+                  <p className={`flex items-start gap-2 text-[12px] leading-snug mb-5 -mt-2
+                                 ${featured ? "text-brand-200" : "text-[var(--text-muted)]"}`}>
+                    <Info size={12} className="mt-0.5 flex-shrink-0" /> {p.catch}
+                  </p>
 
                   <a href="#upit"
                      className={`mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl
@@ -466,24 +480,52 @@ function Packages({ c }: { c: typeof COPY.bs }) {
           })}
         </motion.div>
 
-        {/* traka: mjesečno održavanje */}
-        <motion.div variants={staggerContainer} {...revealNote} className="mt-10 max-w-3xl mx-auto">
-          <motion.div variants={fadeUp}
-            className="flex flex-col sm:flex-row items-center justify-between gap-4
-                       rounded-2xl px-6 py-5 border border-dashed border-[var(--border)]
-                       bg-[color-mix(in_srgb,var(--surface)_60%,transparent)]">
-            <div className="text-center sm:text-left">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--text-muted)] mb-1">
-                {d.maintenanceLabel}
+        {/* Podrška nakon isporuke: dvije opcije jedna do druge.
+           Namjerno je pretplata prikazana lijevo i s računicom koliko bi
+           isto vrijeme koštalo po satnici, jer je to poštena usporedba i
+           istovremeno najjasniji argument za pretplatu. */}
+        <motion.div variants={staggerContainer} {...revealNote} className="mt-14 max-w-4xl mx-auto">
+          <motion.p variants={fadeUp} className="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] mb-2">
+            {d.afterHeading}
+          </motion.p>
+          <motion.p variants={fadeUp} className="text-center text-sm text-[var(--text-muted)] mb-7">
+            {d.afterSub}
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="grid sm:grid-cols-2 gap-4">
+            {/* pretplata */}
+            <div className="rounded-2xl p-6 bg-[var(--surface)] border border-brand-600/35">
+              <div className="flex items-baseline justify-between gap-3 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-brand-300">{d.support.subLabel}</p>
+                <p className="text-2xl font-extrabold text-[var(--text)] whitespace-nowrap">
+                  {d.support.subPrice}
+                  <span className="text-sm font-semibold text-[var(--text-muted)]">{d.support.subPer}</span>
+                </p>
+              </div>
+              <p className="text-[13px] text-[var(--text)] leading-relaxed mb-3">{d.support.subDesc}</p>
+              <p className="flex items-start gap-2 text-[11.5px] text-[var(--text-muted)]">
+                <Info size={12} className="mt-0.5 flex-shrink-0 text-brand-400" /> {d.support.subAnchor}
               </p>
-              <p className="text-[12px] text-[var(--text-muted)]">{d.maintenanceNote}</p>
             </div>
-            <p className="text-2xl font-extrabold text-[var(--text)] whitespace-nowrap">
-              {d.maintenancePrice}
-              <span className="text-sm font-semibold text-[var(--text-muted)]">{d.maintenancePer}</span>
-            </p>
+
+            {/* po satu */}
+            <div className="rounded-2xl p-6 bg-[color-mix(in_srgb,var(--surface)_60%,transparent)] border border-dashed border-[var(--border)]">
+              <div className="flex items-baseline justify-between gap-3 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">{d.support.hourLabel}</p>
+                <p className="text-2xl font-extrabold text-[var(--text)] whitespace-nowrap">
+                  {d.support.hourPrice}
+                  <span className="text-sm font-semibold text-[var(--text-muted)]">{d.support.hourPer}</span>
+                </p>
+              </div>
+              <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">{d.support.hourDesc}</p>
+            </div>
           </motion.div>
-          <motion.p variants={fadeUp} className="text-center text-[12px] text-[var(--text-muted)] mt-4">
+
+          <motion.p variants={fadeUp}
+            className="mt-4 flex items-start justify-center gap-2 text-center text-[12px] text-[var(--text-muted)]">
+            <Server size={12} className="mt-0.5 flex-shrink-0" /> {d.support.hostingNote}
+          </motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[12px] text-[var(--text-muted)] mt-2">
             {d.note}
           </motion.p>
         </motion.div>
