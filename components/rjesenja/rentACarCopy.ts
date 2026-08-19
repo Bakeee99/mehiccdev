@@ -101,6 +101,7 @@ export const COPY = {
         {
           name: "Pro", size: "10 do 20 vozila", price: "2.900 KM", priceNote: "jednokratno · oko €1.480",
           perDay: "oko 8 KM dnevno u prvoj godini",
+          bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost €150",
           catch: "Sve mijenjate sami iz panela, bez dodatnih troškova.",
           features: ["Sve iz Start paketa", "Dvojezični sajt", "Admin panel za flotu i cijene", "Kalendar dostupnosti po vozilu", "Obavijesti o novom upitu"],
           cta: "Zatražite ponudu",
@@ -108,6 +109,7 @@ export const COPY = {
         {
           name: "Premium", size: "20+ vozila, više lokacija", price: "4.200 KM", priceNote: "jednokratno · oko €2.150",
           perDay: "oko 11,50 KM dnevno u prvoj godini",
+          bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost €150",
           catch: "Za firme koje rade iz više poslovnica.",
           features: ["Sve iz Pro paketa", "Upravljanje po lokacijama", "Flota i preuzimanje po poslovnici", "Prioritetna podrška"],
           cta: "Zatražite ponudu",
@@ -279,6 +281,7 @@ export const COPY = {
         {
           name: "Pro", size: "10 to 20 vehicles", price: "€1,480", priceNote: "one time · 2,900 KM",
           perDay: "about €4 a day in the first year",
+          bonus: "3 months of free support", bonusNote: "€150 value",
           catch: "You change everything yourself from the panel, at no extra cost.",
           features: ["Everything in Start", "Bilingual website", "Admin panel for fleet and pricing", "Availability calendar per vehicle", "Alerts on every new inquiry"],
           cta: "Request a quote",
@@ -286,6 +289,7 @@ export const COPY = {
         {
           name: "Premium", size: "20+ vehicles, several locations", price: "€2,150", priceNote: "one time · 4,200 KM",
           perDay: "about €5.90 a day in the first year",
+          bonus: "3 months of free support", bonusNote: "€150 value",
           catch: "For companies working from several branches.",
           features: ["Everything in Pro", "Multi location management", "Fleet and pickup per branch", "Priority support"],
           cta: "Request a quote",

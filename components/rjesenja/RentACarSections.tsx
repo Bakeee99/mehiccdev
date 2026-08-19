@@ -20,7 +20,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
   Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search,
-  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server,
+  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server, Gift,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInLeft, slideInRight } from "@/lib/animations";
@@ -404,6 +404,19 @@ function Packages({ c }: { c: typeof COPY.bs }) {
                                    : "bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
                     <CalendarDays size={12} /> {p.perDay}
                   </p>
+
+                  {/* Bonus: 3 mjeseca podrške uz Pro i Premium. Zeleno da se
+                     odvoji od plavog i da se vidi kao poklon, ne kao stavka. */}
+                  {"bonus" in p && p.bonus && (
+                    <div className="flex items-center gap-2.5 rounded-xl mb-5 px-3.5 py-2.5
+                                    bg-green-500/10 border border-green-500/30">
+                      <Gift size={15} className="text-green-400 flex-shrink-0" />
+                      <span className="min-w-0">
+                        <span className="block text-[12.5px] font-bold text-green-400 leading-tight">{p.bonus}</span>
+                        <span className="block text-[11px] text-[var(--text-muted)] leading-tight">{p.bonusNote}</span>
+                      </span>
+                    </div>
+                  )}
 
                   <div className="h-px bg-[var(--border)] mb-5" aria-hidden />
 

@@ -1,56 +1,39 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — FIKSNE CIJENE + hosting po potrošnji (obje stranice)
+  mehiccdev — BUSINESS PAKET usklađen s Pro paketom (rent-a-car)
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla):
-  components/sections/Pricing.tsx           naslovnica
-  components/sections/Value.tsx             naslovnica
-  components/rjesenja/RentACarSections.tsx  rent-a-car stranica
-  components/rjesenja/rentACarCopy.ts       rent-a-car stranica
+ŠTA JE U ZIP-u (1 fajl):
+  components/sections/Pricing.tsx
+(sadrži i sve prethodno: €50/mj podrška, €25/h, hosting po
+ potrošnji, banner na rent-a-car stranicu)
 
-════════ 1. NOVE CIJENE, FIKSNE, BEZ RASPONA ════════
-  Start    3 do 9 vozila       1.500 KM   (oko €770)
-           oko 4 KM dnevno u prvoj godini
-  Pro      10 do 20 vozila     2.900 KM   (oko €1.480)
-           oko 8 KM dnevno u prvoj godini
-  Premium  20+, više lokacija  4.200 KM   (oko €2.150)
-           oko 11,50 KM dnevno u prvoj godini
+ŠTA JE PROMIJENJENO:
+  Business paket na naslovnici:
+    prije:  €1.600  (precrtano €2.400, oznaka -33%)
+    sada:   €1.480  (precrtano €2.400, oznaka -38%)
+            ispod cijene piše "jednokratno · oko 2.900 KM"
 
-Rasponi ("3.200 do 3.500") su izbačeni. Jedna cifra djeluje
-samouvjereno i skida jedno pitanje sa sastanka.
-Na engleskoj verziji je euro glavna cifra, KM u napomeni.
+€1.480 je isti iznos kao Pro paket na rent-a-car stranici
+(2.900 KM). Sada klijent koji otvori obje stranice vidi istu cifru
+za isti obim posla, a KM napomena mu odmah kaže koliko je to u
+domaćoj valuti, bez računanja.
 
-════════ 2. HOSTING: PO POTROŠNJI, NE FIKSNA CIFRA ════════
-Umjesto "plaća se zasebno" sada piše kako stvarno funkcioniše:
+Popust je automatski postao -38% jer je stara cijena ostala €2.400.
+"3 mjeseca besplatne podrške" je i dalje prva stavka u paketu, kao
+i na rent-a-car stranici, pa se i to poklapa.
 
-  rent-a-car stranica:
-  "Hosting se plaća zasebno, po stvarnoj potrošnji. Kod sajtova ove
-   veličine to je vrlo mali iznos, a tačnu cifru vidite prije nego
-   išta potpišete."
-
-  naslovnica:
-  "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine
-   sajtova je to vrlo mali iznos."
-
-Namjerno nema konkretne cifre, jer je nemaš ni ti dok ne vidiš
-promet. Ovako je iskreno, a rečenica "tačnu cifru vidite prije nego
-išta potpišete" skida strah od skrivenog troška.
-
-════════ 3. VALUE SEKCIJA POPRAVLJENA ════════
-Value je i dalje računala sa €60/mj i tvrdila "PODRŠKA + HOSTING",
-što više nije tačno ni na jednom mjestu. Sada:
-  • "MJESEČNA PODRŠKA · od €1,70/dan · €50 mjesečno"
-  • prva godina Startera: od €3,20 dnevno (bilo €3,50)
-  • napomena kaže da se hosting plaća zasebno po potrošnji
-
-Time cijeli sajt konačno govori istu stvar: €50/mj podrška do 8
-sati, €25/h bez pretplate, hosting odvojeno po potrošnji.
+⚠ JEDNA STVAR ZA RAZMISLITI (ne mijenjam bez tvoje riječi):
+Premium na naslovnici je "od €2.400", a Premium na rent-a-car
+stranici je 4.200 KM (oko €2.150), dakle jeftiniji. To je branjivo
+(naslovnica je neograničen custom obim, rent-a-car je gotov
+proizvod), ali ako ti smeta, mogu naslovnički Premium podići na
+"od €2.600" da hijerarhija bude očigledna.
 
 KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA za sva 4 fajla
-  2. npm run dev → provjeri: rent-a-car paketi, naslovnica
-     (cjenovnik + Value ispod njega), oba jezika
-  3. git add . && git commit -m "feat: fiksne cijene + hosting po potrosnji" && git push
+  1. Raspakuj u KORIJEN → "Zamijeni" DA
+  2. npm run dev → naslovnica, Business kartica: nova cijena,
+     KM napomena, oznaka -38%; oba jezika
+  3. git add . && git commit -m "feat: business usklađen s pro paketom" && git push
 
 Build verifikovan prije slanja: npm run build ✓ (10/10)
 ════════════════════════════════════════════════════════════════════

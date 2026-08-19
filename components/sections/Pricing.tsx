@@ -24,7 +24,7 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type AppPlan = { name: string; tag: string; price: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
+type AppPlan = { name: string; tag: string; price: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
@@ -86,7 +86,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "1.600", oldPrice: "2.400", discountBadge: "-33%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
+        price: "1.480", kmNote: "oko 2.900 KM", oldPrice: "2.400", discountBadge: "-38%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -180,7 +180,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "1,600", oldPrice: "2,400", discountBadge: "-33%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "1,480", kmNote: "about 2,900 KM", oldPrice: "2,400", discountBadge: "-38%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "3 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
@@ -338,7 +338,9 @@ export function Pricing() {
                   )}
 
                 </div>
-                <p className="text-xs text-[var(--text-muted)] mb-2">{d.once}</p>
+                <p className="text-xs text-[var(--text-muted)] mb-2">
+                  {d.once}{plan.kmNote ? ` · ${plan.kmNote}` : ""}
+                </p>
                 {plan.promoNote && (
                   <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30
                                 px-3 py-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 mb-3 leading-snug">
