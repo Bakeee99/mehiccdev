@@ -30,7 +30,7 @@ import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
-import { RcSectionRail } from "@/components/rjesenja/RcSectionRail";
+import { SectionRail } from "@/components/ui/SectionRail";
 
 const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
 const SOLUTION_ICONS: LucideIcon[] = [Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search];
@@ -637,7 +637,7 @@ export function RentACarSections() {
         <div aria-hidden className="absolute inset-x-0 top-0 h-[70vh] pointer-events-none
                                     bg-[radial-gradient(115%_70%_at_50%_-10%,rgba(37,99,235,0.14),transparent_60%)]" />
       )}
-      <RcSectionRail />
+      <SectionRail items={c.nav} />
       <Hero c={c} />
       <Problem c={c} />
       <Solution c={c} />

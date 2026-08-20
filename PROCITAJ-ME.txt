@@ -1,53 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — NAVIGACIJA KROZ STRANICU (rent-a-car)
+  mehiccdev — Tračnica i na naslovnici + tamnija pozadina
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla):
-  components/rjesenja/RcSectionRail.tsx     NOVO: tračnica i linija napretka
-  components/rjesenja/RentACarSections.tsx  id-jevi sekcija + montaža
-  components/rjesenja/rentACarCopy.ts       nazivi sekcija (bs + en)
-  components/rjesenja/RcForm.tsx            (uključen radi hotfixa iz prošlog ZIP-a)
+ŠTA JE U ZIP-u (5 fajlova):
+  app/globals.css                           tamnija paleta
+  app/page.tsx                              montira tračnicu
+  components/ui/SectionRail.tsx             NOVO: zajednička komponenta
+  components/sections/HomeRail.tsx          NOVO: sekcije naslovnice
+  components/rjesenja/RentACarSections.tsx  koristi zajedničku komponentu
 
-════════ DESKTOP: TRAČNICA UZ LIJEVU IVICU ════════
-Osam kratkih crtica jedna ispod druge, vertikalno centrirano:
-  Problem · Rješenje · Kako radi · Primjer · Paketi · Poređenje ·
-  Upit · Pitanja
+⚠ OBRIŠI STARI FAJL nakon raspakivanja:
+    components/rjesenja/RcSectionRail.tsx
+  Njegov posao je preuzela zajednička komponenta. Ako ga ostaviš,
+  ništa neće puknuti, ali stoji mrtav kod.
 
-  • Aktivna sekcija: crtica se produži, zasvijetli plavo i pored nje
-    se pojavi naziv.
-  • Neaktivne: tanke sive crtice bez teksta, naziv se pojavi na hover.
-  • Klik na bilo koju crticu glatko skrola na tu sekciju.
+════════ 1. TAMNIJA POZADINA ════════
+Bio si u pravu, prethodne vrijednosti su vukle na sivo:
 
-Minimalistički namjerno: bez okvira, bez pozadine, bez brojeva. Samo
-crtice i jedan naziv u datom trenutku, pa ne odvlači pažnju sa
-sadržaja.
+  pozadina    #09090B  →  #050507   (skoro čisto crna)
+  kartice     #18181B  →  #0E0E11   (ovo je najviše "sivilo")
+  rubovi      #27272A  →  #1D1D21   (usklađeni, inače bi iskakali)
 
-════════ MOBITEL: NAMJERNO BEZ TRAČNICE ════════
-Pitao si da li da ide i na mobitel. Ne bih, i evo zašto: vertikalne
-tačkice na telefonu zauzimaju baš onu ivicu ekrana kojom se skrola
-palcem, i na uskim ekranima naliježu na sadržaj.
+Najveća razlika dolazi od kartica: one prekrivaju veliki dio ekrana,
+pa je njihova siva boja bila ono što si primjećivao, više nego sama
+pozadina. Rubovi su morali potamniti zajedno s njima, jer bi na
+tamnijoj podlozi svijetli rub izgledao kao obrub.
 
-Umjesto toga, na mobitelu je tanka linija napretka (2 piksela) odmah
-ispod navbara, koja se puni kako se skrola. Isti podatak, nula
-smetnje, i to je rješenje koje koriste ozbiljni sajtovi.
+Ako ti i ovo bude presvijetlo, sve tri vrijednosti su na jednom
+mjestu u app/globals.css, u bloku ".dark".
 
-════════ TEHNIČKI ════════
-  • Prati sekcije preko IntersectionObserver-a, ne kroz skrol petlju,
-    pa nema troška po frejmu (bitno poslije mobilne dijete)
-  • Linija napretka ide kroz requestAnimationFrame
-  • Poštuje "reduced motion": tada nema klizanja, samo skok
-  • Ne sudara se s plutajućim WhatsApp dugmetom (ono je desno dolje)
+════════ 2. TRAČNICA NA NASLOVNICI ════════
+Ista navigacija kao na rent-a-car stranici, sada i na naslovnici:
+  O nama · Usluge · Rezultati · Portfolio · Cjenovnik · Vrijednost ·
+  Flagship · Kontakt
 
-Ako poželiš tračnicu i na mobitelu, to je brisanje "hidden lg:flex"
-iz jedne linije u RcSectionRail.tsx, ali je stvarno ne preporučujem.
+  • Desktop: crtice uz lijevu ivicu, aktivna se produži i pokaže naziv
+  • Mobitel: tanka linija napretka ispod navbara, bez tračnice
+
+Kod je sada jedna zajednička komponenta koju obje stranice koriste,
+pa se buduće izmjene rade na jednom mjestu. Kad dodaš novu sekciju,
+dopišeš jedan red u HomeRail.tsx (ili u rentACarCopy.ts za rent-a-car).
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: navigacija kroz sekcije na rent-a-car stranici"
+  git commit -m "feat: tracnica sekcija na naslovnici, tamnija paleta"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: navigacija kroz sekcije na rent-a-car stranici" ; git push
+  git add . ; git commit -m "feat: tracnica sekcija na naslovnici, tamnija paleta" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

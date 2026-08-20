@@ -4,6 +4,7 @@
  * Landing page — composes all sections in order.
  */
 
+import { HomeRail }      from "@/components/sections/HomeRail";
 import { Navbar }       from "@/components/sections/Navbar";
 import { Hero }         from "@/components/sections/Hero";
 import { Services }     from "@/components/sections/Services";
@@ -21,6 +22,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Navbar />
+      <HomeRail />
       <Hero />
       <About />
       <Services />

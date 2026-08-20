@@ -16,9 +16,12 @@
 }
 
 .dark {
-  --bg:          #09090B;
-  --surface:     #18181B;
-  --border:      #27272A;
+  /* Zatamnjeno: pozadina je sada skoro čisto crna, a kartice (surface) su
+     tamnije da ne djeluju sivo na velikim ekranima. Rub je usklađen, jer bi
+     inače na tamnijoj podlozi iskakao. */
+  --bg:          #050507;
+  --surface:     #0E0E11;
+  --border:      #1D1D21;
   --text:        #F8FAFC;
   --text-muted:  #A1A1AA;
   --accent:      #3B82F6;
