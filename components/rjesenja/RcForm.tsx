@@ -16,10 +16,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, CheckCircle2, ArrowUpRight } from "lucide-react";
+import { Send, CheckCircle2, ArrowUpRight, Phone, MessageCircle } from "lucide-react";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
+import { useLanguage } from "@/components/ui/LanguageProvider";
+import { PHONE_DISPLAY, PHONE_DIAL, waLink } from "@/lib/contact";
 import {
   rentACarInquirySchema, FLEET_SIZES, LOCATIONS, CHANNELS, TIMELINES,
   type RentACarInquiry,
@@ -34,6 +36,7 @@ const EMPTY = {
 };
 
 export function RcForm({ c }: { c: typeof COPY.bs }) {
+  const { lang } = useLanguage();
   const reveal = useReveal();
   const d = c.form;
 
@@ -161,6 +164,26 @@ export function RcForm({ c }: { c: typeof COPY.bs }) {
             <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="text-[var(--text-muted)] leading-relaxed">{d.sub}</motion.p>
+        </motion.div>
+
+        {/* Direktni kanali za one koji ne žele popunjavati formu */}
+        <motion.div variants={fadeUp} {...reveal}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+          <a href={`tel:${PHONE_DIAL}`}
+             className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 rounded-xl
+                        text-[13px] font-bold text-[var(--text)]
+                        bg-[var(--surface)] border border-[var(--border)]
+                        transition-[border-color,transform] duration-300 hover:border-brand-600/45 hover:-translate-y-0.5">
+            <Phone size={14} className="text-brand-400" /> {PHONE_DISPLAY}
+          </a>
+          {waLink(lang) && (
+            <a href={waLink(lang)!} target="_blank" rel="noopener noreferrer"
+               className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 rounded-xl
+                          text-[13px] font-bold bg-[#25D366] text-[#0B3D24]
+                          transition-transform duration-300 hover:-translate-y-0.5">
+              <MessageCircle size={14} /> WhatsApp
+            </a>
+          )}
         </motion.div>
 
         <motion.form variants={scaleIn} {...reveal} onSubmit={handleSubmit} noValidate
@@ -325,6 +348,35 @@ export function RcForm({ c }: { c: typeof COPY.bs }) {
               <>{d.submit} <Send size={14} /></>
             )}
           </button>
+
+          {/* Direktni kanali, za one koji ne žele popunjavati formu.
+             Broj se upisuje u lib/contact.ts */}
+          {(PHONE_DIAL || waLink(lang)) && (
+            <div className="pt-5 border-t border-[var(--border)] text-center">
+              <p className="text-[13.5px] font-bold text-[var(--text)]">{d.directTitle}</p>
+              <p className="text-[12px] text-[var(--text-muted)] mt-1 mb-3.5">{d.directSub}</p>
+              <div className="flex flex-wrap justify-center gap-2.5">
+                {PHONE_DIAL && (
+                  <a href={`tel:${PHONE_DIAL}`}
+                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
+                                border border-[var(--border)] text-[var(--text)]
+                                transition-[border-color,transform] duration-300
+                                hover:border-brand-600/45 hover:-translate-y-0.5">
+                    <Phone size={14} /> {d.callBtn}
+                    {PHONE_DISPLAY && <span className="font-semibold text-[var(--text-muted)]">{PHONE_DISPLAY}</span>}
+                  </a>
+                )}
+                {waLink(lang) && (
+                  <a href={waLink(lang)!} target="_blank" rel="noopener noreferrer"
+                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
+                                bg-[#25D366] text-[#0B3D24]
+                                transition-transform duration-300 hover:-translate-y-0.5">
+                    <MessageCircle size={14} /> {d.waBtn}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </motion.form>
       </div>
     </section>

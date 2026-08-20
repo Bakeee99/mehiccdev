@@ -18,10 +18,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, CheckCircle2, Mail, MapPin } from "lucide-react";
+import { Send, CheckCircle2, Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, slideInLeft, slideInRight } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { PHONE_DISPLAY, PHONE_DIAL, waLink } from "@/lib/contact";
 
 const PEOPLE = [
   { name: "Bakir Mehić",    email: "bakir.mehic@mehiccdev.com",    initials: "BM", gradient: "from-blue-500 to-indigo-600" },
@@ -34,6 +35,7 @@ type Content = {
   steps: { t: string; d: string }[];
   roles: [string, string];
   orReach: string;
+  directTitle: string; directSub: string; callBtn: string; waBtn: string;
   location: string; response: string;
   nameLabel: string; namePlaceholder: string;
   emailLabel: string; emailPlaceholder: string;
@@ -57,6 +59,10 @@ const T: Record<"bs" | "en", Content> = {
     ],
     roles: ["Development", "Marketing"],
     orReach: "Ili nas kontaktirajte direktno",
+    directTitle: "Ne volite forme?",
+    directSub: "Nazovite ili pišite na WhatsApp, javljamo se odmah.",
+    callBtn: "Nazovite",
+    waBtn: "WhatsApp",
     location: "Mostar, BiH · radimo s klijentima iz cijelog regiona",
     response: "Obično odgovorimo isti dan",
     nameLabel: "Ime i prezime",
@@ -86,6 +92,10 @@ const T: Record<"bs" | "en", Content> = {
     ],
     roles: ["Development", "Marketing"],
     orReach: "Or reach us directly",
+    directTitle: "Not a fan of forms?",
+    directSub: "Call us or send a WhatsApp message, we reply right away.",
+    callBtn: "Call us",
+    waBtn: "WhatsApp",
     location: "Mostar, BiH · working with clients across the region",
     response: "We usually reply the same day",
     nameLabel: "Full name",
@@ -191,6 +201,36 @@ export function Contact() {
 
           {/* ── Lijevo: koraci + ljudi + info ──────────────────────────────── */}
           <motion.div variants={staggerContainerSlow} {...revealInfo}>
+
+            {/* Direktni kanali: telefon i WhatsApp, iznad svega ostalog.
+               Prikazuju se samo ako je broj upisan u lib/contact.ts */}
+            {(PHONE_DIAL || waLink(lang)) && (
+              <motion.div variants={fadeUp}
+                className="rounded-2xl p-5 mb-8 bg-[var(--surface)] border border-brand-600/30">
+                <p className="text-[15px] font-extrabold text-[var(--text)]">{d.directTitle}</p>
+                <p className="text-[12.5px] text-[var(--text-muted)] mt-1 mb-4">{d.directSub}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {PHONE_DIAL && (
+                    <a href={`tel:${PHONE_DIAL}`}
+                       className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
+                                  bg-gradient-to-r from-brand-600 to-brand-500 text-white
+                                  shadow-lg shadow-brand-600/25
+                                  transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5">
+                      <Phone size={14} /> {d.callBtn}
+                      {PHONE_DISPLAY && <span className="font-semibold opacity-90">{PHONE_DISPLAY}</span>}
+                    </a>
+                  )}
+                  {waLink(lang) && (
+                    <a href={waLink(lang)!} target="_blank" rel="noopener noreferrer"
+                       className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
+                                  bg-[#25D366] text-[#0B3D24]
+                                  transition-transform duration-300 hover:-translate-y-0.5">
+                      <MessageCircle size={14} /> {d.waBtn}
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            )}
 
             {/* Šta slijedi */}
             <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-5">

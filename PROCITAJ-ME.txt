@@ -1,77 +1,69 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — RUNDA 1: forma šalje, WhatsApp dugme, brže slike
+  mehiccdev — RUNDA 1 (kompletna): forma šalje, telefon i WhatsApp
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (7 fajlova):
+⚠ OVAJ ZIP ZAMJENJUJE prethodni "runda 1" paket. Sve iz njega je
+unutra, plus broj telefona i direktni kanali uz obje forme.
+
+ŠTA JE U ZIP-u (9 fajlova):
+  lib/contact.ts                        NOVO: broj na jednom mjestu
   app/api/kontakt/route.ts              NOVO: šalje poruke s naslovnice
   app/layout.tsx                        montira WhatsApp dugme
   components/ui/WhatsAppButton.tsx      NOVO: plutajuće dugme
-  components/sections/Contact.tsx       forma sada stvarno šalje
+  components/sections/Contact.tsx       forma šalje + direktni kanali
+  components/rjesenja/RcForm.tsx        direktni kanali uz rent-a-car formu
   components/sections/Portfolio.tsx     slike na next/image
   components/sections/About.tsx         slike na next/image
   components/rjesenja/RentACarSections.tsx  slika na next/image
 
-════════════════════════════════════════════════════════════════════
-  ⚠ DVIJE STVARI KOJE MORAŠ URADITI TI (5 minuta)
-════════════════════════════════════════════════════════════════════
+════════ BROJ TELEFONA ════════
+Upisan je na jedno mjesto, u lib/contact.ts, i odatle ga koriste sva
+tri mjesta na sajtu. Ako ga ikad mijenjaš, mijenjaš samo taj fajl.
 
-1) UPIŠI SVOJ WHATSAPP BROJ
-   Otvori components/ui/WhatsAppButton.tsx, na vrhu je:
-       const WHATSAPP_NUMBER = "";
-   Upiši broj bez plusa, razmaka i nule, npr:
-       const WHATSAPP_NUMBER = "38761234567";
-   Dok je prazno, dugme se NE prikazuje (ništa ne puca).
+  PHONE_DISPLAY = "+387 62 784 029"   (kako se vidi)
+  PHONE_DIAL    = "+38762784029"      (kako se zove)
+  WHATSAPP      = "38762784029"       (za wa.me link)
 
-2) PROVJERI ENV VARIJABLE NA VERCELU
-   Ista tri ključa koje traži rent-a-car forma koristi i kontakt
-   forma, pa nema dvostrukog podešavanja:
-       RESEND_API_KEY   = re_xxxxx        (resend.com, besplatno)
-       UPIT_EMAIL_TO    = bakir.mehic@mehiccdev.com
-       UPIT_EMAIL_FROM  = onboarding@resend.dev
-   Poslije dodavanja: Vercel → Deployments → Redeploy.
+VAŽNA ISPRAVKA: u međunarodnom formatu se nula poslije pozivnog broja
+IZOSTAVLJA. Poslao si "+387 062 784 029", ispravno je
+"+387 62 784 029". Da je ostala nula, pozivi iz inostranstva i
+WhatsApp linkovi ne bi radili. Ako je broj ipak drugačiji, ispravi
+ga u lib/contact.ts.
 
-════════ 1. KONTAKT FORMA SADA STVARNO ŠALJE ════════
-Bila je simulacija: prikazivala je "poruka poslana", a poruka nikad
-nije nigdje išla. Sada ide kroz /api/kontakt na tvoj email, s
-odgovorom postavljenim na email pošiljaoca (klikneš Reply i pišeš
-direktno klijentu).
+════════ GDJE SE SADA VIDI ════════
+1. KONTAKT SEKCIJA (naslovnica): iznad koraka saradnje stoji okvir
+   "Ne volite forme? Nazovite ili pišite na WhatsApp, javljamo se
+   odmah." s plavim dugmetom (broj se vidi na dugmetu) i zelenim
+   WhatsApp dugmetom.
 
-Dodano i: skriveno honeypot polje protiv botova, ograničenje na 3
-poruke po IP-u u 10 minuta, i vidljiva crvena poruka ako slanje
-padne, s tvojim emailom kao rezervnim kanalom. Ranije je korisnik u
-slučaju greške dobijao lažnu potvrdu.
+2. RENT-A-CAR FORMA: iznad forme dva dugmeta, telefon i WhatsApp,
+   za one koji ne žele popunjavati sedam polja.
 
-════════ 2. WHATSAPP DUGME ════════
-Plutajuće zeleno dugme u donjem desnom uglu, na svim stranicama.
-Pojavi se tek kad posjetilac skrola oko 500 piksela, da ne smeta u
-hero sekciji. Klik otvara WhatsApp s već upisanom porukom
-("Pozdrav, vidio sam vaš sajt i zanima me ..."), na jeziku sajta.
+3. PLUTAJUĆE WHATSAPP DUGME: sada radi, jer broj postoji. Pojavi se
+   kad posjetilac skrola oko 500 piksela.
 
-════════ 3. SLIKE ════════
-Sve slike u sadržaju prebačene su na Next.js sistem za slike. To
-znači da Vercel sam pravi manje verzije i moderne formate, pa
-posjetilac na telefonu više ne skida original od 2 MB. Portfolio
-folder je bio 4,8 MB i to je najviše obaralo mobilni PageSpeed,
-onaj isti kojim se sajt hvali.
+Na telefonu klik na broj odmah otvara pozivnik, na desktopu se
+otvara program za pozive ili se broj samo vidi.
 
-Napomena: slika u lightboxu (kad se klikne za uvećanje) namjerno je
-ostala klasična, jer se učitava tek na klik i mora slobodno
-skalirati preko cijelog ekrana.
+════════ OSTALO IZ RUNDE 1 (podsjetnik) ════════
+  • Kontakt forma sada STVARNO šalje (bila je simulacija)
+  • Honeypot + ograničenje 3 poruke po IP-u
+  • Slike na next/image, Vercel ih sam smanjuje
 
-════════ KAKO TESTIRATI ════════
-  1. npm run dev
-  2. Pošalji poruku kroz kontakt formu. Bez Resend ključa lokalno
-     ćeš dobiti crvenu grešku, to je očekivano i ispravno.
-  3. Skrolaj, provjeri WhatsApp dugme (vidi se tek kad upišeš broj).
-  4. Poslije deploya provjeri stvarno slanje na produkciji.
+⚠ I DALJE MORAŠ: dodati env varijable na Vercelu, inače nijedna
+forma ne šalje:
+    RESEND_API_KEY   = re_xxxxx      (resend.com, besplatno)
+    UPIT_EMAIL_TO    = bakir.mehic@mehiccdev.com
+    UPIT_EMAIL_FROM  = onboarding@resend.dev
+  pa Vercel → Deployments → Redeploy.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: kontakt forma salje, whatsapp dugme, next/image"
+  git commit -m "feat: telefon i whatsapp uz forme, kontakt forma salje"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: kontakt forma salje, whatsapp dugme, next/image" ; git push
+  git add . ; git commit -m "feat: telefon i whatsapp uz forme, kontakt forma salje" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

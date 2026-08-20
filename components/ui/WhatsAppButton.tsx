@@ -3,7 +3,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Plutajuće WhatsApp dugme u donjem desnom uglu, na svim stranicama.
  *
- * ⚠ UPIŠI SVOJ BROJ DOLJE u WHATSAPP_NUMBER.
+ * ⚠ BROJ SE UPISUJE U lib/contact.ts (jedno mjesto za cijeli sajt).
  *   Format: država + broj, bez plusa, razmaka i nula na početku.
  *   Primjer za +387 61 234 567  →  "38761234567"
  *   Dok je prazno, dugme se uopšte ne prikazuje, pa ništa ne pukne.
@@ -16,12 +16,8 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { waLink } from "@/lib/contact";
 
-const WHATSAPP_NUMBER = "38762784029";           // <── ovdje ide tvoj broj
-const PREFILL = {
-  bs: "Pozdrav, vidio sam vaš sajt i zanima me ",
-  en: "Hi, I saw your website and I'm interested in ",
-};
 
 export function WhatsAppButton() {
   const { lang } = useLanguage();
@@ -35,10 +31,9 @@ export function WhatsAppButton() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (!WHATSAPP_NUMBER) return null;
+  const href = waLink(lang);
+  if (!href) return null;
 
-  const text = PREFILL[(lang as "bs" | "en")] ?? PREFILL.bs;
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   const label = lang === "en" ? "Write to us on WhatsApp" : "Pišite nam na WhatsApp";
 
   return (
