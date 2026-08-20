@@ -17,7 +17,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-const WHATSAPP_NUMBER = "";           // <── ovdje ide tvoj broj
+const WHATSAPP_NUMBER = "38762784029";           // <── ovdje ide tvoj broj
 const PREFILL = {
   bs: "Pozdrav, vidio sam vaš sajt i zanima me ",
   en: "Hi, I saw your website and I'm interested in ",
