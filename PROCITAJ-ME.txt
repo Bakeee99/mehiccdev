@@ -1,63 +1,37 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — SLIKA ZA DIJELJENJE LINKA (Instagram, WhatsApp, LinkedIn)
+  mehiccdev — Tračnica se skriva u hero sekciji
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  app/opengraph-image.tsx                        NOVO: naslovnica
-  app/rjesenja/rent-a-car/opengraph-image.tsx    NOVO: rent-a-car stranica
-  app/rjesenja/rent-a-car/page.tsx               uklonjena stara slika
+ŠTA JE U ZIP-u (1 fajl):
+  components/ui/SectionRail.tsx
 
-════════ ŠTA SE DEŠAVALO ════════
-Sajt nije imao zadanu sliku za dijeljenje, pa su Instagram i ostale
-mreže same birale prvu sliku koju nađu na stranici. Zato je izašla
-tvoja fotografija iz sekcije Tim.
+ŠTA JE PROMIJENJENO:
+Tračnica sekcija se više ne vidi dok je posjetilac na prvom ekranu.
+Pojavi se tek kad skrola oko 80 posto visine ekrana, uz meko
+utapanje i blagi pomak s lijeva.
 
-════════ ŠTA SADA IZLAZI ════════
-Sajt sam generiše brendiranu sliku, u tačnom formatu 1200x630:
+Pošto obje stranice koriste istu komponentu, ovo automatski važi i
+za naslovnicu i za rent-a-car stranicu, jednim fajlom.
 
-  NASLOVNICA
-    MOSTAR, BOSNA I HERCEGOVINA
-    mehiccdev  (veliko, "dev" u plavoj)
-    Web aplikacije, sajtovi i marketing iz jedne ruke
-    [Rezervacije i najam] [Sajtovi] [Marketing]
-    mehiccdev.com
+Zašto je ovako bolje: u hero sekciji tračnica nema šta da pokaže
+(posjetilac je tek stigao), a vizuelno se sudarala s plutajućim
+karticama i naslovom. Kad se pojavi tek na drugoj sekciji, djeluje
+kao da se sajt "otvorio" i ponudio navigaciju u trenutku kad je
+stvarno potrebna.
 
-  RENT-A-CAR STRANICA (zasebna slika)
-    RJEŠENJE ZA RENT-A-CAR FIRME
-    Rezervacioni sistem za vašu rent-a-car firmu
-    Sajt, admin panel i kalendar dostupnosti u jednom
-    mehiccdev · mehiccdev.com
+Linija napretka na mobitelu ostaje kakva je bila, ona ne smeta u
+hero sekciji jer je tanka i stoji uz navbar.
 
-Pozadina je tamna s plavim sjajem, u duhu sajta. Ista slika se
-koristi i za Twitter/X kartice.
-
-Bitno za tebe praktično: kad budeš slao rent-a-car link vlasnicima
-firmi preko WhatsAppa, u pregledu će pisati šta stranica nudi, a ne
-opšte ime agencije. To sam po sebi diže stopu otvaranja.
-
-Nema fajla koji treba dizajnirati ni održavati: slika se pravi iz
-koda, pa se mijenja izmjenom teksta u tim fajlovima.
-
-════════ ⚠ KAKO PROVJERITI POSLIJE DEPLOYA ════════
-Društvene mreže keširaju stare preglede, pa ti stara slika može
-ostati danima. Kad pushaš:
-  1. Facebook i Instagram: developers.facebook.com/tools/debug
-     → zalijepi link → "Scrape Again"
-  2. LinkedIn: linkedin.com/post-inspector
-     → zalijepi link → osvježi
-  3. WhatsApp: obično se osvježi sam za par sati, a najbrže tako što
-     pošalješ link s malim dodatkom, npr. mehiccdev.com/?v=2
-
-Provjeri i lokalno prije pusha: npm run dev pa otvori
-http://localhost:3000/opengraph-image (slika mora izaći).
+Ako ti se učini da se pojavljuje prekasno ili prerano, to je jedan
+broj u fajlu: window.innerHeight * 0.8 (npr. 0.6 za ranije).
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: brendirane og slike za dijeljenje linkova"
+  git commit -m "fix: tracnica se ne prikazuje u hero sekciji"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: brendirane og slike za dijeljenje linkova" ; git push
+  git add . ; git commit -m "fix: tracnica se ne prikazuje u hero sekciji" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
