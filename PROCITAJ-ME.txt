@@ -1,53 +1,63 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Tračnica i na naslovnici + tamnija pozadina
+  mehiccdev — SLIKA ZA DIJELJENJE LINKA (Instagram, WhatsApp, LinkedIn)
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (5 fajlova):
-  app/globals.css                           tamnija paleta
-  app/page.tsx                              montira tračnicu
-  components/ui/SectionRail.tsx             NOVO: zajednička komponenta
-  components/sections/HomeRail.tsx          NOVO: sekcije naslovnice
-  components/rjesenja/RentACarSections.tsx  koristi zajedničku komponentu
+ŠTA JE U ZIP-u (3 fajla):
+  app/opengraph-image.tsx                        NOVO: naslovnica
+  app/rjesenja/rent-a-car/opengraph-image.tsx    NOVO: rent-a-car stranica
+  app/rjesenja/rent-a-car/page.tsx               uklonjena stara slika
 
-⚠ OBRIŠI STARI FAJL nakon raspakivanja:
-    components/rjesenja/RcSectionRail.tsx
-  Njegov posao je preuzela zajednička komponenta. Ako ga ostaviš,
-  ništa neće puknuti, ali stoji mrtav kod.
+════════ ŠTA SE DEŠAVALO ════════
+Sajt nije imao zadanu sliku za dijeljenje, pa su Instagram i ostale
+mreže same birale prvu sliku koju nađu na stranici. Zato je izašla
+tvoja fotografija iz sekcije Tim.
 
-════════ 1. TAMNIJA POZADINA ════════
-Bio si u pravu, prethodne vrijednosti su vukle na sivo:
+════════ ŠTA SADA IZLAZI ════════
+Sajt sam generiše brendiranu sliku, u tačnom formatu 1200x630:
 
-  pozadina    #09090B  →  #050507   (skoro čisto crna)
-  kartice     #18181B  →  #0E0E11   (ovo je najviše "sivilo")
-  rubovi      #27272A  →  #1D1D21   (usklađeni, inače bi iskakali)
+  NASLOVNICA
+    MOSTAR, BOSNA I HERCEGOVINA
+    mehiccdev  (veliko, "dev" u plavoj)
+    Web aplikacije, sajtovi i marketing iz jedne ruke
+    [Rezervacije i najam] [Sajtovi] [Marketing]
+    mehiccdev.com
 
-Najveća razlika dolazi od kartica: one prekrivaju veliki dio ekrana,
-pa je njihova siva boja bila ono što si primjećivao, više nego sama
-pozadina. Rubovi su morali potamniti zajedno s njima, jer bi na
-tamnijoj podlozi svijetli rub izgledao kao obrub.
+  RENT-A-CAR STRANICA (zasebna slika)
+    RJEŠENJE ZA RENT-A-CAR FIRME
+    Rezervacioni sistem za vašu rent-a-car firmu
+    Sajt, admin panel i kalendar dostupnosti u jednom
+    mehiccdev · mehiccdev.com
 
-Ako ti i ovo bude presvijetlo, sve tri vrijednosti su na jednom
-mjestu u app/globals.css, u bloku ".dark".
+Pozadina je tamna s plavim sjajem, u duhu sajta. Ista slika se
+koristi i za Twitter/X kartice.
 
-════════ 2. TRAČNICA NA NASLOVNICI ════════
-Ista navigacija kao na rent-a-car stranici, sada i na naslovnici:
-  O nama · Usluge · Rezultati · Portfolio · Cjenovnik · Vrijednost ·
-  Flagship · Kontakt
+Bitno za tebe praktično: kad budeš slao rent-a-car link vlasnicima
+firmi preko WhatsAppa, u pregledu će pisati šta stranica nudi, a ne
+opšte ime agencije. To sam po sebi diže stopu otvaranja.
 
-  • Desktop: crtice uz lijevu ivicu, aktivna se produži i pokaže naziv
-  • Mobitel: tanka linija napretka ispod navbara, bez tračnice
+Nema fajla koji treba dizajnirati ni održavati: slika se pravi iz
+koda, pa se mijenja izmjenom teksta u tim fajlovima.
 
-Kod je sada jedna zajednička komponenta koju obje stranice koriste,
-pa se buduće izmjene rade na jednom mjestu. Kad dodaš novu sekciju,
-dopišeš jedan red u HomeRail.tsx (ili u rentACarCopy.ts za rent-a-car).
+════════ ⚠ KAKO PROVJERITI POSLIJE DEPLOYA ════════
+Društvene mreže keširaju stare preglede, pa ti stara slika može
+ostati danima. Kad pushaš:
+  1. Facebook i Instagram: developers.facebook.com/tools/debug
+     → zalijepi link → "Scrape Again"
+  2. LinkedIn: linkedin.com/post-inspector
+     → zalijepi link → osvježi
+  3. WhatsApp: obično se osvježi sam za par sati, a najbrže tako što
+     pošalješ link s malim dodatkom, npr. mehiccdev.com/?v=2
+
+Provjeri i lokalno prije pusha: npm run dev pa otvori
+http://localhost:3000/opengraph-image (slika mora izaći).
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: tracnica sekcija na naslovnici, tamnija paleta"
+  git commit -m "feat: brendirane og slike za dijeljenje linkova"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: tracnica sekcija na naslovnici, tamnija paleta" ; git push
+  git add . ; git commit -m "feat: brendirane og slike za dijeljenje linkova" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

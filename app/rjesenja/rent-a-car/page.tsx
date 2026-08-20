@@ -42,13 +42,11 @@ export const metadata: Metadata = {
     siteName: "mehiccdev",
     locale: "bs_BA",
     type: "website",
-    images: [{ url: "/portfolio/maximum-naslovna.png", width: 1200, height: 630, alt: COPY.bs.caseStudy.imageAlt }],
   },
   twitter: {
     card: "summary_large_image",
     title: COPY.bs.meta.title,
     description: COPY.bs.meta.description,
-    images: ["/portfolio/maximum-naslovna.png"],
   },
   robots: { index: true, follow: true },
 };
