@@ -30,6 +30,7 @@ import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
+import { RcSectionRail } from "@/components/rjesenja/RcSectionRail";
 
 const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
 const SOLUTION_ICONS: LucideIcon[] = [Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search];
@@ -126,7 +127,7 @@ function Problem({ c }: { c: typeof COPY.bs }) {
   const reveal = useReveal();
   const d = c.problem;
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section id="problem" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
@@ -158,7 +159,7 @@ function Solution({ c }: { c: typeof COPY.bs }) {
   const reveal = useReveal();
   const d = c.solution;
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section id="rjesenje" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
@@ -198,7 +199,7 @@ function Flow({ c }: { c: typeof COPY.bs }) {
   const d = c.flow;
 
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section id="kako-radi" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.sub} />
@@ -553,7 +554,7 @@ function Comparison({ c }: { c: typeof COPY.bs }) {
   const reveal = useReveal();
   const d = c.comparison;
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section id="poredjenje" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.body} />
@@ -584,7 +585,7 @@ function Faq({ c }: { c: typeof COPY.bs }) {
   const [open, setOpen] = useState<number | null>(0);
   const d = c.faq;
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section id="pitanja" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
         <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
@@ -636,6 +637,7 @@ export function RentACarSections() {
         <div aria-hidden className="absolute inset-x-0 top-0 h-[70vh] pointer-events-none
                                     bg-[radial-gradient(115%_70%_at_50%_-10%,rgba(37,99,235,0.14),transparent_60%)]" />
       )}
+      <RcSectionRail />
       <Hero c={c} />
       <Problem c={c} />
       <Solution c={c} />

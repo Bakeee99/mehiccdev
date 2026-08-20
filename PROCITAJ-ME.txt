@@ -1,33 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — HOTFIX: Vercel build (fali rentACarCopy.ts)
+  mehiccdev — NAVIGACIJA KROZ STRANICU (rent-a-car)
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  components/rjesenja/rentACarCopy.ts   ← OVAJ JE NEDOSTAJAO
-  components/rjesenja/RcForm.tsx        (isti kao u rundi 1, radi sigurnosti)
+ŠTA JE U ZIP-u (4 fajla):
+  components/rjesenja/RcSectionRail.tsx     NOVO: tračnica i linija napretka
+  components/rjesenja/RentACarSections.tsx  id-jevi sekcija + montaža
+  components/rjesenja/rentACarCopy.ts       nazivi sekcija (bs + en)
+  components/rjesenja/RcForm.tsx            (uključen radi hotfixa iz prošlog ZIP-a)
 
-ŠTA SE DESILO:
-Moja greška u pakovanju. Forma na rent-a-car stranici koristi
-tekstove "Radije telefonom?" i "Nazovite ili pišite na WhatsApp"
-koji žive u rentACarCopy.ts, ali taj fajl nije ušao u prošli ZIP.
-Kod tebe je stigla forma koja traži tekstove kojih nema, pa je
-provjera tipova pala:
+════════ DESKTOP: TRAČNICA UZ LIJEVU IVICU ════════
+Osam kratkih crtica jedna ispod druge, vertikalno centrirano:
+  Problem · Rješenje · Kako radi · Primjer · Paketi · Poređenje ·
+  Upit · Pitanja
 
-  Type error: Property 'directTitle' does not exist on type ...
+  • Aktivna sekcija: crtica se produži, zasvijetli plavo i pored nje
+    se pojavi naziv.
+  • Neaktivne: tanke sive crtice bez teksta, naziv se pojavi na hover.
+  • Klik na bilo koju crticu glatko skrola na tu sekciju.
 
-Nije bilo ništa pokvareno u kodu, nego je nedostajao jedan fajl.
+Minimalistički namjerno: bez okvira, bez pozadine, bez brojeva. Samo
+crtice i jedan naziv u datom trenutku, pa ne odvlači pažnju sa
+sadržaja.
 
-KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run build  (lokalno, da se uvjeriš prije pusha)
-  3. git add . ; git commit -m "fix: dodan rentACarCopy sa tekstovima za direktni kontakt" ; git push
+════════ MOBITEL: NAMJERNO BEZ TRAČNICE ════════
+Pitao si da li da ide i na mobitel. Ne bih, i evo zašto: vertikalne
+tačkice na telefonu zauzimaju baš onu ivicu ekrana kojom se skrola
+palcem, i na uskim ekranima naliježu na sadržaj.
+
+Umjesto toga, na mobitelu je tanka linija napretka (2 piksela) odmah
+ispod navbara, koja se puni kako se skrola. Isti podatak, nula
+smetnje, i to je rješenje koje koriste ozbiljni sajtovi.
+
+════════ TEHNIČKI ════════
+  • Prati sekcije preko IntersectionObserver-a, ne kroz skrol petlju,
+    pa nema troška po frejmu (bitno poslije mobilne dijete)
+  • Linija napretka ide kroz requestAnimationFrame
+  • Poštuje "reduced motion": tada nema klizanja, samo skok
+  • Ne sudara se s plutajućim WhatsApp dugmetom (ono je desno dolje)
+
+Ako poželiš tračnicu i na mobitelu, to je brisanje "hidden lg:flex"
+iz jedne linije u RcSectionRail.tsx, ali je stvarno ne preporučujem.
+
+════════ KOMANDE ZA KONZOLU ════════
+  git add .
+  git commit -m "feat: navigacija kroz sekcije na rent-a-car stranici"
+  git push
+
+Ili u jednom redu:
+  git add . ; git commit -m "feat: navigacija kroz sekcije na rent-a-car stranici" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
-
-════════ SAVJET ZA UBUDUĆE ════════
-Kad god Vercel padne, ono što ti treba je crvena linija koja počinje
-sa "Type error:" ili "Module not found:". Ta linija kaže tačno šta
-fali. Sve iznad nje (narandžasta upozorenja) je šum.
-A najbrža provjera je "npm run build" lokalno prije pusha: uhvati
-istu grešku za 30 sekundi umjesto da čekaš Vercel.
 ════════════════════════════════════════════════════════════════════

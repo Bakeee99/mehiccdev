@@ -21,6 +21,16 @@ export const COPY = {
       description:
         "Web aplikacija za rent a car: kalendar dostupnosti po vozilu, admin panel za flotu i cijene i forma za rezervaciju. Sistem za iznajmljivanje vozila, građen u Mostaru.",
     },
+    nav: [
+      { id: "problem",    label: "Problem" },
+      { id: "rjesenje",   label: "Rješenje" },
+      { id: "kako-radi",  label: "Kako radi" },
+      { id: "case-study", label: "Primjer" },
+      { id: "paketi",     label: "Paketi" },
+      { id: "poredjenje", label: "Poređenje" },
+      { id: "upit",       label: "Upit" },
+      { id: "pitanja",    label: "Pitanja" },
+    ],
     hero: {
       eyebrow: "Rješenje za rent-a-car firme",
       h1a: "Rezervacioni sistem",
@@ -205,6 +215,16 @@ export const COPY = {
       description:
         "A web application for car rental companies: per vehicle availability calendar, admin panel for fleet and pricing, and a booking form. Car rental management software built in Mostar.",
     },
+    nav: [
+      { id: "problem",    label: "Problem" },
+      { id: "rjesenje",   label: "Solution" },
+      { id: "kako-radi",  label: "How it works" },
+      { id: "case-study", label: "Example" },
+      { id: "paketi",     label: "Packages" },
+      { id: "poredjenje", label: "Comparison" },
+      { id: "upit",       label: "Inquiry" },
+      { id: "pitanja",    label: "Questions" },
+    ],
     hero: {
       eyebrow: "Built for car rental companies",
       h1a: "A booking system",
