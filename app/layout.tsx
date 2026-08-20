@@ -15,23 +15,73 @@ import "./globals.css";
 // This avoids any build-time font fetch and keeps deployment rock-solid.
 
 export const metadata: Metadata = {
-  title: "mehiccdev — Digital Agency | Web, AI & Marketing",
+  metadataBase: new URL("https://mehiccdev.com"),
+
+  /* Naslov je i tekst u tabu i plavi link u Google rezultatima.
+     Brend ide prvi (tab prikaže samo prvih ~20 znakova, pa se vidi
+     "mehiccdev · Web apl…"), a ostatak nosi ključne riječi i grad.
+     template dodaje brend na naslove podstranica automatski. */
+  title: {
+    default: "mehiccdev · Web aplikacije i sajtovi, Mostar",
+    template: "%s · mehiccdev",
+  },
   description:
-    "We turn business goals into digital realities. Web development, AI integrations, digital marketing & SaaS solutions for the Balkans and beyond.",
-  keywords: ["web development", "digital agency", "Next.js", "Webflow", "AI", "digital marketing", "Bosnia", "mehiccdev"],
+    "Gradimo web aplikacije za rezervacije i najam, sajtove koje sami uređujete i marketing koji dovodi upite. Iz Mostara za cijeli region.",
+  keywords: [
+    "mehiccdev",
+    "izrada web aplikacija Mostar",
+    "izrada sajtova Mostar",
+    "sistem za rezervacije",
+    "rent a car sistem",
+    "sistem za najam vozila",
+    "web aplikacija za firmu",
+    "digitalni marketing BiH",
+    "Next.js razvoj",
+    "web development Bosnia",
+  ],
   authors: [{ name: "mehiccdev" }],
+  creator: "mehiccdev",
+  alternates: { canonical: "https://mehiccdev.com" },
   openGraph: {
-    title: "mehiccdev — Digital Agency",
-    description: "Web development, AI integrations & digital marketing for ambitious brands.",
+    title: "mehiccdev · Web aplikacije, sajtovi i marketing",
+    description:
+      "Sistem za rezervacije i najam, sajt koji sami uređujete i marketing koji dovodi upite. Studio iz Mostara.",
     url: "https://mehiccdev.com",
     siteName: "mehiccdev",
+    locale: "bs_BA",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "mehiccdev · Web aplikacije, sajtovi i marketing",
+    description: "Sistem za rezervacije i najam, sajt koji sami uređujete i marketing koji dovodi upite.",
+  },
+  robots: { index: true, follow: true },
+};
+
+/* Strukturirani podaci: ovako Google prepoznaje mehiccdev kao lokalnu
+   uslužnu firmu iz Mostara, što pomaže kod pretraga tipa
+   "izrada sajtova Mostar". */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "mehiccdev",
+  url: "https://mehiccdev.com",
+  email: "bakir.mehic@mehiccdev.com",
+  description:
+    "Web studio iz Mostara. Gradimo web aplikacije za rezervacije i najam, sajtove i digitalni marketing.",
+  address: { "@type": "PostalAddress", addressLocality: "Mostar", addressCountry: "BA" },
+  areaServed: ["Bosnia and Herzegovina", "Croatia", "Serbia", "Montenegro"],
+  knowsLanguage: ["bs", "en"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="bs" suppressHydrationWarning>
+      <head>
+        <script type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
+      </head>
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
           <LanguageProvider>

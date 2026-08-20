@@ -1,39 +1,51 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — BUSINESS PAKET usklađen s Pro paketom (rent-a-car)
+  mehiccdev — NASLOV U TABU + SEO paket (koji nikad nije pushan)
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/sections/Pricing.tsx
-(sadrži i sve prethodno: €50/mj podrška, €25/h, hosting po
- potrošnji, banner na rent-a-car stranicu)
+ŠTA JE U ZIP-u (4 fajla):
+  app/layout.tsx                       novi naslov + opis + JSON-LD
+  app/sitemap.ts                       NOVI fajl
+  app/robots.ts                        NOVI fajl
+  app/rjesenja/rent-a-car/page.tsx     skraćen naslov podstranice
 
-ŠTA JE PROMIJENJENO:
-  Business paket na naslovnici:
-    prije:  €1.600  (precrtano €2.400, oznaka -33%)
-    sada:   €1.480  (precrtano €2.400, oznaka -38%)
-            ispod cijene piše "jednokratno · oko 2.900 KM"
+⚠ NALAZ: tvoj screenshot pokazuje da SEO paket od ranije nikad nije
+stigao na sajt. U tabu je i dalje stajao stari engleski naslov s
+frazom "We turn business goals into digital realities". Ovaj ZIP to
+konačno rješava, zato su sitemap i robots opet unutra.
 
-€1.480 je isti iznos kao Pro paket na rent-a-car stranici
-(2.900 KM). Sada klijent koji otvori obje stranice vidi istu cifru
-za isti obim posla, a KM napomena mu odmah kaže koliko je to u
-domaćoj valuti, bez računanja.
+════════ ŠTA SADA PIŠE U TABU ════════
+  naslovnica:      mehiccdev · Web aplikacije i sajtovi, Mostar
+  rent-a-car:      Rezervacioni sistem za rent-a-car firme · mehiccdev
 
-Popust je automatski postao -38% jer je stara cijena ostala €2.400.
-"3 mjeseca besplatne podrške" je i dalje prva stavka u paketu, kao
-i na rent-a-car stranici, pa se i to poklapa.
+U uskom tabu se vidi otprilike "mehiccdev · Web apl…", što je čisto
+i odmah prepoznatljivo, a puni naslov radi svoj posao u Google
+rezultatima.
 
-⚠ JEDNA STVAR ZA RAZMISLITI (ne mijenjam bez tvoje riječi):
-Premium na naslovnici je "od €2.400", a Premium na rent-a-car
-stranici je 4.200 KM (oko €2.150), dakle jeftiniji. To je branjivo
-(naslovnica je neograničen custom obim, rent-a-car je gotov
-proizvod), ali ako ti smeta, mogu naslovnički Premium podići na
-"od €2.600" da hijerarhija bude očigledna.
+ZAŠTO NE SAMO "mehiccdev":
+Taj isti tekst je i plavi link u Google rezultatima i jedan od
+najjačih SEO signala. Sa golim brendom ne bi te našao niko ko ne
+zna kako se zoveš, a upravo takve klijente tražiš. Ovako imaš oboje:
+u tabu se vidi brend, u pretrazi ključne riječi i grad.
+
+Ako ipak želiš baš samo "mehiccdev", to je jedna linija u
+app/layout.tsx (polje "default" unutar title).
+
+════════ ŠTA JOŠ DOLAZI S OVIM ════════
+  • Opis stranice na bosanskom, bez AI fraza (stari je bio engleski
+    i pun praznog hvalisanja)
+  • Ključne riječi koje ljudi stvarno kucaju
+  • JSON-LD: Google prepoznaje mehiccdev kao firmu iz Mostara
+  • sitemap.xml (obje rute) i robots.txt
+  • Podstranice sada automatski dobijaju "· mehiccdev" na kraj
+    naslova, pa se to više ne piše ručno
 
 KORACI:
   1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → naslovnica, Business kartica: nova cijena,
-     KM napomena, oznaka -38%; oba jezika
-  3. git add . && git commit -m "feat: business usklađen s pro paketom" && git push
+  2. npm run dev → pogledaj tab na naslovnici i na rent-a-car
+     stranici; otvori i /sitemap.xml i /robots.txt
+  3. git add . && git commit -m "seo: naslovi, sitemap, robots, structured data" && git push
+  4. Poslije deploya: Google Search Console → dodaj mehiccdev.com
+     → pošalji sitemap. Bez toga Google ne zna da treba doći.
 
 Build verifikovan prije slanja: npm run build ✓ (10/10)
 ════════════════════════════════════════════════════════════════════
