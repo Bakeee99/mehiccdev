@@ -1,69 +1,33 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — RUNDA 1 (kompletna): forma šalje, telefon i WhatsApp
+  mehiccdev — HOTFIX: Vercel build (fali rentACarCopy.ts)
 ════════════════════════════════════════════════════════════════════
 
-⚠ OVAJ ZIP ZAMJENJUJE prethodni "runda 1" paket. Sve iz njega je
-unutra, plus broj telefona i direktni kanali uz obje forme.
+ŠTA JE U ZIP-u (2 fajla):
+  components/rjesenja/rentACarCopy.ts   ← OVAJ JE NEDOSTAJAO
+  components/rjesenja/RcForm.tsx        (isti kao u rundi 1, radi sigurnosti)
 
-ŠTA JE U ZIP-u (9 fajlova):
-  lib/contact.ts                        NOVO: broj na jednom mjestu
-  app/api/kontakt/route.ts              NOVO: šalje poruke s naslovnice
-  app/layout.tsx                        montira WhatsApp dugme
-  components/ui/WhatsAppButton.tsx      NOVO: plutajuće dugme
-  components/sections/Contact.tsx       forma šalje + direktni kanali
-  components/rjesenja/RcForm.tsx        direktni kanali uz rent-a-car formu
-  components/sections/Portfolio.tsx     slike na next/image
-  components/sections/About.tsx         slike na next/image
-  components/rjesenja/RentACarSections.tsx  slika na next/image
+ŠTA SE DESILO:
+Moja greška u pakovanju. Forma na rent-a-car stranici koristi
+tekstove "Radije telefonom?" i "Nazovite ili pišite na WhatsApp"
+koji žive u rentACarCopy.ts, ali taj fajl nije ušao u prošli ZIP.
+Kod tebe je stigla forma koja traži tekstove kojih nema, pa je
+provjera tipova pala:
 
-════════ BROJ TELEFONA ════════
-Upisan je na jedno mjesto, u lib/contact.ts, i odatle ga koriste sva
-tri mjesta na sajtu. Ako ga ikad mijenjaš, mijenjaš samo taj fajl.
+  Type error: Property 'directTitle' does not exist on type ...
 
-  PHONE_DISPLAY = "+387 62 784 029"   (kako se vidi)
-  PHONE_DIAL    = "+38762784029"      (kako se zove)
-  WHATSAPP      = "38762784029"       (za wa.me link)
+Nije bilo ništa pokvareno u kodu, nego je nedostajao jedan fajl.
 
-VAŽNA ISPRAVKA: u međunarodnom formatu se nula poslije pozivnog broja
-IZOSTAVLJA. Poslao si "+387 062 784 029", ispravno je
-"+387 62 784 029". Da je ostala nula, pozivi iz inostranstva i
-WhatsApp linkovi ne bi radili. Ako je broj ipak drugačiji, ispravi
-ga u lib/contact.ts.
-
-════════ GDJE SE SADA VIDI ════════
-1. KONTAKT SEKCIJA (naslovnica): iznad koraka saradnje stoji okvir
-   "Ne volite forme? Nazovite ili pišite na WhatsApp, javljamo se
-   odmah." s plavim dugmetom (broj se vidi na dugmetu) i zelenim
-   WhatsApp dugmetom.
-
-2. RENT-A-CAR FORMA: iznad forme dva dugmeta, telefon i WhatsApp,
-   za one koji ne žele popunjavati sedam polja.
-
-3. PLUTAJUĆE WHATSAPP DUGME: sada radi, jer broj postoji. Pojavi se
-   kad posjetilac skrola oko 500 piksela.
-
-Na telefonu klik na broj odmah otvara pozivnik, na desktopu se
-otvara program za pozive ili se broj samo vidi.
-
-════════ OSTALO IZ RUNDE 1 (podsjetnik) ════════
-  • Kontakt forma sada STVARNO šalje (bila je simulacija)
-  • Honeypot + ograničenje 3 poruke po IP-u
-  • Slike na next/image, Vercel ih sam smanjuje
-
-⚠ I DALJE MORAŠ: dodati env varijable na Vercelu, inače nijedna
-forma ne šalje:
-    RESEND_API_KEY   = re_xxxxx      (resend.com, besplatno)
-    UPIT_EMAIL_TO    = bakir.mehic@mehiccdev.com
-    UPIT_EMAIL_FROM  = onboarding@resend.dev
-  pa Vercel → Deployments → Redeploy.
-
-════════ KOMANDE ZA KONZOLU ════════
-  git add .
-  git commit -m "feat: telefon i whatsapp uz forme, kontakt forma salje"
-  git push
-
-Ili u jednom redu:
-  git add . ; git commit -m "feat: telefon i whatsapp uz forme, kontakt forma salje" ; git push
+KORACI:
+  1. Raspakuj u KORIJEN → "Zamijeni" DA
+  2. npm run build  (lokalno, da se uvjeriš prije pusha)
+  3. git add . ; git commit -m "fix: dodan rentACarCopy sa tekstovima za direktni kontakt" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
+
+════════ SAVJET ZA UBUDUĆE ════════
+Kad god Vercel padne, ono što ti treba je crvena linija koja počinje
+sa "Type error:" ili "Module not found:". Ta linija kaže tačno šta
+fali. Sve iznad nje (narandžasta upozorenja) je šum.
+A najbrža provjera je "npm run build" lokalno prije pusha: uhvati
+istu grešku za 30 sekundi umjesto da čekaš Vercel.
 ════════════════════════════════════════════════════════════════════
