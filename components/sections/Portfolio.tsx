@@ -19,6 +19,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check, Star, ZoomIn, X } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
@@ -185,8 +186,9 @@ function DeviceShowcase({
                 aria-label={zoomHint}
                 className="group/zoom block w-full h-full cursor-zoom-in"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={SCREEN_DESKTOP} alt={title} className="w-full h-full object-cover object-top" />
+                <Image src={SCREEN_DESKTOP} alt={title} fill priority
+                       sizes="(max-width: 1024px) 100vw, 760px"
+                       className="object-cover object-top" />
                 <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0
                                  transition-all duration-300 group-hover/zoom:bg-black/35 group-hover/zoom:opacity-100">
                   <span className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold text-white
@@ -221,8 +223,8 @@ function DeviceShowcase({
               aria-label={zoomHint}
               className="group/zoom block w-full h-full cursor-zoom-in"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={SCREEN_MOBILE} alt={`${title} · admin`} className="w-full h-full object-cover object-top" />
+              <Image src={SCREEN_MOBILE} alt={`${title} · admin`} fill
+                     sizes="220px" className="object-cover object-top" />
               <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0
                                transition-all duration-300 group-hover/zoom:bg-black/35 group-hover/zoom:opacity-100">
                 <span className="p-2 rounded-lg bg-black/50 border border-white/20 text-white">
@@ -408,11 +410,12 @@ export function Portfolio() {
                   <span className={`relative flex-1 min-h-[110px] bg-gradient-to-br ${meta.gradient} overflow-hidden`}>
                     {meta.img ? (
                       <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={meta.img}
                           alt={m.title}
-                          className="absolute inset-0 w-full h-full object-cover object-top
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 380px"
+                          className="object-cover object-top
                                      transition-transform duration-500 group-hover/mini:scale-105"
                         />
                         <span className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/45 to-transparent" aria-hidden />

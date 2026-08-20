@@ -16,6 +16,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
@@ -315,9 +316,9 @@ function CaseStudy({ c }: { c: typeof COPY.bs }) {
                 <span className="w-2 h-2 rounded-full bg-white/15" />
                 <span className="flex-1 ml-2 h-[18px] rounded-md bg-white/[.06]" />
               </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/portfolio/maximum-naslovna.png" alt={d.imageAlt}
-                   className="w-full h-auto object-cover object-top" />
+              <Image src="/portfolio/maximum-naslovna.png" alt={d.imageAlt}
+                     width={1600} height={1000} sizes="(max-width: 1024px) 100vw, 620px"
+                     className="w-full h-auto object-cover object-top" />
             </div>
           </motion.div>
         </div>

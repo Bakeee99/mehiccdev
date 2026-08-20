@@ -1,51 +1,77 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — NASLOV U TABU + SEO paket (koji nikad nije pushan)
+  mehiccdev — RUNDA 1: forma šalje, WhatsApp dugme, brže slike
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla):
-  app/layout.tsx                       novi naslov + opis + JSON-LD
-  app/sitemap.ts                       NOVI fajl
-  app/robots.ts                        NOVI fajl
-  app/rjesenja/rent-a-car/page.tsx     skraćen naslov podstranice
+ŠTA JE U ZIP-u (7 fajlova):
+  app/api/kontakt/route.ts              NOVO: šalje poruke s naslovnice
+  app/layout.tsx                        montira WhatsApp dugme
+  components/ui/WhatsAppButton.tsx      NOVO: plutajuće dugme
+  components/sections/Contact.tsx       forma sada stvarno šalje
+  components/sections/Portfolio.tsx     slike na next/image
+  components/sections/About.tsx         slike na next/image
+  components/rjesenja/RentACarSections.tsx  slika na next/image
 
-⚠ NALAZ: tvoj screenshot pokazuje da SEO paket od ranije nikad nije
-stigao na sajt. U tabu je i dalje stajao stari engleski naslov s
-frazom "We turn business goals into digital realities". Ovaj ZIP to
-konačno rješava, zato su sitemap i robots opet unutra.
+════════════════════════════════════════════════════════════════════
+  ⚠ DVIJE STVARI KOJE MORAŠ URADITI TI (5 minuta)
+════════════════════════════════════════════════════════════════════
 
-════════ ŠTA SADA PIŠE U TABU ════════
-  naslovnica:      mehiccdev · Web aplikacije i sajtovi, Mostar
-  rent-a-car:      Rezervacioni sistem za rent-a-car firme · mehiccdev
+1) UPIŠI SVOJ WHATSAPP BROJ
+   Otvori components/ui/WhatsAppButton.tsx, na vrhu je:
+       const WHATSAPP_NUMBER = "";
+   Upiši broj bez plusa, razmaka i nule, npr:
+       const WHATSAPP_NUMBER = "38761234567";
+   Dok je prazno, dugme se NE prikazuje (ništa ne puca).
 
-U uskom tabu se vidi otprilike "mehiccdev · Web apl…", što je čisto
-i odmah prepoznatljivo, a puni naslov radi svoj posao u Google
-rezultatima.
+2) PROVJERI ENV VARIJABLE NA VERCELU
+   Ista tri ključa koje traži rent-a-car forma koristi i kontakt
+   forma, pa nema dvostrukog podešavanja:
+       RESEND_API_KEY   = re_xxxxx        (resend.com, besplatno)
+       UPIT_EMAIL_TO    = bakir.mehic@mehiccdev.com
+       UPIT_EMAIL_FROM  = onboarding@resend.dev
+   Poslije dodavanja: Vercel → Deployments → Redeploy.
 
-ZAŠTO NE SAMO "mehiccdev":
-Taj isti tekst je i plavi link u Google rezultatima i jedan od
-najjačih SEO signala. Sa golim brendom ne bi te našao niko ko ne
-zna kako se zoveš, a upravo takve klijente tražiš. Ovako imaš oboje:
-u tabu se vidi brend, u pretrazi ključne riječi i grad.
+════════ 1. KONTAKT FORMA SADA STVARNO ŠALJE ════════
+Bila je simulacija: prikazivala je "poruka poslana", a poruka nikad
+nije nigdje išla. Sada ide kroz /api/kontakt na tvoj email, s
+odgovorom postavljenim na email pošiljaoca (klikneš Reply i pišeš
+direktno klijentu).
 
-Ako ipak želiš baš samo "mehiccdev", to je jedna linija u
-app/layout.tsx (polje "default" unutar title).
+Dodano i: skriveno honeypot polje protiv botova, ograničenje na 3
+poruke po IP-u u 10 minuta, i vidljiva crvena poruka ako slanje
+padne, s tvojim emailom kao rezervnim kanalom. Ranije je korisnik u
+slučaju greške dobijao lažnu potvrdu.
 
-════════ ŠTA JOŠ DOLAZI S OVIM ════════
-  • Opis stranice na bosanskom, bez AI fraza (stari je bio engleski
-    i pun praznog hvalisanja)
-  • Ključne riječi koje ljudi stvarno kucaju
-  • JSON-LD: Google prepoznaje mehiccdev kao firmu iz Mostara
-  • sitemap.xml (obje rute) i robots.txt
-  • Podstranice sada automatski dobijaju "· mehiccdev" na kraj
-    naslova, pa se to više ne piše ručno
+════════ 2. WHATSAPP DUGME ════════
+Plutajuće zeleno dugme u donjem desnom uglu, na svim stranicama.
+Pojavi se tek kad posjetilac skrola oko 500 piksela, da ne smeta u
+hero sekciji. Klik otvara WhatsApp s već upisanom porukom
+("Pozdrav, vidio sam vaš sajt i zanima me ..."), na jeziku sajta.
 
-KORACI:
-  1. Raspakuj u KORIJEN → "Zamijeni" DA
-  2. npm run dev → pogledaj tab na naslovnici i na rent-a-car
-     stranici; otvori i /sitemap.xml i /robots.txt
-  3. git add . && git commit -m "seo: naslovi, sitemap, robots, structured data" && git push
-  4. Poslije deploya: Google Search Console → dodaj mehiccdev.com
-     → pošalji sitemap. Bez toga Google ne zna da treba doći.
+════════ 3. SLIKE ════════
+Sve slike u sadržaju prebačene su na Next.js sistem za slike. To
+znači da Vercel sam pravi manje verzije i moderne formate, pa
+posjetilac na telefonu više ne skida original od 2 MB. Portfolio
+folder je bio 4,8 MB i to je najviše obaralo mobilni PageSpeed,
+onaj isti kojim se sajt hvali.
 
-Build verifikovan prije slanja: npm run build ✓ (10/10)
+Napomena: slika u lightboxu (kad se klikne za uvećanje) namjerno je
+ostala klasična, jer se učitava tek na klik i mora slobodno
+skalirati preko cijelog ekrana.
+
+════════ KAKO TESTIRATI ════════
+  1. npm run dev
+  2. Pošalji poruku kroz kontakt formu. Bez Resend ključa lokalno
+     ćeš dobiti crvenu grešku, to je očekivano i ispravno.
+  3. Skrolaj, provjeri WhatsApp dugme (vidi se tek kad upišeš broj).
+  4. Poslije deploya provjeri stvarno slanje na produkciji.
+
+════════ KOMANDE ZA KONZOLU ════════
+  git add .
+  git commit -m "feat: kontakt forma salje, whatsapp dugme, next/image"
+  git push
+
+Ili u jednom redu:
+  git add . ; git commit -m "feat: kontakt forma salje, whatsapp dugme, next/image" ; git push
+
+Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

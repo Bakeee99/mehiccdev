@@ -19,6 +19,7 @@
 
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Code2, Megaphone, Linkedin, ArrowUpRight, ImagePlus } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -151,13 +152,14 @@ export function About() {
                                      bg-gradient-to-br ${p.gradient}
                                      shadow-xl shadow-brand-600/20
                                      transition-transform duration-500 group-hover:scale-[1.03]`}>
-                      <div className="w-full h-full rounded-[13px] overflow-hidden bg-[var(--bg)]">
+                      <div className="relative w-full h-full rounded-[13px] overflow-hidden bg-[var(--bg)]">
                         {p.src ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <Image
                             src={p.src}
                             alt={m.name}
-                            className="w-full h-full object-cover object-center"
+                            fill
+                            sizes="176px"
+                            className="object-cover object-center"
                           />
                         ) : (
                           <div className={`w-full h-full flex flex-col items-center justify-center gap-2

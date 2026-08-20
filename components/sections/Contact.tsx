@@ -40,6 +40,7 @@ type Content = {
   subjectLabel: string; subjectOptions: string[];
   messageLabel: string; messagePlaceholder: string;
   submit: string; submitting: string; success: string;
+  errSend: string; errTooMany: string;
 };
 
 const T: Record<"bs" | "en", Content> = {
@@ -66,6 +67,8 @@ const T: Record<"bs" | "en", Content> = {
     subjectOptions: ["Web sajt", "Web aplikacija", "Sistem za rezervacije", "Digitalni marketing", "Ostalo"],
     messageLabel: "Poruka",
     messagePlaceholder: "Recite nam nešto o vašem projektu…",
+    errSend: "Slanje trenutno ne radi. Pišite nam direktno na bakir.mehic@mehiccdev.com",
+    errTooMany: "Previše poruka u kratkom roku. Pokušajte ponovo za nekoliko minuta.",
     submit: "Pošalji poruku",
     submitting: "Slanje…",
     success: "Hvala! Vaša poruka je poslana. Javljamo se uskoro.",
@@ -93,6 +96,8 @@ const T: Record<"bs" | "en", Content> = {
     subjectOptions: ["Website", "Web application", "Booking system", "Digital marketing", "Other"],
     messageLabel: "Message",
     messagePlaceholder: "Tell us a bit about your project…",
+    errSend: "Sending is not working right now. Write to us at bakir.mehic@mehiccdev.com",
+    errTooMany: "Too many messages in a short time. Please try again in a few minutes.",
     submit: "Send message",
     submitting: "Sending…",
     success: "Thank you! Your message has been sent. We'll be in touch soon.",
@@ -111,6 +116,8 @@ export function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
+  const [honey, setHoney]         = useState("");   // honeypot, bot ga popuni
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -121,21 +128,26 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // ── TO MAKE THIS REALLY SEND: ─────────────────────────────────────────────
-    // Easiest = Formspree (free). Create form at formspree.io, then:
-    //
-    //   await fetch("https://formspree.io/f/YOUR_ID", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(form),
-    //   });
-    //
-    // For now we just simulate a successful submission:
-    await new Promise((r) => setTimeout(r, 1200));
-
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      const res = await fetch("/api/kontakt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, website: honey }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else if (res.status === 429) {
+        setError(d.errTooMany);
+      } else {
+        setError(d.errSend);
+      }
+    } catch {
+      setError(d.errSend);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls = `w-full px-4 py-3 rounded-xl text-sm bg-[var(--bg)]
@@ -309,6 +321,18 @@ export function Contact() {
                                 onChange={handleChange} placeholder={d.messagePlaceholder}
                                 className={`${inputCls} resize-none`} />
                     </div>
+
+                    {/* honeypot: skriveno od ljudi, botovi ga popune */}
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden
+                           value={honey} onChange={(e) => setHoney(e.target.value)}
+                           className="absolute left-[-9999px] w-px h-px opacity-0" />
+
+                    {error && (
+                      <p className="rounded-xl px-4 py-3 text-[13px] font-semibold text-red-400
+                                    bg-red-500/10 border border-red-500/30">
+                        {error}
+                      </p>
+                    )}
 
                     <button
                       type="submit"

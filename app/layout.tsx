@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { ThemeProvider }    from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/components/ui/LanguageProvider";
 import { BackgroundLayers, BlueprintLayer } from "@/components/ui/BackgroundFX";
+import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import "./globals.css";
 
 // NOTE: Plus Jakarta Sans is loaded via @import in globals.css (not next/font).
@@ -95,6 +96,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <BlueprintLayer />
               {children}
             </div>
+
+            {/* Plutajuće WhatsApp dugme: prikazuje se tek kad upišeš broj
+                u components/ui/WhatsAppButton.tsx */}
+            <WhatsAppButton />
           </LanguageProvider>
         </ThemeProvider>
       </body>
