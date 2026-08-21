@@ -22,8 +22,7 @@ export const COPY = {
         "Web aplikacija za rent a car: kalendar dostupnosti po vozilu, admin panel za flotu i cijene i forma za rezervaciju. Sistem za iznajmljivanje vozila, građen u Mostaru.",
     },
     nav: [
-      { id: "problem",    label: "Problem" },
-      { id: "rjesenje",   label: "Rješenje" },
+      { id: "razlika",    label: "Razlika" },
       { id: "kako-radi",  label: "Kako radi" },
       { id: "case-study", label: "Primjer" },
       { id: "paketi",     label: "Paketi" },
@@ -86,6 +85,46 @@ export const COPY = {
         { by: "you",    t: "Blokirate vozilo kad zatreba", d: "Servis, registracija ili privatna upotreba. Označite vozilo kao nedostupno i ono se odmah sklanja iz ponude, bez ijedne izmjene na sajtu." },
       ],
       summary: "Vaš dio posla su dva klika. Sve ostalo sistem radi u pozadini, i dok spavate.",
+    },
+    compare: {
+      label: "Razlika",
+      heading1: "Jedna rezervacija,",
+      headingAccent: "dva načina",
+      sub: "Prebacite prekidač i vidite šta se dogodi kada gost želi vozilo.",
+      tabOld: "Bez sistema",
+      tabNew: "Sa sistemom",
+      stepsTitleOld: "Kako to ide danas",
+      stepsTitleNew: "Kako to ide sa sistemom",
+      old: {
+        steps: [
+          { t: "Gost piše na Viber ili zove", d: "Ako ste na putu ili spavate, poruka čeka." },
+          { t: "Tražite je li vozilo slobodno", d: "Po svesci, Excelu ili porukama od prošle sedmice." },
+          { t: "Dogovarate se u nekoliko poruka", d: "Datumi, cijena, preuzimanje, sve ručno." },
+          { t: "Upisujete rezervaciju", d: "I nadate se da niste isto vozilo već obećali." },
+        ],
+        stats: [
+          { v: "15 min", l: "vašeg vremena po rezervaciji" },
+          { v: "2 do 5 h", l: "dok gost dobije odgovor" },
+          { v: "8 h", l: "koliko dnevno primate upite" },
+          { v: "moguće", l: "dupli termini na istom vozilu" },
+        ],
+      },
+      neu: {
+        steps: [
+          { t: "Gost bira datume na vašem sajtu", d: "Vidi samo ono što je stvarno slobodno." },
+          { t: "Vama stiže obavijest", d: "Odmah, sa svim podacima, na email i telefon." },
+          { t: "Potvrđujete jednim klikom", d: "To je cijeli vaš dio posla." },
+          { t: "Gost dobija potvrdu", d: "Automatski, a vozilo se zaključa za te datume." },
+        ],
+        stats: [
+          { v: "30 sek", l: "vašeg vremena po rezervaciji" },
+          { v: "odmah", l: "dok gost dobije odgovor" },
+          { v: "24 h", l: "koliko dnevno primate upite" },
+          { v: "nemoguće", l: "dupli termini na istom vozilu" },
+        ],
+      },
+      barLabel: "Vaše vrijeme po jednoj rezervaciji",
+      note: "Vremena su procjena za firmu koja rezervacije vodi ručno, radi poređenja. Vaš stvarni raspored može biti drugačiji.",
     },
     howItWorks: {
       label: "Kako to radi",
@@ -246,8 +285,7 @@ export const COPY = {
         "A web application for car rental companies: per vehicle availability calendar, admin panel for fleet and pricing, and a booking form. Car rental management software built in Mostar.",
     },
     nav: [
-      { id: "problem",    label: "Problem" },
-      { id: "rjesenje",   label: "Solution" },
+      { id: "razlika",    label: "Difference" },
       { id: "kako-radi",  label: "How it works" },
       { id: "case-study", label: "Example" },
       { id: "paketi",     label: "Packages" },
@@ -310,6 +348,46 @@ export const COPY = {
         { by: "you",    t: "You block a vehicle when needed", d: "Servicing, registration or personal use. Mark the vehicle as unavailable and it leaves the offer straight away, with no changes to the website." },
       ],
       summary: "Your part is two clicks. Everything else runs in the background, including while you sleep.",
+    },
+    compare: {
+      label: "The difference",
+      heading1: "One booking,",
+      headingAccent: "two ways",
+      sub: "Flip the switch and see what happens when a guest wants a vehicle.",
+      tabOld: "Without the system",
+      tabNew: "With the system",
+      stepsTitleOld: "How it goes today",
+      stepsTitleNew: "How it goes with the system",
+      old: {
+        steps: [
+          { t: "The guest messages or calls", d: "If you are driving or asleep, the message waits." },
+          { t: "You check if the car is free", d: "In a notebook, a spreadsheet or last week's messages." },
+          { t: "You agree over several messages", d: "Dates, price, pickup, all by hand." },
+          { t: "You write the booking down", d: "And hope you have not promised the same car twice." },
+        ],
+        stats: [
+          { v: "15 min", l: "of your time per booking" },
+          { v: "2 to 5 h", l: "until the guest hears back" },
+          { v: "8 h", l: "a day you can take requests" },
+          { v: "possible", l: "double bookings on one vehicle" },
+        ],
+      },
+      neu: {
+        steps: [
+          { t: "The guest picks dates on your site", d: "They only see what is genuinely free." },
+          { t: "You get an alert", d: "Instantly, with all details, by email and on your phone." },
+          { t: "You confirm in one click", d: "That is your entire part of the job." },
+          { t: "The guest gets a confirmation", d: "Automatically, and the vehicle locks for those dates." },
+        ],
+        stats: [
+          { v: "30 sec", l: "of your time per booking" },
+          { v: "instant", l: "until the guest hears back" },
+          { v: "24 h", l: "a day you can take requests" },
+          { v: "impossible", l: "double bookings on one vehicle" },
+        ],
+      },
+      barLabel: "Your time per booking",
+      note: "These times are an estimate for a company handling bookings by hand, shown for comparison. Your actual routine may differ.",
     },
     howItWorks: {
       label: "How it works",

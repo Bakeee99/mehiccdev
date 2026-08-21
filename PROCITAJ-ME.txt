@@ -1,45 +1,50 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Animacije sada rade i na telefonu
+  mehiccdev — "RAZLIKA": dvije sekcije spojene u jedno poređenje
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  components/rjesenja/RcHowItWorks.tsx
-  components/rjesenja/RentACarSections.tsx
+ŠTA JE U ZIP-u (3 fajla):
+  components/rjesenja/RcCompare.tsx         NOVO: sekcija poređenja
+  components/rjesenja/RentACarSections.tsx  uklonjene Problem i Rješenje
+  components/rjesenja/rentACarCopy.ts       tekstovi + nova tračnica
 
-════════ ZAŠTO JE BILO STATIČNO ════════
-Nije bio kvar nego prestrogo primijenjeno pravilo. Kada smo rješavali
-mobilne performanse, uveli smo da na touch uređajima dekorativne
-animacije miruju. To je bilo ispravno za teške slojeve sa zamućenjem
-(aurora u pozadini), ali je nehotice pogodilo i ovu sekciju, koja je
-mnogo lakša: ona mijenja samo prozirnost i pomak nekoliko malih
-elemenata.
+════════ ŠTA JE URAĐENO ════════
+Sekcije "Poznato vam je ovo" (problemi) i "Jedan sistem umjesto
+sveske i prepiske" (mogućnosti) spojene su u JEDNU sekciju s
+prekidačem. Stranica je kraća za jedan cijeli ekran, a poruka jača,
+jer se sada vidi razlika umjesto dva odvojena spiska.
 
-════════ ŠTA JE PROMIJENJENO ════════
-Razdvojene su dvije stvari koje su ranije bile spojene u jednu:
+PREKIDAČ: "Bez sistema" (crveno) i "Sa sistemom" (plavo). Sam se
+prebacuje svakih 7 sekundi; klik zadržava stranu 14 sekundi pa se
+vrtenje nastavi, isto kao u sekciji "Kako to radi".
 
-  • korisnik je ISKLJUČIO animacije u sistemu → sve stoji, kao i do
-    sada (to je zahtjev pristupačnosti i ostaje)
-  • touch uređaj → animacije RADE normalno, koraci se smjenjuju,
-    mockup se mijenja
+ŠTA SE VIDI NA SVAKOJ STRANI (isto za obje, pa je poređenje pošteno):
+  • ČETIRI KORAKA toka rezervacije, s crvenim X ili plavom kvačicom
+  • ČETIRI BROJKE jedna do druge:
+      vrijeme po rezervaciji     15 min      naspram   30 sek
+      dok gost dobije odgovor    2 do 5 h    naspram   odmah
+      koliko dnevno primate upite 8 h        naspram   24 h
+      dupli termini              moguće      naspram   nemoguće
+  • TRAKA koja pokazuje koliko vašeg vremena odlazi: puna preko
+    cijele širine bez sistema, i sasvim kratka sa sistemom
 
-Jedina razlika u odnosu na desktop: na telefonu se ne prikazuje
-lažni pokazivač miša, jer na telefonu nema kursora pa bi izgledao
-besmisleno. Sve ostalo je isto, uključujući klik na korak koji
-pauzira prikaz pa se vrtenje nastavi.
+Kada je uključena strana "Sa sistemom", ispod se pojavljuje i spisak
+mogućnosti (dvojezični sajt, kalendar, admin panel, forma, više
+lokacija, SEO), pa je time pokriven i sadržaj stare sekcije.
 
-Isto pravilo je primijenjeno i na prikaz rezervacije u hero sekciji,
-pa se i on sada odvija na telefonu.
+ISKRENOST: ispod stoji napomena da su vremena procjena za firmu koja
+rezervacije vodi ručno, radi poređenja, a ne izmjeren prosjek. To je
+bitno, jer je cijeli sajt građen na provjerljivim tvrdnjama.
 
-Performanse ostaju netaknute: nigdje nema zamućenja, animira se samo
-pomak i prozirnost.
+TRAČNICA: dvije stavke ("Problem" i "Rješenje") zamijenjene su
+jednom, "Razlika".
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "fix: animacije rade i na touch uredjajima"
+  git commit -m "feat: sekcija razlika, spojeni problem i rjesenje"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "fix: animacije rade i na touch uredjajima" ; git push
+  git add . ; git commit -m "feat: sekcija razlika, spojeni problem i rjesenje" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

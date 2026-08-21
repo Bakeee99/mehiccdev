@@ -31,6 +31,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
 import { RcHowItWorks } from "@/components/rjesenja/RcHowItWorks";
+import { RcCompare } from "@/components/rjesenja/RcCompare";
 import { SectionRail } from "@/components/ui/SectionRail";
 
 const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
@@ -301,98 +302,6 @@ function Hero({ c, calm }: { c: typeof COPY.bs; calm: boolean }) {
             <BookingDemo calm={calm} labels={d.demo} />
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 2 · Problem ────────────────────────────────────────────────────────────
-   Namjerno drugačiji ritam od ostalih sekcija: naslov lijevo, kartice su
-   vodoravni redovi u zajedničkom panelu, a ne mreža kvadrata. Panel daje
-   dubinu i razdvaja ovu sekciju od susjednih.                              */
-function Problem({ c }: { c: typeof COPY.bs }) {
-  const reveal = useReveal();
-  const d = c.problem;
-  return (
-    <section id="problem" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} align="left" index="01" />
-
-        <motion.div variants={staggerContainerSlow} {...reveal}
-          className="rounded-[28px] border border-[var(--border)] p-2 sm:p-3
-                     bg-[color-mix(in_srgb,var(--surface)_55%,transparent)]">
-          <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
-            {d.items.map((item, i) => {
-              const Icon = PROBLEM_ICONS[i];
-              return (
-                <motion.article key={item.t} variants={fadeUp}
-                  className="flex gap-4 rounded-2xl p-5 bg-[var(--surface)] border border-[var(--border)]
-                             transition-[border-color] duration-300 hover:border-red-500/30">
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
-                                   bg-red-500/10 border border-red-500/25 text-red-400">
-                    <Icon size={17} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[15px] font-extrabold text-[var(--text)] leading-tight mb-1.5">{item.t}</span>
-                    <span className="block text-[13px] text-[var(--text-muted)] leading-relaxed">{item.d}</span>
-                  </span>
-                </motion.article>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 3 · Rješenje ───────────────────────────────────────────────────────────
-   Asimetrična mreža: prve dvije stavke su šire i krupnije (to su i najjači
-   argumenti), ostale četiri manje. Time sekcija prestaje biti niz identičnih
-   kvadrata, a hijerarhija govori šta je najvažnije.                        */
-function Solution({ c }: { c: typeof COPY.bs }) {
-  const reveal = useReveal();
-  const d = c.solution;
-  const SPAN = ["lg:col-span-3", "lg:col-span-3", "lg:col-span-2", "lg:col-span-2", "lg:col-span-2", "lg:col-span-6"];
-  return (
-    <section id="rjesenje" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} index="02" />
-        <motion.div variants={staggerContainerSlow} {...reveal}
-          className="grid sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
-          {d.items.map((item, i) => {
-            const Icon = SOLUTION_ICONS[i];
-            const big = i < 2;
-            const wide = i === 5;
-            return (
-              <motion.article key={item.t} variants={scaleIn} whileHover={{ y: -4 }}
-                className={`group rounded-3xl bg-[var(--surface)] border border-[var(--border)]
-                            transition-[border-color,box-shadow] duration-300
-                            hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10
-                            ${SPAN[i]} ${big ? "p-7" : "p-5"}
-                            ${wide ? "flex items-center gap-5" : ""}`}>
-                <span className={`inline-flex rounded-2xl items-center justify-center flex-shrink-0
-                                  bg-gradient-to-br from-brand-600 to-brand-400 text-white
-                                  shadow-lg shadow-brand-600/25
-                                  transition-transform duration-300 group-hover:scale-110
-                                  ${big ? "w-12 h-12 mb-4" : wide ? "w-11 h-11" : "w-10 h-10 mb-3"}`}>
-                  <Icon size={big ? 20 : 17} />
-                </span>
-                <span className="min-w-0 block">
-                  <span className={`block font-extrabold text-[var(--text)] leading-tight mb-1.5
-                                    ${big ? "text-[19px]" : "text-[15px]"}`}>
-                    {item.t}
-                  </span>
-                  <span className={`block text-[var(--text-muted)] leading-relaxed ${big ? "text-[14px]" : "text-[12.5px]"}`}>
-                    {item.d}
-                  </span>
-                </span>
-              </motion.article>
-            );
-          })}
-        </motion.div>
       </div>
     </section>
   );
@@ -776,8 +685,7 @@ export function RentACarSections() {
       )}
       <SectionRail items={c.nav} />
       <Hero c={c} calm={reduce} />
-      <Problem c={c} />
-      <Solution c={c} />
+      <RcCompare c={c} />
       <RcHowItWorks c={c} />
       <CaseStudy c={c} />
       <Packages c={c} />
