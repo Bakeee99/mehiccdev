@@ -1,37 +1,45 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — "Kako to radi": klik pauzira, pa se vrtenje nastavi
+  mehiccdev — Animacije sada rade i na telefonu
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
+ŠTA JE U ZIP-u (2 fajla):
   components/rjesenja/RcHowItWorks.tsx
+  components/rjesenja/RentACarSections.tsx
 
-ŠTA JE PROMIJENJENO:
-Ranije je klik na korak TRAJNO zaustavljao vrtenje, pa je sekcija
-ostajala statična do kraja posjete.
+════════ ZAŠTO JE BILO STATIČNO ════════
+Nije bio kvar nego prestrogo primijenjeno pravilo. Kada smo rješavali
+mobilne performanse, uveli smo da na touch uređajima dekorativne
+animacije miruju. To je bilo ispravno za teške slojeve sa zamućenjem
+(aurora u pozadini), ali je nehotice pogodilo i ovu sekciju, koja je
+mnogo lakša: ona mijenja samo prozirnost i pomak nekoliko malih
+elemenata.
 
-Sada klik samo produžava zadržavanje na tom koraku, a onda se
-automatsko vrtenje samo nastavi:
-  • normalan korak traje 4,2 sekunde
-  • korak koji je posjetilac kliknuo stoji 9 sekundi
+════════ ŠTA JE PROMIJENJENO ════════
+Razdvojene su dvije stvari koje su ranije bile spojene u jednu:
 
-Traka napretka na dnu aktivnog koraka prati stvarno trajanje, pa se
-poslije klika puni sporije. Time posjetilac vidi da prikaz nije
-zamrznut nego samo čeka njega.
+  • korisnik je ISKLJUČIO animacije u sistemu → sve stoji, kao i do
+    sada (to je zahtjev pristupačnosti i ostaje)
+  • touch uređaj → animacije RADE normalno, koraci se smjenjuju,
+    mockup se mijenja
 
-Ako želiš drugačiji tempo, na vrhu fajla su dvije vrijednosti:
-  STEP_MS  = 4200   (automatski korak)
-  PAUSE_MS = 9000   (poslije klika)
+Jedina razlika u odnosu na desktop: na telefonu se ne prikazuje
+lažni pokazivač miša, jer na telefonu nema kursora pa bi izgledao
+besmisleno. Sve ostalo je isto, uključujući klik na korak koji
+pauzira prikaz pa se vrtenje nastavi.
 
-Na telefonu i uz "reduced motion" i dalje nema automatskog vrtenja;
-tamo se koraci otvaraju tapom, kako je i bilo.
+Isto pravilo je primijenjeno i na prikaz rezervacije u hero sekciji,
+pa se i on sada odvija na telefonu.
+
+Performanse ostaju netaknute: nigdje nema zamućenja, animira se samo
+pomak i prozirnost.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: klik pauzira korak pa se vrtenje nastavi"
+  git commit -m "fix: animacije rade i na touch uredjajima"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: klik pauzira korak pa se vrtenje nastavi" ; git push
+  git add . ; git commit -m "fix: animacije rade i na touch uredjajima" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

@@ -775,7 +775,7 @@ export function RentACarSections() {
                                     bg-[radial-gradient(115%_70%_at_50%_-10%,rgba(37,99,235,0.14),transparent_60%)]" />
       )}
       <SectionRail items={c.nav} />
-      <Hero c={c} calm={calm} />
+      <Hero c={c} calm={reduce} />
       <Problem c={c} />
       <Solution c={c} />
       <RcHowItWorks c={c} />

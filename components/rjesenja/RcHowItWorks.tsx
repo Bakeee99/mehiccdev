@@ -68,7 +68,7 @@ function Window({ title, children }: { title: string; children: React.ReactNode 
 }
 
 /* ── Stanje 1: gost bira datume i rezerviše ───────────────────────────────── */
-function StateBooking({ ui, animate }: { ui: Ui; animate: boolean }) {
+function StateBooking({ ui, animate, cursor = false }: { ui: Ui; animate: boolean; cursor?: boolean }) {
   return (
     <div className="relative">
       <Window title={ui.site}>
@@ -114,7 +114,7 @@ function StateBooking({ ui, animate }: { ui: Ui; animate: boolean }) {
         </div>
       </Window>
 
-      <Cursor show={animate} path={[{ x: 40, y: 200 }, { x: 120, y: 120 }, { x: 150, y: 300 }, { x: 150, y: 300 }]} />
+      <Cursor show={cursor} path={[{ x: 40, y: 200 }, { x: 120, y: 120 }, { x: 150, y: 300 }, { x: 150, y: 300 }]} />
     </div>
   );
 }
@@ -170,7 +170,7 @@ function StateAlerts({ ui, animate }: { ui: Ui; animate: boolean }) {
 }
 
 /* ── Stanje 3: vlasnik odobrava u panelu ──────────────────────────────────── */
-function StateApprove({ ui, animate }: { ui: Ui; animate: boolean }) {
+function StateApprove({ ui, animate, cursor = false }: { ui: Ui; animate: boolean; cursor?: boolean }) {
   const [done, setDone] = useState(!animate);
 
   useEffect(() => {
@@ -232,7 +232,7 @@ function StateApprove({ ui, animate }: { ui: Ui; animate: boolean }) {
         </div>
       </Window>
 
-      <Cursor show={animate} path={[{ x: 60, y: 60 }, { x: 150, y: 150 }, { x: 165, y: 232 }, { x: 165, y: 232 }]} />
+      <Cursor show={cursor} path={[{ x: 60, y: 60 }, { x: 150, y: 150 }, { x: 165, y: 232 }, { x: 165, y: 232 }]} />
     </div>
   );
 }
@@ -281,7 +281,14 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
   const d = c.howItWorks;
   const reduce = useReducedMotion() ?? false;
   const coarse = useCoarsePointer();
-  const calm = reduce || coarse;
+
+  /* Dvije različite stvari, ranije su bile spojene u jedno:
+       reduce  korisnik je ISKLJUČIO animacije → sve stoji
+       coarse  touch uređaj → animacije rade (lagane su, samo pomak i
+               prozirnost), ali se gasi lažni kursor, jer na telefonu
+               nema kursora pa nema ni smisla.                          */
+  const still  = reduce;            // potpuno statično
+  const cursor = !reduce && !coarse; // pokazivač miša samo na desktopu
 
   const revealHead = useReveal();
   const revealBody = useReveal();
@@ -294,17 +301,17 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
      pogleda što ga zanima, a sekcija nikad ne ostane statična.
      Ključ "step" u zavisnostima resetuje odbrojavanje pri svakoj promjeni. */
   useEffect(() => {
-    if (calm) return;
+    if (still) return;
     const wait = paused ? PAUSE_MS : STEP_MS;
     const t = setTimeout(() => {
       setPaused(false);
       setStep((s) => (s + 1) % 4);
     }, wait);
     return () => clearTimeout(t);
-  }, [step, paused, calm]);
+  }, [step, paused, still]);
 
   const pick = (i: number) => { setPaused(true); setStep(i); };
-  const animate = !calm;
+  const animate = !still;
 
   return (
     <section id="kako-radi" className="py-24 lg:py-28 relative scroll-mt-24">
@@ -376,7 +383,7 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
                   </span>
 
                   {/* traka napretka dok se vrti samo */}
-                  {on && !calm && (
+                  {on && !still && (
                     <motion.span
                       key={`p-${step}-${paused ? "long" : "auto"}`}
                       initial={{ scaleX: 0 }}
@@ -404,9 +411,9 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   className="w-full"
                 >
-                  {step === 0 && <StateBooking   ui={d.ui} animate={animate} />}
+                  {step === 0 && <StateBooking   ui={d.ui} animate={animate} cursor={cursor} />}
                   {step === 1 && <StateAlerts    ui={d.ui} animate={animate} />}
-                  {step === 2 && <StateApprove   ui={d.ui} animate={animate} />}
+                  {step === 2 && <StateApprove   ui={d.ui} animate={animate} cursor={cursor} />}
                   {step === 3 && <StateConfirmed ui={d.ui} animate={animate} />}
                 </motion.div>
               </AnimatePresence>
