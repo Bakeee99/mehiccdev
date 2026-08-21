@@ -15,13 +15,13 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
   Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search,
-  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server, Gift,
+  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server, Gift, BellRing,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInLeft, slideInRight } from "@/lib/animations";
@@ -99,62 +99,207 @@ function SectionHead({
   );
 }
 
-/* ── 1 · Hero ───────────────────────────────────────────────────────────────── */
-function Hero({ c }: { c: typeof COPY.bs }) {
-  const reveal = useReveal();
-  const d = c.hero;
+/* ── 1 · Hero ───────────────────────────────────────────────────────────────
+   Podijeljen raspored: lijevo poruka, desno ŽIVI PRIKAZ SISTEMA koji se sam
+   odvija u krug (gost bira datume → upit stiže → vlasnik potvrđuje → vozilo
+   se zaključa). Umjesto da opisujemo šta sistem radi, posjetilac to vidi u
+   prvih pet sekundi.
+
+   Animacija ide kroz jednostavan brojač koraka, samo transform i opacity,
+   bez blura. Na touch uređajima i uz reduced-motion prikaz stoji na zadnjem
+   koraku, pa se sve i dalje vidi ali ništa se ne vrti.                     */
+
+const HERO_STEP_MS = 2600;
+
+function BookingDemo({ calm, labels }: { calm: boolean; labels: typeof COPY.bs.hero.demo }) {
+  const [step, setStep] = useState(calm ? 3 : 0);
+
+  useEffect(() => {
+    if (calm) return;
+    const t = setInterval(() => setStep((s) => (s + 1) % 4), HERO_STEP_MS);
+    return () => clearInterval(t);
+  }, [calm]);
+
+  const picked    = step >= 1;   // gost odabrao datume
+  const requested = step >= 2;   // upit stigao vlasniku
+  const confirmed = step >= 3;   // vlasnik potvrdio
+
   return (
-    <section className="relative pt-36 pb-20 lg:pt-44 lg:pb-28">
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-        <motion.div variants={staggerContainer} {...reveal}>
-          <motion.div variants={fadeUp} className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 bg-brand-600/10
-                             text-brand-300 text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.eyebrow}
+    <div className="relative">
+      {/* sjaj iza prikaza */}
+      <div aria-hidden className="absolute -inset-8 rounded-[40px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.16),transparent_75%)]" />
+
+      <div className="relative rounded-3xl border border-brand-500/25 bg-[#080D1E] overflow-hidden
+                      shadow-[0_44px_90px_-30px_rgba(37,99,235,0.45)]">
+        {/* traka prozora */}
+        <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="ml-2 text-[10px] text-white/35 tracking-wide">{labels.window}</span>
+        </div>
+
+        <div className="p-5 sm:p-6">
+          {/* kalendar */}
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-200/60 mb-3">
+            {labels.calendar}
+          </p>
+          <div className="grid grid-cols-7 gap-1.5 mb-5" aria-hidden>
+            {Array.from({ length: 21 }).map((_, i) => {
+              const inRange = i >= 9 && i <= 12;
+              const on = picked && inRange;
+              return (
+                <motion.span
+                  key={i}
+                  animate={{
+                    backgroundColor: on ? "rgba(37,99,235,0.9)" : "rgba(255,255,255,0.05)",
+                    scale: on ? 1 : 0.96,
+                  }}
+                  transition={{ duration: 0.35, delay: on ? (i - 9) * 0.07 : 0 }}
+                  className="h-7 rounded-md flex items-center justify-center text-[10px] font-semibold text-white/70"
+                >
+                  {i + 1}
+                </motion.span>
+              );
+            })}
+          </div>
+
+          {/* vozilo */}
+          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[.03] px-3.5 py-3">
+            <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500/40 to-indigo-600/20 flex items-center justify-center flex-shrink-0">
+              <Car size={15} className="text-blue-200" />
             </span>
+            <span className="min-w-0">
+              <span className="block text-[12.5px] font-bold text-white/90 leading-tight">{labels.car}</span>
+              <span className="block text-[11px] text-white/40 leading-tight">{labels.price}</span>
+            </span>
+            <motion.span
+              key={confirmed ? "taken" : "free"}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`ml-auto px-2.5 py-1 rounded-full text-[10px] font-bold border whitespace-nowrap
+                          ${confirmed
+                            ? "text-brand-300 bg-brand-600/15 border-brand-600/35"
+                            : "text-green-400 bg-green-500/10 border-green-500/30"}`}
+            >
+              {confirmed ? labels.booked : labels.free}
+            </motion.span>
+          </div>
+        </div>
+      </div>
+
+      {/* upit koji stigne vlasniku */}
+      <motion.div
+        animate={{
+          opacity: requested ? 1 : 0,
+          y: requested ? 0 : 14,
+          scale: requested ? 1 : 0.97,
+        }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="absolute -bottom-6 -right-3 sm:-right-6 w-[248px] rounded-2xl p-3.5
+                   border border-brand-500/30 bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]
+                   shadow-[0_20px_45px_-12px_rgba(2,8,30,0.7)]"
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+                           bg-green-500/12 border border-green-500/35 text-green-400">
+            <BellRing size={13} />
+          </span>
+          <span className="text-[10.5px] font-bold uppercase tracking-wider text-green-400">
+            {labels.newRequest}
+          </span>
+        </div>
+        <p className="text-[12px] text-[var(--text)] font-semibold leading-snug mb-3">{labels.requestBody}</p>
+
+        <div className="flex gap-2">
+          <motion.span
+            animate={{
+              backgroundColor: confirmed ? "rgba(34,197,94,0.9)" : "rgba(37,99,235,0.9)",
+            }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 h-7 rounded-lg flex items-center justify-center gap-1.5 text-[11px] font-bold text-white"
+          >
+            {confirmed ? <><Check size={11} strokeWidth={3} /> {labels.confirmed}</> : labels.confirm}
+          </motion.span>
+          <span className="w-16 h-7 rounded-lg flex items-center justify-center text-[11px] font-semibold
+                           text-[var(--text-muted)] border border-[var(--border)]">
+            {labels.decline}
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function Hero({ c, calm }: { c: typeof COPY.bs; calm: boolean }) {
+  const reveal  = useReveal();
+  const revealR = useReveal();
+  const d = c.hero;
+
+  return (
+    <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+
+          {/* ── lijevo: poruka ── */}
+          <motion.div variants={staggerContainer} {...reveal} className="text-center lg:text-left">
+            <motion.div variants={fadeUp} className="flex justify-center lg:justify-start mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+                               border border-brand-600/30 bg-brand-600/10
+                               text-brand-300 text-xs font-semibold tracking-wider uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" aria-hidden />
+                {d.eyebrow}
+              </span>
+            </motion.div>
+
+            <motion.h1 variants={fadeUp}
+              className="text-[38px] leading-[1.06] sm:text-5xl lg:text-[56px] font-extrabold tracking-tight text-[var(--text)]">
+              {d.h1a}{" "}
+              <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
+            </motion.h1>
+
+            <motion.p variants={fadeUp}
+              className="mt-6 max-w-xl mx-auto lg:mx-0 text-[15.5px] sm:text-[17px] text-[var(--text-muted)] leading-relaxed">
+              {d.sub}
+            </motion.p>
+
+            <motion.div variants={fadeUp}
+              className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3">
+              <a href="#upit"
+                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                            bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
+                            shadow-xl shadow-brand-600/30
+                            transition-[box-shadow,transform] duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
+                {d.ctaPrimary} <ArrowRight size={16} />
+              </a>
+              <a href="#paketi"
+                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                            border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
+                            transition-[border-color,background-color,transform] duration-300
+                            hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
+                {d.ctaSecondary}
+              </a>
+            </motion.div>
+
+            <motion.ul variants={fadeUp} className="mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+              {d.points.map((p) => (
+                <li key={p}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
+                               text-[var(--text)] bg-[color-mix(in_srgb,var(--surface)_80%,transparent)]
+                               border border-[var(--border)]">
+                  <Check size={12} strokeWidth={3} className="text-brand-400" /> {p}
+                </li>
+              ))}
+            </motion.ul>
           </motion.div>
 
-          <motion.h1 variants={fadeUp}
-            className="text-[38px] leading-[1.08] sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--text)]">
-            {d.h1a}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
-          </motion.h1>
-
-          <motion.p variants={fadeUp}
-            className="mt-6 max-w-2xl mx-auto text-[15.5px] sm:text-lg text-[var(--text-muted)] leading-relaxed">
-            {d.sub}
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <a href="#upit"
-               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
-                          bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
-                          shadow-xl shadow-brand-600/30
-                          transition-[box-shadow,transform] duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
-              {d.ctaPrimary} <ArrowRight size={16} />
-            </a>
-            <a href="#paketi"
-               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
-                          border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
-                          transition-[border-color,background-color,transform] duration-300
-                          hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
-              {d.ctaSecondary}
-            </a>
+          {/* ── desno: živi prikaz ── */}
+          <motion.div variants={slideInRight} {...revealR} className="lg:pl-4">
+            <BookingDemo calm={calm} labels={d.demo} />
           </motion.div>
-
-          <motion.ul variants={fadeUp} className="mt-10 flex flex-wrap items-center justify-center gap-2.5">
-            {d.points.map((p) => (
-              <li key={p}
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
-                             text-[var(--text)] bg-[color-mix(in_srgb,var(--surface)_80%,transparent)]
-                             border border-[var(--border)]">
-                <Check size={12} strokeWidth={3} className="text-brand-400" /> {p}
-              </li>
-            ))}
-          </motion.ul>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -702,7 +847,7 @@ export function RentACarSections() {
                                     bg-[radial-gradient(115%_70%_at_50%_-10%,rgba(37,99,235,0.14),transparent_60%)]" />
       )}
       <SectionRail items={c.nav} />
-      <Hero c={c} />
+      <Hero c={c} calm={calm} />
       <Problem c={c} />
       <Solution c={c} />
       <Flow c={c} />

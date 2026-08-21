@@ -39,6 +39,13 @@ export const COPY = {
       ctaPrimary: "Zatražite ponudu",
       ctaSecondary: "Pogledajte cijene",
       points: ["Bez duplih termina", "Radi i van radnog vremena", "Sistem ostaje vaš"],
+      demo: {
+        window: "vasa-firma.ba", calendar: "Dostupnost, jul",
+        car: "VW Golf 8", price: "60 KM / dan",
+        free: "Slobodno", booked: "Rezervisano",
+        newRequest: "Novi upit", requestBody: "Rezervacija 10 do 13. jula, preuzimanje Mostar",
+        confirm: "Potvrdi", confirmed: "Potvrđeno", decline: "Odbij",
+      },
     },
     problem: {
       label: "Kako to danas izgleda",
@@ -233,6 +240,13 @@ export const COPY = {
       ctaPrimary: "Request a quote",
       ctaSecondary: "See the prices",
       points: ["No double bookings", "Works outside office hours", "The system stays yours"],
+      demo: {
+        window: "yourcompany.com", calendar: "Availability, July",
+        car: "VW Golf 8", price: "€30 / day",
+        free: "Available", booked: "Booked",
+        newRequest: "New request", requestBody: "Booking July 10 to 13, pickup in Mostar",
+        confirm: "Confirm", confirmed: "Confirmed", decline: "Decline",
+      },
     },
     problem: {
       label: "How it works today",

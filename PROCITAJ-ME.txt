@@ -1,48 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — RITAM STRANICE: manje ponavljanja, više dubine
+  mehiccdev — HERO v2: živi prikaz rezervacije
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
+ŠTA JE U ZIP-u (2 fajla):
   components/rjesenja/RentACarSections.tsx
+  components/rjesenja/rentACarCopy.ts
 
-════════ ŠTA JE BIO PROBLEM ════════
-Nije bio stil nego RITAM. Svaka sekcija je imala isti raspored:
-centrirana pilula, centriran naslov, pa mreža jednakih kartica. Oko
-to nauči poslije druge sekcije i prestane gledati, pa cijela
-stranica djeluje kao jedan te isti blok koji se ponavlja.
+════════ ZAŠTO JE DJELOVALO SIROMAŠNO ════════
+Hero je bio samo tekst na praznoj podlozi. Naslovnica ima plutajuće
+kartice i dokazne pilule, a ovdje oko nije imalo za šta da se uhvati,
+pa je cijeli prvi ekran djelovao prazno bez obzira koliko je tekst
+dobar.
 
-════════ ŠTA JE PROMIJENJENO ════════
-1. NASLOVI VIŠE NISU SVI CENTRIRANI
-   Sekcije "Problem" i "Poređenje" sada imaju naslov lijevo, a
-   uvodni tekst desno od njega. Ostale ostaju centrirane. Sama ta
-   izmjena razbija monotoniju pri skrolanju.
+════════ ŠTA JE SADA ════════
+Podijeljen raspored: lijevo poruka i dugmad, desno ŽIVI PRIKAZ
+SISTEMA koji se sam odvija u krug, u četiri koraka:
 
-2. REDNI BROJEVI SEKCIJA (01, 02, 03...)
-   U pilulu iznad naslova ide broj u kurzivu umjesto tačkice.
-   Stranica se čita kao niz poglavlja, ne kao niz blokova.
+  1. Prikazan je kalendar dostupnosti i vozilo označeno "Slobodno"
+  2. Gost bira datume: polja od 10. do 13. se pale jedno po jedno
+  3. Vlasniku sklizne obavijest "Novi upit, rezervacija 10 do 13.
+     jula, preuzimanje Mostar" s dugmadima Potvrdi i Odbij
+  4. Dugme prelazi u zeleno "Potvrđeno", a vozilo se mijenja iz
+     "Slobodno" u "Rezervisano"
 
-3. PROBLEM: REDOVI UMJESTO KVADRATA, U PANELU
-   Četiri problema su sada vodoravni redovi (ikonica lijevo, tekst
-   desno) unutar jednog tamnijeg panela sa zaobljenim rubom. Panel
-   daje dubinu i jasno odvaja sekciju od susjednih.
+Pa ciklus kreće ispočetka.
 
-4. RJEŠENJE: ASIMETRIČNA MREŽA
-   Šest jednakih kvadrata je zamijenjeno bento rasporedom: prve
-   dvije stavke su šire i krupnije (dvojezični sajt i kalendar
-   dostupnosti, ujedno i najjači argumenti), tri su manje, a zadnja
-   ide preko cijele širine s ikonicom sa strane. Hijerarhija sada
-   govori šta je najvažnije.
+To je cijela prodajna priča stranice odigrana u pet sekundi, prije
+nego iko išta pročita. Ujedno je i tačno ono što sekcija "Sistem
+radi, vi samo odlučujete" objašnjava riječima niže na stranici.
 
-Boje, tipografija i komponente su netaknute, pa se ništa ne kosi s
-ostatkom sajta. Promijenjen je samo raspored.
+Tekst hero sekcije je nepromijenjen, samo je poravnat lijevo na
+velikim ekranima (na telefonu ostaje centriran, a prikaz ide ispod
+teksta).
+
+════════ TEHNIČKI ════════
+  • Animira se samo prozirnost i pomak, bez blura i bez slika
+  • Na touch uređajima i uz "reduced motion" prikaz stoji na zadnjem
+    koraku: sve se vidi, ali se ništa ne vrti (mobilna dijeta ostaje
+    netaknuta)
+  • Tempo je jedan broj u kodu (HERO_STEP_MS, sada 2600 ms) ako ti
+    se učini prebrzo ili presporo
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: novi ritam sekcija na rent-a-car stranici"
+  git commit -m "feat: hero sa zivim prikazom rezervacije"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: novi ritam sekcija na rent-a-car stranici" ; git push
+  git add . ; git commit -m "feat: hero sa zivim prikazom rezervacije" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
