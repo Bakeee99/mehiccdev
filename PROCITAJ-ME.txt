@@ -1,50 +1,62 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — "RAZLIKA": dvije sekcije spojene u jedno poređenje
+  mehiccdev — Put do rent-a-car stranice: hero, navbar, nova sekcija
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/rjesenja/RcCompare.tsx         NOVO: sekcija poređenja
-  components/rjesenja/RentACarSections.tsx  uklonjene Problem i Rješenje
-  components/rjesenja/rentACarCopy.ts       tekstovi + nova tračnica
+ŠTA JE U ZIP-u (5 fajlova):
+  components/sections/RentACarPromo.tsx  NOVO: sekcija na naslovnici
+  app/page.tsx                            montira je ispod "O nama"
+  components/sections/Hero.tsx            animirani link u hero sekciji
+  components/sections/Navbar.tsx          oznaka "Novo" na Rješenjima
+  components/sections/HomeRail.tsx        nova stavka u tračnici
 
-════════ ŠTA JE URAĐENO ════════
-Sekcije "Poznato vam je ovo" (problemi) i "Jedan sistem umjesto
-sveske i prepiske" (mogućnosti) spojene su u JEDNU sekciju s
-prekidačem. Stranica je kraća za jedan cijeli ekran, a poruka jača,
-jer se sada vidi razlika umjesto dva odvojena spiska.
+════════ 1. HERO: ANIMIRANI LINK UMJESTO SUVIŠNE PILULE ════════
+Pilula "WEB APLIKACIJE · SAJTOVI · MARKETING" je uklonjena, jer je
+ponavljala ono što piše u podnaslovu odmah ispod. Na njeno mjesto
+došao je link:
 
-PREKIDAČ: "Bez sistema" (crveno) i "Sa sistemom" (plavo). Sam se
-prebacuje svakih 7 sekundi; klik zadržava stranu 14 sekundi pa se
-vrtenje nastavi, isto kao u sekciji "Kako to radi".
+     [NOVO]  Rezervacioni sistem za rent-a-car firme  →
 
-ŠTA SE VIDI NA SVAKOJ STRANI (isto za obje, pa je poređenje pošteno):
-  • ČETIRI KORAKA toka rezervacije, s crvenim X ili plavom kvačicom
-  • ČETIRI BROJKE jedna do druge:
-      vrijeme po rezervaciji     15 min      naspram   30 sek
-      dok gost dobije odgovor    2 do 5 h    naspram   odmah
-      koliko dnevno primate upite 8 h        naspram   24 h
-      dupli termini              moguće      naspram   nemoguće
-  • TRAKA koja pokazuje koliko vašeg vremena odlazi: puna preko
-    cijele širine bez sistema, i sasvim kratka sa sistemom
+Preko pilule s lijeva na desno povremeno prelazi tanki odsjaj, pa se
+primijeti, a ne trepće i ne viče. Na hover se podigne i strelica se
+pomjeri. Vodi pravo na /rjesenja/rent-a-car.
 
-Kada je uključena strana "Sa sistemom", ispod se pojavljuje i spisak
-mogućnosti (dvojezični sajt, kalendar, admin panel, forma, više
-lokacija, SEO), pa je time pokriven i sadržaj stare sekcije.
+Broj elemenata u hero sekciji je ostao isti, samo je jedan dekor
+zamijenjen mjestom za klik.
 
-ISKRENOST: ispod stoji napomena da su vremena procjena za firmu koja
-rezervacije vodi ručno, radi poređenja, a ne izmjeren prosjek. To je
-bitno, jer je cijeli sajt građen na provjerljivim tvrdnjama.
+════════ 2. NAVBAR: ISTAKNUTA "RJEŠENJA" ════════
+Pored riječi "Rješenja" sada stoji mala plava tačkica koja pulsira,
+a unutar padajućeg menija stavka "Rent-a-Car sistem" ima oznaku
+"Novo". Isti princip kao crvena oznaka na Cjenovniku, samo plava, da
+se ne takmiče.
 
-TRAČNICA: dvije stavke ("Problem" i "Rješenje") zamijenjene su
-jednom, "Razlika".
+════════ 3. NOVA SEKCIJA NA NASLOVNICI (ispod "O nama") ════════
+Velika kartica s gradijentnim rubom, kakav već koristimo:
+
+  LIJEVO   naslov "Cijeli sistem za iznajmljivanje vozila, na jednoj
+           stranici", kratak opis, tri koristi s kvačicama, veliko
+           dugme "Pogledajte sistem i cijene" i pilula "Paketi od
+           1.500 KM", pa sitno "Cijene, paketi i primjer iz prakse"
+
+  DESNO    prikaz koji se sam vrti kroz tri kadra:
+             1. Kalendar dostupnosti · 10 do 13. jula · VW Golf 8
+             2. Novi upit · stigao na email i telefon
+             3. Rezervacija potvrđena · vozilo zaključano
+           Svaki kadar ima svoju oznaku, brojač 1/3 i traku koja se
+           puni. Tačkice ispod prikaza dozvoljavaju ručni odabir, a
+           cijeli prikaz je link na stranicu.
+
+Cijena je namjerno vidljiva ovdje: to je ono što tjera na klik i
+odmah kaže da na toj stranici postoje konkretne brojke.
+
+Sekcija "O nama" ostaje prva poslije hero sekcije, kako si tražio.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: sekcija razlika, spojeni problem i rjesenje"
+  git commit -m "feat: promo sekcija i linkovi ka rent-a-car stranici"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: sekcija razlika, spojeni problem i rjesenje" ; git push
+  git add . ; git commit -m "feat: promo sekcija i linkovi ka rent-a-car stranici" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

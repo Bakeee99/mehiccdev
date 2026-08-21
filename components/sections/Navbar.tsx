@@ -31,6 +31,7 @@ const SOLUTIONS = [
     href: "/rjesenja/rent-a-car",
     label: { bs: "Rent-a-Car sistem", en: "Car rental system" },
     desc:  { bs: "Rezervacije, flota i kalendar", en: "Bookings, fleet and calendar" },
+    isNew: true,
   },
 ];
 
@@ -92,6 +93,9 @@ export function Navbar() {
                            transition-colors duration-200"
               >
                 {L.solutions}
+                {/* plava tačkica: signal da tu ima nešto novo (crvena je
+                   rezervisana za akciju na cjenovniku, da se ne takmiče) */}
+                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
                 <ChevronDown size={13} className={`transition-transform duration-200 ${solOpen ? "rotate-180" : ""}`} />
               </button>
 
@@ -104,8 +108,16 @@ export function Navbar() {
                          onClick={() => setSolOpen(false)}
                          className="flex flex-col gap-0.5 px-3.5 py-3 rounded-xl
                                     transition-colors duration-200 hover:bg-[var(--surface)]">
-                        <span className="text-sm font-bold text-[var(--text)]">
-                          {s.label[(lang as "bs" | "en")] ?? s.label.bs}
+                        <span className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-[var(--text)]">
+                            {s.label[(lang as "bs" | "en")] ?? s.label.bs}
+                          </span>
+                          {"isNew" in s && s.isNew && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-brand-600 text-white
+                                             text-[9px] font-extrabold uppercase tracking-wider">
+                              {lang === "en" ? "New" : "Novo"}
+                            </span>
+                          )}
                         </span>
                         <span className="text-[12px] text-[var(--text-muted)]">
                           {s.desc[(lang as "bs" | "en")] ?? s.desc.bs}
@@ -209,6 +221,9 @@ export function Navbar() {
                            border-b border-[var(--border)]"
               >
                 {L.solutions}
+                {/* plava tačkica: signal da tu ima nešto novo (crvena je
+                   rezervisana za akciju na cjenovniku, da se ne takmiče) */}
+                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
                 <ChevronDown size={15} className={`text-[var(--text-muted)] transition-transform duration-200 ${solAccOpen ? "rotate-180" : ""}`} />
               </button>
               {solAccOpen && (

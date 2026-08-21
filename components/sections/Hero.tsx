@@ -22,19 +22,20 @@
 
 import { useEffect } from "react";
 import { motion, useReducedMotion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowRight, ArrowUpRight, ChevronDown, BellRing, Gauge } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown, BellRing, Gauge, CarFront } from "lucide-react";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 type Content = {
-  status: string; eyebrow: string;
+  status: string; announceTag: string; announceText: string;
   h1a: string; h1b: string;
   sub: string;
   ctaPrimary: string; ctaSecondary: string;
   liveLabel: string; liveProjects: string[];
   psBadge: string;
+  teaserTag: string; teaserText: string; teaserCta: string;
   notifTitle: string; notifBody: string;
   gaugeLabel: string;
 };
@@ -42,7 +43,8 @@ type Content = {
 const T: Record<"bs" | "en", Content> = {
   bs: {
     status: "Dostupni za nove projekte",
-    eyebrow: "Web aplikacije · Sajtovi · Marketing",
+    announceTag: "Novo",
+    announceText: "Rezervacioni sistem za rent-a-car firme",
     h1a: "Vašem biznisu ne treba sajt.",
     h1b: "Treba mu sistem.",
     sub: "Web aplikacije koje primaju rezervacije, sajtovi koje sami uređujete i marketing koji dovodi upite. Sve iz jedne ruke, iz Mostara za cijeli region.",
@@ -51,13 +53,17 @@ const T: Record<"bs" | "en", Content> = {
     liveLabel: "Uživo u produkciji",
     liveProjects: ["Maximum Rent a Car", "OxyBaric Mostar"],
     psBadge: "Google PageSpeed 100",
+    teaserTag: "Novo",
+    teaserText: "Rezervacioni sistem za rent-a-car firme",
+    teaserCta: "Pogledajte",
     notifTitle: "Nova rezervacija",
     notifBody: "Upit stigao vlasniku za 2 sekunde",
     gaugeLabel: "PageSpeed",
   },
   en: {
     status: "Available for new projects",
-    eyebrow: "Web apps · Websites · Marketing",
+    announceTag: "New",
+    announceText: "Booking system for car rental companies",
     h1a: "Your business doesn't need a website.",
     h1b: "It needs a system.",
     sub: "Web apps that take bookings, websites you can edit yourself, and marketing that brings inquiries. All from one team, from Mostar for the whole region.",
@@ -66,6 +72,9 @@ const T: Record<"bs" | "en", Content> = {
     liveLabel: "Live in production",
     liveProjects: ["Maximum Rent a Car", "OxyBaric Mostar"],
     psBadge: "Google PageSpeed 100",
+    teaserTag: "Novo",
+    teaserText: "Rezervacioni sistem za rent-a-car firme",
+    teaserCta: "Pogledajte",
     notifTitle: "New booking",
     notifBody: "Inquiry reached the owner in 2 seconds",
     gaugeLabel: "PageSpeed",
@@ -170,13 +179,31 @@ export function Hero() {
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
             {d.status}
           </span>
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
-                           border border-brand-600/30 dark:border-brand-500/30
-                           bg-brand-600/8 dark:bg-brand-500/10
-                           text-brand-700 dark:text-brand-300
-                           text-xs font-semibold tracking-wide uppercase">
-            {d.eyebrow}
-          </span>
+          {/* Mamac za rent-a-car stranicu: pilula s natpisom "Novo", tekstom i
+             strelicom. Preko nje s lijeva na desno prelazi tanki odsjaj, pa
+             se primijeti bez treptanja i vike. Animira se samo pomak. */}
+          <a
+            href="/rjesenja/rent-a-car"
+            className="group relative inline-flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-full overflow-hidden
+                       border border-brand-600/35 bg-brand-600/10
+                       transition-[border-color,transform] duration-300
+                       hover:border-brand-500/60 hover:-translate-y-0.5"
+          >
+            <motion.span
+              aria-hidden
+              animate={reduce ? undefined : { x: ["-120%", "220%"] }}
+              transition={{ duration: 2.6, repeat: Infinity, repeatDelay: 3.4, ease: "easeInOut" }}
+              className="absolute inset-y-0 w-1/3 skew-x-[-20deg] pointer-events-none
+                         bg-gradient-to-r from-transparent via-white/12 to-transparent"
+            />
+            <span className="relative px-2 py-0.5 rounded-full bg-brand-600 text-white text-[10px] font-extrabold uppercase tracking-wider">
+              {d.announceTag}
+            </span>
+            <span className="relative text-xs sm:text-[13px] font-semibold text-brand-200">
+              {d.announceText}
+            </span>
+            <ArrowRight size={13} className="relative text-brand-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </a>
         </motion.div>
 
         {/* naslov */}
@@ -208,6 +235,38 @@ export function Hero() {
                        
                         transition-all duration-300 hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
             {d.ctaSecondary}
+          </a>
+        </motion.div>
+
+        {/* Mamac za rent-a-car stranicu: pilula s gradijentnim rubom i
+           svjetlosnim prelivom koji prelazi preko nje. Namjerno stoji odmah
+           ispod dugmadi, jer je to prvo mjesto gdje oko traži "šta dalje". */}
+        <motion.div variants={fadeUp} className="mt-7">
+          <a href="/rjesenja/rent-a-car"
+             className="group relative inline-flex items-center gap-3 pl-2 pr-4 py-2 rounded-full overflow-hidden
+                        transition-transform duration-300 hover:-translate-y-0.5"
+             style={{
+               background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(120deg, #2563EB, #60A5FA, #818CF8) border-box",
+               border: "1.5px solid transparent",
+             }}>
+            {/* preliv svjetla koji putuje preko pilule */}
+            {!calm && (
+              <motion.span aria-hidden
+                animate={{ x: ["-120%", "220%"] }}
+                transition={{ duration: 2.6, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
+                className="absolute inset-y-0 w-1/3 pointer-events-none
+                           bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+            )}
+            <span className="relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                             bg-gradient-to-r from-brand-600 to-brand-500 text-white
+                             text-[10px] font-bold uppercase tracking-wider">
+              <CarFront size={11} /> {d.teaserTag}
+            </span>
+            <span className="relative text-[13px] font-semibold text-[var(--text)]">{d.teaserText}</span>
+            <span className="relative inline-flex items-center gap-1 text-[13px] font-bold text-brand-400
+                             transition-transform duration-300 group-hover:translate-x-0.5">
+              {d.teaserCta} <ArrowRight size={13} />
+            </span>
           </a>
         </motion.div>
 

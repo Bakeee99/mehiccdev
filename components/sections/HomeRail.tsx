@@ -17,6 +17,7 @@ import { SectionRail } from "@/components/ui/SectionRail";
 const ITEMS = {
   bs: [
     { id: "o-nama",     label: "O nama" },
+    { id: "rent-a-car", label: "Rent-a-Car" },
     { id: "usluge",     label: "Usluge" },
     { id: "rezultati",  label: "Rezultati" },
     { id: "portfolio",  label: "Portfolio" },
@@ -27,6 +28,7 @@ const ITEMS = {
   ],
   en: [
     { id: "o-nama",     label: "About" },
+    { id: "rent-a-car", label: "Car rental" },
     { id: "usluge",     label: "Services" },
     { id: "rezultati",  label: "Results" },
     { id: "portfolio",  label: "Portfolio" },
