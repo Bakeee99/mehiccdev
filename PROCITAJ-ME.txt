@@ -1,73 +1,37 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — "KAKO TO RADI": animirani prikaz u četiri stanja
+  mehiccdev — "Kako to radi": klik pauzira, pa se vrtenje nastavi
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/rjesenja/RcHowItWorks.tsx      NOVO: cijela sekcija
-  components/rjesenja/RentACarSections.tsx  montira novu, uklonjena stara
-  components/rjesenja/rentACarCopy.ts       tekstovi, bs + en
+ŠTA JE U ZIP-u (1 fajl):
+  components/rjesenja/RcHowItWorks.tsx
 
-════════ KAKO RADI ════════
-Dvije kolone. Lijevo četiri koraka s opisima; aktivni je istaknut,
-opis mu se otvara, a tanka traka na dnu pokazuje kada slijedi
-prelazak. Klik na bilo koji korak preuzima kontrolu i zaustavlja
-automatsko vrtenje (korisnik uvijek ima prednost nad animacijom).
+ŠTA JE PROMIJENJENO:
+Ranije je klik na korak TRAJNO zaustavljao vrtenje, pa je sekcija
+ostajala statična do kraja posjete.
 
-Desno se mijenja mockup, po stanjima:
+Sada klik samo produžava zadržavanje na tom koraku, a onda se
+automatsko vrtenje samo nastavi:
+  • normalan korak traje 4,2 sekunde
+  • korak koji je posjetilac kliknuo stoji 9 sekundi
 
-  1. GOST REZERVIŠE
-     Prozor sajta s kalendarom. Kursor putuje, datumi od 10. do 13.
-     se pale jedan po jedan, pa kursor klikne dugme "Rezerviši
-     VW Golf 8" koje se blago pritisne.
+Traka napretka na dnu aktivnog koraka prati stvarno trajanje, pa se
+poslije klika puni sporije. Time posjetilac vidi da prikaz nije
+zamrznut nego samo čeka njega.
 
-  2. OBAVIJEST VLASNIKU
-     Isti prozor se zatamni, a s dvije strane uklize obavijest:
-     email kartica ("Nova rezervacija", pošiljalac, detalji) i
-     Telegram poruka ("🔔 Imate novu rezervaciju na čekanju").
+Ako želiš drugačiji tempo, na vrhu fajla su dvije vrijednosti:
+  STEP_MS  = 4200   (automatski korak)
+  PAUSE_MS = 9000   (poslije klika)
 
-  3. ODOBRENJE U PANELU
-     Prelaz u admin panel. Red s rezervacijom ima oznaku "Na
-     čekanju", kursor klikne "Odobri", dugme i oznaka postanu
-     zeleni i pišu "Odobreno". Ispod stoje dva prigušena reda da
-     panel izgleda kao pravi.
-
-  4. POTVRDA GOSTU
-     Prelaz na telefon. S vrha se spusti obavijest sa zelenom
-     kvačicom: "Rezervacija potvrđena, VW Golf 8, preuzimanje 10.
-     jula u Mostaru".
-
-Svaki tekst, uključujući datume, imena dugmadi i sadržaj obavijesti,
-dolazi iz rječnika i mijenja se s jezikom sajta.
-
-════════ POŠTOVANA PRAVILA PROJEKTA ════════
-  • nula novih biblioteka: framer-motion, Tailwind, lucide-react
-  • sav tekst kroz rentACarCopy.ts, oba jezika
-  • samo transform i opacity, nigdje blur
-  • useReveal za ulaz, useCoarsePointer za touch
-  • na telefonu i uz "reduced motion" nema vrtenja ni kursora, ali
-    se svako stanje može otvoriti tapom na korak
-
-════════ ⚠ DVIJE STVARI ZA TVOJU ODLUKU ════════
-1. STARA SEKCIJA "Sistem radi, vi samo odlučujete" JE UKLONJENA.
-   Pričala je istu priču riječima, pa bi uz novu bila ponavljanje.
-   Ako je želiš nazad, javi, kod je lako vratiti.
-
-2. HERO PRIKAZ SADA PONAVLJA OVU PRIČU U MALOM.
-   Preporučujem da hero prikaz zamrznemo na zadnjem kadru, pa da se
-   animacija dešava samo ovdje. To je jedna izmjena: u
-   RentACarSections.tsx zamijeni
-       <Hero c={c} calm={calm} />
-   sa
-       <Hero c={c} calm={true} />
-   Reci ako želiš da to uradim, ili ostavljamo oba u pokretu.
+Na telefonu i uz "reduced motion" i dalje nema automatskog vrtenja;
+tamo se koraci otvaraju tapom, kako je i bilo.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: animirana sekcija kako to radi"
+  git commit -m "feat: klik pauzira korak pa se vrtenje nastavi"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: animirana sekcija kako to radi" ; git push
+  git add . ; git commit -m "feat: klik pauzira korak pa se vrtenje nastavi" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

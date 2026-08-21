@@ -32,7 +32,8 @@ import { useReveal } from "@/lib/useReveal";
 import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
 
-const STEP_MS = 4200;
+const STEP_MS  = 4200;   // koliko traje jedan korak dok se vrti samo
+const PAUSE_MS = 9000;   // koliko duže stoji korak koji je posjetilac kliknuo
 type Ui = typeof COPY.bs.howItWorks.ui;
 
 /* ── Kursor koji putuje po mockupu ─────────────────────────────────────────── */
@@ -285,16 +286,24 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
   const revealHead = useReveal();
   const revealBody = useReveal();
 
-  const [step, setStep]     = useState(0);
-  const [locked, setLocked] = useState(false);
+  const [step, setStep]   = useState(0);
+  const [paused, setPaused] = useState(false);
 
+  /* Kada posjetilac klikne korak, prikaz stane na njemu duže (PAUSE_MS), a
+     zatim se automatsko vrtenje samo nastavi. Tako korisnik ima vremena da
+     pogleda što ga zanima, a sekcija nikad ne ostane statična.
+     Ključ "step" u zavisnostima resetuje odbrojavanje pri svakoj promjeni. */
   useEffect(() => {
-    if (locked || calm) return;
-    const t = setInterval(() => setStep((s) => (s + 1) % 4), STEP_MS);
-    return () => clearInterval(t);
-  }, [locked, calm]);
+    if (calm) return;
+    const wait = paused ? PAUSE_MS : STEP_MS;
+    const t = setTimeout(() => {
+      setPaused(false);
+      setStep((s) => (s + 1) % 4);
+    }, wait);
+    return () => clearTimeout(t);
+  }, [step, paused, calm]);
 
-  const pick = (i: number) => { setLocked(true); setStep(i); };
+  const pick = (i: number) => { setPaused(true); setStep(i); };
   const animate = !calm;
 
   return (
@@ -367,12 +376,12 @@ export function RcHowItWorks({ c }: { c: typeof COPY.bs }) {
                   </span>
 
                   {/* traka napretka dok se vrti samo */}
-                  {on && !locked && !calm && (
+                  {on && !calm && (
                     <motion.span
-                      key={`p-${step}`}
+                      key={`p-${step}-${paused ? "long" : "auto"}`}
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
-                      transition={{ duration: STEP_MS / 1000, ease: "linear" }}
+                      transition={{ duration: (paused ? PAUSE_MS : STEP_MS) / 1000, ease: "linear" }}
                       className="absolute bottom-0 left-0 h-[2.5px] w-full origin-left bg-brand-500/60"
                     />
                   )}
