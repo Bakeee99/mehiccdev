@@ -193,7 +193,8 @@ export function Footer() {
                   <a href={`mailto:${m.email}`}
                      className="inline-flex items-center gap-1.5 text-[12.5px] text-[var(--text-muted)]
                                 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200 mb-2">
-                    <Mail size={12} /> {m.email}
+                    <Mail size={12} className="flex-shrink-0" />
+                    <span className="break-all">{m.email}</span>
                   </a>
                   <div className="flex gap-2">
                     <a href={m.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} Instagram`}

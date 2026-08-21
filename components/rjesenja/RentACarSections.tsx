@@ -198,7 +198,7 @@ function BookingDemo({ calm, labels }: { calm: boolean; labels: typeof COPY.bs.h
           scale: requested ? 1 : 0.97,
         }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="absolute -bottom-6 -right-3 sm:-right-6 w-[248px] rounded-2xl p-3.5
+        className="absolute -bottom-6 right-0 sm:-right-6 w-[248px] max-w-[calc(100%-1rem)] rounded-2xl p-3.5
                    border border-brand-500/30 bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]
                    shadow-[0_20px_45px_-12px_rgba(2,8,30,0.7)]"
       >

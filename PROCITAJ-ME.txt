@@ -1,53 +1,61 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — HERO v2: živi prikaz rezervacije
+  mehiccdev — PROVJERA RESPONZIVNOSTI + tri popravke
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
+ŠTA JE U ZIP-u (3 fajla):
+  components/sections/Navbar.tsx
+  components/sections/Footer.tsx
   components/rjesenja/RentACarSections.tsx
-  components/rjesenja/rentACarCopy.ts
 
-════════ ZAŠTO JE DJELOVALO SIROMAŠNO ════════
-Hero je bio samo tekst na praznoj podlozi. Naslovnica ima plutajuće
-kartice i dokazne pilule, a ovdje oko nije imalo za šta da se uhvati,
-pa je cijeli prvi ekran djelovao prazno bez obzira koliko je tekst
-dobar.
+════════ ŠTA JE NAĐENO I POPRAVLJENO ════════
 
-════════ ŠTA JE SADA ════════
-Podijeljen raspored: lijevo poruka i dugmad, desno ŽIVI PRIKAZ
-SISTEMA koji se sam odvija u krug, u četiri koraka:
+1. NAVBAR SE LOMIO NA UŽIM LAPTOPIMA (najozbiljnije)
+   Desktop meni se prikazivao već od 768 piksela, a u međuvremenu je
+   dobio šest stavki, dropdown "Rješenja", prekidač jezika i dugme
+   Kontakt. Na tabletima i užim laptopima (768 do 1023 px) to se
+   gužvalo i znalo iskočiti iz pilule.
+   Sada se desktop meni pojavljuje tek od 1024 px, a ispod toga ide
+   hamburger meni, koji ionako sve to prikazuje uredno.
 
-  1. Prikazan je kalendar dostupnosti i vozilo označeno "Slobodno"
-  2. Gost bira datume: polja od 10. do 13. se pale jedno po jedno
-  3. Vlasniku sklizne obavijest "Novi upit, rezervacija 10 do 13.
-     jula, preuzimanje Mostar" s dugmadima Potvrdi i Odbij
-  4. Dugme prelazi u zeleno "Potvrđeno", a vozilo se mijenja iz
-     "Slobodno" u "Rezervisano"
+2. DUG EMAIL U FOOTERU
+   "nedim.kupusija@mehiccdev.com" je jedna neprekinuta riječ i na
+   uskim ekranima je razvlačila kolonu. Sada se prelama.
 
-Pa ciklus kreće ispočetka.
+3. OBAVIJEST U HERO PRIKAZU (rent-a-car)
+   Kartica "Novi upit" je bila fiksne širine i pomjerena udesno, pa
+   je na najmanjim telefonima mogla dodirivati ivicu. Sada joj je
+   ograničena maksimalna širina i poravnata je uz okvir.
 
-To je cijela prodajna priča stranice odigrana u pet sekundi, prije
-nego iko išta pročita. Ujedno je i tačno ono što sekcija "Sistem
-radi, vi samo odlučujete" objašnjava riječima niže na stranici.
+════════ ŠTA JE PROVJERENO I ISPRAVNO JE ════════
+  • Sve sekcije imaju zaštitu od prelijevanja, pa dekorativni sjajevi
+    (koji su široki i po 800 px) ne prave vodoravno skrolanje
+  • Tračnica sekcija: skrivena na mobitelu, tamo ide linija napretka
+  • Plutajuće kartice u hero sekciji naslovnice: skrivene ispod 1024 px
+  • Obje forme: polja se na mobitelu slažu u jednu kolonu
+  • Mreže s dvije i tri kolone koje ostaju takve na mobitelu su
+    isključivo unutar mockupa (kalendar, feed oglasa, statistike), gdje
+    je to i namjera, jer su elementi sitni i skalirani u procentima
+  • Slike: sve idu kroz Next.js sistem koji sam bira veličinu prema
+    ekranu
+  • Cjenovnik, paketi, FAQ, poređenje: sve koriste sm: i lg: prekidače
 
-Tekst hero sekcije je nepromijenjen, samo je poravnat lijevo na
-velikim ekranima (na telefonu ostaje centriran, a prikaz ide ispod
-teksta).
-
-════════ TEHNIČKI ════════
-  • Animira se samo prozirnost i pomak, bez blura i bez slika
-  • Na touch uređajima i uz "reduced motion" prikaz stoji na zadnjem
-    koraku: sve se vidi, ali se ništa ne vrti (mobilna dijeta ostaje
-    netaknuta)
-  • Tempo je jedan broj u kodu (HERO_STEP_MS, sada 2600 ms) ako ti
-    se učini prebrzo ili presporo
+════════ ŠTA TI PREPORUČUJEM DA SAM PROVJERIŠ ════════
+Statička provjera koda hvata strukturne greške, ali ne i kako nešto
+izgleda. Uzmi 10 minuta i prođi ovo u Chrome-u (F12 pa Ctrl+Shift+M):
+  • 360 px (mali Android) i 390 px (iPhone)
+  • 768 px (tablet) i 1024 px (uži laptop) ← tu je bila greška
+  • 1440 px (normalan monitor)
+Na svakoj širini skrolaj obje stranice do dna i gledaj samo dvije
+stvari: da li se pojavljuje vodoravno skrolanje i da li išta iskače
+iz okvira.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: hero sa zivim prikazom rezervacije"
+  git commit -m "fix: responzivnost navbara, footera i hero prikaza"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: hero sa zivim prikazom rezervacije" ; git push
+  git add . ; git commit -m "fix: responzivnost navbara, footera i hero prikaza" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

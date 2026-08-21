@@ -77,7 +77,7 @@ export function Navbar() {
           </a>
 
           {/* Desktop links */}
-          <ul className="hidden md:flex items-center gap-1">
+          <ul className="hidden lg:flex items-center gap-1">
             {/* Rješenja: dropdown, otvara se na hover i na klik (tipkovnica) */}
             <li className="relative"
                 onMouseEnter={() => setSolOpen(true)}
@@ -98,7 +98,7 @@ export function Navbar() {
               {solOpen && (
                 <div className="absolute left-0 top-full pt-2 w-72">
                   <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)]
-                                  md:backdrop-blur-xl shadow-2xl shadow-black/25 p-2">
+                                  lg:backdrop-blur-xl shadow-2xl shadow-black/25 p-2">
                     {SOLUTIONS.map((s) => (
                       <a key={s.href} href={s.href}
                          onClick={() => setSolOpen(false)}
@@ -165,7 +165,7 @@ export function Navbar() {
 
             <a
               href="/#kontakt"
-              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl
+              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl
                          bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold
                          shadow-lg shadow-brand-600/25
                          transition-all duration-200 hover:shadow-xl hover:shadow-brand-600/40
@@ -177,7 +177,7 @@ export function Navbar() {
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text)]
+              className="lg:hidden p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text)]
                          hover:bg-[var(--surface)] transition-all duration-200"
               aria-label="Toggle menu"
             >
@@ -195,7 +195,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-[74px] inset-x-3 z-40 md:hidden
+            className="fixed top-[74px] inset-x-3 z-40 lg:hidden
                        rounded-2xl border border-[var(--border)]
                        bg-[var(--bg)] shadow-2xl shadow-black/20 overflow-hidden"
           >
