@@ -127,7 +127,7 @@ export function Footer() {
 
           {/* Brand */}
           <motion.div variants={fadeUp}>
-            <a href="#" className="inline-flex items-baseline mb-4" aria-label="mehiccdev">
+            <a href="/" className="inline-flex items-baseline mb-4" aria-label="mehiccdev, naslovna">
               <span className="text-2xl font-extrabold tracking-tight text-[var(--text)]">
                 mehicc<span className="text-brand-600 dark:text-brand-400">dev</span>
               </span>

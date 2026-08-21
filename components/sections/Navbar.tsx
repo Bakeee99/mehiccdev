@@ -69,7 +69,7 @@ export function Navbar() {
           )}
         >
           {/* Logo */}
-          <a href="#" className="flex items-baseline group relative" aria-label="mehiccdev home">
+          <a href="/" className="flex items-baseline group relative" aria-label="mehiccdev, naslovna">
             <span className="text-lg font-extrabold tracking-tight text-[var(--text)]">mehicc</span>
             <span className="text-lg font-extrabold tracking-tight text-brand-600 dark:text-brand-400">dev</span>
             <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-brand-500 opacity-0 group-hover:opacity-100

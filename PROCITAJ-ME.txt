@@ -1,61 +1,41 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — PROVJERA RESPONZIVNOSTI + tri popravke
+  mehiccdev — Dugme za vrh stranice + logo vodi na naslovnicu
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/sections/Navbar.tsx
-  components/sections/Footer.tsx
-  components/rjesenja/RentACarSections.tsx
+ŠTA JE U ZIP-u (4 fajla):
+  components/ui/ScrollTopButton.tsx   NOVO
+  app/layout.tsx                      montira dugme
+  components/sections/Navbar.tsx      logo → naslovnica (+ responzivnost)
+  components/sections/Footer.tsx      logo → naslovnica (+ prelom emaila)
 
-════════ ŠTA JE NAĐENO I POPRAVLJENO ════════
+Napomena: Navbar i Footer nose i popravke responzivnosti iz prošlog
+ZIP-a, pa ako ga nisi ubacio, ovaj ga pokriva.
 
-1. NAVBAR SE LOMIO NA UŽIM LAPTOPIMA (najozbiljnije)
-   Desktop meni se prikazivao već od 768 piksela, a u međuvremenu je
-   dobio šest stavki, dropdown "Rješenja", prekidač jezika i dugme
-   Kontakt. Na tabletima i užim laptopima (768 do 1023 px) to se
-   gužvalo i znalo iskočiti iz pilule.
-   Sada se desktop meni pojavljuje tek od 1024 px, a ispod toga ide
-   hamburger meni, koji ionako sve to prikazuje uredno.
+════════ 1. LOGO VODI NA NASLOVNICU ════════
+Logo u navbaru i u footeru je vodio na "#", što na naslovnici samo
+skoči na vrh, a sa rent-a-car stranice ne vodi nigdje. Sada oba vode
+na "/", dakle na naslovnicu, kako se i očekuje.
 
-2. DUG EMAIL U FOOTERU
-   "nedim.kupusija@mehiccdev.com" je jedna neprekinuta riječ i na
-   uskim ekranima je razvlačila kolonu. Sada se prelama.
+════════ 2. DUGME ZA POVRATAK NA VRH ════════
+Malo okruglo dugme sa strelicom, u donjem desnom uglu, radi i na
+desktopu i na mobitelu. Pojavi se tek kad posjetilac pređe visinu
+jednog ekrana.
 
-3. OBAVIJEST U HERO PRIKAZU (rent-a-car)
-   Kartica "Novi upit" je bila fiksne širine i pomjerena udesno, pa
-   je na najmanjim telefonima mogla dodirivati ivicu. Sada joj je
-   ograničena maksimalna širina i poravnata je uz okvir.
+RASPORED: stoji IZNAD WhatsApp dugmeta i namjerno je manje i
+diskretnije (siva podloga, tanki rub) jer WhatsApp donosi kontakte
+i mora ostati dominantan. Ako WhatsApp broj nije upisan, dugme se
+samo spusti na njegovo mjesto, pa nema praznog razmaka.
 
-════════ ŠTA JE PROVJERENO I ISPRAVNO JE ════════
-  • Sve sekcije imaju zaštitu od prelijevanja, pa dekorativni sjajevi
-    (koji su široki i po 800 px) ne prave vodoravno skrolanje
-  • Tračnica sekcija: skrivena na mobitelu, tamo ide linija napretka
-  • Plutajuće kartice u hero sekciji naslovnice: skrivene ispod 1024 px
-  • Obje forme: polja se na mobitelu slažu u jednu kolonu
-  • Mreže s dvije i tri kolone koje ostaju takve na mobitelu su
-    isključivo unutar mockupa (kalendar, feed oglasa, statistike), gdje
-    je to i namjera, jer su elementi sitni i skalirani u procentima
-  • Slike: sve idu kroz Next.js sistem koji sam bira veličinu prema
-    ekranu
-  • Cjenovnik, paketi, FAQ, poređenje: sve koriste sm: i lg: prekidače
-
-════════ ŠTA TI PREPORUČUJEM DA SAM PROVJERIŠ ════════
-Statička provjera koda hvata strukturne greške, ali ne i kako nešto
-izgleda. Uzmi 10 minuta i prođi ovo u Chrome-u (F12 pa Ctrl+Shift+M):
-  • 360 px (mali Android) i 390 px (iPhone)
-  • 768 px (tablet) i 1024 px (uži laptop) ← tu je bila greška
-  • 1440 px (normalan monitor)
-Na svakoj širini skrolaj obje stranice do dna i gledaj samo dvije
-stvari: da li se pojavljuje vodoravno skrolanje i da li išta iskače
-iz okvira.
+Klik glatko klizi na vrh, a korisnicima koji su isključili animacije
+skoči odmah.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "fix: responzivnost navbara, footera i hero prikaza"
+  git commit -m "feat: dugme za vrh stranice i logo vodi na naslovnicu"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "fix: responzivnost navbara, footera i hero prikaza" ; git push
+  git add . ; git commit -m "feat: dugme za vrh stranice i logo vodi na naslovnicu" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
