@@ -35,25 +35,63 @@ import { SectionRail } from "@/components/ui/SectionRail";
 const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
 const SOLUTION_ICONS: LucideIcon[] = [Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search];
 
-/* ── Zajednički header sekcije ──────────────────────────────────────────────── */
-function SectionHead({ label, h1, accent, sub }: { label: string; h1: string; accent: string; sub?: string }) {
+/* ── Zajednički header sekcije ───────────────────────────────────────────────
+   align="center" je zadano; align="left" koristе sekcije koje treba da razbiju
+   ritam, pa naslov ide lijevo a uvodni tekst desno od njega. Redni broj
+   (01, 02...) daje osjećaj poglavlja umjesto niza istih blokova.            */
+function SectionHead({
+  label, h1, accent, sub, align = "center", index,
+}: {
+  label: string; h1: string; accent: string; sub?: string;
+  align?: "center" | "left"; index?: string;
+}) {
   const reveal = useReveal();
+
+  const eyebrow = (
+    <motion.div variants={fadeUp} className={align === "center" ? "flex justify-center mb-5" : "mb-5"}>
+      <span className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full
+                       border border-brand-600/30 bg-brand-600/10
+                       text-brand-300 text-xs font-semibold tracking-wider uppercase">
+        {index ? (
+          <span className="font-serif italic text-[13px] text-brand-400 leading-none">{index}</span>
+        ) : (
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
+        )}
+        {label}
+      </span>
+    </motion.div>
+  );
+
+  const heading = (
+    <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+      {h1}{" "}
+      <span className="text-gradient font-serif italic font-semibold tracking-normal">{accent}</span>
+    </motion.h2>
+  );
+
+  if (align === "left") {
+    return (
+      <motion.div variants={staggerContainer} {...reveal}
+        className="grid lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-12 items-end mb-12">
+        <div>
+          {eyebrow}
+          {heading}
+        </div>
+        {sub && (
+          <motion.p variants={fadeUp} className="text-[var(--text-muted)] text-base leading-relaxed lg:pb-2">
+            {sub}
+          </motion.p>
+        )}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div variants={staggerContainer} {...reveal} className="text-center mb-14">
-      <motion.div variants={fadeUp} className="flex justify-center mb-5">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                         border border-brand-600/30 bg-brand-600/10
-                         text-brand-300 text-xs font-semibold tracking-wider uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-          {label}
-        </span>
-      </motion.div>
-      <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
-        {h1}{" "}
-        <span className="text-gradient font-serif italic font-semibold tracking-normal">{accent}</span>
-      </motion.h2>
+      {eyebrow}
+      {heading}
       {sub && (
-        <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-base sm:text-lg leading-relaxed">
+        <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-base sm:text-lg leading-relaxed mt-4">
           {sub}
         </motion.p>
       )}
@@ -122,63 +160,89 @@ function Hero({ c }: { c: typeof COPY.bs }) {
   );
 }
 
-/* ── 2 · Problem ────────────────────────────────────────────────────────────── */
+/* ── 2 · Problem ────────────────────────────────────────────────────────────
+   Namjerno drugačiji ritam od ostalih sekcija: naslov lijevo, kartice su
+   vodoravni redovi u zajedničkom panelu, a ne mreža kvadrata. Panel daje
+   dubinu i razdvaja ovu sekciju od susjednih.                              */
 function Problem({ c }: { c: typeof COPY.bs }) {
   const reveal = useReveal();
   const d = c.problem;
   return (
     <section id="problem" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
-        <motion.div variants={staggerContainerSlow} {...reveal} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {d.items.map((item, i) => {
-            const Icon = PROBLEM_ICONS[i];
-            return (
-              <motion.article key={item.t} variants={scaleIn} whileHover={{ y: -4 }}
-                className="rounded-3xl p-6 bg-[var(--surface)] border border-[var(--border)]
-                           transition-[border-color,box-shadow] duration-300
-                           hover:border-red-500/30 hover:shadow-xl hover:shadow-red-500/5">
-                <span className="inline-flex w-10 h-10 rounded-2xl items-center justify-center mb-4
-                                 bg-red-500/10 border border-red-500/25 text-red-400">
-                  <Icon size={17} />
-                </span>
-                <h3 className="text-[15px] font-extrabold text-[var(--text)] leading-tight mb-2">{item.t}</h3>
-                <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">{item.d}</p>
-              </motion.article>
-            );
-          })}
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} align="left" index="01" />
+
+        <motion.div variants={staggerContainerSlow} {...reveal}
+          className="rounded-[28px] border border-[var(--border)] p-2 sm:p-3
+                     bg-[color-mix(in_srgb,var(--surface)_55%,transparent)]">
+          <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
+            {d.items.map((item, i) => {
+              const Icon = PROBLEM_ICONS[i];
+              return (
+                <motion.article key={item.t} variants={fadeUp}
+                  className="flex gap-4 rounded-2xl p-5 bg-[var(--surface)] border border-[var(--border)]
+                             transition-[border-color] duration-300 hover:border-red-500/30">
+                  <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+                                   bg-red-500/10 border border-red-500/25 text-red-400">
+                    <Icon size={17} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-extrabold text-[var(--text)] leading-tight mb-1.5">{item.t}</span>
+                    <span className="block text-[13px] text-[var(--text-muted)] leading-relaxed">{item.d}</span>
+                  </span>
+                </motion.article>
+              );
+            })}
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-/* ── 3 · Rješenje ───────────────────────────────────────────────────────────── */
+/* ── 3 · Rješenje ───────────────────────────────────────────────────────────
+   Asimetrična mreža: prve dvije stavke su šire i krupnije (to su i najjači
+   argumenti), ostale četiri manje. Time sekcija prestaje biti niz identičnih
+   kvadrata, a hijerarhija govori šta je najvažnije.                        */
 function Solution({ c }: { c: typeof COPY.bs }) {
   const reveal = useReveal();
   const d = c.solution;
+  const SPAN = ["lg:col-span-3", "lg:col-span-3", "lg:col-span-2", "lg:col-span-2", "lg:col-span-2", "lg:col-span-6"];
   return (
     <section id="rjesenje" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
-        <motion.div variants={staggerContainerSlow} {...reveal} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} index="02" />
+        <motion.div variants={staggerContainerSlow} {...reveal}
+          className="grid sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
           {d.items.map((item, i) => {
             const Icon = SOLUTION_ICONS[i];
+            const big = i < 2;
+            const wide = i === 5;
             return (
               <motion.article key={item.t} variants={scaleIn} whileHover={{ y: -4 }}
-                className="group rounded-3xl p-6 bg-[var(--surface)] border border-[var(--border)]
-                           transition-[border-color,box-shadow] duration-300
-                           hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10">
-                <span className="inline-flex w-11 h-11 rounded-2xl items-center justify-center mb-4
-                                 bg-gradient-to-br from-brand-600 to-brand-400 text-white
-                                 shadow-lg shadow-brand-600/25
-                                 transition-transform duration-300 group-hover:scale-110">
-                  <Icon size={18} />
+                className={`group rounded-3xl bg-[var(--surface)] border border-[var(--border)]
+                            transition-[border-color,box-shadow] duration-300
+                            hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10
+                            ${SPAN[i]} ${big ? "p-7" : "p-5"}
+                            ${wide ? "flex items-center gap-5" : ""}`}>
+                <span className={`inline-flex rounded-2xl items-center justify-center flex-shrink-0
+                                  bg-gradient-to-br from-brand-600 to-brand-400 text-white
+                                  shadow-lg shadow-brand-600/25
+                                  transition-transform duration-300 group-hover:scale-110
+                                  ${big ? "w-12 h-12 mb-4" : wide ? "w-11 h-11" : "w-10 h-10 mb-3"}`}>
+                  <Icon size={big ? 20 : 17} />
                 </span>
-                <h3 className="text-base font-extrabold text-[var(--text)] leading-tight mb-2">{item.t}</h3>
-                <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">{item.d}</p>
+                <span className="min-w-0 block">
+                  <span className={`block font-extrabold text-[var(--text)] leading-tight mb-1.5
+                                    ${big ? "text-[19px]" : "text-[15px]"}`}>
+                    {item.t}
+                  </span>
+                  <span className={`block text-[var(--text-muted)] leading-relaxed ${big ? "text-[14px]" : "text-[12.5px]"}`}>
+                    {item.d}
+                  </span>
+                </span>
               </motion.article>
             );
           })}
@@ -202,7 +266,7 @@ function Flow({ c }: { c: typeof COPY.bs }) {
     <section id="kako-radi" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.sub} />
+        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.sub} index="03" />
 
         <motion.div variants={staggerContainerSlow} {...reveal} className="relative">
           {/* linija koja povezuje korake */}
@@ -364,7 +428,7 @@ function Packages({ c }: { c: typeof COPY.bs }) {
     <section id="paketi" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
+        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} index="05" />
 
         <motion.div variants={staggerContainerSlow} {...reveal}
                     className="grid md:grid-cols-3 gap-5 lg:gap-6 items-start pt-4">
@@ -557,7 +621,7 @@ function Comparison({ c }: { c: typeof COPY.bs }) {
     <section id="poredjenje" className="py-24 lg:py-28 relative scroll-mt-24">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.body} />
+        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.body} align="left" index="06" />
         <motion.div variants={staggerContainerSlow} {...reveal} className="flex flex-col gap-3">
           {d.rows.map((r) => (
             <motion.div key={r.b} variants={fadeUp}
