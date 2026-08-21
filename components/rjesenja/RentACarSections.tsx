@@ -30,6 +30,7 @@ import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
+import { RcHowItWorks } from "@/components/rjesenja/RcHowItWorks";
 import { SectionRail } from "@/components/ui/SectionRail";
 
 const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
@@ -392,79 +393,6 @@ function Solution({ c }: { c: typeof COPY.bs }) {
             );
           })}
         </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 4 · Kako radi u praksi ─────────────────────────────────────────────────
-   Poenta sekcije: pokazati koliko malo posla ostaje vlasniku. Koraci su
-   obojeni po tome ko ih radi, sistem (plavo, ikonica munje) ili vlasnik
-   (zeleno, ikonica ruke), pa se na prvi pogled vidi da su samo dva koraka
-   njegova.                                                                 */
-function Flow({ c }: { c: typeof COPY.bs }) {
-  const reveal  = useReveal();
-  const revealS = useReveal();
-  const d = c.flow;
-
-  return (
-    <section id="kako-radi" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.sub} index="03" />
-
-        <motion.div variants={staggerContainerSlow} {...reveal} className="relative">
-          {/* linija koja povezuje korake */}
-          <div className="absolute left-[27px] top-8 bottom-8 w-px hidden sm:block
-                          bg-gradient-to-b from-brand-600 via-brand-500/40 to-green-500/40" aria-hidden />
-
-          <div className="flex flex-col gap-3.5">
-            {d.steps.map((s, i) => {
-              const mine = s.by === "you";
-              return (
-                <motion.div key={s.t} variants={fadeUp}
-                  className={`relative flex gap-4 sm:gap-5 rounded-2xl p-5 border
-                              transition-[border-color,box-shadow] duration-300
-                              ${mine
-                                ? "bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] border-green-500/30 hover:border-green-500/50"
-                                : "bg-[var(--surface)] border-[var(--border)] hover:border-brand-600/40"}`}>
-                  <span className={`relative z-10 w-[38px] h-[38px] rounded-2xl flex items-center justify-center flex-shrink-0
-                                    border ${mine
-                                      ? "bg-green-500/12 border-green-500/40 text-green-400"
-                                      : "bg-brand-600/12 border-brand-600/40 text-brand-400"}`}>
-                    {mine ? <Hand size={16} /> : <Zap size={16} />}
-                  </span>
-
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className={`px-2 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider
-                                        ${mine
-                                          ? "bg-green-500/12 border border-green-500/35 text-green-400"
-                                          : "bg-brand-600/12 border border-brand-600/35 text-brand-300"}`}>
-                        {mine ? d.byYou : d.bySystem}
-                      </span>
-                      <h3 className="text-[15px] font-extrabold text-[var(--text)] leading-tight">{s.t}</h3>
-                    </div>
-                    <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">{s.d}</p>
-                  </div>
-
-                  <span className="ml-auto self-start text-[22px] leading-none font-serif italic font-semibold
-                                   text-[var(--text-muted)] opacity-25 select-none hidden sm:block" aria-hidden>
-                    0{i + 1}
-                  </span>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <motion.p variants={fadeUp} {...revealS}
-          className="mt-8 flex items-start gap-2.5 justify-center text-center text-[13.5px] font-semibold
-                     text-[var(--text)] rounded-2xl px-6 py-4
-                     bg-[color-mix(in_srgb,var(--surface)_70%,transparent)] border border-[var(--border)]">
-          <Zap size={15} className="mt-0.5 flex-shrink-0 text-brand-400" />
-          {d.summary}
-        </motion.p>
       </div>
     </section>
   );
@@ -850,7 +778,7 @@ export function RentACarSections() {
       <Hero c={c} calm={calm} />
       <Problem c={c} />
       <Solution c={c} />
-      <Flow c={c} />
+      <RcHowItWorks c={c} />
       <CaseStudy c={c} />
       <Packages c={c} />
       <Comparison c={c} />
