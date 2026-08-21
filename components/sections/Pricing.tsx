@@ -422,7 +422,7 @@ export function Pricing() {
             variants={fadeUp}
             href="/rjesenja/rent-a-car"
             className="group relative flex flex-col sm:flex-row items-center gap-5 rounded-3xl p-6 sm:p-7 overflow-hidden
-                       bg-[var(--surface)] transition-[box-shadow,transform] duration-300
+                       transition-[box-shadow,transform] duration-300
                        hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-600/20"
             style={{
               background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",

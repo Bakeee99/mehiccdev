@@ -371,9 +371,22 @@ function Packages({ c }: { c: typeof COPY.bs }) {
           {d.items.map((p, i) => {
             const featured = i === 1;
 
+            /* Sve na jednom elementu: radijus, rub, pozadina i sjena. Ranije je
+               gradijentni rub bio na vanjskom divu, a radijus i pozadina na
+               unutrašnjem, pa se uglovi i sjena nisu poklapali (vidjelo se kao
+               čudan ugao uz karticu). */
             const card = (
-              <div className={`relative flex flex-col h-full rounded-3xl p-6 sm:p-7 overflow-hidden
-                               ${featured ? "bg-[var(--surface)]" : "bg-[var(--surface)] border border-[var(--border)]"}`}>
+              <div
+                className={`relative flex flex-col h-full rounded-3xl p-6 sm:p-7 overflow-hidden
+                            transition-[box-shadow] duration-300
+                            ${featured
+                              ? "hover:shadow-2xl hover:shadow-brand-600/20"
+                              : "bg-[var(--surface)] border border-[var(--border)] hover:shadow-xl hover:shadow-brand-600/10"}`}
+                style={featured ? {
+                  background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(150deg, #2563EB, #60A5FA, #818CF8) border-box",
+                  border: "1.5px solid transparent",
+                } : undefined}
+              >
                 {/* sjaj u uglu istaknute kartice */}
                 {featured && (
                   <span aria-hidden className="absolute -top-24 -right-20 w-64 h-64 rounded-full pointer-events-none
@@ -476,20 +489,7 @@ function Packages({ c }: { c: typeof COPY.bs }) {
                     ★ {d.recommended}
                   </span>
                 )}
-                {featured ? (
-                  /* gradijentni rub kroz dvostruku pozadinu, isti pristup kao na naslovnici */
-                  <div className="rounded-3xl h-full transition-[box-shadow] duration-300 hover:shadow-2xl hover:shadow-brand-600/20"
-                       style={{
-                         background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(150deg, #2563EB, #60A5FA, #818CF8) border-box",
-                         border: "1.5px solid transparent",
-                       }}>
-                    {card}
-                  </div>
-                ) : (
-                  <div className="h-full transition-[box-shadow] duration-300 hover:shadow-xl hover:shadow-brand-600/10">
-                    {card}
-                  </div>
-                )}
+                {card}
               </motion.article>
             );
           })}

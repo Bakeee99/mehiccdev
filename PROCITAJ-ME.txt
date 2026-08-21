@@ -1,37 +1,44 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Tračnica se skriva u hero sekciji
+  mehiccdev — POPRAVKA: ugao i sjena na istaknutoj kartici
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/ui/SectionRail.tsx
+ŠTA JE U ZIP-u (2 fajla):
+  components/rjesenja/RentACarSections.tsx
+  components/sections/Pricing.tsx
 
-ŠTA JE PROMIJENJENO:
-Tračnica sekcija se više ne vidi dok je posjetilac na prvom ekranu.
-Pojavi se tek kad skrola oko 80 posto visine ekrana, uz meko
-utapanje i blagi pomak s lijeva.
+════════ ŠTA JE BIO PROBLEM ════════
+Pro kartica je bila napravljena od DVA ugniježdena elementa:
+  • vanjski div nosio je gradijentni rub i sjenu
+  • unutrašnji div nosio je zaobljenje i pozadinu
 
-Pošto obje stranice koriste istu komponentu, ovo automatski važi i
-za naslovnicu i za rent-a-car stranicu, jednim fajlom.
+Pošto vanjski ima rub od 1,5 piksela, unutrašnji je bio pomjeren za
+toliko, a oba su imala isto zaobljenje. Kada dvije zaobljene forme
+istog radijusa nisu poravnate, na uglovima se vidi tačno ono što si
+uslikao: sjena i rub se razilaze i ugao izgleda odsječeno.
 
-Zašto je ovako bolje: u hero sekciji tračnica nema šta da pokaže
-(posjetilac je tek stigao), a vizuelno se sudarala s plutajućim
-karticama i naslovom. Kad se pojavi tek na drugoj sekciji, djeluje
-kao da se sajt "otvorio" i ponudio navigaciju u trenutku kad je
-stvarno potrebna.
+════════ ŠTA JE URAĐENO ════════
+Sve je spojeno na JEDAN element: zaobljenje, gradijentni rub,
+pozadina i sjena sada dijele isti okvir, pa se sjena savršeno prati
+zaobljene uglove.
 
-Linija napretka na mobitelu ostaje kakva je bila, ona ne smeta u
-hero sekciji jer je tanka i stoji uz navbar.
+Provjerio sam cijeli sajt na isti obrazac. Gradijentni rub se koristi
+na četiri mjesta:
+  • Pro kartica (rent-a-car)      → bila pogrešna, POPRAVLJENA
+  • Kontakt forma (naslovnica)    → ispravna, sve na jednom elementu
+  • Flagship traka (naslovnica)   → ispravna
+  • Rent-a-car banner (cjenovnik) → ispravan, ali je imao suvišnu
+    klasu za pozadinu preko koje je inline gradijent ionako pisao;
+    očišćeno da ne zbunjuje kasnije
 
-Ako ti se učini da se pojavljuje prekasno ili prerano, to je jedan
-broj u fajlu: window.innerHeight * 0.8 (npr. 0.6 za ranije).
+Dakle nigdje drugdje na sajtu ovaj problem ne postoji.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "fix: tracnica se ne prikazuje u hero sekciji"
+  git commit -m "fix: poravnat ugao i sjena na istaknutoj kartici"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "fix: tracnica se ne prikazuje u hero sekciji" ; git push
+  git add . ; git commit -m "fix: poravnat ugao i sjena na istaknutoj kartici" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
