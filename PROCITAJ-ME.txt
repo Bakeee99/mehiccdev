@@ -1,62 +1,38 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Put do rent-a-car stranice: hero, navbar, nova sekcija
+  mehiccdev — NOVA SLIKA za sekciju "O nama"
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (5 fajlova):
-  components/sections/RentACarPromo.tsx  NOVO: sekcija na naslovnici
-  app/page.tsx                            montira je ispod "O nama"
-  components/sections/Hero.tsx            animirani link u hero sekciji
-  components/sections/Navbar.tsx          oznaka "Novo" na Rješenjima
-  components/sections/HomeRail.tsx        nova stavka u tračnici
+ŠTA JE U ZIP-u (1 fajl):
+  public/team/bakir.jpg
 
-════════ 1. HERO: ANIMIRANI LINK UMJESTO SUVIŠNE PILULE ════════
-Pilula "WEB APLIKACIJE · SAJTOVI · MARKETING" je uklonjena, jer je
-ponavljala ono što piše u podnaslovu odmah ispod. Na njeno mjesto
-došao je link:
+Raspakuj u KORIJEN projekta i potvrdi zamjenu postojećeg fajla.
+Kod se NE mijenja, putanja je ista kao i do sada.
 
-     [NOVO]  Rezervacioni sistem za rent-a-car firme  →
+════════ ŠTA JE URAĐENO SA SLIKOM ════════
+  • Kvadratni izrez, jer je okvir u sekciji "O nama" kvadrat.
+    Kadar je pomjeren malo naniže od vrha, tako da glava ima zraka
+    iznad sebe, a ramena ulaze u donji dio, pa lice sjeda u sredinu
+    okvira umjesto da bude priljubljeno uz gornju ivicu.
+  • Veličina 800 x 800 piksela. Okvir je 176 piksela, pa je ovo
+    dovoljno i za ekrane s dvostrukom gustinom, bez suvišne težine.
+  • Optimizovan JPEG, 49 KB. Za poređenje, ranije slike u portfoliju
+    su bile i po 2 MB.
+  • Progresivno učitavanje, pa se slika pojavljuje postepeno na
+    sporijim vezama umjesto da iskoči odjednom.
 
-Preko pilule s lijeva na desno povremeno prelazi tanki odsjaj, pa se
-primijeti, a ne trepće i ne viče. Na hover se podigne i strelica se
-pomjeri. Vodi pravo na /rjesenja/rent-a-car.
+Next.js će je usput dodatno smanjiti i pretvoriti u moderni format
+prilikom prikaza, jer smo slike prebacili na next/image.
 
-Broj elemenata u hero sekciji je ostao isti, samo je jedan dekor
-zamijenjen mjestom za klik.
-
-════════ 2. NAVBAR: ISTAKNUTA "RJEŠENJA" ════════
-Pored riječi "Rješenja" sada stoji mala plava tačkica koja pulsira,
-a unutar padajućeg menija stavka "Rent-a-Car sistem" ima oznaku
-"Novo". Isti princip kao crvena oznaka na Cjenovniku, samo plava, da
-se ne takmiče.
-
-════════ 3. NOVA SEKCIJA NA NASLOVNICI (ispod "O nama") ════════
-Velika kartica s gradijentnim rubom, kakav već koristimo:
-
-  LIJEVO   naslov "Cijeli sistem za iznajmljivanje vozila, na jednoj
-           stranici", kratak opis, tri koristi s kvačicama, veliko
-           dugme "Pogledajte sistem i cijene" i pilula "Paketi od
-           1.500 KM", pa sitno "Cijene, paketi i primjer iz prakse"
-
-  DESNO    prikaz koji se sam vrti kroz tri kadra:
-             1. Kalendar dostupnosti · 10 do 13. jula · VW Golf 8
-             2. Novi upit · stigao na email i telefon
-             3. Rezervacija potvrđena · vozilo zaključano
-           Svaki kadar ima svoju oznaku, brojač 1/3 i traku koja se
-           puni. Tačkice ispod prikaza dozvoljavaju ručni odabir, a
-           cijeli prikaz je link na stranicu.
-
-Cijena je namjerno vidljiva ovdje: to je ono što tjera na klik i
-odmah kaže da na toj stranici postoje konkretne brojke.
-
-Sekcija "O nama" ostaje prva poslije hero sekcije, kako si tražio.
+════════ PROVJERA POSLIJE UBACIVANJA ════════
+Otvori naslovnicu i sekciju "O nama". Ako ti se učini da je kadar
+previsok ili prenizak, javi pa pomjerim izrez za par procenata,
+imam original.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: promo sekcija i linkovi ka rent-a-car stranici"
+  git commit -m "chore: nova fotografija u sekciji o nama"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: promo sekcija i linkovi ka rent-a-car stranici" ; git push
-
-Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
+  git add . ; git commit -m "chore: nova fotografija u sekciji o nama" ; git push
 ════════════════════════════════════════════════════════════════════
