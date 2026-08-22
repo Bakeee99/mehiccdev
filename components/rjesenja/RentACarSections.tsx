@@ -17,7 +17,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
   Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search,
@@ -102,135 +102,181 @@ function SectionHead({
 }
 
 /* ── 1 · Hero ───────────────────────────────────────────────────────────────
-   Podijeljen raspored: lijevo poruka, desno ŽIVI PRIKAZ SISTEMA koji se sam
-   odvija u krug (gost bira datume → upit stiže → vlasnik potvrđuje → vozilo
-   se zaključa). Umjesto da opisujemo šta sistem radi, posjetilac to vidi u
-   prvih pet sekundi.
+   Koncept: JEDAN SISTEM, DVA EKRANA.
+   Desno stoje laptop s admin panelom i telefon gosta, povezani u istu priču
+   koja se odvija u tri takta:
+     0. gost na telefonu bira datume
+     1. u panelu na laptopu iskoči novi red, oznaka "Na čekanju" pulsira
+     2. red postaje zelen ("Odobreno"), a na telefon padne potvrda
 
-   Animacija ide kroz jednostavan brojač koraka, samo transform i opacity,
-   bez blura. Na touch uređajima i uz reduced-motion prikaz stoji na zadnjem
-   koraku, pa se sve i dalje vidi ali ništa se ne vrti.                     */
+   Boje: plava ostaje nosilac, ali su potvrde zelene, a čekanje jantarno, pa
+   se probije jednoličnost plave. Ispod telefona stoji tihi tirkizni sjaj.
 
-const HERO_STEP_MS = 2600;
+   Tekst se preuzima iz postojećih rječnika (hero.demo i howItWorks.ui), pa
+   nema novih ključeva ni prijevoda.
 
-function BookingDemo({ calm, labels }: { calm: boolean; labels: typeof COPY.bs.hero.demo }) {
-  const [step, setStep] = useState(calm ? 3 : 0);
+   Performanse: samo pomak, prozirnost i boja; nigdje zamućenja ni slika.  */
+
+const HERO_STEP_MS = 3200;
+
+function DeviceShowcase({ c, animate }: { c: typeof COPY.bs; animate: boolean }) {
+  const demo = c.hero.demo;
+  const ui   = c.howItWorks.ui;
+  const [step, setStep] = useState(animate ? 0 : 2);
 
   useEffect(() => {
-    if (calm) return;
-    const t = setInterval(() => setStep((s) => (s + 1) % 4), HERO_STEP_MS);
+    if (!animate) return;
+    const t = setInterval(() => setStep((s) => (s + 1) % 3), HERO_STEP_MS);
     return () => clearInterval(t);
-  }, [calm]);
+  }, [animate]);
 
-  const picked    = step >= 1;   // gost odabrao datume
-  const requested = step >= 2;   // upit stigao vlasniku
-  const confirmed = step >= 3;   // vlasnik potvrdio
+  const arrived  = step >= 1;   // upit stigao u panel
+  const approved = step >= 2;   // vlasnik odobrio
 
   return (
     <div className="relative">
-      {/* sjaj iza prikaza */}
-      <div aria-hidden className="absolute -inset-8 rounded-[40px] pointer-events-none
-                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.16),transparent_75%)]" />
+      {/* sjaj: plavi gore desno, tirkizni dolje lijevo, da se plava ne ponavlja */}
+      <div aria-hidden className="absolute -top-16 -right-10 w-72 h-72 rounded-full pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.20),transparent_72%)]" />
+      <div aria-hidden className="absolute -bottom-16 -left-10 w-64 h-64 rounded-full pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.14),transparent_72%)]" />
 
-      <div className="relative rounded-3xl border border-brand-500/25 bg-[#080D1E] overflow-hidden
-                      shadow-[0_44px_90px_-30px_rgba(37,99,235,0.45)]">
-        {/* traka prozora */}
-        <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
-          <span className="w-2 h-2 rounded-full bg-white/15" />
-          <span className="w-2 h-2 rounded-full bg-white/15" />
-          <span className="w-2 h-2 rounded-full bg-white/15" />
-          <span className="ml-2 text-[10px] text-white/35 tracking-wide">{labels.window}</span>
-        </div>
-
-        <div className="p-5 sm:p-6">
-          {/* kalendar */}
-          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-200/60 mb-3">
-            {labels.calendar}
-          </p>
-          <div className="grid grid-cols-7 gap-1.5 mb-5" aria-hidden>
-            {Array.from({ length: 21 }).map((_, i) => {
-              const inRange = i >= 9 && i <= 12;
-              const on = picked && inRange;
-              return (
-                <motion.span
-                  key={i}
-                  animate={{
-                    backgroundColor: on ? "rgba(37,99,235,0.9)" : "rgba(255,255,255,0.05)",
-                    scale: on ? 1 : 0.96,
-                  }}
-                  transition={{ duration: 0.35, delay: on ? (i - 9) * 0.07 : 0 }}
-                  className="h-7 rounded-md flex items-center justify-center text-[10px] font-semibold text-white/70"
-                >
-                  {i + 1}
-                </motion.span>
-              );
-            })}
+      {/* ── LAPTOP ── */}
+      <div className="relative">
+        <div className="rounded-2xl border border-white/12 bg-[#070C1A] overflow-hidden
+                        shadow-[0_44px_90px_-30px_rgba(37,99,235,0.45)]">
+          {/* traka prozora */}
+          <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
+            <span className="w-2 h-2 rounded-full bg-white/15" />
+            <span className="w-2 h-2 rounded-full bg-white/15" />
+            <span className="w-2 h-2 rounded-full bg-white/15" />
+            <span className="ml-2 text-[10px] text-white/35">{ui.panel}</span>
+            <span className="ml-auto flex items-center gap-1.5">
+              <motion.span
+                animate={animate && arrived && !approved ? { opacity: [1, 0.35, 1] } : { opacity: 1 }}
+                transition={{ duration: 1.1, repeat: Infinity }}
+                className={`w-1.5 h-1.5 rounded-full ${arrived && !approved ? "bg-amber-400" : "bg-emerald-400"}`}
+              />
+              <span className="text-[9.5px] text-white/30">{arrived && !approved ? ui.pending : ui.approved}</span>
+            </span>
           </div>
 
-          {/* vozilo */}
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[.03] px-3.5 py-3">
-            <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500/40 to-indigo-600/20 flex items-center justify-center flex-shrink-0">
-              <Car size={15} className="text-blue-200" />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[12.5px] font-bold text-white/90 leading-tight">{labels.car}</span>
-              <span className="block text-[11px] text-white/40 leading-tight">{labels.price}</span>
-            </span>
-            <motion.span
-              key={confirmed ? "taken" : "free"}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`ml-auto px-2.5 py-1 rounded-full text-[10px] font-bold border whitespace-nowrap
-                          ${confirmed
-                            ? "text-brand-300 bg-brand-600/15 border-brand-600/35"
-                            : "text-green-400 bg-green-500/10 border-green-500/30"}`}
+          <div className="p-4 sm:p-5">
+            {/* novi upit koji uleti u panel */}
+            <motion.div
+              animate={{
+                opacity: arrived ? 1 : 0.25,
+                y: arrived ? 0 : -6,
+                borderColor: approved ? "rgba(16,185,129,0.45)" : arrived ? "rgba(245,158,11,0.45)" : "rgba(255,255,255,0.08)",
+              }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="rounded-xl border bg-white/[.03] p-3.5 mb-3"
             >
-              {confirmed ? labels.booked : labels.free}
-            </motion.span>
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500/40 to-indigo-600/20 flex items-center justify-center flex-shrink-0">
+                  <Car size={15} className="text-blue-200" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[12.5px] font-bold text-white/90 leading-tight">{demo.car}</span>
+                  <span className="block text-[10.5px] text-white/40 leading-tight">{ui.guest} · {ui.dates}</span>
+                </span>
+                <motion.span
+                  animate={{
+                    backgroundColor: approved ? "rgba(16,185,129,0.14)" : "rgba(245,158,11,0.12)",
+                    color: approved ? "rgb(52,211,153)" : "rgb(251,191,36)",
+                  }}
+                  transition={{ duration: 0.35 }}
+                  className="ml-auto px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap"
+                >
+                  {approved ? ui.approved : ui.pending}
+                </motion.span>
+              </div>
+
+              <motion.div
+                animate={{
+                  backgroundColor: approved ? "rgb(5,150,105)" : "rgba(37,99,235,0.95)",
+                  scale: animate && step === 2 ? [1, 0.97, 1] : 1,
+                }}
+                transition={{ duration: 0.45 }}
+                className="mt-3 h-8 rounded-lg flex items-center justify-center gap-1.5 text-[11.5px] font-bold text-white"
+              >
+                {approved ? <><Check size={12} strokeWidth={3} /> {ui.approved}</> : ui.approveBtn}
+              </motion.div>
+            </motion.div>
+
+            {/* ostatak flote, tiho u pozadini */}
+            <div className="space-y-2" aria-hidden>
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2.5 rounded-lg border border-white/[.06] px-3 py-2.5 opacity-35">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/70" />
+                  <span className="h-1.5 rounded bg-white/15" style={{ width: `${70 - i * 12}px` }} />
+                  <span className="ml-auto h-1.5 w-9 rounded bg-white/10" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* postolje laptopa */}
+        <div aria-hidden className="mx-auto h-2.5 w-[86%] rounded-b-2xl bg-gradient-to-b from-white/12 to-white/[.03]" />
+        <div aria-hidden className="mx-auto h-1 w-[38%] rounded-full bg-white/10" />
+      </div>
+
+      {/* ── TELEFON ── */}
+      <div className="absolute -bottom-8 -left-3 sm:-left-6 w-[118px] sm:w-[136px]">
+        <div className="rounded-[22px] border border-white/12 bg-[#070C1A] p-1.5 pt-3
+                        shadow-[0_28px_60px_-20px_rgba(2,8,30,0.85)]">
+          <span aria-hidden className="absolute top-1.5 left-1/2 -translate-x-1/2 w-9 h-1 rounded-full bg-white/15" />
+          <div className="rounded-[16px] bg-gradient-to-b from-[#0B1226] to-[#060A16] p-2 h-[168px] sm:h-[188px] overflow-hidden">
+            <AnimatePresence mode="wait">
+              {step < 2 ? (
+                <motion.div
+                  key="picking"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <p className="text-[7.5px] font-bold uppercase tracking-wider text-blue-200/60 mb-1.5">
+                    {demo.calendar}
+                  </p>
+                  <div className="grid grid-cols-7 gap-[3px] mb-2.5" aria-hidden>
+                    {Array.from({ length: 14 }).map((_, i) => {
+                      const on = i >= 5 && i <= 8;
+                      return (
+                        <motion.span
+                          key={i}
+                          animate={{ backgroundColor: on ? "rgba(37,99,235,0.9)" : "rgba(255,255,255,0.06)" }}
+                          transition={{ duration: 0.25, delay: animate && on ? (i - 5) * 0.09 : 0 }}
+                          className="h-[13px] rounded-[3px]"
+                        />
+                      );
+                    })}
+                  </div>
+                  <motion.div
+                    animate={{ backgroundColor: arrived ? "rgba(255,255,255,0.08)" : "rgba(37,99,235,0.95)" }}
+                    className="h-6 rounded-lg flex items-center justify-center text-[7.5px] font-bold text-white px-1 text-center leading-tight"
+                  >
+                    {arrived ? demo.newRequest : demo.car}
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="confirmed"
+                  initial={{ opacity: 0, y: -22 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="rounded-xl border border-emerald-500/40 bg-emerald-500/[.08] p-2.5"
+                >
+                  <span className="w-7 h-7 rounded-lg flex items-center justify-center mb-2
+                                   bg-emerald-500/15 border border-emerald-500/40 text-emerald-400">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                  <p className="text-[8.5px] font-bold text-white/90 leading-tight mb-1">{ui.phoneTitle}</p>
+                  <p className="text-[7.5px] text-white/45 leading-snug">{demo.car} · {ui.dates}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
-
-      {/* upit koji stigne vlasniku */}
-      <motion.div
-        animate={{
-          opacity: requested ? 1 : 0,
-          y: requested ? 0 : 14,
-          scale: requested ? 1 : 0.97,
-        }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-        className="absolute -bottom-6 right-0 sm:-right-6 w-[248px] max-w-[calc(100%-1rem)] rounded-2xl p-3.5
-                   border border-brand-500/30 bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]
-                   shadow-[0_20px_45px_-12px_rgba(2,8,30,0.7)]"
-      >
-        <div className="flex items-center gap-2 mb-2">
-          <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
-                           bg-green-500/12 border border-green-500/35 text-green-400">
-            <BellRing size={13} />
-          </span>
-          <span className="text-[10.5px] font-bold uppercase tracking-wider text-green-400">
-            {labels.newRequest}
-          </span>
-        </div>
-        <p className="text-[12px] text-[var(--text)] font-semibold leading-snug mb-3">{labels.requestBody}</p>
-
-        <div className="flex gap-2">
-          <motion.span
-            animate={{
-              backgroundColor: confirmed ? "rgba(34,197,94,0.9)" : "rgba(37,99,235,0.9)",
-            }}
-            transition={{ duration: 0.3 }}
-            className="flex-1 h-7 rounded-lg flex items-center justify-center gap-1.5 text-[11px] font-bold text-white"
-          >
-            {confirmed ? <><Check size={11} strokeWidth={3} /> {labels.confirmed}</> : labels.confirm}
-          </motion.span>
-          <span className="w-16 h-7 rounded-lg flex items-center justify-center text-[11px] font-semibold
-                           text-[var(--text-muted)] border border-[var(--border)]">
-            {labels.decline}
-          </span>
-        </div>
-      </motion.div>
     </div>
   );
 }
@@ -241,40 +287,41 @@ function Hero({ c, calm }: { c: typeof COPY.bs; calm: boolean }) {
   const d = c.hero;
 
   return (
-    <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
+    <section className="relative pt-32 pb-28 lg:pt-40 lg:pb-36 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-[1fr_1.05fr] gap-16 lg:gap-14 items-center">
 
-          {/* ── lijevo: poruka ── */}
+          {/* ── lijevo ── */}
           <motion.div variants={staggerContainer} {...reveal} className="text-center lg:text-left">
             <motion.div variants={fadeUp} className="flex justify-center lg:justify-start mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
                                border border-brand-600/30 bg-brand-600/10
                                text-brand-300 text-xs font-semibold tracking-wider uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" aria-hidden />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
                 {d.eyebrow}
               </span>
             </motion.div>
 
             <motion.h1 variants={fadeUp}
-              className="text-[38px] leading-[1.06] sm:text-5xl lg:text-[56px] font-extrabold tracking-tight text-[var(--text)]">
+              className="text-[38px] leading-[1.06] sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-[var(--text)]">
               {d.h1a}{" "}
               <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
             </motion.h1>
 
             <motion.p variants={fadeUp}
-              className="mt-6 max-w-xl mx-auto lg:mx-0 text-[15.5px] sm:text-[17px] text-[var(--text-muted)] leading-relaxed">
+              className="mt-6 max-w-lg mx-auto lg:mx-0 text-[15.5px] sm:text-[17px] text-[var(--text-muted)] leading-relaxed">
               {d.sub}
             </motion.p>
 
             <motion.div variants={fadeUp}
               className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3">
               <a href="#upit"
-                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                             bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
                             shadow-xl shadow-brand-600/30
                             transition-[box-shadow,transform] duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
-                {d.ctaPrimary} <ArrowRight size={16} />
+                {d.ctaPrimary}
+                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </a>
               <a href="#paketi"
                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
@@ -286,20 +333,20 @@ function Hero({ c, calm }: { c: typeof COPY.bs; calm: boolean }) {
             </motion.div>
 
             <motion.ul variants={fadeUp} className="mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-              {d.points.map((p) => (
+              {d.points.map((p, i) => (
                 <li key={p}
                     className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
                                text-[var(--text)] bg-[color-mix(in_srgb,var(--surface)_80%,transparent)]
                                border border-[var(--border)]">
-                  <Check size={12} strokeWidth={3} className="text-brand-400" /> {p}
+                  <Check size={12} strokeWidth={3} className={i === 0 ? "text-emerald-400" : "text-brand-400"} /> {p}
                 </li>
               ))}
             </motion.ul>
           </motion.div>
 
-          {/* ── desno: živi prikaz ── */}
-          <motion.div variants={slideInRight} {...revealR} className="lg:pl-4">
-            <BookingDemo calm={calm} labels={d.demo} />
+          {/* ── desno: uređaji ── */}
+          <motion.div variants={slideInRight} {...revealR} className="lg:pl-6">
+            <DeviceShowcase c={c} animate={!calm} />
           </motion.div>
         </div>
       </div>

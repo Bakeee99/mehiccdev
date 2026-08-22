@@ -1,42 +1,56 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Fotografije tima, usklađen kadar
+  mehiccdev — HERO v3: laptop i telefon, jedan sistem u dva ekrana
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  public/team/nedim.jpg    NOVA
-  public/team/bakir.jpg    (ista kao u prošlom ZIP-u, radi kompletnosti)
+ŠTA JE U ZIP-u (1 fajl):
+  components/rjesenja/RentACarSections.tsx
 
-Raspakuj u KORIJEN projekta i potvrdi zamjenu. Kod se NE mijenja.
+════════ IDEJA ════════
+Ranije je hero pokazivao jedan prozor s kalendarom, pa je izgledao
+kao "još jedan sajt". Sada stoje DVA UREĐAJA koja pričaju istu
+priču, jer to je i suština proizvoda: gost je na telefonu, vlasnik
+je na računaru, a sistem ih spaja.
 
-════════ KAKO SU USKLAĐENE ════════
-Original Nedimove slike je mnogo širi kadar (sjedi za stolom, vidi
-se cijela gornja polovina tijela), dok je tvoja slika portret iz
-blizine. Da izgledaju kao par, mjerio sam kadar prema tvojoj slici i
-prišao bliže:
+  LAPTOP    admin panel s flotom; u njemu iskoči novi upit
+  TELEFON   ekran gosta, naslonjen na donji lijevi ugao laptopa
 
-  • GLAVA zauzima oko polovinu visine kadra, isto kao kod tebe
-  • TJEME je na otprilike 9 posto od gornje ivice, isto kao kod tebe
-  • LICE je horizontalno u sredini kvadrata
-  • kvadratni izrez 800 x 800, jer je okvir u sekciji kvadrat
+Odvija se u tri takta, u krug:
+  1. Na telefonu se pale datumi, gost bira termin
+  2. U panelu na laptopu iskoči red "VW Golf 8 · Amir H.", oznaka
+     "Na čekanju" pulsira jantarno, a i tačkica u traci prozora
+  3. Red i dugme postaju zeleni "Odobreno", a na telefon padne
+     potvrda sa zelenom kvačicom
 
-Rezultat: obje slike imaju istu "udaljenost" i istu visinu lica, pa
-u sekciji stoje ravnomjerno jedna pored druge.
+════════ BOJE ════════
+Tražio si da se razbije dubina plave, pa je uvedena logika boja:
+  plava    sistem i radnje
+  jantar   nešto čeka vas
+  zelena   gotovo, potvrđeno
+Ispod telefona stoji tihi tirkizni sjaj, nasuprot plavom sjaju gore
+desno, pa kadar ima dvije temperature umjesto jedne.
 
-Razlike koje ostaju, a ne mogu se popraviti izrezom: tvoja pozadina
-je tamnija siva, njegova svjetlija, i on ima ruke u kadru dok je kod
-tebe samo rame. Na veličini od 176 piksela to se jedva primijeti.
-Ako ti kasnije zasmeta, najčistije rješenje je da se obje slike
-snime u istom stilu, ili da im damo blagi tamni preliv u kodu, pa da
-pozadine budu bliže. Reci ako želiš to drugo, radi se za par minuta.
+Ista logika je i u pilulama ispod dugmadi: prva kvačica je zelena,
+ostale plave.
 
-  • optimizovan JPEG, oko 95 KB, progresivno učitavanje
-  • Next.js će je usput dodatno smanjiti pri prikazu
+════════ ČISTOĆA ════════
+Namjerno nema previše elemenata: tri reda flote u pozadini su
+prigušena, telefon prikazuje samo ono što je u tom trenutku bitno,
+a laptop ima samo naznaku postolja umjesto crtanog okvira.
+
+════════ TEHNIČKI ════════
+  • nema novih tekstova: koristi postojeće rječnike (hero.demo i
+    howItWorks.ui), pa oba jezika rade odmah
+  • animira se samo pomak, prozirnost i boja; nigdje zamućenja
+  • na mobitelu telefon je uži i naslonjen uz ivicu, bez prelijevanja
+  • uz "reduced motion" prikaz stoji na zadnjem taktu, sve se vidi
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "chore: nove fotografije tima, uskladjen kadar"
+  git commit -m "feat: novi hero sa laptopom i telefonom"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "chore: nove fotografije tima, uskladjen kadar" ; git push
+  git add . ; git commit -m "feat: novi hero sa laptopom i telefonom" ; git push
+
+Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
