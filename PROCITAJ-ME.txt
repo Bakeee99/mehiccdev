@@ -1,38 +1,42 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — NOVA SLIKA za sekciju "O nama"
+  mehiccdev — Fotografije tima, usklađen kadar
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  public/team/bakir.jpg
+ŠTA JE U ZIP-u (2 fajla):
+  public/team/nedim.jpg    NOVA
+  public/team/bakir.jpg    (ista kao u prošlom ZIP-u, radi kompletnosti)
 
-Raspakuj u KORIJEN projekta i potvrdi zamjenu postojećeg fajla.
-Kod se NE mijenja, putanja je ista kao i do sada.
+Raspakuj u KORIJEN projekta i potvrdi zamjenu. Kod se NE mijenja.
 
-════════ ŠTA JE URAĐENO SA SLIKOM ════════
-  • Kvadratni izrez, jer je okvir u sekciji "O nama" kvadrat.
-    Kadar je pomjeren malo naniže od vrha, tako da glava ima zraka
-    iznad sebe, a ramena ulaze u donji dio, pa lice sjeda u sredinu
-    okvira umjesto da bude priljubljeno uz gornju ivicu.
-  • Veličina 800 x 800 piksela. Okvir je 176 piksela, pa je ovo
-    dovoljno i za ekrane s dvostrukom gustinom, bez suvišne težine.
-  • Optimizovan JPEG, 49 KB. Za poređenje, ranije slike u portfoliju
-    su bile i po 2 MB.
-  • Progresivno učitavanje, pa se slika pojavljuje postepeno na
-    sporijim vezama umjesto da iskoči odjednom.
+════════ KAKO SU USKLAĐENE ════════
+Original Nedimove slike je mnogo širi kadar (sjedi za stolom, vidi
+se cijela gornja polovina tijela), dok je tvoja slika portret iz
+blizine. Da izgledaju kao par, mjerio sam kadar prema tvojoj slici i
+prišao bliže:
 
-Next.js će je usput dodatno smanjiti i pretvoriti u moderni format
-prilikom prikaza, jer smo slike prebacili na next/image.
+  • GLAVA zauzima oko polovinu visine kadra, isto kao kod tebe
+  • TJEME je na otprilike 9 posto od gornje ivice, isto kao kod tebe
+  • LICE je horizontalno u sredini kvadrata
+  • kvadratni izrez 800 x 800, jer je okvir u sekciji kvadrat
 
-════════ PROVJERA POSLIJE UBACIVANJA ════════
-Otvori naslovnicu i sekciju "O nama". Ako ti se učini da je kadar
-previsok ili prenizak, javi pa pomjerim izrez za par procenata,
-imam original.
+Rezultat: obje slike imaju istu "udaljenost" i istu visinu lica, pa
+u sekciji stoje ravnomjerno jedna pored druge.
+
+Razlike koje ostaju, a ne mogu se popraviti izrezom: tvoja pozadina
+je tamnija siva, njegova svjetlija, i on ima ruke u kadru dok je kod
+tebe samo rame. Na veličini od 176 piksela to se jedva primijeti.
+Ako ti kasnije zasmeta, najčistije rješenje je da se obje slike
+snime u istom stilu, ili da im damo blagi tamni preliv u kodu, pa da
+pozadine budu bliže. Reci ako želiš to drugo, radi se za par minuta.
+
+  • optimizovan JPEG, oko 95 KB, progresivno učitavanje
+  • Next.js će je usput dodatno smanjiti pri prikazu
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "chore: nova fotografija u sekciji o nama"
+  git commit -m "chore: nove fotografije tima, uskladjen kadar"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "chore: nova fotografija u sekciji o nama" ; git push
+  git add . ; git commit -m "chore: nove fotografije tima, uskladjen kadar" ; git push
 ════════════════════════════════════════════════════════════════════
