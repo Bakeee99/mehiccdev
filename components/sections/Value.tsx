@@ -48,12 +48,12 @@ const T: { bs: Content; en: Content } = {
     h: ["Zvuči kao velika investicija? ", "Nije", "."],
     sub: "Starter aplikacija razvučena na prvu godinu ispadne oko tri eura dnevno, a mjesečno održavanje manje od jedne kafe. I radi za vas non-stop.",
     cards: [
-      { label: "KOMPLETNA APLIKACIJA", lt: "od", big: "€3,20", per: "/dan", capPre: "prva godina · zatim je ", capStrong: "zauvijek vaša" },
-      { label: "MJESEČNA PODRŠKA", lt: "od", big: "€1,70", per: "/dan", capPre: "€50 mjesečno · ", capStrong: "otkažite bilo kad" },
+      { label: "KOMPLETNA APLIKACIJA", lt: "od", big: "6 KM", per: "/dan", capPre: "oko €3 · prva godina, zatim je ", capStrong: "zauvijek vaša" },
+      { label: "MJESEČNA PODRŠKA", lt: "od", big: "3,30 KM", per: "/dan", capPre: "100 KM (oko €50) mjesečno · ", capStrong: "otkažite bilo kad" },
     ],
     coffee: "održavanje košta manje od jedne kafe dnevno",
     chips: ["Dizajn po mjeri", "Aplikacija je vaša", "3 mjeseca podrške", "Hosting i domena podešeni", "Izmjene bez developera"],
-    note: "Računica za Starter paket (€550 + €50/mj podrška, koja je opciona). Hosting se plaća zasebno po potrošnji. Business i Premium paketi su u cjenovniku iznad.",
+    note: "Računica za Starter paket (1.000 KM, oko €500, plus 100 KM mjesečno za podršku, koja je opciona). Hosting se plaća zasebno po potrošnji. Business i Premium paketi su u cjenovniku iznad.",
     trHead: "Od haosa do potpune kontrole",
     pairs: [
       { b: "Excel tabele i ručne bilješke", a: "Sve na jednom mjestu" },
@@ -71,12 +71,12 @@ const T: { bs: Content; en: Content } = {
     h: ["Sounds like a big investment? ", "It isn't", "."],
     sub: "Spread over the first year, a Starter app comes to about three euros a day, and monthly support costs less than a coffee. And it works for you non-stop.",
     cards: [
-      { label: "COMPLETE APP", lt: "from", big: "€3.20", per: "/day", capPre: "first year · then it's ", capStrong: "yours forever" },
-      { label: "MONTHLY SUPPORT", lt: "from", big: "€1.70", per: "/day", capPre: "€50 monthly · ", capStrong: "cancel anytime" },
+      { label: "COMPLETE APP", lt: "from", big: "€3", per: "/day", capPre: "about 6 KM · first year, then it's ", capStrong: "yours forever" },
+      { label: "MONTHLY SUPPORT", lt: "from", big: "€1.65", per: "/day", capPre: "€50 (about 100 KM) monthly · ", capStrong: "cancel anytime" },
     ],
     coffee: "support costs less than one coffee a day",
     chips: ["Design made for you", "The app is yours", "3 months of support", "Hosting and domain set up", "Edits without a developer"],
-    note: "Based on the Starter package (€550 + €50/mo optional support). Hosting is billed separately based on usage. Business and Premium packages are in the pricing above.",
+    note: "Based on the Starter package (€500 plus €50 a month for optional support). Hosting is billed separately based on usage. Business and Premium packages are in the pricing above.",
     trHead: "From chaos to full control",
     pairs: [
       { b: "Spreadsheets and manual notes", a: "Everything automated" },

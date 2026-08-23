@@ -58,7 +58,7 @@ const T = {
       "You get the alert instantly, even at night",
       "Double bookings cannot happen",
     ],
-    priceTag: "Packages from €770",
+    priceTag: "Packages from €750",
     cta: "See the system and pricing",
     ctaSub: "Pricing, packages and a real example",
     frames: [

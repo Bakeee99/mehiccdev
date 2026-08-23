@@ -1,56 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — HERO v3: laptop i telefon, jedan sistem u dva ekrana
+  mehiccdev — ZAOKRUŽENE CIJENE u obje valute
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/rjesenja/RentACarSections.tsx
+ŠTA JE U ZIP-u (4 fajla):
+  components/sections/Pricing.tsx
+  components/sections/Value.tsx
+  components/sections/RentACarPromo.tsx
+  components/rjesenja/rentACarCopy.ts
 
-════════ IDEJA ════════
-Ranije je hero pokazivao jedan prozor s kalendarom, pa je izgledao
-kao "još jedan sajt". Sada stoje DVA UREĐAJA koja pričaju istu
-priču, jer to je i suština proizvoda: gost je na telefonu, vlasnik
-je na računaru, a sistem ih spaja.
+════════ NASLOVNICA ════════
+  Starter               1.000 KM   (oko €500)
+  Business              3.000 KM   (oko €1.500)
+      precrtano         4.800 KM   (oko €2.400), oznaka -38%
+  Premium            od 5.000 KM   (oko €2.500)
 
-  LAPTOP    admin panel s flotom; u njemu iskoči novi upit
-  TELEFON   ekran gosta, naslonjen na donji lijevi ugao laptopa
+  Marketing Start          60 KM/mj   (oko €30)
+  Marketing Rast          150 KM/mj   (oko €75)
+  Marketing Dominacija    250 KM/mj   (oko €125)
 
-Odvija se u tri takta, u krug:
-  1. Na telefonu se pale datumi, gost bira termin
-  2. U panelu na laptopu iskoči red "VW Golf 8 · Amir H.", oznaka
-     "Na čekanju" pulsira jantarno, a i tačkica u traci prozora
-  3. Red i dugme postaju zeleni "Odobreno", a na telefon padne
-     potvrda sa zelenom kvačicom
+  Mjesečna podrška        100 KM/mj   (oko €50)
+  Bez pretplate            50 KM/h    (oko €25)
 
-════════ BOJE ════════
-Tražio si da se razbije dubina plave, pa je uvedena logika boja:
-  plava    sistem i radnje
-  jantar   nešto čeka vas
-  zelena   gotovo, potvrđeno
-Ispod telefona stoji tihi tirkizni sjaj, nasuprot plavom sjaju gore
-desno, pa kadar ima dvije temperature umjesto jedne.
+  Value računica: 6 KM dnevno prve godine, 3,30 KM dnevno podrška
 
-Ista logika je i u pilulama ispod dugmadi: prva kvačica je zelena,
-ostale plave.
+════════ RENT-A-CAR STRANICA ════════
+  Start      1.500 KM   (oko €750)     oko 4 KM dnevno
+  Pro        3.000 KM   (oko €1.500)   oko 8 KM dnevno
+  Premium    4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
 
-════════ ČISTOĆA ════════
-Namjerno nema previše elemenata: tri reda flote u pozadini su
-prigušena, telefon prikazuje samo ono što je u tom trenutku bitno,
-a laptop ima samo naznaku postolja umjesto crtanog okvira.
+  Podrška     100 KM/mj  ·  bez pretplate 50 KM/h
+  Bonus uz Pro i Premium: 3 mjeseca podrške, vrijednost 300 KM
+  Usporedba u tekstu: 8 sati po satnici bi bilo 400 KM
 
-════════ TEHNIČKI ════════
-  • nema novih tekstova: koristi postojeće rječnike (hero.demo i
-    howItWorks.ui), pa oba jezika rade odmah
-  • animira se samo pomak, prozirnost i boja; nigdje zamućenja
-  • na mobitelu telefon je uži i naslonjen uz ivicu, bez prelijevanja
-  • uz "reduced motion" prikaz stoji na zadnjem taktu, sve se vidi
+════════ ŠTA SE USPUT POPRAVILO ════════
+Pro paket na rent-a-car stranici i Business na naslovnici sada su
+ISTA cifra, 3.000 KM. Ranije su se razlikovale za stotinu maraka, pa
+je klijent koji otvori obje stranice mogao pomisliti da negdje ima
+kvaka. Sada je priča ista bez obzira odakle dođe.
+
+Sve cifre su okrugle i u markama i u eurima, pa se lako izgovaraju
+na sastanku i lako pamte poslije njega.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: novi hero sa laptopom i telefonom"
+  git commit -m "feat: zaokruzene cijene u obje valute"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: novi hero sa laptopom i telefonom" ; git push
+  git add . ; git commit -m "feat: zaokruzene cijene u obje valute" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

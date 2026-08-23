@@ -24,13 +24,13 @@ import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type AppPlan = { name: string; tag: string; price: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
-type MktPlan = { name: string; tag: string; price: string; note: string; features: string[] };
+type AppPlan = { name: string; tag: string; price: string; alt?: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
+type MktPlan = { alt?: string; name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
   buildLabel: string; once: string; monthlyLabel: string; monthlySub: string;
   afterHeading: string; afterSub: string;
-  afterBoxes: { label: string; price: string; per: string; sub: string }[];
+  afterBoxes: { label: string; price: string; alt?: string; per: string; sub: string }[];
   hostingNote: string;
   rcBanner: { eyebrow: string; title: string; desc: string; cta: string };
   perMonth: string; from: string; popular: string;
@@ -53,8 +53,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterHeading: "Nakon isporuke",
     afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
     afterBoxes: [
-      { label: "Mjesečna podrška", price: "€50", per: "/mj", sub: "do 8 sati mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
-      { label: "Bez pretplate", price: "€25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
+      { label: "Mjesečna podrška", price: "100 KM", alt: "oko €50", per: "/mj", sub: "do 8 sati mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
+      { label: "Bez pretplate", price: "50 KM", alt: "oko €25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
     ],
     hostingNote: "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine sajtova je to vrlo mali iznos.",
     rcBanner: {
@@ -74,7 +74,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "Jedan alat koji rješava jedan problem, npr. evidencija ili jednostavan katalog.",
-        price: "550", monthly: "50", gift: "Start",
+        price: "1.000 KM", alt: "oko €500", monthly: "50", gift: "Start",
         features: [
           "Jedna glavna funkcija (npr. katalog vozila ili evidencija klijenata)",
           "Vi i vaš tim se prijavljujete lozinkom",
@@ -86,7 +86,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "1.480", kmNote: "oko 2.900 KM", oldPrice: "2.400", discountBadge: "-38%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
+        price: "3.000 KM", alt: "oko €1.500", oldPrice: "4.800 KM", discountBadge: "-38%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -101,7 +101,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "Aplikacija bez ograničenja, kreirana tačno oko vašeg procesa.",
-        price: "2.400", monthly: "100", from: true, gift: "Dominacija",
+        price: "5.000 KM", alt: "oko €2.500", monthly: "100", from: true, gift: "Dominacija",
         features: [
           "SVE iz Business paketa, plus:",
           "Neograničeni dijelovi i funkcije po vašoj želji",
@@ -121,15 +121,15 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       "Marketing paketi su opcionalni. Budžet koji ide direktno Meti/Google-u za reklame plaća se zasebno.",
     mkt: [
       {
-        name: "Start", tag: "Osnovno prisustvo da vas ljudi nađu.", price: "30", note: "bez ugovorne obaveze",
+        name: "Start", tag: "Osnovno prisustvo da vas ljudi nađu.", price: "60 KM", alt: "oko €30", note: "bez ugovorne obaveze",
         features: ["1 platforma (Instagram ili Facebook)", "8 objava mjesečno", "Postavka Google Business profila", "Osnovni mjesečni izvještaj"],
       },
       {
-        name: "Rast", tag: "Aktivan rast i prve reklame koje donose upite.", price: "75", note: "budžet za reklame zaseban",
+        name: "Rast", tag: "Aktivan rast i prve reklame koje donose upite.", price: "150 KM", alt: "oko €75", note: "budžet za reklame zaseban",
         features: ["2 platforme (Instagram + Facebook)", "16 objava + Stories / Reels", "1 aktivna reklamna kampanja", "Mjesečna content strategija", "Analytics + mjesečni izvještaj"],
       },
       {
-        name: "Dominacija", tag: "Pun nastup: dominacija u vašem gradu.", price: "125", note: "budžet za reklame zaseban",
+        name: "Dominacija", tag: "Pun nastup: dominacija u vašem gradu.", price: "250 KM", alt: "oko €125", note: "budžet za reklame zaseban",
         features: ["SVE iz paketa Rast, plus:", "Pun content kalendar (do 30 objava)", "Više reklamnih kampanja (Meta + Google)", "Reels produkcija + community management", "Strateški pozivi + prioritetna podrška"],
       },
     ],
@@ -147,8 +147,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterHeading: "After launch",
     afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional.",
     afterBoxes: [
-      { label: "Monthly support", price: "€50", per: "/mo", sub: "up to 8 hours a month for changes, upgrades and help · priority response" },
-      { label: "No subscription", price: "€25", per: "/h", sub: "you pay only when you need something, for the time spent" },
+      { label: "Monthly support", price: "€50", alt: "about 100 KM", per: "/mo", sub: "up to 8 hours a month for changes, upgrades and help · priority response" },
+      { label: "No subscription", price: "€25", alt: "about 50 KM", per: "/h", sub: "you pay only when you need something, for the time spent" },
     ],
     hostingNote: "Hosting is billed separately based on actual usage, and for most sites it is a very small amount.",
     rcBanner: {
@@ -168,7 +168,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "One tool that solves one problem, e.g. records or a simple catalog.",
-        price: "550", monthly: "50", gift: "Start",
+        price: "€500", alt: "about 1,000 KM", monthly: "50", gift: "Start",
         features: [
           "One main feature (e.g. vehicle catalog or client records)",
           "You and your team log in with a password",
@@ -180,7 +180,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "1,480", kmNote: "about 2,900 KM", oldPrice: "2,400", discountBadge: "-38%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "€1,500", alt: "about 3,000 KM", oldPrice: "€2,400", discountBadge: "-38%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "3 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
@@ -195,7 +195,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "An app without limits, built exactly around your process.",
-        price: "2,400", monthly: "100", from: true, gift: "Domination",
+        price: "€2,500", alt: "about 5,000 KM", monthly: "100", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
@@ -215,15 +215,15 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       "Marketing packages are optional. The budget that goes directly to Meta/Google for ads is paid separately.",
     mkt: [
       {
-        name: "Start", tag: "Basic presence so people can find you.", price: "30", note: "no contract commitment",
+        name: "Start", tag: "Basic presence so people can find you.", price: "€30", alt: "about 60 KM", note: "no contract commitment",
         features: ["1 platform (Instagram or Facebook)", "8 posts per month", "Google Business profile setup", "Basic monthly report"],
       },
       {
-        name: "Growth", tag: "Active growth and first ads that bring inquiries.", price: "75", note: "ad budget separate",
+        name: "Growth", tag: "Active growth and first ads that bring inquiries.", price: "€75", alt: "about 150 KM", note: "ad budget separate",
         features: ["2 platforms (Instagram + Facebook)", "16 posts + Stories / Reels", "1 active ad campaign", "Monthly content strategy", "Analytics + monthly report"],
       },
       {
-        name: "Domination", tag: "Full presence: dominate your city.", price: "125", note: "ad budget separate",
+        name: "Domination", tag: "Full presence: dominate your city.", price: "€125", alt: "about 250 KM", note: "ad budget separate",
         features: ["EVERYTHING in Growth, plus:", "Full content calendar (up to 30 posts)", "Multiple ad campaigns (Meta + Google)", "Reels production + community management", "Strategy calls + priority support"],
       },
     ],
@@ -330,16 +330,16 @@ export function Pricing() {
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)] mb-1">{d.buildLabel}</p>
                 <div className="flex items-baseline gap-2 mb-1 flex-wrap">
                   {plan.from && <span className="text-base font-semibold text-[var(--text-muted)]">{d.from}</span>}
-                  <span className="text-4xl font-extrabold text-[var(--text)]">€{plan.price}</span>
+                  <span className="text-4xl font-extrabold text-[var(--text)]">{plan.price}</span>
                   {plan.oldPrice && (
                     <span className="text-lg font-bold text-[var(--text-muted)] line-through decoration-red-500/60 decoration-2">
-                      €{plan.oldPrice}
+                      {plan.oldPrice}
                     </span>
                   )}
 
                 </div>
                 <p className="text-xs text-[var(--text-muted)] mb-2">
-                  {d.once}{plan.kmNote ? ` · ${plan.kmNote}` : ""}
+                  {d.once}{plan.alt ? ` · ${plan.alt}` : ""}
                 </p>
                 {plan.promoNote && (
                   <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30
@@ -405,6 +405,7 @@ export function Pricing() {
                 <p className="text-2xl font-extrabold text-[var(--text)]">
                   {b.price}<span className="text-sm font-semibold text-[var(--text-muted)]">{b.per}</span>
                 </p>
+                {b.alt && <p className="text-[11px] text-[var(--text-muted)] mt-0.5">{b.alt}</p>}
                 <p className="text-[11px] text-[var(--text-muted)] mt-1">{b.sub}</p>
               </div>
             ))}
@@ -510,9 +511,10 @@ export function Pricing() {
                 <p className="text-sm text-[var(--text-muted)] mb-5 min-h-[40px] leading-relaxed">{plan.tag}</p>
 
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-extrabold text-[var(--text)]">€{plan.price}</span>
+                  <span className="text-4xl font-extrabold text-[var(--text)]">{plan.price}</span>
                   <span className="text-sm text-[var(--text-muted)] font-medium">{d.perMonth}</span>
                 </div>
+                {plan.alt && <p className="text-[11.5px] text-[var(--text-muted)] -mt-0.5 mb-1">{plan.alt}</p>}
                 <p className="text-xs text-[var(--text-muted)] mb-5">{plan.note}</p>
 
                 <ul className="flex flex-col gap-2.5 mb-6 flex-1">
