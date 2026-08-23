@@ -1,53 +1,37 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — ZAOKRUŽENE CIJENE u obje valute
+  mehiccdev — Pro paket spušten na 2.600 KM
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla):
-  components/sections/Pricing.tsx
-  components/sections/Value.tsx
-  components/sections/RentACarPromo.tsx
+ŠTA JE U ZIP-u (1 fajl):
   components/rjesenja/rentACarCopy.ts
 
-════════ NASLOVNICA ════════
-  Starter               1.000 KM   (oko €500)
-  Business              3.000 KM   (oko €1.500)
-      precrtano         4.800 KM   (oko €2.400), oznaka -38%
-  Premium            od 5.000 KM   (oko €2.500)
-
-  Marketing Start          60 KM/mj   (oko €30)
-  Marketing Rast          150 KM/mj   (oko €75)
-  Marketing Dominacija    250 KM/mj   (oko €125)
-
-  Mjesečna podrška        100 KM/mj   (oko €50)
-  Bez pretplate            50 KM/h    (oko €25)
-
-  Value računica: 6 KM dnevno prve godine, 3,30 KM dnevno podrška
-
-════════ RENT-A-CAR STRANICA ════════
+NOVE CIJENE RENT-A-CAR PAKETA:
   Start      1.500 KM   (oko €750)     oko 4 KM dnevno
-  Pro        3.000 KM   (oko €1.500)   oko 8 KM dnevno
+  Pro        2.600 KM   (oko €1.300)   oko 7 KM dnevno   ← promijenjeno
   Premium    4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
 
-  Podrška     100 KM/mj  ·  bez pretplate 50 KM/h
-  Bonus uz Pro i Premium: 3 mjeseca podrške, vrijednost 300 KM
-  Usporedba u tekstu: 8 sati po satnici bi bilo 400 KM
+Dnevna računica i euro iznos su preračunati, na oba jezika.
 
-════════ ŠTA SE USPUT POPRAVILO ════════
-Pro paket na rent-a-car stranici i Business na naslovnici sada su
-ISTA cifra, 3.000 KM. Ranije su se razlikovale za stotinu maraka, pa
-je klijent koji otvori obje stranice mogao pomisliti da negdje ima
-kvaka. Sada je priča ista bez obzira odakle dođe.
+════════ ⚠ JEDNA POSLJEDICA ════════
+Do sada su Pro paket (rent-a-car) i Business paket (naslovnica) bili
+ista cifra, 3.000 KM, jer je riječ o istom obimu posla. Sada je Pro
+jeftiniji za 400 KM.
 
-Sve cifre su okrugle i u markama i u eurima, pa se lako izgovaraju
-na sastanku i lako pamte poslije njega.
+To je branjivo i lako se objasni: rent-a-car sistem je gotov
+proizvod koji se prilagođava, a Business na naslovnici je gradnja od
+nule za bilo koju djelatnost. Ali ako klijent otvori obje stranice,
+razliku će vidjeti, pa je dobro da rečenicu imaš spremnu.
+
+Ako ti je draže da budu izjednačeni, javi pa spustim i Business na
+2.600 KM (oko €1.300), ili ostavljamo ovako.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: zaokruzene cijene u obje valute"
+  git commit -m "feat: pro paket 2600 KM"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: zaokruzene cijene u obje valute" ; git push
+  git add . ; git commit -m "feat: pro paket 2600 KM" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════

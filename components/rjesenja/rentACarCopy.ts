@@ -178,8 +178,8 @@ export const COPY = {
           cta: "Zatražite ponudu",
         },
         {
-          name: "Pro", size: "10 do 20 vozila", price: "3.000 KM", priceNote: "jednokratno · oko €1.500",
-          perDay: "oko 8 KM dnevno u prvoj godini",
+          name: "Pro", size: "10 do 20 vozila", price: "2.600 KM", priceNote: "jednokratno · oko €1.300",
+          perDay: "oko 7 KM dnevno u prvoj godini",
           bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost 300 KM",
           catch: "Sve mijenjate sami iz panela, bez dodatnih troškova.",
           features: ["Sve iz Start paketa", "Dvojezični sajt", "Admin panel za flotu i cijene", "Kalendar dostupnosti po vozilu", "Obavijesti o novom upitu"],
@@ -441,8 +441,8 @@ export const COPY = {
           cta: "Request a quote",
         },
         {
-          name: "Pro", size: "10 to 20 vehicles", price: "€1,500", priceNote: "one time · 3,000 KM",
-          perDay: "about €4 a day in the first year",
+          name: "Pro", size: "10 to 20 vehicles", price: "€1,300", priceNote: "one time · 2,600 KM",
+          perDay: "about €3.60 a day in the first year",
           bonus: "3 months of free support", bonusNote: "€150 value",
           catch: "You change everything yourself from the panel, at no extra cost.",
           features: ["Everything in Start", "Bilingual website", "Admin panel for fleet and pricing", "Availability calendar per vehicle", "Alerts on every new inquiry"],
