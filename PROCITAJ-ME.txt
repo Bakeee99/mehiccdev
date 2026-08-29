@@ -1,37 +1,44 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Pro paket spušten na 2.600 KM
+  mehiccdev — FINALNE CIJENE PAKETA
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/rjesenja/rentACarCopy.ts
 
-NOVE CIJENE RENT-A-CAR PAKETA:
+Napravljeno na svježem stanju s GitHuba, dakle uklapa se u ono što
+ti je trenutno na sajtu.
+
+════════ RENT-A-CAR PAKETI ════════
   Start      1.500 KM   (oko €750)     oko 4 KM dnevno
-  Pro        2.600 KM   (oko €1.300)   oko 7 KM dnevno   ← promijenjeno
+  Pro        2.900 KM   (oko €1.480)   oko 8 KM dnevno   ← promijenjeno
   Premium    4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
 
-Dnevna računica i euro iznos su preračunati, na oba jezika.
+Jedina izmjena u odnosu na sajt je Pro paket, sa 2.600 na 2.900 KM,
+plus preračunata dnevna računica i euro iznos, na oba jezika.
 
-════════ ⚠ JEDNA POSLJEDICA ════════
-Do sada su Pro paket (rent-a-car) i Business paket (naslovnica) bili
-ista cifra, 3.000 KM, jer je riječ o istom obimu posla. Sada je Pro
-jeftiniji za 400 KM.
+════════ NASLOVNICA JE VEĆ ISPRAVNA ════════
+Provjerio sam, tamo je već sve na mjestu i ne treba dirati:
+  Starter               1.000 KM   (oko €500)
+  Business              3.000 KM   (oko €1.500), precrtano 4.800 KM
+  Premium            od 5.000 KM   (oko €2.500)
+  Marketing              60 / 150 / 250 KM mjesečno
+  Podrška               100 KM/mj  ·  bez pretplate 50 KM/h
 
-To je branjivo i lako se objasni: rent-a-car sistem je gotov
-proizvod koji se prilagođava, a Business na naslovnici je gradnja od
-nule za bilo koju djelatnost. Ali ako klijent otvori obje stranice,
-razliku će vidjeti, pa je dobro da rečenicu imaš spremnu.
+════════ PREPORUKA UZ OVO ════════
+Ove cijene drži zaključane najmanje 90 dana i vrati se na njih tek
+poslije tri zatvorena klijenta. Češće mijenjanje ne šteti sajtu nego
+tvojoj sigurnosti kad izgovaraš cifru na sastanku.
 
-Ako ti je draže da budu izjednačeni, javi pa spustim i Business na
-2.600 KM (oko €1.300), ili ostavljamo ovako.
+Sljedeće podizanje: kad budeš imao tri reference i izjavu vlasnika
+Maximuma, Pro može mirno na 3.500 KM.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git add .
-  git commit -m "feat: pro paket 2600 KM"
+  git commit -m "feat: finalne cijene, pro paket 2900 KM"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: pro paket 2600 KM" ; git push
+  git add . ; git commit -m "feat: finalne cijene, pro paket 2900 KM" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
 ════════════════════════════════════════════════════════════════════
