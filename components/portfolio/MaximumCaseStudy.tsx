@@ -532,48 +532,71 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
           </div>
         </div>
 
-        {/* ══ PROZOR PREGLEDNIKA, DNO ══ */}
-        <motion.div
-          initial={{ opacity: 0, y: 44 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mt-16 lg:mt-20 rounded-3xl border border-white/10 overflow-hidden
-                     bg-[#070C1A]/90 md:backdrop-blur-xl shadow-[0_70px_140px_-45px_rgba(37,99,235,0.5)]"
-        >
-          <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[.07]">
-            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-            <span className="ml-3 px-3 py-1 rounded-md text-[11px] font-mono text-white/40 bg-white/[.04]">
-              {d.browser.url}
-            </span>
-          </div>
-
-          <div className="relative">
-            <div className="flex items-center gap-6 px-5 sm:px-8 py-3.5 border-b border-white/[.06] overflow-x-auto">
-              <span className="text-[15px] font-extrabold tracking-tight text-[#E23B3B] whitespace-nowrap">MAXIMUM</span>
-              <nav className="flex items-center gap-4 sm:gap-5">
-                {d.browser.nav.map((n) => (
-                  <span key={n} className="text-[10px] font-semibold tracking-wider text-white/45 whitespace-nowrap">{n}</span>
-                ))}
-              </nav>
-              <span className="ml-auto flex items-center gap-2 flex-shrink-0">
-                <span className="px-2 py-0.5 rounded text-[9.5px] font-bold text-white/50 border border-white/10">EUR</span>
-                <span className="px-2 py-0.5 rounded text-[9.5px] font-bold text-white/50 border border-white/10">HR</span>
+        {/* ══ DVA UREĐAJA, DNO ══════════════════════════════════════════════
+           Ranije je ovdje stajao screenshot preko cijele širine, uz nacrtanu
+           navigaciju i natpis koji su se DUPLIRALI s onim što je već na slici.
+           Sada: prozor preglednika ograničene visine (vidi se gornji dio
+           stranice, ne cijela), a preko njega telefon s mobilnom verzijom.  */}
+        <div className="relative mt-16 lg:mt-24 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-2xl border border-white/10 overflow-hidden
+                       bg-[#070C1A]/90 md:backdrop-blur-xl
+                       shadow-[0_60px_120px_-45px_rgba(37,99,235,0.5)]"
+          >
+            <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
+              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+              <span className="ml-3 px-3 py-1 rounded-md text-[11px] font-mono text-white/40 bg-white/[.04]">
+                {d.browser.url}
               </span>
             </div>
 
-            <div className="relative">
-              <Image src="/portfolio/maximum-naslovna.png" alt={d.imgAlt}
-                     width={1600} height={900} priority
-                     sizes="(max-width: 1024px) 100vw, 1100px"
-                     className="w-full h-auto object-cover object-top" />
-              <p className="absolute left-5 sm:left-8 bottom-12 text-2xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
-                {d.browser.title}
-              </p>
+            {/* visina je ograničena, pa se vidi samo vrh stranice */}
+            <div className="relative h-[240px] sm:h-[330px] lg:h-[400px] overflow-hidden">
+              <Image
+                src="/portfolio/maximum-naslovna.png"
+                alt={d.imgAlt}
+                fill priority quality={92}
+                sizes="(max-width: 1024px) 100vw, 1000px"
+                className="object-cover object-top"
+              />
+              <span aria-hidden className="absolute inset-x-0 bottom-0 h-24
+                                           bg-gradient-to-t from-[#050507] via-[#050507]/60 to-transparent" />
             </div>
-            <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050507] to-transparent" />
-          </div>
-        </motion.div>
+          </motion.div>
+
+          {/* telefon, mobilna verzija */}
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.94 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={once}
+            transition={{ duration: 0.65, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute -bottom-10 sm:-bottom-12 right-2 sm:right-8 lg:-right-4
+                       w-[132px] sm:w-[168px] lg:w-[188px]"
+          >
+            <motion.div
+              animate={calm ? undefined : { y: [0, -8, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="rounded-[26px] border border-white/12 bg-[#070C1A] p-1.5 pt-3
+                         shadow-[0_40px_80px_-25px_rgba(2,8,30,0.95)]"
+            >
+              <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/15" />
+              <div className="relative rounded-[20px] overflow-hidden aspect-[450/992] bg-[#0B1226]">
+                <Image
+                  src="/portfolio/maximum-admin-mobitel.png"
+                  alt={d.imgAlt}
+                  fill quality={92}
+                  sizes="200px"
+                  className="object-cover object-top"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+
       </div>
     </section>
   );

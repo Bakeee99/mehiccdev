@@ -1,62 +1,42 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Case study hero v3, po priloženom dizajnu
+  mehiccdev — Dno hero sekcije: prozor + telefon
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
-(sadrži i QA sekciju i bento grid iz prethodnih isporuka)
 
-════════ LIJEVA KOLONA ════════
-  • plava pilula "CASE STUDY · CAR RENTAL"
-  • naslov: "Maximum SaaS," bijelo, ostatak plavo u serif kurzivu,
-    ulazi riječ po riječ
-  • opis u sivom
-  • tri taga i dugme "Open the site" U ISTOM REDU, kao na slici
+════════ ŠTA JE BILO LOŠE ════════
+1. Screenshot je išao preko cijele širine i visine, pa je progutao
+   ekran i djelovao kao da je slika zalutala na stranicu.
+2. Naša nacrtana navigacija (MAXIMUM, POČETNA, POSLOVNO...) stajala
+   je IZNAD screenshota koji već sadrži svoju navigaciju. Isto i
+   natpis "Vaš ključ slobode" preko slike na kojoj taj natpis već
+   postoji. Duplo, i zato je izgledalo pokvareno.
 
-════════ DESNA KOLONA ════════
-  • vektorski sedan u sivo-plavom gradijentu, lagano lebdi, sa
-    svjetlosnim oreolom iza sebe
-  • četiri tanke linije povezuju kartice s automobilom; kroz njih
-    putuju svjetlosni impulsi (strokeDashoffset), svaki sa svojim
-    kašnjenjem
-  • ČETIRI STAKLENE KARTICE:
-      Obim rezervacija +18%   deset stubića koji izrastaju jedan po jedan
-      Aktivna flota 45 vozila / 0 neiskorištenih
-      Pokrivenost             mini mapa, četiri markera s pulsom
-      Provjera na serveru     isječak koda u boji
-  • DASHBOARD MOCKUP naslonjen ispod auta: sidebar, četiri pločice
-    (+18%, +10%, 45, 20) i mreža od osam vozila, sve ulazi postupno
-  • notifikacija "New request · VW Golf 8 · July 10 to 13" sa zvonom
+════════ ŠTA JE SADA ════════
+  • Prozor preglednika je uži (najviše 5xl) i OGRANIČENE VISINE
+    (240 px na telefonu, 400 px na desktopu), pa se vidi samo gornji
+    dio stranice, kao pravi isječak, a ne cijeli sajt.
+  • Nacrtana navigacija i duplirani natpis su uklonjeni. Ostaje samo
+    traka preglednika s adresom, jer ona daje kontekst.
+  • Dno slike prelazi u tamno, pa rez ne izgleda kao odsječena slika
+    nego kao da stranica nestaje u pozadini.
+  • TELEFON s mobilnom verzijom (maximum-admin-mobitel.png) naslanja
+    se na donji desni ugao prozora i lagano pluta. Time se odmah vidi
+    da sistem radi i na telefonu, što je pola priče kod rent-a-cara.
 
-════════ PROZOR PREGLEDNIKA ════════
-Traka s adresom maximum-rent.vercel.app, crveni MAXIMUM logo,
-navigacija (HOME, BUSINESS, ABOUT US, FLEET, RENTAL TERMS, CONTACT),
-birač EUR i HR, a unutra PRAVI SCREENSHOT sajta s natpisom
-"Your key to freedom" preko slike.
+════════ OŠTRINA ════════
+Obje slike idu kroz next/image s quality 92 (umjesto zadanih 75) i s
+tačnim sizes vrijednostima, pa Vercel isporučuje verziju taman za
+ekran. Telefon koristi odnos stranica 450:992, koliko i sam original,
+pa nema izobličenja.
 
-Namjerno je stavljen stvarni screenshot umjesto nacrtanih blokova:
-posjetilac na case studyju očekuje dokaz, a ne crtež.
-
-════════ ODSTUPANJA OD SPECIFIKACIJE, NAMJERNA ════════
-1. NAVBAR NIJE DIRAN. Postojeći već ima dropdown, jezički slajder i
-   akcijsku oznaku. Spec traži hrvatsku zastavicu i "new" oznaku na
-   Cjenovniku, što se kosi s onim što je uživo.
-2. Tekst je dvojezičan. Engleski su tačno rečenice iz specifikacije,
-   bosanski je prijevod, jer sajt ima prekidač jezika.
-3. Nema 3D renderа automobila, nego čist vektor. 3D model bi tražio
-   eksterni fajl i tešku biblioteku, a dobitak je nula na ovoj
-   veličini.
-
-════════ PERFORMANSE ════════
-  • staklo tek od md: naviše, kako je pravilo u projektu
-  • animira se samo pomak, prozirnost, razmjera i dužina linije
-  • uz "reduced motion" sve miruje: linije stoje, kartice ne plutaju
-  • screenshot ide kroz next/image s priority oznakom
+Uz "reduced motion" telefon ne pluta.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: hero case studyja po novom dizajnu"
+  git commit -m "feat: prozor i telefon na dnu hero sekcije"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
