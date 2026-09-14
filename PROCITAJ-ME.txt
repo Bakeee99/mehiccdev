@@ -1,56 +1,66 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Putevi do case study stranice
+  mehiccdev — Case study hero v2
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/sections/Navbar.tsx      Portfolio postaje dropdown
-  components/sections/Portfolio.tsx   dugme na Maximum kartici
-  app/sitemap.ts                      dodana ruta /maximum
+ŠTA JE U ZIP-u (1 fajl):
+  components/portfolio/MaximumCaseStudy.tsx
 
-⚠ JEDNA STVAR KOJU TREBA OBRISATI RUČNO
-  app/portfolio/maximum/    ← cijeli folder
-Ta stara ruta je duplikat iste stranice. Ja sam je obrisao kod sebe
-prije builda, ali brisanje foldera ne može doći kroz ZIP.
+Mijenja se samo hero, ostatak stranice (sticky story, bento, CTA)
+ostaje isti.
 
-════════ 1. NAVBAR ════════
-"Portfolio" više nije običan link nego padajući meni. Na hover (i na
-klik, radi tastature) otvara se panel:
+════════ ŠTA JE BILO JEFTINO ════════
+Hero je bio slika sa natpisima. Jedan mockup, nula sloja, nula
+pokreta poslije prvog fade-ina. Sve se vidjelo u prvoj sekundi i
+dalje nije imalo šta da drži pažnju.
 
-    Maximum Rent a Car
-    Rezervacioni sistem, case study
-    ─────────────────────────────
-    Sve reference →
+════════ ŠTA JE SADA ════════
+1. NASLOV SE SASTAVLJA
+   Druga linija naslova ulazi RIJEČ PO RIJEČ, s malim pomakom odozdo.
+   Traje pola sekunde, ali je razlika između "učitalo se" i "pojavilo
+   se".
 
-Prva stavka vodi na /maximum, druga na portfolio sekciju naslovnice.
-Dodavanje novog case studyja kasnije je jedan red u nizu
-PORTFOLIO_ITEMS na vrhu fajla.
+2. TRI PLUTAJUĆE KARTICE OKO MOCKUPA
+   Gore desno: "Novi upit · VW Golf 8 · 10 do 13. jula"
+   Dolje lijevo: "Odobreno · u dva klika iz panela"
+   Desno u sredini: "PageSpeed · 100 od 100"
+   Svaka ulazi sa svojim kašnjenjem i poslije lagano pluta, svaka
+   svojim ritmom, pa se nikad ne poklope.
 
-Mobilni meni: "Maximum Rent a Car" i "Portfolio" su dva zasebna reda,
-bez accordiona, jer na telefonu jedan dodatni tap samo smeta.
+3. PARALLAX NA DVIJE DUBINE
+   Mockup se pomjera sporo za mišem, plutajuće kartice skoro duplo
+   brže. Time kompozicija dobija dubinu umjesto da bude plosnata.
 
-════════ 2. PORTFOLIO SEKCIJA ════════
-Maximum kartica sada ima dugme "Pogledajte detaljnije" koje vodi na
-/maximum (EN: "See the full case study").
+4. ODSJAJ PREKO EKRANA
+   Preko screenshota povremeno prelazi tanki svjetlosni pojas, kao
+   odsjaj po staklu. Pojavi se svakih par sekundi, dovoljno rijetko
+   da ne smeta.
 
-Namjerno je POSTAVLJENO PRVO, a dugme "Pogledaj uživo" je prešlo u
-sporedni stil s obrubom. Razlog: case study vodi dublje u tvoj sajt,
-dok "uživo" šalje posjetioca na klijentov sajt, odakle se rijetko ko
-vraća. Dva puna plava dugmeta jedno do drugog bi se i takmičila.
+5. BROJKE SE ODBROJAVAJU
+   Četiri brojke ispod mockupa broje od nule do svoje vrijednosti
+   kad uđu u vidno polje (100, 3,2 s, 0, 2). Usporavaju pred kraj,
+   pa djeluju kao mjerenje a ne kao animacija.
 
-Slika u kartici i dalje radi uvećanje na klik, pa te dvije radnje
-ostaju odvojene i jasne.
+6. POZADINA
+   Tanka mreža koja blijedi prema rubovima, plavo svjetlo odozgo i
+   tirkizno s lijeve strane, pa kadar ima dvije temperature.
 
-════════ 3. SITEMAP ════════
-Ruta /maximum je dodana, pa je Google može naći.
-
-Build verifikovan: npm run build ✓ (12/12 stranica)
+════════ PERFORMANSE I PRISTUPAČNOST ════════
+  • animira se samo pomak, prozirnost i razmjera, nigdje zamućenja
+  • brojači idu kroz requestAnimationFrame i staju kad završe
+  • parallax sluša miš pasivno i radi samo na desktopu
+  • uz "reduced motion" sve miruje: brojke se ispišu odmah, kartice
+    stoje, odsjaja nema
+  • plutajuće kartice su skrivene ispod 640 px, da se na telefonu ne
+    naslanjaju na mockup
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
-  git rm -r --cached app/portfolio/maximum
   git add .
-  git commit -m "feat: dropdown portfolio i dugme ka case studyju"
+  git commit -m "feat: novi hero na case study stranici"
   git push
 
-Ako si folder već obrisao iz Explorera, druga linija nije potrebna:
-  git add . ; git commit -m "feat: dropdown portfolio i dugme ka case studyju" ; git push
+Ili u jednom redu:
+  git add . ; git commit -m "feat: novi hero na case study stranici" ; git push
+
+Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
+════════════════════════════════════════════════════════════════════

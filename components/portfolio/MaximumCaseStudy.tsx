@@ -8,10 +8,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -31,11 +31,16 @@ const T = {
     meta: ["Next.js i TypeScript", "Dvojezično, HR i EN", "Uživo od 2025."],
     visit: "Otvorite sajt",
     stats: [
-      { v: "100", l: "Google ocjena performansi" },
-      { v: "3,2 s", l: "učitavanje na telefonu, ranije 21,6 s" },
-      { v: "0", l: "duplih rezervacija od lansiranja" },
-      { v: "2", l: "jezika za domaće i strane goste" },
+      { n: 100, dec: 0, suf: "", l: "Google ocjena performansi" },
+      { n: 3.2, dec: 1, suf: " s", l: "učitavanje na telefonu, ranije 21,6 s" },
+      { n: 0, dec: 0, suf: "", l: "duplih rezervacija od lansiranja" },
+      { n: 2, dec: 0, suf: "", l: "jezika za domaće i strane goste" },
     ],
+    floats: {
+      req: { t: "Novi upit", d: "VW Golf 8 · 10 do 13. jula" },
+      ok:  { t: "Odobreno", d: "u dva klika iz panela" },
+      spd: { t: "PageSpeed", d: "100 od 100" },
+    },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
     storyH2: "ne pucaju",
@@ -78,11 +83,16 @@ const T = {
     meta: ["Next.js and TypeScript", "Bilingual, HR and EN", "Live since 2025"],
     visit: "Open the site",
     stats: [
-      { v: "100", l: "Google performance score" },
-      { v: "3.2 s", l: "mobile load time, was 21.6 s" },
-      { v: "0", l: "double bookings since launch" },
-      { v: "2", l: "languages for local and foreign guests" },
+      { n: 100, dec: 0, suf: "", l: "Google performance score" },
+      { n: 3.2, dec: 1, suf: " s", l: "mobile load time, was 21.6 s" },
+      { n: 0, dec: 0, suf: "", l: "double bookings since launch" },
+      { n: 2, dec: 0, suf: "", l: "languages for local and foreign guests" },
     ],
+    floats: {
+      req: { t: "New request", d: "VW Golf 8 · July 10 to 13" },
+      ok:  { t: "Approved", d: "in two clicks from the panel" },
+      spd: { t: "PageSpeed", d: "100 out of 100" },
+    },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
     storyH2: "do not break",
@@ -121,11 +131,111 @@ const T = {
 
 const SITE = "https://maximum-rent.vercel.app";
 
-function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
+/* ── Brojka koja se odbroji kad uđe u vidno polje ─────────────────────────── */
+function Counter({ to, dec, suf }: { to: number; dec: number; suf: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [val, setVal] = useState(0);
+  const reduce = useReducedMotion() ?? false;
+
+  useEffect(() => {
+    if (!inView) return;
+    if (reduce || to === 0) { setVal(to); return; }
+    const dur = 1100;
+    const t0 = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min((t - t0) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);          // brzo krene, meko stane
+      setVal(to * eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, reduce]);
+
   return (
-    <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-28 overflow-hidden">
+    <span ref={ref}>
+      {val.toFixed(dec).replace(".", ",")}{suf}
+    </span>
+  );
+}
+
+/* ── Plutajuća kartica oko mockupa ────────────────────────────────────────── */
+function FloatCard({
+  icon, title, desc, tone, className, delay, calm,
+}: {
+  icon: React.ReactNode; title: string; desc: string;
+  tone: "blue" | "green"; className: string; delay: number; calm: boolean;
+}) {
+  const tones = {
+    blue:  "border-brand-500/35 text-brand-300",
+    green: "border-emerald-500/40 text-emerald-400",
+  } as const;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={once}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute z-20 hidden sm:block ${className}`}
+    >
+      <motion.div
+        animate={calm ? undefined : { y: [0, -9, 0] }}
+        transition={{ duration: 5.5 + delay * 2, repeat: Infinity, ease: "easeInOut", delay }}
+        className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border
+                    bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]
+                    shadow-[0_24px_50px_-14px_rgba(2,8,30,0.8)] ${tones[tone]}`}
+      >
+        <span className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 border bg-[var(--bg)] ${tones[tone]}`}>
+          {icon}
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[12px] font-extrabold text-[var(--text)] leading-tight">{title}</span>
+          <span className="block text-[10.5px] text-[var(--text-muted)] leading-tight whitespace-nowrap">{desc}</span>
+        </span>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
+  /* Parallax: slojevi se pomjeraju različitom brzinom za mišem, pa kompozicija
+     dobija dubinu. Samo desktop, samo transform. */
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 60, damping: 20, mass: 0.6 });
+  const sy = useSpring(my, { stiffness: 60, damping: 20, mass: 0.6 });
+  const deepX  = useTransform(sx, (v) => v * 18);
+  const deepY  = useTransform(sy, (v) => v * 12);
+  const frontX = useTransform(sx, (v) => v * 34);
+  const frontY = useTransform(sy, (v) => v * 22);
+
+  useEffect(() => {
+    if (calm) return;
+    const onMove = (e: MouseEvent) => {
+      mx.set((e.clientX / window.innerWidth) * 2 - 1);
+      my.set((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [calm, mx, my]);
+
+  const words = d.h1b.split(" ");
+
+  return (
+    <section className="relative pt-32 pb-28 lg:pt-40 lg:pb-32 overflow-hidden">
+      {/* pozadina: mreža koja blijedi + dva svjetla */}
+      <div aria-hidden className="absolute inset-0 pointer-events-none opacity-[0.25]
+                                  [background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]
+                                  [background-size:64px_64px]
+                                  [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)]" />
       <div aria-hidden className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[520px] pointer-events-none
-                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_72%)]" />
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)]" />
+      <div aria-hidden className="absolute top-40 -left-24 w-[420px] h-[420px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.12),transparent_72%)]" />
+
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="max-w-3xl">
           <motion.span variants={up}
@@ -136,11 +246,23 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             {d.eyebrow}
           </motion.span>
 
-          <motion.h1 variants={up}
-            className="text-[40px] leading-[1.05] sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-[var(--text)]">
-            {d.h1a}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
-          </motion.h1>
+          <h1 className="text-[40px] leading-[1.05] sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-[var(--text)]">
+            <motion.span variants={up} className="block">{d.h1a}</motion.span>
+            <span className="block">
+              {words.map((w, i) => (
+                <motion.span
+                  key={`${w}-${i}`}
+                  initial={{ opacity: 0, y: 26 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={once}
+                  transition={{ duration: 0.5, delay: 0.15 + i * 0.055, ease: [0.22, 1, 0.36, 1] }}
+                  className="inline-block text-gradient font-serif italic font-semibold tracking-normal mr-[0.28em]"
+                >
+                  {w}
+                </motion.span>
+              ))}
+            </span>
+          </h1>
 
           <motion.p variants={up} className="mt-7 max-w-2xl text-[16px] sm:text-lg text-[var(--text-muted)] leading-relaxed">
             {d.sub}
@@ -154,47 +276,79 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
               </span>
             ))}
             <a href={SITE} target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold
+               className="group inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold
                           bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/25
                           transition-transform duration-300 hover:-translate-y-0.5">
-              {d.visit} <ArrowUpRight size={13} />
+              {d.visit}
+              <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </motion.div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mt-16 lg:mt-20"
-        >
-          <motion.div
-            animate={calm ? undefined : { y: [0, -10, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="relative mx-auto max-w-4xl rounded-3xl border border-brand-500/25 bg-[#070C1A] overflow-hidden
-                       shadow-[0_60px_120px_-40px_rgba(37,99,235,0.5)]"
-          >
-            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[.07]">
-              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-              <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-              <span className="ml-3 text-[11px] text-white/35">maximum-rent.vercel.app</span>
-            </div>
-            <Image src="/portfolio/maximum-naslovna.png" alt={d.imgAlt}
-                   width={1600} height={1000} priority
-                   sizes="(max-width: 1024px) 100vw, 900px"
-                   className="w-full h-auto object-cover object-top" />
+        {/* ── kompozicija uređaja ── */}
+        <div className="relative mt-16 lg:mt-24">
+          <motion.div style={calm ? undefined : { x: deepX, y: deepY }} className="relative mx-auto max-w-4xl">
+            <motion.div
+              initial={{ opacity: 0, y: 46, rotateX: 8 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={once}
+              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              className="relative rounded-3xl border border-brand-500/25 bg-[#070C1A] overflow-hidden
+                         shadow-[0_70px_140px_-45px_rgba(37,99,235,0.55)]"
+              style={{ transformPerspective: 1400 }}
+            >
+              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[.07]">
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="ml-3 text-[11px] text-white/35">maximum-rent.vercel.app</span>
+              </div>
+              <Image src="/portfolio/maximum-naslovna.png" alt={d.imgAlt}
+                     width={1600} height={1000} priority
+                     sizes="(max-width: 1024px) 100vw, 900px"
+                     className="w-full h-auto object-cover object-top" />
+              {/* odsjaj preko ekrana */}
+              {!calm && (
+                <motion.span
+                  aria-hidden
+                  animate={{ x: ["-130%", "230%"] }}
+                  transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 5.5, ease: "easeInOut" }}
+                  className="absolute inset-y-0 w-1/4 skew-x-[-18deg] pointer-events-none
+                             bg-gradient-to-r from-transparent via-white/[0.07] to-transparent"
+                />
+              )}
+            </motion.div>
           </motion.div>
 
-          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
-            className="relative mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
-            {d.stats.map((s) => (
-              <motion.div key={s.l} variants={up}
-                className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-center">
-                <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)]">{s.v}</p>
-                <p className="text-[11px] text-[var(--text-muted)] leading-snug mt-1.5">{s.l}</p>
-              </motion.div>
-            ))}
+          {/* plutajući slojevi, brži parallax */}
+          <motion.div style={calm ? undefined : { x: frontX, y: frontY }} className="absolute inset-0 pointer-events-none">
+            <div className="relative max-w-4xl mx-auto h-full">
+              <FloatCard calm={calm} delay={0.45} tone="blue" icon={<BellRing size={15} />}
+                title={d.floats.req.t} desc={d.floats.req.d}
+                className="-top-6 -right-4 lg:-right-16" />
+              <FloatCard calm={calm} delay={0.65} tone="green" icon={<Check size={15} strokeWidth={3} />}
+                title={d.floats.ok.t} desc={d.floats.ok.d}
+                className="bottom-10 -left-4 lg:-left-16" />
+              <FloatCard calm={calm} delay={0.85} tone="green" icon={<Gauge size={15} />}
+                title={d.floats.spd.t} desc={d.floats.spd.d}
+                className="top-1/2 -right-6 lg:-right-20" />
+            </div>
           </motion.div>
+        </div>
+
+        {/* brojke */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
+          className="relative mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
+          {d.stats.map((s) => (
+            <motion.div key={s.l} variants={up}
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-center
+                         transition-[border-color] duration-300 hover:border-brand-600/35">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)]">
+                <Counter to={s.n} dec={s.dec} suf={s.suf} />
+              </p>
+              <p className="text-[11px] text-[var(--text-muted)] leading-snug mt-1.5">{s.l}</p>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>
