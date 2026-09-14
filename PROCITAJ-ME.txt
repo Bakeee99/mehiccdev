@@ -1,22 +1,56 @@
-mehiccdev — Linkovi ka case study stranici
+════════════════════════════════════════════════════════════════════
+  mehiccdev — Putevi do case study stranice
+════════════════════════════════════════════════════════════════════
 
-⚠ ZAŠTO SU OVO UPUTE, A NE GOTOVI FAJLOVI
-Klon tvog repozitorija s GitHuba mi je odbijen, izgleda da je repo
-postao privatan. Bez uvida u trenutne verzije Navbar.tsx i
-Portfolio.tsx ne mogu ti poslati gotove fajlove, jer bih pisao
-napamet i rizikovao da pregazim nešto što si u međuvremenu mijenjao.
+ŠTA JE U ZIP-u (3 fajla):
+  components/sections/Navbar.tsx      Portfolio postaje dropdown
+  components/sections/Portfolio.tsx   dugme na Maximum kartici
+  app/sitemap.ts                      dodana ruta /maximum
 
-Zato su ovdje tačni isječci s mjestom umetanja:
-  1-NAVBAR.txt      padajući meni na Portfolio stavci
-  2-PORTFOLIO.txt   dugme na Maximum kartici
+⚠ JEDNA STVAR KOJU TREBA OBRISATI RUČNO
+  app/portfolio/maximum/    ← cijeli folder
+Ta stara ruta je duplikat iste stranice. Ja sam je obrisao kod sebe
+prije builda, ali brisanje foldera ne može doći kroz ZIP.
 
-BRŽE RJEŠENJE
-Prevuci mi ovdje ta dva fajla (Navbar.tsx i Portfolio.tsx) i vratim
-ti ih gotove i provjerene, kao i do sada. Traje minut.
+════════ 1. NAVBAR ════════
+"Portfolio" više nije običan link nego padajući meni. Na hover (i na
+klik, radi tastature) otvara se panel:
 
-KOMANDE ZA KONZOLU (poslije izmjena)
+    Maximum Rent a Car
+    Rezervacioni sistem, case study
+    ─────────────────────────────
+    Sve reference →
+
+Prva stavka vodi na /maximum, druga na portfolio sekciju naslovnice.
+Dodavanje novog case studyja kasnije je jedan red u nizu
+PORTFOLIO_ITEMS na vrhu fajla.
+
+Mobilni meni: "Maximum Rent a Car" i "Portfolio" su dva zasebna reda,
+bez accordiona, jer na telefonu jedan dodatni tap samo smeta.
+
+════════ 2. PORTFOLIO SEKCIJA ════════
+Maximum kartica sada ima dugme "Pogledajte detaljnije" koje vodi na
+/maximum (EN: "See the full case study").
+
+Namjerno je POSTAVLJENO PRVO, a dugme "Pogledaj uživo" je prešlo u
+sporedni stil s obrubom. Razlog: case study vodi dublje u tvoj sajt,
+dok "uživo" šalje posjetioca na klijentov sajt, odakle se rijetko ko
+vraća. Dva puna plava dugmeta jedno do drugog bi se i takmičila.
+
+Slika u kartici i dalje radi uvećanje na klik, pa te dvije radnje
+ostaju odvojene i jasne.
+
+════════ 3. SITEMAP ════════
+Ruta /maximum je dodana, pa je Google može naći.
+
+Build verifikovan: npm run build ✓ (12/12 stranica)
+
+════════ KOMANDE ZA KONZOLU ════════
   git remote -v
-  npm run build
+  git rm -r --cached app/portfolio/maximum
   git add .
-  git commit -m "feat: linkovi ka case study stranici"
+  git commit -m "feat: dropdown portfolio i dugme ka case studyju"
   git push
+
+Ako si folder već obrisao iz Explorera, druga linija nije potrebna:
+  git add . ; git commit -m "feat: dropdown portfolio i dugme ka case studyju" ; git push

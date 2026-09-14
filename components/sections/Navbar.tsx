@@ -18,14 +18,26 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const LABELS = {
-  bs: { services: "Usluge", portfolio: "Portfolio", about: "O nama", saas: "Flagship", pricing: "Cjenovnik", contact: "Kontakt", solutions: "Rješenja" },
-  en: { services: "Services", portfolio: "Portfolio", about: "About", saas: "Flagship", pricing: "Pricing", contact: "Contact", solutions: "Solutions" },
+  bs: { services: "Usluge", portfolio: "Portfolio", about: "O nama", saas: "Flagship", pricing: "Cjenovnik", contact: "Kontakt", solutions: "Rješenja", portfolioAll: "Sve reference" },
+  en: { services: "Services", portfolio: "Portfolio", about: "About", saas: "Flagship", pricing: "Pricing", contact: "Contact", solutions: "Solutions", portfolioAll: "All references" },
 };
 
 /**
  * Rješenja (dropdown). Dodavanje novog rješenja = jedan red ovdje, ništa
  * drugo se ne mijenja. Sljedeća planirana: vikendice i rezervacija termina.
  */
+/**
+ * Radovi koji imaju svoju stranicu. Dodavanje novog case studyja je jedan
+ * red ovdje, ostalo se ne dira.
+ */
+const PORTFOLIO_ITEMS = [
+  {
+    href: "/maximum",
+    label: { bs: "Maximum Rent a Car", en: "Maximum Rent a Car" },
+    desc:  { bs: "Rezervacioni sistem, case study", en: "Booking system, case study" },
+  },
+];
+
 const SOLUTIONS = [
   {
     href: "/rjesenja/rent-a-car",
@@ -39,6 +51,7 @@ export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solOpen,    setSolOpen]    = useState(false);   // desktop dropdown
+  const [portOpen,   setPortOpen]   = useState(false);   // dropdown za portfolio
   const [solAccOpen, setSolAccOpen] = useState(false);   // mobilni accordion
   const { lang, setLang }           = useLanguage();
   const L = LABELS[(lang as "bs" | "en")] ?? LABELS.bs;
@@ -52,7 +65,6 @@ export function Navbar() {
   const NAV_LINKS = [
     { label: L.about,     href: "/#o-nama"    },
     { label: L.services,  href: "/#usluge"    },
-    { label: L.portfolio, href: "/#portfolio" },
     { label: L.pricing,   href: "/#cjenovnik", promo: true },
     { label: L.saas,      href: "/#saas"      },
   ];
@@ -124,6 +136,52 @@ export function Navbar() {
                         </span>
                       </a>
                     ))}
+                  </div>
+                </div>
+              )}
+            </li>
+
+            {/* Portfolio: dropdown s radovima koji imaju svoju stranicu */}
+            <li className="relative"
+                onMouseEnter={() => setPortOpen(true)}
+                onMouseLeave={() => setPortOpen(false)}>
+              <button
+                type="button"
+                onClick={() => setPortOpen((v) => !v)}
+                aria-expanded={portOpen}
+                aria-haspopup="true"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium
+                           text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface)]
+                           transition-colors duration-200"
+              >
+                {L.portfolio}
+                <ChevronDown size={13} className={`transition-transform duration-200 ${portOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {portOpen && (
+                <div className="absolute left-0 top-full pt-2 w-72">
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)]
+                                  lg:backdrop-blur-xl shadow-2xl shadow-black/25 p-2">
+                    {PORTFOLIO_ITEMS.map((p) => (
+                      <a key={p.href} href={p.href}
+                         onClick={() => setPortOpen(false)}
+                         className="flex flex-col gap-0.5 px-3.5 py-3 rounded-xl
+                                    transition-colors duration-200 hover:bg-[var(--surface)]">
+                        <span className="text-sm font-bold text-[var(--text)]">
+                          {p.label[(lang as "bs" | "en")] ?? p.label.bs}
+                        </span>
+                        <span className="text-[12px] text-[var(--text-muted)]">
+                          {p.desc[(lang as "bs" | "en")] ?? p.desc.bs}
+                        </span>
+                      </a>
+                    ))}
+                    <a href="/#portfolio"
+                       onClick={() => setPortOpen(false)}
+                       className="flex items-center gap-1.5 px-3.5 py-2.5 mt-1 rounded-xl text-[12.5px] font-semibold
+                                  text-[var(--text-muted)] border-t border-[var(--border)]
+                                  transition-colors duration-200 hover:text-[var(--text)]">
+                      {L.portfolioAll} <ArrowUpRight size={12} />
+                    </a>
                   </div>
                 </div>
               )}
@@ -237,6 +295,18 @@ export function Navbar() {
                   ))}
                 </div>
               )}
+
+              <a href="/maximum" onClick={() => setMobileOpen(false)}
+                 className="flex items-center justify-between text-[15px] font-semibold text-[var(--text)] py-3.5
+                            border-b border-[var(--border)]">
+                Maximum Rent a Car
+                <ArrowUpRight size={14} className="text-[var(--text-muted)]" />
+              </a>
+              <a href="/#portfolio" onClick={() => setMobileOpen(false)}
+                 className="flex items-center justify-between text-[15px] font-semibold text-[var(--text)] py-3.5
+                            border-b border-[var(--border)]">
+                {L.portfolio}
+              </a>
 
               {NAV_LINKS.map((link) => (
                 <a

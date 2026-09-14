@@ -21,7 +21,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Check, Star, ZoomIn, X } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Check, Star, ZoomIn, X } from "lucide-react";
 import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
@@ -38,7 +38,7 @@ type Content = {
   badge: string; title: string; desc: string;
   stats: { v: string; l: string }[];
   features: string[];
-  ctaLive: string; ctaWant: string; livePill: string;
+  ctaLive: string; ctaWant: string; ctaCase: string; livePill: string;
   zoomHint: string; closeLabel: string;
   minis: Mini[];
 };
@@ -65,6 +65,7 @@ const T: Record<"bs" | "en", Content> = {
       "Dvojezično HR/EN, građeno prvo za telefon",
     ],
     ctaLive: "Pogledaj uživo",
+    ctaCase: "Pogledajte detaljnije",
     ctaWant: "Želim ovakvu aplikaciju",
     livePill: "Uživo",
     zoomHint: "Klikni za uvećanje",
@@ -96,6 +97,7 @@ const T: Record<"bs" | "en", Content> = {
       "Bilingual HR/EN, built mobile-first",
     ],
     ctaLive: "See it live",
+    ctaCase: "See the full case study",
     ctaWant: "I want an app like this",
     livePill: "Live",
     zoomHint: "Click to enlarge",
@@ -350,13 +352,27 @@ export function Portfolio() {
 
               {/* CTA */}
               <div className="flex flex-wrap gap-3 mb-9">
+                {/* Case study prvi, jer vodi dublje u naš sajt; "uživo" vodi
+                   van, pa stoji drugi da posjetilac ne odleti prerano. */}
+                <a
+                  href="/maximum"
+                  className="group/case inline-flex items-center gap-2 px-5 py-3 rounded-xl
+                             bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold
+                             shadow-lg shadow-brand-600/30
+                             transition-[box-shadow,transform] duration-300
+                             hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+                >
+                  {d.ctaCase}
+                  <ArrowRight size={15} className="transition-transform duration-300 group-hover/case:translate-x-0.5" />
+                </a>
                 <a
                   href={FEATURE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700
-                             text-white text-sm font-bold shadow-lg shadow-brand-600/30
-                             transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[var(--border)]
+                             text-sm font-bold text-[var(--text)]
+                             transition-[border-color,background-color,transform] duration-300
+                             hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5"
                 >
                   {d.ctaLive} <ArrowUpRight size={15} />
                 </a>
