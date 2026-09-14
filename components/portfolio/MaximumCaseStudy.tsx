@@ -8,7 +8,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
   ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel,
@@ -40,6 +40,17 @@ const T = {
       req: { t: "Novi upit", d: "VW Golf 8 · 10 do 13. jula" },
       ok:  { t: "Odobreno", d: "u dva klika iz panela" },
       spd: { t: "PageSpeed", d: "100 od 100" },
+    },
+    cards: {
+      volume: { t: "Obim rezervacija", v: "+18%", note: "od početka godine" },
+      fleet:  { t: "Aktivna flota", v: "45", unit: "vozila", idle: "0 neiskorištenih", note: "stanje se osvježava samo" },
+      map:    { t: "Pokrivenost", note: "Mostar, Sarajevo, Neum, Čapljina" },
+      valid:  { t: "Provjera na serveru", note: "svaki upit prolazi istu provjeru" },
+    },
+    browser: {
+      url: "maximum-rent.vercel.app",
+      nav: ["POČETNA", "POSLOVNO", "O NAMA", "FLOTA", "USLOVI NAJMA", "KONTAKT"],
+      title: "Vaš ključ slobode",
     },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
@@ -125,6 +136,17 @@ const T = {
       ok:  { t: "Approved", d: "in two clicks from the panel" },
       spd: { t: "PageSpeed", d: "100 out of 100" },
     },
+    cards: {
+      volume: { t: "Booking volume", v: "+18%", note: "year to date" },
+      fleet:  { t: "Active fleet", v: "45", unit: "cars", idle: "0 idle", note: "status refreshes on its own" },
+      map:    { t: "Fleet coverage", note: "Mostar, Sarajevo, Neum, Čapljina" },
+      valid:  { t: "Server-side validation", note: "every request runs the same checks" },
+    },
+    browser: {
+      url: "maximum-rent.vercel.app",
+      nav: ["HOME", "BUSINESS", "ABOUT US", "FLEET", "RENTAL TERMS", "CONTACT"],
+      title: "Your key to freedom",
+    },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
     storyH2: "do not break",
@@ -195,231 +217,369 @@ const T = {
 
 const SITE = "https://maximum-rent.vercel.app";
 
-/* ── Brojka koja se odbroji kad uđe u vidno polje ─────────────────────────── */
-function Counter({ to, dec, suf }: { to: number; dec: number; suf: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  const [val, setVal] = useState(0);
-  const reduce = useReducedMotion() ?? false;
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduce || to === 0) { setVal(to); return; }
-    const dur = 1100;
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min((t - t0) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);          // brzo krene, meko stane
-      setVal(to * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, to, reduce]);
-
-  return (
-    <span ref={ref}>
-      {val.toFixed(dec).replace(".", ",")}{suf}
-    </span>
-  );
-}
-
-/* ── Plutajuća kartica oko mockupa ────────────────────────────────────────── */
-function FloatCard({
-  icon, title, desc, tone, className, delay, calm,
-}: {
-  icon: React.ReactNode; title: string; desc: string;
-  tone: "blue" | "green"; className: string; delay: number; calm: boolean;
-}) {
-  const tones = {
-    blue:  "border-brand-500/35 text-brand-300",
-    green: "border-emerald-500/40 text-emerald-400",
-  } as const;
-
+/* ── Zajednički okvir plutajuće kartice ───────────────────────────────────── */
+function GlassCard({
+  className = "", delay, calm, children,
+}: { className?: string; delay: number; calm: boolean; children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18, scale: 0.94 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={once}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`absolute z-20 hidden sm:block ${className}`}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute z-20 ${className}`}
     >
       <motion.div
-        animate={calm ? undefined : { y: [0, -9, 0] }}
-        transition={{ duration: 5.5 + delay * 2, repeat: Infinity, ease: "easeInOut", delay }}
-        className={`flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 border
-                    bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]
-                    shadow-[0_24px_50px_-14px_rgba(2,8,30,0.8)] ${tones[tone]}`}
+        animate={calm ? undefined : { y: [0, -8, 0] }}
+        transition={{ duration: 6 + delay * 3, repeat: Infinity, ease: "easeInOut", delay }}
+        className="rounded-2xl border border-white/10 bg-[color-mix(in_srgb,var(--surface)_88%,transparent)]
+                   md:backdrop-blur-xl p-3.5 shadow-[0_28px_60px_-18px_rgba(2,8,30,0.85)]"
       >
-        <span className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 border bg-[var(--bg)] ${tones[tone]}`}>
-          {icon}
-        </span>
-        <span className="min-w-0">
-          <span className="block text-[12px] font-extrabold text-[var(--text)] leading-tight">{title}</span>
-          <span className="block text-[10.5px] text-[var(--text-muted)] leading-tight whitespace-nowrap">{desc}</span>
-        </span>
+        {children}
       </motion.div>
     </motion.div>
   );
 }
 
+/* ── Automobil, vektorski ─────────────────────────────────────────────────── */
+function CarArt({ calm }: { calm: boolean }) {
+  return (
+    <motion.svg
+      viewBox="0 0 320 130" className="w-full max-w-[320px]" fill="none" aria-hidden
+      animate={calm ? undefined : { y: [0, -6, 0] }}
+      transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#8FB4E8" /><stop offset="55%" stopColor="#3E6FB5" /><stop offset="100%" stopColor="#1B2F52" />
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0B1226" /><stop offset="100%" stopColor="#2B4670" />
+        </linearGradient>
+      </defs>
+      {/* sjena */}
+      <ellipse cx="160" cy="118" rx="120" ry="9" fill="rgba(37,99,235,0.18)" />
+      {/* karoserija */}
+      <path d="M22 96c-6-2-10-7-10-15 0-10 5-15 14-18l22-6 26-24c6-6 14-9 23-9h76c10 0 19 4 26 11l20 22 33 7c12 3 18 9 18 19 0 8-5 13-12 13H22z"
+            fill="url(#body)" />
+      {/* stakla */}
+      <path d="M77 53l21-19c4-4 9-6 15-6h30v25H77z" fill="url(#glass)" />
+      <path d="M151 28h29c7 0 13 3 18 8l16 17h-63V28z" fill="url(#glass)" />
+      {/* linija vrata */}
+      <path d="M150 57v39" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5" />
+      {/* svjetla */}
+      <rect x="252" y="70" width="26" height="9" rx="4" fill="#DCEBFF" opacity="0.9" />
+      <rect x="26" y="72" width="18" height="8" rx="4" fill="#F05A5A" opacity="0.75" />
+      {/* točkovi */}
+      {[[85, 96], [232, 96]].map(([cx, cy]) => (
+        <g key={cx}>
+          <circle cx={cx} cy={cy} r="23" fill="#0A0F1C" />
+          <circle cx={cx} cy={cy} r="12" fill="#1E2A44" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+        </g>
+      ))}
+    </motion.svg>
+  );
+}
+
+/* ── Linije koje povezuju kartice s automobilom ───────────────────────────── */
+function ConnectLines({ calm }: { calm: boolean }) {
+  const paths = [
+    "M120 90 C 180 90, 200 140, 250 150",
+    "M250 60 C 300 60, 320 120, 330 150",
+    "M470 110 C 420 110, 400 145, 360 158",
+    "M470 210 C 420 210, 400 185, 360 172",
+  ];
+  return (
+    <svg aria-hidden className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block"
+         viewBox="0 0 600 300" preserveAspectRatio="none">
+      {paths.map((dPath, i) => (
+        <g key={i}>
+          <path d={dPath} stroke="rgba(255,255,255,0.10)" strokeWidth="1" fill="none" />
+          {!calm && (
+            <motion.path
+              d={dPath} stroke="rgba(96,165,250,0.85)" strokeWidth="1.4" fill="none"
+              strokeDasharray="10 250"
+              initial={{ strokeDashoffset: 260 }}
+              animate={{ strokeDashoffset: -10 }}
+              transition={{ duration: 3.4, repeat: Infinity, ease: "linear", delay: i * 0.85 }}
+            />
+          )}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
-  /* Parallax: slojevi se pomjeraju različitom brzinom za mišem, pa kompozicija
-     dobija dubinu. Samo desktop, samo transform. */
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 20, mass: 0.6 });
-  const sy = useSpring(my, { stiffness: 60, damping: 20, mass: 0.6 });
-  const deepX  = useTransform(sx, (v) => v * 18);
-  const deepY  = useTransform(sy, (v) => v * 12);
-  const frontX = useTransform(sx, (v) => v * 34);
-  const frontY = useTransform(sy, (v) => v * 22);
-
-  useEffect(() => {
-    if (calm) return;
-    const onMove = (e: MouseEvent) => {
-      mx.set((e.clientX / window.innerWidth) * 2 - 1);
-      my.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [calm, mx, my]);
-
-  const words = d.h1b.split(" ");
+  const c = d.cards;
+  const bars = [38, 52, 44, 63, 58, 74, 69, 88, 82, 100];
 
   return (
-    <section className="relative pt-32 pb-28 lg:pt-40 lg:pb-32 overflow-hidden">
-      {/* pozadina: mreža koja blijedi + dva svjetla */}
-      <div aria-hidden className="absolute inset-0 pointer-events-none opacity-[0.25]
+    <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-28 overflow-hidden">
+      <div aria-hidden className="absolute inset-0 pointer-events-none opacity-[0.22]
                                   [background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]
                                   [background-size:64px_64px]
-                                  [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)]" />
-      <div aria-hidden className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[520px] pointer-events-none
+                                  [mask-image:radial-gradient(ellipse_75%_65%_at_50%_0%,black,transparent)]" />
+      <div aria-hidden className="absolute -top-40 right-0 w-[820px] h-[520px] pointer-events-none
                                   bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)]" />
-      <div aria-hidden className="absolute top-40 -left-24 w-[420px] h-[420px] pointer-events-none
-                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.12),transparent_72%)]" />
+      <div aria-hidden className="absolute top-52 -left-32 w-[420px] h-[420px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.10),transparent_72%)]" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="max-w-3xl">
-          <motion.span variants={up}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6
-                       border border-brand-600/30 bg-brand-600/10 text-brand-300
-                       text-xs font-semibold tracking-wider uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
-            {d.eyebrow}
-          </motion.span>
+        <div className="grid lg:grid-cols-[0.92fr_1.08fr] gap-14 lg:gap-10 items-center">
 
-          <h1 className="text-[40px] leading-[1.05] sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-[var(--text)]">
-            <motion.span variants={up} className="block">{d.h1a}</motion.span>
-            <span className="block">
-              {words.map((w, i) => (
-                <motion.span
-                  key={`${w}-${i}`}
-                  initial={{ opacity: 0, y: 26 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={once}
-                  transition={{ duration: 0.5, delay: 0.15 + i * 0.055, ease: [0.22, 1, 0.36, 1] }}
-                  className="inline-block text-gradient font-serif italic font-semibold tracking-normal mr-[0.28em]"
-                >
-                  {w}
-                </motion.span>
-              ))}
-            </span>
-          </h1>
+          {/* ══ LIJEVO ══ */}
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}>
+            <motion.span variants={up}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6
+                         border border-brand-600/30 bg-brand-600/10 text-brand-300
+                         text-[11px] font-bold tracking-[0.14em] uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-400" aria-hidden />
+              {d.eyebrow}
+            </motion.span>
 
-          <motion.p variants={up} className="mt-7 max-w-2xl text-[16px] sm:text-lg text-[var(--text-muted)] leading-relaxed">
-            {d.sub}
-          </motion.p>
-
-          <motion.div variants={up} className="mt-8 flex flex-wrap items-center gap-2.5">
-            {d.meta.map((m) => (
-              <span key={m} className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-[var(--text)]
-                                       bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] border border-[var(--border)]">
-                {m}
+            <h1 className="text-[36px] leading-[1.06] sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-[var(--text)]">
+              <motion.span variants={up} className="block">{d.h1a}</motion.span>
+              <span className="block">
+                {d.h1b.split(" ").map((w, i) => (
+                  <motion.span key={`${w}-${i}`}
+                    initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+                    transition={{ duration: 0.5, delay: 0.12 + i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                    className="inline-block text-gradient font-serif italic font-semibold tracking-normal mr-[0.26em]">
+                    {w}
+                  </motion.span>
+                ))}
               </span>
-            ))}
-            <a href={SITE} target="_blank" rel="noopener noreferrer"
-               className="group inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold
-                          bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/25
-                          transition-transform duration-300 hover:-translate-y-0.5">
-              {d.visit}
-              <ArrowUpRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
-          </motion.div>
-        </motion.div>
+            </h1>
 
-        {/* ── kompozicija uređaja ── */}
-        <div className="relative mt-16 lg:mt-24">
-          <motion.div style={calm ? undefined : { x: deepX, y: deepY }} className="relative mx-auto max-w-4xl">
+            <motion.p variants={up} className="mt-6 max-w-xl text-[15.5px] sm:text-base text-[var(--text-muted)] leading-relaxed">
+              {d.sub}
+            </motion.p>
+
+            <motion.div variants={up} className="mt-8 flex flex-wrap items-center gap-2.5">
+              {d.meta.map((mt) => (
+                <span key={mt} className="px-4 py-2.5 rounded-xl text-[12.5px] font-semibold
+                                          text-[var(--text)] border border-white/12
+                                          bg-[color-mix(in_srgb,var(--surface)_70%,transparent)]">
+                  {mt}
+                </span>
+              ))}
+              <a href={SITE} target="_blank" rel="noopener noreferrer"
+                 className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl
+                            bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[12.5px] font-bold
+                            shadow-lg shadow-brand-600/30
+                            transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+                {d.visit}
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              </a>
+            </motion.div>
+          </motion.div>
+
+          {/* ══ DESNO: auto, linije, kartice ══ */}
+          <div className="relative min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]">
+            <ConnectLines calm={calm} />
+
+            {/* auto u sredini */}
             <motion.div
-              initial={{ opacity: 0, y: 46, rotateX: 8 }}
+              initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={once}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center"
+            >
+              <div className="relative">
+                <span aria-hidden className="absolute -inset-16 rounded-full
+                                             bg-[radial-gradient(closest-side,rgba(37,99,235,0.28),transparent_72%)]" />
+                <div className="relative"><CarArt calm={calm} /></div>
+              </div>
+            </motion.div>
+
+            {/* 1 · obim rezervacija */}
+            <GlassCard calm={calm} delay={0.35} className="top-0 left-0 w-[188px]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">{c.volume.t}</p>
+              <p className="text-xl font-extrabold text-emerald-400 leading-none mb-2.5">{c.volume.v}</p>
+              <div className="flex items-end gap-1 h-10">
+                {bars.map((h, i) => (
+                  <motion.span key={i}
+                    initial={{ height: 0 }} whileInView={{ height: `${h}%` }} viewport={once}
+                    transition={{ duration: 0.5, delay: 0.5 + i * 0.045, ease: "easeOut" }}
+                    className={`flex-1 rounded-t ${i === bars.length - 1
+                      ? "bg-gradient-to-t from-brand-600 to-brand-400"
+                      : "bg-white/12"}`} />
+                ))}
+              </div>
+              <p className="text-[9.5px] text-[var(--text-muted)] mt-2">{c.volume.note}</p>
+            </GlassCard>
+
+            {/* 2 · aktivna flota */}
+            <GlassCard calm={calm} delay={0.5} className="top-6 right-0 sm:right-6 w-[186px]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">{c.fleet.t}</p>
+              <p className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-extrabold text-[var(--text)] leading-none">{c.fleet.v}</span>
+                <span className="text-[11px] text-[var(--text-muted)]">{c.fleet.unit}</span>
+              </p>
+              <span className="inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 rounded-full
+                               text-[9.5px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {c.fleet.idle}
+              </span>
+              <p className="text-[9.5px] text-[var(--text-muted)] mt-2 leading-snug">{c.fleet.note}</p>
+            </GlassCard>
+
+            {/* 3 · pokrivenost */}
+            <GlassCard calm={calm} delay={0.65} className="bottom-24 right-0 w-[176px] hidden sm:block">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">{c.map.t}</p>
+              <div className="relative h-[70px] rounded-xl border border-white/10 bg-[#070C1A] overflow-hidden">
+                <span aria-hidden className="absolute inset-0 opacity-40
+                                             [background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]
+                                             [background-size:14px_14px]" />
+                {[[26, 30], [58, 22], [44, 58], [72, 48]].map(([x, y], i) => (
+                  <motion.span key={i}
+                    initial={{ scale: 0, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={once}
+                    transition={{ duration: 0.35, delay: 0.75 + i * 0.12 }}
+                    style={{ left: `${x}%`, top: `${y}%` }}
+                    className="absolute -translate-x-1/2 -translate-y-1/2">
+                    <span className="block w-2 h-2 rounded-full bg-brand-400 shadow-[0_0_10px_rgba(96,165,250,0.9)]" />
+                    {!calm && (
+                      <motion.span
+                        animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+                        className="absolute inset-0 rounded-full bg-brand-400" />
+                    )}
+                  </motion.span>
+                ))}
+              </div>
+              <p className="text-[9.5px] text-[var(--text-muted)] mt-2 leading-snug">{c.map.note}</p>
+            </GlassCard>
+
+            {/* 4 · provjera na serveru */}
+            <GlassCard calm={calm} delay={0.8} className="bottom-0 left-0 w-[216px]">
+              <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                <ShieldCheck size={11} className="text-brand-400" /> {c.valid.t}
+              </p>
+              <pre className="text-[9.5px] leading-[1.7] font-mono rounded-lg border border-white/10 bg-[#070C1A] p-2.5 overflow-hidden">
+                <code>
+                  <span className="block text-white/30">{"// prije upisa"}</span>
+                  <span className="block"><span className="text-brand-300">if</span><span className="text-white/70">{" (zauzeto) "}</span></span>
+                  <span className="block text-white/70">{"  return "}<span className="text-emerald-300">{'"ODBIJENO"'}</span>;</span>
+                </code>
+              </pre>
+              <p className="text-[9.5px] text-[var(--text-muted)] mt-2 leading-snug">{c.valid.note}</p>
+            </GlassCard>
+
+            {/* dashboard mockup, naslonjen ispod auta */}
+            <motion.div
+              initial={{ opacity: 0, y: 30, rotateX: 10 }}
               whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={once}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-              className="relative rounded-3xl border border-brand-500/25 bg-[#070C1A] overflow-hidden
-                         shadow-[0_70px_140px_-45px_rgba(37,99,235,0.55)]"
-              style={{ transformPerspective: 1400 }}
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformPerspective: 1200 }}
+              className="absolute left-0 right-6 sm:right-16 bottom-4 z-10"
             >
-              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[.07]">
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="ml-3 text-[11px] text-white/35">maximum-rent.vercel.app</span>
-              </div>
-              <Image src="/portfolio/maximum-naslovna.png" alt={d.imgAlt}
-                     width={1600} height={1000} priority
-                     sizes="(max-width: 1024px) 100vw, 900px"
-                     className="w-full h-auto object-cover object-top" />
-              {/* odsjaj preko ekrana */}
-              {!calm && (
-                <motion.span
-                  aria-hidden
-                  animate={{ x: ["-130%", "230%"] }}
-                  transition={{ duration: 3.2, repeat: Infinity, repeatDelay: 5.5, ease: "easeInOut" }}
-                  className="absolute inset-y-0 w-1/4 skew-x-[-18deg] pointer-events-none
-                             bg-gradient-to-r from-transparent via-white/[0.07] to-transparent"
-                />
-              )}
-            </motion.div>
-          </motion.div>
+              <div className="rounded-2xl border border-white/12 bg-[#070C1A]/95 md:backdrop-blur-xl overflow-hidden
+                              shadow-[0_50px_100px_-35px_rgba(2,8,30,0.95)]">
+                <div className="flex">
+                  {/* sidebar */}
+                  <div className="hidden sm:flex flex-col gap-2 w-[62px] border-r border-white/[.06] p-2.5">
+                    <span className="h-5 w-5 rounded-md bg-[#E23B3B]/80 mb-1" />
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <span key={i} className={`h-1.5 rounded ${i === 1 ? "bg-brand-500/70 w-9" : "bg-white/10 w-7"}`} />
+                    ))}
+                  </div>
 
-          {/* plutajući slojevi, brži parallax */}
-          <motion.div style={calm ? undefined : { x: frontX, y: frontY }} className="absolute inset-0 pointer-events-none">
-            <div className="relative max-w-4xl mx-auto h-full">
-              <FloatCard calm={calm} delay={0.45} tone="blue" icon={<BellRing size={15} />}
-                title={d.floats.req.t} desc={d.floats.req.d}
-                className="-top-6 -right-4 lg:-right-16" />
-              <FloatCard calm={calm} delay={0.65} tone="green" icon={<Check size={15} strokeWidth={3} />}
-                title={d.floats.ok.t} desc={d.floats.ok.d}
-                className="bottom-10 -left-4 lg:-left-16" />
-              <FloatCard calm={calm} delay={0.85} tone="green" icon={<Gauge size={15} />}
-                title={d.floats.spd.t} desc={d.floats.spd.d}
-                className="top-1/2 -right-6 lg:-right-20" />
-            </div>
-          </motion.div>
+                  <div className="flex-1 p-3 sm:p-3.5 min-w-0">
+                    {/* pločice */}
+                    <div className="grid grid-cols-4 gap-2 mb-2.5">
+                      {[
+                        { v: "+18%", tone: "text-emerald-400 border-emerald-500/30 bg-emerald-500/[.07]" },
+                        { v: "+10%", tone: "text-brand-300 border-brand-600/30 bg-brand-600/[.07]" },
+                        { v: "45", tone: "text-white/70 border-white/10 bg-white/[.03]" },
+                        { v: "20", tone: "text-white/70 border-white/10 bg-white/[.03]" },
+                      ].map((t, i) => (
+                        <motion.span key={i}
+                          initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+                          transition={{ duration: 0.4, delay: 0.5 + i * 0.08 }}
+                          className={`rounded-lg border px-2 py-2 text-[11px] font-extrabold text-center ${t.tone}`}>
+                          {t.v}
+                        </motion.span>
+                      ))}
+                    </div>
+                    {/* mreža vozila */}
+                    <div className="grid grid-cols-4 gap-2">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <motion.div key={i}
+                          initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={once}
+                          transition={{ duration: 0.35, delay: 0.7 + i * 0.05 }}
+                          className="rounded-lg border border-white/[.07] bg-white/[.02] p-1.5">
+                          <span className="block h-7 sm:h-9 rounded-md bg-gradient-to-br from-white/[.10] to-transparent mb-1.5" />
+                          <span className="block h-1 w-3/4 rounded bg-white/12" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* notifikacija */}
+            <GlassCard calm={calm} delay={0.95} className="bottom-6 right-2 sm:right-10 w-[196px]">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+                                 bg-emerald-500/12 border border-emerald-500/35 text-emerald-400">
+                  <BellRing size={13} />
+                </span>
+                <span className="text-[11px] font-extrabold text-[var(--text)]">{d.floats.req.t}</span>
+              </div>
+              <p className="text-[10.5px] text-[var(--text-muted)] leading-snug">{d.floats.req.d}</p>
+            </GlassCard>
+          </div>
         </div>
 
-        {/* brojke */}
-        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
-          className="relative mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
-          {d.stats.map((s) => (
-            <motion.div key={s.l} variants={up}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-center
-                         transition-[border-color] duration-300 hover:border-brand-600/35">
-              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)]">
-                <Counter to={s.n} dec={s.dec} suf={s.suf} />
+        {/* ══ PROZOR PREGLEDNIKA, DNO ══ */}
+        <motion.div
+          initial={{ opacity: 0, y: 44 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mt-16 lg:mt-20 rounded-3xl border border-white/10 overflow-hidden
+                     bg-[#070C1A]/90 md:backdrop-blur-xl shadow-[0_70px_140px_-45px_rgba(37,99,235,0.5)]"
+        >
+          <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[.07]">
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="ml-3 px-3 py-1 rounded-md text-[11px] font-mono text-white/40 bg-white/[.04]">
+              {d.browser.url}
+            </span>
+          </div>
+
+          <div className="relative">
+            <div className="flex items-center gap-6 px-5 sm:px-8 py-3.5 border-b border-white/[.06] overflow-x-auto">
+              <span className="text-[15px] font-extrabold tracking-tight text-[#E23B3B] whitespace-nowrap">MAXIMUM</span>
+              <nav className="flex items-center gap-4 sm:gap-5">
+                {d.browser.nav.map((n) => (
+                  <span key={n} className="text-[10px] font-semibold tracking-wider text-white/45 whitespace-nowrap">{n}</span>
+                ))}
+              </nav>
+              <span className="ml-auto flex items-center gap-2 flex-shrink-0">
+                <span className="px-2 py-0.5 rounded text-[9.5px] font-bold text-white/50 border border-white/10">EUR</span>
+                <span className="px-2 py-0.5 rounded text-[9.5px] font-bold text-white/50 border border-white/10">HR</span>
+              </span>
+            </div>
+
+            <div className="relative">
+              <Image src="/portfolio/maximum-naslovna.png" alt={d.imgAlt}
+                     width={1600} height={900} priority
+                     sizes="(max-width: 1024px) 100vw, 1100px"
+                     className="w-full h-auto object-cover object-top" />
+              <p className="absolute left-5 sm:left-8 bottom-12 text-2xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
+                {d.browser.title}
               </p>
-              <p className="text-[11px] text-[var(--text-muted)] leading-snug mt-1.5">{s.l}</p>
-            </motion.div>
-          ))}
+            </div>
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050507] to-transparent" />
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-/* ── Bojenje koda: sitni isticač, bez biblioteke ──────────────────────────── */
+/* ── Bojenje koda, sitni isticač bez biblioteke ───────────────────────────── */
 function Code({ code }: { code: string }) {
   const tint = (line: string, key: number) => {
     if (line.trim().startsWith("//")) {
@@ -430,8 +590,7 @@ function Code({ code }: { code: string }) {
       <span key={key} className="block">
         {parts.map((p, i) => {
           if (!p) return null;
-          if (/^"/.test(p))
-            return <span key={i} className="text-emerald-300/90">{p}</span>;
+          if (/^"/.test(p)) return <span key={i} className="text-emerald-300/90">{p}</span>;
           if (/^(const|await|if|return|test|expect|async|new)$/.test(p))
             return <span key={i} className="text-brand-300">{p}</span>;
           return <span key={i} className="text-white/70">{p}</span>;
@@ -446,7 +605,7 @@ function Code({ code }: { code: string }) {
   );
 }
 
-/* ── Sekcija: QA pozadina, interaktivno ───────────────────────────────────── */
+/* Koliko jedan rubni slučaj stoji dok se sekcija vrti sama. */
 const STORY_MS = 6000;
 
 function Story({ d }: { d: typeof T.bs }) {

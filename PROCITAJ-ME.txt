@@ -1,65 +1,63 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Bento grid v2: moduli sistema
+  mehiccdev — Case study hero v3, po priloženom dizajnu
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
-(sadrži i novi hero i novu QA sekciju iz prethodnih isporuka)
+(sadrži i QA sekciju i bento grid iz prethodnih isporuka)
 
-════════ ZAŠTO JE IZGLEDALO PRAZNO ════════
-Kartice su bile crne kutije s ikonicom, naslovom i odlomkom teksta.
-Ništa unutra nije dokazivalo ono što piše, pa je oko klizilo preko
-njih. Rješenje nije bilo više teksta nego MANJE teksta i više prikaza.
+════════ LIJEVA KOLONA ════════
+  • plava pilula "CASE STUDY · CAR RENTAL"
+  • naslov: "Maximum SaaS," bijelo, ostatak plavo u serif kurzivu,
+    ulazi riječ po riječ
+  • opis u sivom
+  • tri taga i dugme "Open the site" U ISTOM REDU, kao na slici
 
-════════ ŠTA JE SADA U KARTICAMA ════════
-FLOTA UŽIVO (4 kolone)
-  Oznaka "uživo" sa zelenom tačkicom koja pulsira. Tri vozila ulaze
-  jedno po jedno s lijeva. Značka "Kasni 2 h" pulsira brže (1,4 s),
-  "Vraća se danas" sporije (2,4 s), a "Na terenu" miruje, pa se oko
-  samo od sebe zaustavi na problemu.
+════════ DESNA KOLONA ════════
+  • vektorski sedan u sivo-plavom gradijentu, lagano lebdi, sa
+    svjetlosnim oreolom iza sebe
+  • četiri tanke linije povezuju kartice s automobilom; kroz njih
+    putuju svjetlosni impulsi (strokeDashoffset), svaki sa svojim
+    kašnjenjem
+  • ČETIRI STAKLENE KARTICE:
+      Obim rezervacija +18%   deset stubića koji izrastaju jedan po jedan
+      Aktivna flota 45 vozila / 0 neiskorištenih
+      Pokrivenost             mini mapa, četiri markera s pulsom
+      Provjera na serveru     isječak koda u boji
+  • DASHBOARD MOCKUP naslonjen ispod auta: sidebar, četiri pločice
+    (+18%, +10%, 45, 20) i mreža od osam vozila, sve ulazi postupno
+  • notifikacija "New request · VW Golf 8 · July 10 to 13" sa zvonom
 
-UGOVORI SE PIŠU SAMI (2 kolone)
-  Prikaz dokumenta koji se popunjava: tri zelene trake izrastaju
-  jedna za drugom uz natpise (Podaci gosta, Vozilo i termin, Spremno
-  za potpis), pa na kraju iskoči kvačica "Spremno za potpis".
+════════ PROZOR PREGLEDNIKA ════════
+Traka s adresom maximum-rent.vercel.app, crveni MAXIMUM logo,
+navigacija (HOME, BUSINESS, ABOUT US, FLEET, RENTAL TERMS, CONTACT),
+birač EUR i HR, a unutra PRAVI SCREENSHOT sajta s natpisom
+"Your key to freedom" preko slike.
 
-SMART PREUZIMANJE (3 kolone)
-  Traka za gorivo koja na hover preko kartice ide sa 45 na 100 posto,
-  kilometraža u monospace fontu i POTPIS koji se iscrtava linijom
-  (SVG pathLength animacija).
+Namjerno je stavljen stvarni screenshot umjesto nacrtanih blokova:
+posjetilac na case studyju očekuje dokaz, a ne crtež.
 
-DVOJEZIČNO (1 kolona)
-  Dvije pilule, Bosanski i English, ulaze s lijeva.
+════════ ODSTUPANJA OD SPECIFIKACIJE, NAMJERNA ════════
+1. NAVBAR NIJE DIRAN. Postojeći već ima dropdown, jezički slajder i
+   akcijsku oznaku. Spec traži hrvatsku zastavicu i "new" oznaku na
+   Cjenovniku, što se kosi s onim što je uživo.
+2. Tekst je dvojezičan. Engleski su tačno rečenice iz specifikacije,
+   bosanski je prijevod, jer sajt ima prekidač jezika.
+3. Nema 3D renderа automobila, nego čist vektor. 3D model bi tražio
+   eksterni fajl i tešku biblioteku, a dobitak je nula na ovoj
+   veličini.
 
-BRZINA (2 kolone)
-  Dvije trake jedna ispod druge: crvena "prije 21,6 s" preko cijele
-  širine i zelena "sada 3,2 s" na 15 posto. Razlika se vidi bez
-  čitanja.
-
-════════ TEKSTURA I DUBINA ════════
-  • svaka kartica ima suptilnu pozadinu, mrežu ili tačkice, koja
-    blijedi prema dnu
-  • radijalni sjaj u gornjem desnom uglu koji jača na hover
-  • staklo (border-white/10 + backdrop blur od md: naviše)
-  • ikonice u gradijentnim kvadratima koje se blago zarotiraju i
-    uvećaju na hover
-  • cijela kartica se podiže na hover, kroz oprugu a ne kroz trajanje
-
-════════ ANIMACIJE ════════
-  • kartice ulaze jedna po jedna (stagger) pri skrolanju
-  • sve trake i liste imaju svoje kašnjenje, pa se ništa ne dešava
-    odjednom
-  • uz "reduced motion" pulsiranja nema, trake se ispišu odmah
-  • animira se samo pomak, prozirnost i širina
+════════ PERFORMANSE ════════
+  • staklo tek od md: naviše, kako je pravilo u projektu
+  • animira se samo pomak, prozirnost, razmjera i dužina linije
+  • uz "reduced motion" sve miruje: linije stoje, kartice ne plutaju
+  • screenshot ide kroz next/image s priority oznakom
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: bento grid v2 na case studyju"
+  git commit -m "feat: hero case studyja po novom dizajnu"
   git push
-
-Ili u jednom redu:
-  git add . ; git commit -m "feat: bento grid v2 na case studyju" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
 ════════════════════════════════════════════════════════════════════
