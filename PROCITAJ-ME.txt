@@ -1,44 +1,36 @@
-════════════════════════════════════════════════════════════════════
-  mehiccdev — FINALNE CIJENE PAKETA
-════════════════════════════════════════════════════════════════════
+mehiccdev — Case study: Maximum Rent a Car
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/rjesenja/rentACarCopy.ts
+U ZIP-u (2 fajla):
+  components/portfolio/MaximumCaseStudy.tsx   sve sekcije, lokalne podkomponente
+  app/portfolio/maximum/page.tsx              ruta + metadata, montira Navbar i Footer
 
-Napravljeno na svježem stanju s GitHuba, dakle uklapa se u ono što
-ti je trenutno na sajtu.
+⚠ OVAJ PUT BUILD NIJE VERIFIKOVAN. Klon repozitorija s GitHuba mi je
+odbijen (autentikacija), pa nisam mogao pokrenuti npm run build kao
+inače. Prije pusha OBAVEZNO pokreni lokalno:
+    npm run build
+Provjereno je jedino da sve ikonice iz lucide-react postoje.
 
-════════ RENT-A-CAR PAKETI ════════
-  Start      1.500 KM   (oko €750)     oko 4 KM dnevno
-  Pro        2.900 KM   (oko €1.480)   oko 8 KM dnevno   ← promijenjeno
-  Premium    4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
+SADRŽAJ
+  Hero        masivan naslov, plutajući mockup sajta, četiri brojke
+  Story       lijevo fiksiran tekst o QA pozadini, desno četiri kartice
+              koje se pale kako se skrola
+  Bento       asimetrična mreža: Pregled flote uživo (široka, s redovima
+              i bojenim oznakama za kašnjenje), Ugovori se pišu sami,
+              Smart preuzimanje i povrat, Dvojezično, Brzina
+  CTA         gradijentni okvir, vodi na /rjesenja/rent-a-car
 
-Jedina izmjena u odnosu na sajt je Pro paket, sa 2.600 na 2.900 KM,
-plus preračunata dnevna računica i euro iznos, na oba jezika.
+Sve animacije koriste viewport={{ once: true }}.
+Tekst je dvojezičan (bs i en), jer sajt ima prekidač jezika.
 
-════════ NASLOVNICA JE VEĆ ISPRAVNA ════════
-Provjerio sam, tamo je već sve na mjestu i ne treba dirati:
-  Starter               1.000 KM   (oko €500)
-  Business              3.000 KM   (oko €1.500), precrtano 4.800 KM
-  Premium            od 5.000 KM   (oko €2.500)
-  Marketing              60 / 150 / 250 KM mjesečno
-  Podrška               100 KM/mj  ·  bez pretplate 50 KM/h
+⚠ PROVJERI TVRDNJE PRIJE OBJAVE
+Moduli "Smart preuzimanje i povrat" i "Ugovori se pišu sami" opisani
+su kao postojeći. Ako to u Maximumu još nije izgrađeno, preformuliši
+ih ili obriši, jer je cijeli sajt građen na provjerljivim tvrdnjama.
+Isto vrijedi za "0 duplih rezervacija od lansiranja".
 
-════════ PREPORUKA UZ OVO ════════
-Ove cijene drži zaključane najmanje 90 dana i vrati se na njih tek
-poslije tri zatvorena klijenta. Češće mijenjanje ne šteti sajtu nego
-tvojoj sigurnosti kad izgovaraš cifru na sastanku.
-
-Sljedeće podizanje: kad budeš imao tri reference i izjavu vlasnika
-Maximuma, Pro može mirno na 3.500 KM.
-
-════════ KOMANDE ZA KONZOLU ════════
+KOMANDE ZA KONZOLU
+  git remote -v            ← provjeri da je mehiccdev, ne maximum
+  npm run build
   git add .
-  git commit -m "feat: finalne cijene, pro paket 2900 KM"
+  git commit -m "feat: case study stranica za Maximum"
   git push
-
-Ili u jednom redu:
-  git add . ; git commit -m "feat: finalne cijene, pro paket 2900 KM" ; git push
-
-Build verifikovan prije slanja: npm run build ✓ (11/11 stranica)
-════════════════════════════════════════════════════════════════════
