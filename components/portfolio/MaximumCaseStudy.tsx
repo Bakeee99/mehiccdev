@@ -11,7 +11,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -98,8 +98,9 @@ const T = {
         ],
       },
       pdf: { t: "Ugovori se pišu sami", d: "Iz potvrđene rezervacije nastaje gotov ugovor s podacima gosta, vozila i termina. Bez prekucavanja i bez grešaka u imenima.", chips: ["Podaci gosta", "Vozilo i termin", "Spremno za potpis"] },
-      lang: { t: "Dvojezično od prvog dana", d: "Domaći i strani gosti čitaju istu ponudu na svom jeziku." },
-      speed: { t: "Brzina kao funkcija", d: "Stranica se otvara ispod tri sekunde na mobilnoj mreži, jer gost koji čeka odlazi kod konkurencije." },
+      lang: { t: "Dvojezično od prvog dana", d: "Domaći i strani gosti čitaju istu ponudu na svom jeziku.", a: "Bosanski", b: "English" },
+      speed: { t: "Brzina kao funkcija", d: "Stranica se otvara ispod tri sekunde na mobilnoj mreži, jer gost koji čeka odlazi kod konkurencije.", before: "prije", after: "sada" },
+      ui: { fuel: "Gorivo", km: "Kilometraža", sign: "Potpis", doc: "ugovor.pdf", ready: "Spremno za potpis", generating: "Popunjavam podatke", live: "uživo" },
     },
     ctaH: "Vodite rent-a-car firmu?",
     ctaSub: "Isti sistem prilagođavamo vašoj floti. Cijene i paketi su na jednoj stranici.",
@@ -181,8 +182,9 @@ const T = {
         ],
       },
       pdf: { t: "Contracts write themselves", d: "A confirmed booking turns into a finished contract with guest, vehicle and date details. No retyping and no misspelled names.", chips: ["Guest details", "Vehicle and dates", "Ready to sign"] },
-      lang: { t: "Bilingual from day one", d: "Local and foreign guests read the same offer in their own language." },
-      speed: { t: "Speed as a feature", d: "The page opens in under three seconds on mobile data, because a guest who waits goes to a competitor." },
+      lang: { t: "Bilingual from day one", d: "Local and foreign guests read the same offer in their own language.", a: "Bosnian", b: "English" },
+      speed: { t: "Speed as a feature", d: "The page opens in under three seconds on mobile data, because a guest who waits goes to a competitor.", before: "before", after: "now" },
+      ui: { fuel: "Fuel", km: "Mileage", sign: "Signature", doc: "contract.pdf", ready: "Ready to sign", generating: "Filling in the details", live: "live" },
     },
     ctaH: "Running a car rental company?",
     ctaSub: "We adapt the same system to your fleet. Pricing and packages are on one page.",
@@ -636,18 +638,79 @@ function Story({ d }: { d: typeof T.bs }) {
   );
 }
 
+/* ── Zajednički okvir kartice: tekstura, sjaj u uglu, podizanje na hover ──── */
+function Tile({
+  className = "", glow = "brand", pattern = "grid", children,
+}: {
+  className?: string; glow?: "brand" | "emerald" | "amber";
+  pattern?: "grid" | "dots" | "none"; children: React.ReactNode;
+}) {
+  const glows = {
+    brand:   "rgba(37,99,235,0.22)",
+    emerald: "rgba(16,185,129,0.18)",
+    amber:   "rgba(245,158,11,0.16)",
+  } as const;
+
+  const patterns = {
+    grid: "[background-image:linear-gradient(to_right,rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:26px_26px]",
+    dots: "[background-image:radial-gradient(rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:16px_16px]",
+    none: "",
+  } as const;
+
+  return (
+    <motion.article
+      variants={up}
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 300, damping: 26 }}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10
+                  bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] md:backdrop-blur-sm
+                  transition-[border-color,box-shadow] duration-300
+                  hover:border-white/20 hover:shadow-2xl hover:shadow-black/40 ${className}`}
+    >
+      {pattern !== "none" && (
+        <span aria-hidden
+          className={`absolute inset-0 pointer-events-none opacity-60 ${patterns[pattern]}
+                      [mask-image:radial-gradient(ellipse_80%_70%_at_50%_0%,black,transparent)]`} />
+      )}
+      <span aria-hidden
+        className="absolute -top-24 -right-20 w-64 h-64 rounded-full pointer-events-none
+                   opacity-70 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: `radial-gradient(closest-side, ${glows[glow]}, transparent 72%)` }} />
+      <div className="relative h-full">{children}</div>
+    </motion.article>
+  );
+}
+
+function TileIcon({ children, tone = "brand" }: { children: React.ReactNode; tone?: "brand" | "emerald" }) {
+  const tones = {
+    brand:   "from-brand-600 to-brand-400 shadow-brand-600/30",
+    emerald: "from-emerald-600 to-emerald-400 shadow-emerald-600/30",
+  } as const;
+  return (
+    <span className={`inline-flex w-11 h-11 rounded-2xl items-center justify-center flex-shrink-0
+                      bg-gradient-to-br ${tones[tone]} text-white shadow-lg
+                      transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+      {children}
+    </span>
+  );
+}
+
 function Bento({ d }: { d: typeof T.bs }) {
   const m = d.modules;
+  const reduce = useReducedMotion() ?? false;
   const toneCls = {
-    ok: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
+    ok:   "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
     warn: "text-amber-400 bg-amber-500/10 border-amber-500/30",
     late: "text-red-400 bg-red-500/10 border-red-500/35",
   } as const;
 
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section className="py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div aria-hidden className="absolute top-20 left-1/2 -translate-x-1/2 w-[760px] h-[420px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.12),transparent_72%)]" />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="text-center mb-14">
           <motion.span variants={up}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
@@ -662,95 +725,197 @@ function Bento({ d }: { d: typeof T.bs }) {
         </motion.div>
 
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
-          className="grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          className="grid sm:grid-cols-2 lg:grid-cols-6 gap-4 auto-rows-[minmax(0,auto)]">
 
-          <motion.article variants={up} whileHover={{ y: -5 }}
-            className="lg:col-span-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-7
-                       transition-[border-color,box-shadow] duration-300
-                       hover:border-brand-600/40 hover:shadow-2xl hover:shadow-brand-600/10">
-            <span className="inline-flex w-11 h-11 rounded-2xl items-center justify-center mb-4
-                             bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/25">
-              <MapPinned size={19} />
-            </span>
+          {/* ── Flota uživo ── */}
+          <Tile className="lg:col-span-4 p-7" glow="brand" pattern="grid">
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <TileIcon><MapPinned size={19} /></TileIcon>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                               text-[10px] font-bold uppercase tracking-wider
+                               text-emerald-400 bg-emerald-500/10 border border-emerald-500/30">
+                <motion.span
+                  animate={reduce ? undefined : { opacity: [1, 0.3, 1] }}
+                  transition={{ duration: 1.8, repeat: Infinity }}
+                  className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                {m.ui.live}
+              </span>
+            </div>
             <h3 className="text-[19px] font-extrabold text-[var(--text)] mb-2">{m.fleet.t}</h3>
             <p className="text-[13.5px] text-[var(--text-muted)] leading-relaxed mb-5 max-w-lg">{m.fleet.d}</p>
 
-            <div className="rounded-2xl border border-white/10 bg-[#070C1A] p-3 space-y-2">
-              {m.fleet.rows.map((r) => (
-                <div key={r.car} className="flex items-center gap-3 rounded-xl border border-white/[.06] px-3.5 py-2.5">
-                  <span className="w-8 h-8 rounded-lg bg-white/[.05] flex items-center justify-center flex-shrink-0">
+            <div className="rounded-2xl border border-white/10 bg-[#070C1A]/80 p-3 space-y-2">
+              {m.fleet.rows.map((r, i) => (
+                <motion.div
+                  key={r.car}
+                  initial={{ opacity: 0, x: -12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={once}
+                  transition={{ duration: 0.4, delay: 0.1 * i }}
+                  className="flex items-center gap-3 rounded-xl border border-white/[.06] px-3.5 py-2.5
+                             transition-colors duration-300 hover:border-white/15 hover:bg-white/[.02]"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-white/[.05] flex items-center justify-center flex-shrink-0
+                                   transition-transform duration-300 group-hover:translate-x-0.5">
                     <Car size={14} className="text-blue-200/80" />
                   </span>
                   <span className="text-[12.5px] font-bold text-white/85">{r.car}</span>
-                  <span className={`ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border
-                                    text-[10px] font-bold whitespace-nowrap ${toneCls[r.tone]}`}>
+                  <motion.span
+                    animate={reduce || r.tone === "ok" ? undefined : { opacity: [1, 0.45, 1] }}
+                    transition={{ duration: r.tone === "late" ? 1.4 : 2.4, repeat: Infinity }}
+                    className={`ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border
+                                text-[10px] font-bold whitespace-nowrap ${toneCls[r.tone]}`}
+                  >
                     {r.tone === "late" && <AlertTriangle size={10} />}
                     {r.tone === "warn" && <Clock size={10} />}
                     {r.state}
+                  </motion.span>
+                </motion.div>
+              ))}
+            </div>
+          </Tile>
+
+          {/* ── PDF ugovori ── */}
+          <Tile className="lg:col-span-2 p-6" glow="emerald" pattern="dots">
+            <TileIcon tone="emerald"><FileSignature size={17} /></TileIcon>
+            <h3 className="text-[16px] font-extrabold text-[var(--text)] mt-4 mb-2">{m.pdf.t}</h3>
+            <p className="text-[12.5px] text-[var(--text-muted)] leading-relaxed mb-4">{m.pdf.d}</p>
+
+            {/* dokument koji se popunjava */}
+            <div className="rounded-2xl border border-white/10 bg-[#070C1A]/80 p-3.5">
+              <div className="flex items-center gap-2 mb-3">
+                <FileSignature size={11} className="text-emerald-400" />
+                <span className="text-[10px] font-mono text-white/40">{m.ui.doc}</span>
+              </div>
+              <div className="space-y-2">
+                {m.pdf.chips.map((c, i) => (
+                  <div key={c} className="flex items-center gap-2">
+                    <motion.span
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${62 - i * 9}%` }}
+                      viewport={once}
+                      transition={{ duration: 0.55, delay: 0.25 + i * 0.22, ease: "easeOut" }}
+                      className="h-1.5 rounded-full bg-gradient-to-r from-emerald-500/70 to-emerald-400/30"
+                    />
+                    <motion.span
+                      initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={once}
+                      transition={{ duration: 0.3, delay: 0.55 + i * 0.22 }}
+                      className="text-[10px] text-white/35 whitespace-nowrap"
+                    >
+                      {c}
+                    </motion.span>
+                  </div>
+                ))}
+              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 6 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+                transition={{ duration: 0.35, delay: 1.15 }}
+                className="mt-3.5 flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-400"
+              >
+                <Check size={11} strokeWidth={3} /> {m.ui.ready}
+              </motion.div>
+            </div>
+          </Tile>
+
+          {/* ── Smart preuzimanje ── */}
+          <Tile className="lg:col-span-3 p-6 sm:p-7" glow="brand" pattern="grid">
+            <TileIcon><ScanLine size={17} /></TileIcon>
+            <h3 className="text-[17px] font-extrabold text-[var(--text)] mt-4 mb-2">{m.checkin.t}</h3>
+            <p className="text-[13.5px] text-[var(--text-muted)] leading-relaxed mb-5">{m.checkin.d}</p>
+
+            <div className="rounded-2xl border border-white/10 bg-[#070C1A]/80 p-4 space-y-3.5">
+              {/* gorivo */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/50">
+                    <Fuel size={11} /> {m.ui.fuel}
+                  </span>
+                  <span className="text-[11px] font-bold text-brand-300">
+                    <span className="inline-block transition-all duration-500 group-hover:hidden">45%</span>
+                    <span className="hidden group-hover:inline-block">100%</span>
                   </span>
                 </div>
+                <div className="h-2 rounded-full bg-white/[.06] overflow-hidden">
+                  <div className="h-full w-[45%] rounded-full bg-gradient-to-r from-brand-600 to-brand-400
+                                  transition-[width] duration-700 ease-out group-hover:w-full" />
+                </div>
+              </div>
+
+              {/* kilometraža */}
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/50">
+                  <Gauge size={11} /> {m.ui.km}
+                </span>
+                <span className="text-[11px] font-mono font-bold text-white/70">84 210 km</span>
+              </div>
+
+              {/* potpis */}
+              <div className="flex items-center justify-between pt-3 border-t border-white/[.06]">
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/50">
+                  <FileSignature size={11} /> {m.ui.sign}
+                </span>
+                <svg width="76" height="20" viewBox="0 0 76 20" fill="none" aria-hidden>
+                  <motion.path
+                    d="M2 14c6-9 10 2 15-3s7 6 12 1 9 3 14-2 8 4 11 1"
+                    stroke="rgb(96,165,250)" strokeWidth="1.6" strokeLinecap="round"
+                    initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={once}
+                    transition={{ duration: 1.1, delay: 0.3, ease: "easeInOut" }}
+                  />
+                </svg>
+              </div>
+            </div>
+          </Tile>
+
+          {/* ── Dvojezično ── */}
+          <Tile className="lg:col-span-1 p-6 flex flex-col" glow="brand" pattern="dots">
+            <TileIcon><Languages size={17} /></TileIcon>
+            <h3 className="text-[14.5px] font-extrabold text-[var(--text)] leading-tight mt-4 mb-1.5">{m.lang.t}</h3>
+            <p className="text-[12px] text-[var(--text-muted)] leading-relaxed mb-4">{m.lang.d}</p>
+            <div className="mt-auto flex flex-col gap-1.5">
+              {[m.lang.a, m.lang.b].map((l, i) => (
+                <motion.span
+                  key={l}
+                  initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={once}
+                  transition={{ duration: 0.35, delay: 0.15 * i }}
+                  className="px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-center
+                             text-[var(--text)] bg-[var(--bg)] border border-white/10"
+                >
+                  {l}
+                </motion.span>
               ))}
             </div>
-          </motion.article>
+          </Tile>
 
-          <motion.article variants={up} whileHover={{ y: -5 }}
-            className="lg:col-span-2 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6
-                       transition-[border-color,box-shadow] duration-300
-                       hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10">
-            <span className="inline-flex w-10 h-10 rounded-2xl items-center justify-center mb-4
-                             bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/25">
-              <FileSignature size={17} />
-            </span>
-            <h3 className="text-[16px] font-extrabold text-[var(--text)] mb-2">{m.pdf.t}</h3>
-            <p className="text-[13px] text-[var(--text-muted)] leading-relaxed mb-4">{m.pdf.d}</p>
-            <ul className="flex flex-col gap-2">
-              {m.pdf.chips.map((c) => (
-                <li key={c} className="flex items-center gap-2 text-[12.5px] text-[var(--text)]">
-                  <Check size={11} strokeWidth={3} className="text-brand-400 flex-shrink-0" /> {c}
-                </li>
-              ))}
-            </ul>
-          </motion.article>
+          {/* ── Brzina ── */}
+          <Tile className="lg:col-span-2 p-6" glow="emerald" pattern="grid">
+            <TileIcon tone="emerald"><Gauge size={17} /></TileIcon>
+            <h3 className="text-[15px] font-extrabold text-[var(--text)] leading-tight mt-4 mb-1.5">{m.speed.t}</h3>
+            <p className="text-[12.5px] text-[var(--text-muted)] leading-relaxed mb-4">{m.speed.d}</p>
 
-          <motion.article variants={up} whileHover={{ y: -5 }}
-            className="lg:col-span-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-7
-                       transition-[border-color,box-shadow] duration-300
-                       hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10">
-            <span className="inline-flex w-10 h-10 rounded-2xl items-center justify-center mb-4
-                             bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/25">
-              <ScanLine size={17} />
-            </span>
-            <h3 className="text-[17px] font-extrabold text-[var(--text)] mb-2">{m.checkin.t}</h3>
-            <p className="text-[13.5px] text-[var(--text-muted)] leading-relaxed mb-4">{m.checkin.d}</p>
-            <div className="flex flex-wrap gap-2">
-              {m.checkin.chips.map((c) => (
-                <span key={c} className="px-3 py-1.5 rounded-full text-[12px] font-semibold text-[var(--text)]
-                                         bg-[var(--bg)] border border-[var(--border)]">{c}</span>
-              ))}
+            <div className="space-y-2.5">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{m.speed.before}</span>
+                  <span className="text-[11px] font-bold text-red-400">21,6 s</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-white/[.06] overflow-hidden">
+                  <motion.div initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={once}
+                    transition={{ duration: 0.8 }} className="h-full rounded-full bg-red-500/50" />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{m.speed.after}</span>
+                  <span className="text-[11px] font-bold text-emerald-400">3,2 s</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-white/[.06] overflow-hidden">
+                  <motion.div initial={{ width: 0 }} whileInView={{ width: "15%" }} viewport={once}
+                    transition={{ duration: 0.8, delay: 0.25 }}
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400" />
+                </div>
+              </div>
             </div>
-          </motion.article>
-
-          <motion.article variants={up} whileHover={{ y: -5 }}
-            className="lg:col-span-1 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6
-                       transition-[border-color,box-shadow] duration-300 hover:border-brand-600/40">
-            <span className="inline-flex w-10 h-10 rounded-2xl items-center justify-center mb-3
-                             bg-brand-600/12 border border-brand-600/30 text-brand-300">
-              <Languages size={17} />
-            </span>
-            <h3 className="text-[14.5px] font-extrabold text-[var(--text)] leading-tight mb-1.5">{m.lang.t}</h3>
-            <p className="text-[12px] text-[var(--text-muted)] leading-relaxed">{m.lang.d}</p>
-          </motion.article>
-
-          <motion.article variants={up} whileHover={{ y: -5 }}
-            className="lg:col-span-2 rounded-3xl border border-emerald-500/25 bg-[var(--surface)] p-6
-                       transition-[border-color,box-shadow] duration-300 hover:border-emerald-500/45">
-            <span className="inline-flex w-10 h-10 rounded-2xl items-center justify-center mb-3
-                             bg-emerald-500/12 border border-emerald-500/35 text-emerald-400">
-              <Gauge size={17} />
-            </span>
-            <h3 className="text-[15px] font-extrabold text-[var(--text)] leading-tight mb-1.5">{m.speed.t}</h3>
-            <p className="text-[12.5px] text-[var(--text-muted)] leading-relaxed">{m.speed.d}</p>
-          </motion.article>
+          </Tile>
         </motion.div>
       </div>
     </section>

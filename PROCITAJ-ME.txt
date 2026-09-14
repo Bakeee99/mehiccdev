@@ -1,58 +1,65 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — QA sekcija: interaktivni prikaz umjesto četiri kartice
+  mehiccdev — Bento grid v2: moduli sistema
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
-(sadrži i novi hero iz prethodne isporuke)
+(sadrži i novi hero i novu QA sekciju iz prethodnih isporuka)
 
-════════ NOVI RASPORED ════════
-LIJEVO   četiri rubna slučaja, jedan ispod drugog. Prelazak mišem
-         (ili tap) otvara opis i mijenja desnu stranu. Aktivna stavka
-         ima sjaj koji klizi za izborom, a tanka traka na dnu
-         pokazuje kada se prelazi na sljedeći.
+════════ ZAŠTO JE IZGLEDALO PRAZNO ════════
+Kartice su bile crne kutije s ikonicom, naslovom i odlomkom teksta.
+Ništa unutra nije dokazivalo ono što piše, pa je oko klizilo preko
+njih. Rješenje nije bilo više teksta nego MANJE teksta i više prikaza.
 
-DESNO    editor s kodom koji dokazuje ono što tekst tvrdi. Za svaki
-         slučaj mijenja se ime fajla u traci i sam isječak:
+════════ ŠTA JE SADA U KARTICAMA ════════
+FLOTA UŽIVO (4 kolone)
+  Oznaka "uživo" sa zelenom tačkicom koja pulsira. Tri vozila ulaze
+  jedno po jedno s lijeva. Značka "Kasni 2 h" pulsira brže (1,4 s),
+  "Vraća se danas" sporije (2,4 s), a "Na terenu" miruje, pa se oko
+  samo od sebe zaustavi na problemu.
 
-  01  rezervacija.rules.ts   provjera obrnutih datuma
-  02  dostupnost.ts          provjera zauzetog termina na serveru
-  03  vozilo.status.ts       servis i blokada u istom upitu
-  04  rezervacija.test.ts    test da dupli klik ne pravi dvije rezervacije
+UGOVORI SE PIŠU SAMI (2 kolone)
+  Prikaz dokumenta koji se popunjava: tri zelene trake izrastaju
+  jedna za drugom uz natpise (Podaci gosta, Vozilo i termin, Spremno
+  za potpis), pa na kraju iskoči kvačica "Spremno za potpis".
 
-Ispod koda iskoči zelena traka s ishodom, npr. "Spriječeno · Druga
-istovremena rezervacija odbijena". Kod je obojen bez ijedne dodatne
-biblioteke: ključne riječi plavo, tekstovi zeleno, komentari sivo.
+SMART PREUZIMANJE (3 kolone)
+  Traka za gorivo koja na hover preko kartice ide sa 45 na 100 posto,
+  kilometraža u monospace fontu i POTPIS koji se iscrtava linijom
+  (SVG pathLength animacija).
 
-Sekcija se sama vrti svakih 6 sekundi, ali STAJE čim miš uđe u nju,
-pa čitanje koda niko ne prekida.
+DVOJEZIČNO (1 kolona)
+  Dvije pilule, Bosanski i English, ulaze s lijeva.
 
-════════ METRIKE ════════
-Ispod svega tri kartice sa staklenim efektom i sjajem na hover:
-  0      duplih rezervacija od lansiranja
-  100%   provjera koje rade i na serveru
-  4      rubna slučaja pokrivena prije isporuke
+BRZINA (2 kolone)
+  Dvije trake jedna ispod druge: crvena "prije 21,6 s" preko cijele
+  širine i zelena "sada 3,2 s" na 15 posto. Razlika se vidi bez
+  čitanja.
 
-⚠ Prva tvrdnja ("0 duplih rezervacija") je nešto što možeš potvrditi
-samo ti. Ako nisi siguran, zamijeni je sa "3,2 s učitavanje" ili
-nekom drugom brojkom koju već dokazuješ na sajtu.
+════════ TEKSTURA I DUBINA ════════
+  • svaka kartica ima suptilnu pozadinu, mrežu ili tačkice, koja
+    blijedi prema dnu
+  • radijalni sjaj u gornjem desnom uglu koji jača na hover
+  • staklo (border-white/10 + backdrop blur od md: naviše)
+  • ikonice u gradijentnim kvadratima koje se blago zarotiraju i
+    uvećaju na hover
+  • cijela kartica se podiže na hover, kroz oprugu a ne kroz trajanje
 
-════════ DETALJI IZVEDBE ════════
-  • staklo se koristi tek od md: naviše, kako je pravilo u projektu
-  • radijalni sjajevi: plavi desno, tirkizni dolje lijevo
-  • sjaj oko aktivne stavke klizi kroz layoutId, ne kroz prekrajanje
-  • hover na metrikama pali sjaj i podiže karticu
-  • uz "reduced motion" nema automatskog vrtenja ni traka napretka
-  • animira se samo pomak i prozirnost, nigdje teških filtera
+════════ ANIMACIJE ════════
+  • kartice ulaze jedna po jedna (stagger) pri skrolanju
+  • sve trake i liste imaju svoje kašnjenje, pa se ništa ne dešava
+    odjednom
+  • uz "reduced motion" pulsiranja nema, trake se ispišu odmah
+  • animira se samo pomak, prozirnost i širina
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: interaktivna QA sekcija na case studyju"
+  git commit -m "feat: bento grid v2 na case studyju"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: interaktivna QA sekcija na case studyju" ; git push
+  git add . ; git commit -m "feat: bento grid v2 na case studyju" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
 ════════════════════════════════════════════════════════════════════
