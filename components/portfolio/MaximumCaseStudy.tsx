@@ -227,7 +227,7 @@ function GlassCard({
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={once}
       transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`absolute z-20 ${className}`}
+      className={`z-20 ${className}`}
     >
       <motion.div
         animate={calm ? undefined : { y: [0, -8, 0] }}
@@ -376,7 +376,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
           </motion.div>
 
           {/* ══ DESNO: auto, linije, kartice ══ */}
-          <div className="relative min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]">
+          <div className="relative hidden lg:block lg:min-h-[560px]">
             <ConnectLines calm={calm} />
 
             {/* auto u sredini */}
@@ -393,7 +393,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             </motion.div>
 
             {/* 1 · obim rezervacija */}
-            <GlassCard calm={calm} delay={0.35} className="top-0 left-0 w-[188px]">
+            <GlassCard calm={calm} delay={0.35} className="absolute top-0 left-0 w-[188px]">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">{c.volume.t}</p>
               <p className="text-xl font-extrabold text-emerald-400 leading-none mb-2.5">{c.volume.v}</p>
               <div className="flex items-end gap-1 h-10">
@@ -410,7 +410,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             </GlassCard>
 
             {/* 2 · aktivna flota */}
-            <GlassCard calm={calm} delay={0.5} className="top-6 right-0 sm:right-6 w-[186px]">
+            <GlassCard calm={calm} delay={0.5} className="absolute top-6 right-0 sm:right-6 w-[186px]">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">{c.fleet.t}</p>
               <p className="flex items-baseline gap-1.5">
                 <span className="text-2xl font-extrabold text-[var(--text)] leading-none">{c.fleet.v}</span>
@@ -424,7 +424,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             </GlassCard>
 
             {/* 3 · pokrivenost */}
-            <GlassCard calm={calm} delay={0.65} className="bottom-24 right-0 w-[176px] hidden sm:block">
+            <GlassCard calm={calm} delay={0.65} className="absolute bottom-24 right-0 w-[176px]">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">{c.map.t}</p>
               <div className="relative h-[70px] rounded-xl border border-white/10 bg-[#070C1A] overflow-hidden">
                 <span aria-hidden className="absolute inset-0 opacity-40
@@ -450,7 +450,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             </GlassCard>
 
             {/* 4 · provjera na serveru */}
-            <GlassCard calm={calm} delay={0.8} className="bottom-0 left-0 w-[216px]">
+            <GlassCard calm={calm} delay={0.8} className="absolute bottom-0 left-0 w-[216px]">
               <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
                 <ShieldCheck size={11} className="text-brand-400" /> {c.valid.t}
               </p>
@@ -519,7 +519,67 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
             </motion.div>
 
             {/* notifikacija */}
-            <GlassCard calm={calm} delay={0.95} className="bottom-6 right-2 sm:right-10 w-[196px]">
+            <GlassCard calm={calm} delay={0.95} className="absolute bottom-6 right-2 sm:right-10 w-[196px]">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+                                 bg-emerald-500/12 border border-emerald-500/35 text-emerald-400">
+                  <BellRing size={13} />
+                </span>
+                <span className="text-[11px] font-extrabold text-[var(--text)]">{d.floats.req.t}</span>
+              </div>
+              <p className="text-[10.5px] text-[var(--text-muted)] leading-snug">{d.floats.req.d}</p>
+            </GlassCard>
+          </div>
+        </div>
+
+        {/* ══ MOBILNA VERZIJA DESNE KOLONE ═══════════════════════════════════
+           Na telefonu apsolutne kartice nemaju gdje stati, pa se kompozicija
+           razlaže: auto na vrhu, ispod njega kartice u normalnom toku.      */}
+        <div className="lg:hidden mt-12">
+          <div className="relative flex justify-center mb-7">
+            <span aria-hidden className="absolute inset-0 -inset-x-10
+                                         bg-[radial-gradient(closest-side,rgba(37,99,235,0.24),transparent_72%)]" />
+            <div className="relative w-[240px] sm:w-[300px]"><CarArt calm={calm} /></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <GlassCard calm={calm} delay={0.1} className="w-full">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">{c.volume.t}</p>
+              <p className="text-lg font-extrabold text-emerald-400 leading-none mb-2">{c.volume.v}</p>
+              <div className="flex items-end gap-[3px] h-8">
+                {bars.map((h, i) => (
+                  <span key={i} style={{ height: `${h}%` }}
+                        className={`flex-1 rounded-t ${i === bars.length - 1
+                          ? "bg-gradient-to-t from-brand-600 to-brand-400" : "bg-white/12"}`} />
+                ))}
+              </div>
+            </GlassCard>
+
+            <GlassCard calm={calm} delay={0.16} className="w-full">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">{c.fleet.t}</p>
+              <p className="flex items-baseline gap-1.5">
+                <span className="text-xl font-extrabold text-[var(--text)] leading-none">{c.fleet.v}</span>
+                <span className="text-[11px] text-[var(--text-muted)]">{c.fleet.unit}</span>
+              </p>
+              <span className="inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 rounded-full
+                               text-[9.5px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {c.fleet.idle}
+              </span>
+            </GlassCard>
+
+            <GlassCard calm={calm} delay={0.22} className="w-full">
+              <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                <ShieldCheck size={11} className="text-brand-400" /> {c.valid.t}
+              </p>
+              <pre className="text-[9px] leading-[1.7] font-mono rounded-lg border border-white/10 bg-[#070C1A] p-2 overflow-hidden">
+                <code>
+                  <span className="block"><span className="text-brand-300">if</span><span className="text-white/70">{" (zauzeto)"}</span></span>
+                  <span className="block text-white/70">{"  return "}<span className="text-emerald-300">{'"ODBIJENO"'}</span>;</span>
+                </code>
+              </pre>
+            </GlassCard>
+
+            <GlassCard calm={calm} delay={0.28} className="w-full">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
                                  bg-emerald-500/12 border border-emerald-500/35 text-emerald-400">

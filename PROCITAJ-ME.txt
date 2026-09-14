@@ -1,42 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Dno hero sekcije: prozor + telefon
+  mehiccdev — Case study: popravljena mobilna verzija
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
 
-════════ ŠTA JE BILO LOŠE ════════
-1. Screenshot je išao preko cijele širine i visine, pa je progutao
-   ekran i djelovao kao da je slika zalutala na stranicu.
-2. Naša nacrtana navigacija (MAXIMUM, POČETNA, POSLOVNO...) stajala
-   je IZNAD screenshota koji već sadrži svoju navigaciju. Isto i
-   natpis "Vaš ključ slobode" preko slike na kojoj taj natpis već
-   postoji. Duplo, i zato je izgledalo pokvareno.
+════════ ŠTA JE BILO POKVARENO ════════
+Desna kolona hero sekcije bila je građena apsolutnim pozicioniranjem:
+auto u sredini, četiri kartice u uglovima, dashboard ispod, sve unutar
+okvira visine 420 piksela. Na desktopu to radi, na telefonu širine 375
+piksela kartice od po 190 piksela nemaju gdje stati, pa su naljegle
+jedna na drugu i preko auta.
 
 ════════ ŠTA JE SADA ════════
-  • Prozor preglednika je uži (najviše 5xl) i OGRANIČENE VISINE
-    (240 px na telefonu, 400 px na desktopu), pa se vidi samo gornji
-    dio stranice, kao pravi isječak, a ne cijeli sajt.
-  • Nacrtana navigacija i duplirani natpis su uklonjeni. Ostaje samo
-    traka preglednika s adresom, jer ona daje kontekst.
-  • Dno slike prelazi u tamno, pa rez ne izgleda kao odsječena slika
-    nego kao da stranica nestaje u pozadini.
-  • TELEFON s mobilnom verzijom (maximum-admin-mobitel.png) naslanja
-    se na donji desni ugao prozora i lagano pluta. Time se odmah vidi
-    da sistem radi i na telefonu, što je pola priče kod rent-a-cara.
+Kompozicija se RAZLAŽE ispod 1024 piksela:
 
-════════ OŠTRINA ════════
-Obje slike idu kroz next/image s quality 92 (umjesto zadanih 75) i s
-tačnim sizes vrijednostima, pa Vercel isporučuje verziju taman za
-ekran. Telefon koristi odnos stranica 450:992, koliko i sam original,
-pa nema izobličenja.
+  DESKTOP   ostaje kako jeste: auto u sredini, linije, četiri kartice
+            oko njega, dashboard ispod, notifikacija u uglu
 
-Uz "reduced motion" telefon ne pluta.
+  TELEFON   auto na vrhu (manji, sa sjajem iza sebe), ispod njega
+            četiri kartice u mreži dva po dva, u normalnom toku:
+              Obim rezervacija +18%   ·   Aktivna flota 45 / 0
+              Provjera na serveru     ·   Novi upit
+            Bez apsolutnog pozicioniranja, pa ništa ne može naleći.
+
+Dashboard mockup i linije koje povezuju kartice s automobilom ostaju
+samo na desktopu. Na telefonu bi bili nečitki, a usporili bi stranicu.
+
+════════ PROVJERA OSTALIH SEKCIJA ════════
+Prošao sam cijeli fajl i tražio uobičajene uzroke lomljenja:
+  ✓ QA sekcija: lijevo i desno se slažu jedno ispod drugog, kod ima
+    vodoravno skrolanje unutar svog okvira, ne razvlači stranicu
+  ✓ Bento grid: sm:grid-cols-2 lg:grid-cols-6, na telefonu jedna
+    kolona
+  ✓ Metrike: sm:grid-cols-3, na telefonu jedna ispod druge
+  ✓ Sve apsolutne kartice su unutar bloka koji je skriven ispod 1024 px
+  ✓ Telefon u dnu je 132 px na mobitelu i ne izlazi iz okvira
+  ✓ Fiksne širine preko 300 px postoje samo u dekorativnim sjajevima,
+    koji su unutar sekcije s overflow-hidden
+
+════════ ŠTA MOLIM DA PROVJERIŠ SAM ════════
+Ja čitam kod, ne vidim stranicu. Otvori /maximum u Chrome-u
+(F12 pa Ctrl+Shift+M) na 360, 390 i 768 piksela i pogledaj samo
+dvije stvari: ima li vodoravnog skrolanja i izlazi li išta iz okvira.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: prozor i telefon na dnu hero sekcije"
+  git commit -m "fix: mobilna verzija case study hero sekcije"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
