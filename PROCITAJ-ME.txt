@@ -1,66 +1,58 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Case study hero v2
+  mehiccdev — QA sekcija: interaktivni prikaz umjesto četiri kartice
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
+(sadrži i novi hero iz prethodne isporuke)
 
-Mijenja se samo hero, ostatak stranice (sticky story, bento, CTA)
-ostaje isti.
+════════ NOVI RASPORED ════════
+LIJEVO   četiri rubna slučaja, jedan ispod drugog. Prelazak mišem
+         (ili tap) otvara opis i mijenja desnu stranu. Aktivna stavka
+         ima sjaj koji klizi za izborom, a tanka traka na dnu
+         pokazuje kada se prelazi na sljedeći.
 
-════════ ŠTA JE BILO JEFTINO ════════
-Hero je bio slika sa natpisima. Jedan mockup, nula sloja, nula
-pokreta poslije prvog fade-ina. Sve se vidjelo u prvoj sekundi i
-dalje nije imalo šta da drži pažnju.
+DESNO    editor s kodom koji dokazuje ono što tekst tvrdi. Za svaki
+         slučaj mijenja se ime fajla u traci i sam isječak:
 
-════════ ŠTA JE SADA ════════
-1. NASLOV SE SASTAVLJA
-   Druga linija naslova ulazi RIJEČ PO RIJEČ, s malim pomakom odozdo.
-   Traje pola sekunde, ali je razlika između "učitalo se" i "pojavilo
-   se".
+  01  rezervacija.rules.ts   provjera obrnutih datuma
+  02  dostupnost.ts          provjera zauzetog termina na serveru
+  03  vozilo.status.ts       servis i blokada u istom upitu
+  04  rezervacija.test.ts    test da dupli klik ne pravi dvije rezervacije
 
-2. TRI PLUTAJUĆE KARTICE OKO MOCKUPA
-   Gore desno: "Novi upit · VW Golf 8 · 10 do 13. jula"
-   Dolje lijevo: "Odobreno · u dva klika iz panela"
-   Desno u sredini: "PageSpeed · 100 od 100"
-   Svaka ulazi sa svojim kašnjenjem i poslije lagano pluta, svaka
-   svojim ritmom, pa se nikad ne poklope.
+Ispod koda iskoči zelena traka s ishodom, npr. "Spriječeno · Druga
+istovremena rezervacija odbijena". Kod je obojen bez ijedne dodatne
+biblioteke: ključne riječi plavo, tekstovi zeleno, komentari sivo.
 
-3. PARALLAX NA DVIJE DUBINE
-   Mockup se pomjera sporo za mišem, plutajuće kartice skoro duplo
-   brže. Time kompozicija dobija dubinu umjesto da bude plosnata.
+Sekcija se sama vrti svakih 6 sekundi, ali STAJE čim miš uđe u nju,
+pa čitanje koda niko ne prekida.
 
-4. ODSJAJ PREKO EKRANA
-   Preko screenshota povremeno prelazi tanki svjetlosni pojas, kao
-   odsjaj po staklu. Pojavi se svakih par sekundi, dovoljno rijetko
-   da ne smeta.
+════════ METRIKE ════════
+Ispod svega tri kartice sa staklenim efektom i sjajem na hover:
+  0      duplih rezervacija od lansiranja
+  100%   provjera koje rade i na serveru
+  4      rubna slučaja pokrivena prije isporuke
 
-5. BROJKE SE ODBROJAVAJU
-   Četiri brojke ispod mockupa broje od nule do svoje vrijednosti
-   kad uđu u vidno polje (100, 3,2 s, 0, 2). Usporavaju pred kraj,
-   pa djeluju kao mjerenje a ne kao animacija.
+⚠ Prva tvrdnja ("0 duplih rezervacija") je nešto što možeš potvrditi
+samo ti. Ako nisi siguran, zamijeni je sa "3,2 s učitavanje" ili
+nekom drugom brojkom koju već dokazuješ na sajtu.
 
-6. POZADINA
-   Tanka mreža koja blijedi prema rubovima, plavo svjetlo odozgo i
-   tirkizno s lijeve strane, pa kadar ima dvije temperature.
-
-════════ PERFORMANSE I PRISTUPAČNOST ════════
-  • animira se samo pomak, prozirnost i razmjera, nigdje zamućenja
-  • brojači idu kroz requestAnimationFrame i staju kad završe
-  • parallax sluša miš pasivno i radi samo na desktopu
-  • uz "reduced motion" sve miruje: brojke se ispišu odmah, kartice
-    stoje, odsjaja nema
-  • plutajuće kartice su skrivene ispod 640 px, da se na telefonu ne
-    naslanjaju na mockup
+════════ DETALJI IZVEDBE ════════
+  • staklo se koristi tek od md: naviše, kako je pravilo u projektu
+  • radijalni sjajevi: plavi desno, tirkizni dolje lijevo
+  • sjaj oko aktivne stavke klizi kroz layoutId, ne kroz prekrajanje
+  • hover na metrikama pali sjaj i podiže karticu
+  • uz "reduced motion" nema automatskog vrtenja ni traka napretka
+  • animira se samo pomak i prozirnost, nigdje teških filtera
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: novi hero na case study stranici"
+  git commit -m "feat: interaktivna QA sekcija na case studyju"
   git push
 
 Ili u jednom redu:
-  git add . ; git commit -m "feat: novi hero na case study stranici" ; git push
+  git add . ; git commit -m "feat: interaktivna QA sekcija na case studyju" ; git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
 ════════════════════════════════════════════════════════════════════

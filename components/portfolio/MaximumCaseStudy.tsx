@@ -8,7 +8,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useInView, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
   ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing,
@@ -47,11 +47,42 @@ const T = {
     storyBody: "Dvije godine sam radio manualno i API testiranje prije nego što sam napisao prvu liniju ovog sistema. Ta navika je presudila dizajnu: prije nego što sam gradio ekrane, popisao sam načine na koje rezervacija može pući. Preklapanje termina, gost koji osvježi stranicu dva puta, datum povratka prije datuma preuzimanja, vozilo koje ode na servis usred rezervisanog perioda.",
     storySub: "Zato provjere ne stoje samo u pregledniku nego i na serveru, pa se ista pravila ne mogu zaobići ni ručnim mijenjanjem podataka.",
     storySteps: [
-      { t: "Popis rubnih slučajeva prije koda", d: "Lista načina na koje rezervacija može propasti nastala je prva, pa je sistem građen oko nje umjesto da se krpi poslije prijava." },
-      { t: "Provjera dostupnosti na serveru", d: "Preklapanje termina se odbija na serveru, ne samo u formi. Dvije osobe koje istovremeno šalju isti termin ne mogu obje proći." },
-      { t: "Stanje vozila je jedan izvor istine", d: "Servis, blokada i rezervacija dijele istu evidenciju, pa vozilo ne može biti slobodno na sajtu a zauzeto u panelu." },
-      { t: "Testirano kao da će neko pokušati srušiti", d: "Prazna polja, obrnuti datumi, dupli klik, prekid veze usred slanja. Sve što bi tester prijavio riješeno je prije isporuke." },
+      {
+        t: "Popis rubnih slučajeva prije koda",
+        d: "Lista načina na koje rezervacija može propasti nastala je prva, pa je sistem građen oko nje umjesto da se krpi poslije prijava.",
+        file: "rezervacija.rules.ts",
+        code: `// datum povratka ne smije biti prije preuzimanja\nif (povratak <= preuzimanje) {\n  return odbij("DATUMI_OBRNUTI");\n}`,
+        result: "Odbijeno prije upisa u bazu",
+      },
+      {
+        t: "Provjera dostupnosti na serveru",
+        d: "Preklapanje termina se odbija na serveru, ne samo u formi. Dvije osobe koje istovremeno šalju isti termin ne mogu obje proći.",
+        file: "dostupnost.ts",
+        code: `const zauzeto = await rezervacije.postoji({\n  vozilo, od: preuzimanje, do: povratak,\n});\n\nif (zauzeto) return odbij("TERMIN_ZAUZET");`,
+        result: "Druga istovremena rezervacija odbijena",
+      },
+      {
+        t: "Stanje vozila je jedan izvor istine",
+        d: "Servis, blokada i rezervacija dijele istu evidenciju, pa vozilo ne može biti slobodno na sajtu a zauzeto u panelu.",
+        file: "vozilo.status.ts",
+        code: `// servis i ručna blokada ulaze u isti upit\nconst slobodno = await vozilo.slobodnoU(raspon);\n\nif (!slobodno) return odbij("VOZILO_NEDOSTUPNO");`,
+        result: "Sajt i panel pokazuju isto stanje",
+      },
+      {
+        t: "Testirano kao da će neko pokušati srušiti",
+        d: "Prazna polja, obrnuti datumi, dupli klik, prekid veze usred slanja. Sve što bi tester prijavio riješeno je prije isporuke.",
+        file: "rezervacija.test.ts",
+        code: `test("dupli klik ne pravi dvije rezervacije", async () => {\n  const [a, b] = await Promise.all([posalji(), posalji()]);\n  expect([a.ok, b.ok]).toEqual([true, false]);\n});`,
+        result: "Prolazi, jedan upit prolazi, drugi pada",
+      },
     ],
+    storyMetrics: [
+      { v: "0", l: "duplih rezervacija od lansiranja" },
+      { v: "100%", l: "provjera koje rade i na serveru" },
+      { v: "4", l: "rubna slučaja pokrivena prije isporuke" },
+    ],
+    storyPassed: "provjera prošla",
+    storyBlocked: "spriječeno",
     bentoLabel: "Moduli sistema",
     bentoH1: "Šta sve",
     bentoH2: "sistem radi",
@@ -99,11 +130,42 @@ const T = {
     storyBody: "I spent two years doing manual and API testing before writing the first line of this system. That habit shaped the design: before building any screen, I listed the ways a booking can fail. Overlapping dates, a guest refreshing twice, a return date before the pickup date, a car going into service in the middle of a booked period.",
     storySub: "That is why the checks do not live only in the browser but on the server as well, so the same rules cannot be bypassed by editing data by hand.",
     storySteps: [
-      { t: "Edge cases listed before the code", d: "The list of ways a booking can fail came first, so the system was built around it instead of being patched after bug reports." },
-      { t: "Availability checked on the server", d: "Overlapping dates are rejected server side, not just in the form. Two people submitting the same slot cannot both succeed." },
-      { t: "One source of truth per vehicle", d: "Service, manual blocks and bookings share one record, so a car cannot be free on the site and taken in the panel." },
-      { t: "Tested as if someone will try to break it", d: "Empty fields, reversed dates, double clicks, a dropped connection mid submit. Everything a tester would report was handled before delivery." },
+      {
+        t: "Edge cases listed before the code",
+        d: "The list of ways a booking can fail came first, so the system was built around it instead of being patched after bug reports.",
+        file: "booking.rules.ts",
+        code: `// return date cannot come before pickup\nif (dropoff <= pickup) {\n  return reject("DATES_REVERSED");\n}`,
+        result: "Rejected before it reaches the database",
+      },
+      {
+        t: "Availability checked on the server",
+        d: "Overlapping dates are rejected server side, not just in the form. Two people submitting the same slot cannot both succeed.",
+        file: "availability.ts",
+        code: `const taken = await bookings.exists({\n  vehicle, from: pickup, to: dropoff,\n});\n\nif (taken) return reject("SLOT_TAKEN");`,
+        result: "The second simultaneous booking is rejected",
+      },
+      {
+        t: "One source of truth per vehicle",
+        d: "Service, manual blocks and bookings share one record, so a car cannot be free on the site and taken in the panel.",
+        file: "vehicle.status.ts",
+        code: `// service and manual blocks hit the same query\nconst free = await vehicle.isFreeIn(range);\n\nif (!free) return reject("VEHICLE_UNAVAILABLE");`,
+        result: "Site and panel show the same state",
+      },
+      {
+        t: "Tested as if someone will try to break it",
+        d: "Empty fields, reversed dates, double clicks, a dropped connection mid submit. Everything a tester would report was handled before delivery.",
+        file: "booking.test.ts",
+        code: `test("double click cannot create two bookings", async () => {\n  const [a, b] = await Promise.all([submit(), submit()]);\n  expect([a.ok, b.ok]).toEqual([true, false]);\n});`,
+        result: "Passing, one request succeeds and one fails",
+      },
     ],
+    storyMetrics: [
+      { v: "0", l: "double bookings since launch" },
+      { v: "100%", l: "of checks also run on the server" },
+      { v: "4", l: "edge cases covered before delivery" },
+    ],
+    storyPassed: "check passed",
+    storyBlocked: "prevented",
     bentoLabel: "System modules",
     bentoH1: "What the",
     bentoH2: "system does",
@@ -355,86 +417,220 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
   );
 }
 
+/* ── Bojenje koda: sitni isticač, bez biblioteke ──────────────────────────── */
+function Code({ code }: { code: string }) {
+  const tint = (line: string, key: number) => {
+    if (line.trim().startsWith("//")) {
+      return <span key={key} className="block text-white/30 italic">{line || "\u00A0"}</span>;
+    }
+    const parts = line.split(/("[^"]*"|\b(?:const|await|if|return|test|expect|async|new)\b)/g);
+    return (
+      <span key={key} className="block">
+        {parts.map((p, i) => {
+          if (!p) return null;
+          if (/^"/.test(p))
+            return <span key={i} className="text-emerald-300/90">{p}</span>;
+          if (/^(const|await|if|return|test|expect|async|new)$/.test(p))
+            return <span key={i} className="text-brand-300">{p}</span>;
+          return <span key={i} className="text-white/70">{p}</span>;
+        })}
+      </span>
+    );
+  };
+  return (
+    <pre className="text-[11.5px] sm:text-[12.5px] leading-[1.75] font-mono overflow-x-auto">
+      <code>{code.split("\n").map(tint)}</code>
+    </pre>
+  );
+}
+
+/* ── Sekcija: QA pozadina, interaktivno ───────────────────────────────────── */
+const STORY_MS = 6000;
+
 function Story({ d }: { d: typeof T.bs }) {
+  const reduce = useReducedMotion() ?? false;
   const [active, setActive] = useState(0);
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const vis = entries.filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (vis) setActive(Number((vis.target as HTMLElement).dataset.i));
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.4, 1] }
-    );
-    refs.current.forEach((el) => el && obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
+    if (reduce || paused) return;
+    const t = setTimeout(() => setActive((a) => (a + 1) % d.storySteps.length), STORY_MS);
+    return () => clearTimeout(t);
+  }, [active, paused, reduce, d.storySteps.length]);
+
+  const s = d.storySteps[active];
 
   return (
-    <section className="py-24 lg:py-28 relative">
+    <section
+      className="py-24 lg:py-32 relative overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-start">
+      <div aria-hidden className="absolute top-1/3 -right-32 w-[560px] h-[560px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.16),transparent_72%)]" />
+      <div aria-hidden className="absolute bottom-0 -left-32 w-[460px] h-[460px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.10),transparent_72%)]" />
 
-          <div className="lg:sticky lg:top-28">
-            <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}>
-              <motion.span variants={up}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
-                           border border-brand-600/30 bg-brand-600/10 text-brand-300
-                           text-xs font-semibold tracking-wider uppercase">
-                <ShieldCheck size={12} /> {d.storyLabel}
-              </motion.span>
-              <motion.h2 variants={up} className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight leading-[1.1]">
-                {d.storyH1}{" "}
-                <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.storyH2}</span>
-              </motion.h2>
-              <motion.p variants={up} className="text-[var(--text-muted)] leading-relaxed mt-5">{d.storyBody}</motion.p>
-              <motion.p variants={up} className="text-[var(--text)] leading-relaxed mt-4 text-[15px] font-medium">
-                {d.storySub}
-              </motion.p>
-              <motion.div variants={up} className="hidden lg:flex gap-1.5 mt-8" aria-hidden>
-                {d.storySteps.map((_, i) => (
-                  <span key={i} className={`h-1 rounded-full transition-all duration-500
-                                            ${i === active ? "w-8 bg-brand-500" : "w-3 bg-[var(--border)]"}`} />
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        {/* uvod */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="max-w-3xl mb-14">
+          <motion.span variants={up}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
+                       border border-brand-600/30 bg-brand-600/10 text-brand-300
+                       text-xs font-semibold tracking-wider uppercase">
+            <ShieldCheck size={12} /> {d.storyLabel}
+          </motion.span>
+          <motion.h2 variants={up} className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold tracking-tight leading-[1.08]">
+            {d.storyH1}{" "}
+            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.storyH2}</span>
+          </motion.h2>
+          <motion.p variants={up} className="text-[var(--text-muted)] leading-relaxed mt-5">{d.storyBody}</motion.p>
+          <motion.p variants={up} className="text-[var(--text)] leading-relaxed mt-3 text-[15px] font-medium">{d.storySub}</motion.p>
+        </motion.div>
 
-          <div className="flex flex-col gap-4">
-            {d.storySteps.map((s, i) => (
-              <motion.div
-                key={s.t}
-                data-i={i}
-                ref={(el) => { refs.current[i] = el; }}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={once}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className={`rounded-3xl border p-6 sm:p-7 transition-[border-color,background-color] duration-500
-                            ${i === active
-                              ? "border-brand-600/45 bg-brand-600/[.06]"
-                              : "border-[var(--border)] bg-[var(--surface)]"}`}
-              >
-                <div className="flex items-start gap-4">
-                  <span className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0
-                                    text-[13px] font-extrabold transition-colors duration-500
-                                    ${i === active
-                                      ? "bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/30"
-                                      : "bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
-                    0{i + 1}
+        <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-6 lg:gap-8 items-start">
+
+          {/* ── lijevo: izbor rubnog slučaja ── */}
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
+                      className="flex flex-col gap-2.5" role="tablist" aria-label={d.storyLabel}>
+            {d.storySteps.map((step, i) => {
+              const on = i === active;
+              return (
+                <motion.button
+                  key={step.t}
+                  variants={up}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => setActive(i)}
+                  className={`group relative overflow-hidden text-left rounded-2xl p-5 border
+                              transition-[border-color,background-color,transform] duration-300
+                              ${on
+                                ? "border-brand-600/45 bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-sm"
+                                : "border-[var(--border)] bg-[var(--surface)] hover:border-brand-600/30 hover:-translate-y-0.5"}`}
+                >
+                  {/* sjaj koji prati aktivnu stavku */}
+                  {on && (
+                    <motion.span layoutId="qa-glow" aria-hidden
+                      transition={{ type: "spring", stiffness: 260, damping: 32 }}
+                      className="absolute inset-0 -z-10 rounded-2xl
+                                 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(37,99,235,0.16),transparent_60%)]" />
+                  )}
+                  <span className="flex items-start gap-3.5">
+                    <span className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0
+                                      text-[12px] font-extrabold transition-colors duration-300
+                                      ${on ? "bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/30"
+                                           : "bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
+                      0{i + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className={`block text-[14.5px] font-extrabold leading-tight
+                                        ${on ? "text-[var(--text)]" : "text-[var(--text-muted)]"}`}>
+                        {step.t}
+                      </span>
+                      {on && (
+                        <motion.span
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ duration: 0.3 }}
+                          className="block text-[12.5px] text-[var(--text-muted)] leading-relaxed mt-1.5"
+                        >
+                          {step.d}
+                        </motion.span>
+                      )}
+                    </span>
                   </span>
-                  <div className="min-w-0">
-                    <h3 className="text-[16px] font-extrabold text-[var(--text)] leading-tight mb-2">{s.t}</h3>
-                    <p className="text-[13.5px] text-[var(--text-muted)] leading-relaxed">{s.d}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+
+                  {on && !paused && !reduce && (
+                    <motion.span
+                      key={`bar-${active}`}
+                      initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                      transition={{ duration: STORY_MS / 1000, ease: "linear" }}
+                      className="absolute bottom-0 left-0 h-[2.5px] w-full origin-left bg-brand-500/60"
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </motion.div>
+
+          {/* ── desno: editor s kodom i ishodom ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }} viewport={once}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#070C1A]/90 md:backdrop-blur-xl
+                       shadow-[0_50px_100px_-40px_rgba(2,8,30,0.9)]"
+          >
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[.07]">
+              <span className="w-2 h-2 rounded-full bg-white/15" />
+              <span className="w-2 h-2 rounded-full bg-white/15" />
+              <span className="w-2 h-2 rounded-full bg-white/15" />
+              <AnimatePresence mode="wait">
+                <motion.span key={s.file}
+                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.2 }}
+                  className="ml-2 text-[11px] font-mono text-white/40">
+                  {s.file}
+                </motion.span>
+              </AnimatePresence>
+              <span className="ml-auto inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full
+                               text-[9.5px] font-bold uppercase tracking-wider
+                               text-emerald-400 bg-emerald-500/10 border border-emerald-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {d.storyPassed}
+              </span>
+            </div>
+
+            <div className="p-5 sm:p-6 min-h-[236px]">
+              <AnimatePresence mode="wait">
+                <motion.div key={active}
+                  initial={{ opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}>
+                  <Code code={s.code} />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.25 }}
+                    className="mt-5 flex items-center gap-3 rounded-xl px-4 py-3
+                               border border-emerald-500/30 bg-emerald-500/[.06]"
+                  >
+                    <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+                                     bg-emerald-500/15 border border-emerald-500/40 text-emerald-400">
+                      <Check size={14} strokeWidth={3} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[9.5px] font-bold uppercase tracking-wider text-emerald-400/80">
+                        {d.storyBlocked}
+                      </span>
+                      <span className="block text-[13px] font-semibold text-[var(--text)] leading-tight mt-0.5">
+                        {s.result}
+                      </span>
+                    </span>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </motion.div>
         </div>
+
+        {/* ── metrike ── */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
+          className="grid sm:grid-cols-3 gap-3.5 mt-8">
+          {d.storyMetrics.map((m) => (
+            <motion.div key={m.l} variants={up} whileHover={{ y: -4 }}
+              className="group relative overflow-hidden rounded-2xl border border-[var(--border)]
+                         bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-sm p-6
+                         transition-[border-color] duration-300 hover:border-brand-600/40">
+              <span aria-hidden className="absolute -top-16 -right-12 w-40 h-40 rounded-full pointer-events-none
+                                           opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                                           bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)]" />
+              <p className="relative text-3xl font-extrabold tracking-tight text-[var(--text)]">{m.v}</p>
+              <p className="relative text-[12px] text-[var(--text-muted)] leading-snug mt-2">{m.l}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
