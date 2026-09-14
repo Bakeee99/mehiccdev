@@ -1,36 +1,34 @@
-mehiccdev — Case study: Maximum Rent a Car
+mehiccdev — Case study na adresi /maximum
 
-U ZIP-u (2 fajla):
-  components/portfolio/MaximumCaseStudy.tsx   sve sekcije, lokalne podkomponente
-  app/portfolio/maximum/page.tsx              ruta + metadata, montira Navbar i Footer
+PUTANJE
+  kreiraj:    app/maximum/page.tsx          (u ZIP-u)
+  obriši:     app/portfolio/maximum/        (stara ruta iz ranije isporuke)
+  izmijeni:   components/sections/Navbar.tsx (vidi NAVBAR-IZMJENE.txt)
 
-⚠ OVAJ PUT BUILD NIJE VERIFIKOVAN. Klon repozitorija s GitHuba mi je
-odbijen (autentikacija), pa nisam mogao pokrenuti npm run build kao
-inače. Prije pusha OBAVEZNO pokreni lokalno:
-    npm run build
-Provjereno je jedino da sve ikonice iz lucide-react postoje.
+ZAŠTO BRISATI STARU RUTU
+Ako ostanu obje, ista stranica postoji na dvije adrese. Google to
+tretira kao duplikat i sam bira koju će prikazati, a ti gubiš dio
+snage linkova. Jedna adresa, /maximum, i gotovo.
 
-SADRŽAJ
-  Hero        masivan naslov, plutajući mockup sajta, četiri brojke
-  Story       lijevo fiksiran tekst o QA pozadini, desno četiri kartice
-              koje se pale kako se skrola
-  Bento       asimetrična mreža: Pregled flote uživo (široka, s redovima
-              i bojenim oznakama za kašnjenje), Ugovori se pišu sami,
-              Smart preuzimanje i povrat, Dvojezično, Brzina
-  CTA         gradijentni okvir, vodi na /rjesenja/rent-a-car
+ŠTA JE U page.tsx
+  • metadata tačno kako si tražio (title i description)
+  • canonical, OpenGraph i Twitter kartica
+  • JSON-LD CreativeWork, da Google razumije da je riječ o radu
+  • montira postojeći Navbar i Footer i komponentu MaximumCaseStudy
 
-Sve animacije koriste viewport={{ once: true }}.
-Tekst je dvojezičan (bs i en), jer sajt ima prekidač jezika.
+KOMPONENTA
+Ostaje na components/portfolio/MaximumCaseStudy.tsx, iz prethodne
+isporuke. Ako ti je draže da i ona bude uz rutu, premjesti je u
+app/maximum/MaximumCaseStudy.tsx i promijeni import u page.tsx.
 
-⚠ PROVJERI TVRDNJE PRIJE OBJAVE
-Moduli "Smart preuzimanje i povrat" i "Ugovori se pišu sami" opisani
-su kao postojeći. Ako to u Maximumu još nije izgrađeno, preformuliši
-ih ili obriši, jer je cijeli sajt građen na provjerljivim tvrdnjama.
-Isto vrijedi za "0 duplih rezervacija od lansiranja".
+⚠ BUILD I DALJE NIJE VERIFIKOVAN NA REPOZITORIJU
+Klon s GitHuba mi je odbijen, pa nisam mogao pokrenuti npm run build.
+Komponenta prolazi TypeScript provjeru u izolaciji. Prije pusha
+pokreni lokalno:  npm run build
 
 KOMANDE ZA KONZOLU
-  git remote -v            ← provjeri da je mehiccdev, ne maximum
+  git remote -v                ← provjeri da je mehiccdev, ne maximum
   npm run build
   git add .
-  git commit -m "feat: case study stranica za Maximum"
+  git commit -m "feat: case study stranica na /maximum"
   git push
