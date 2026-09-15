@@ -11,7 +11,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -87,11 +87,11 @@ const T = {
         result: "Prolazi, jedan upit prolazi, drugi pada",
       },
     ],
-    storyMetrics: [
-      { v: "0", l: "duplih rezervacija od lansiranja" },
-      { v: "100%", l: "provjera koje rade i na serveru" },
-      { v: "4", l: "rubna slučaja pokrivena prije isporuke" },
-    ],
+    storyMetrics: {
+      dial:  { t: "Google ocjena performansi", v: 100, unit: "/100", note: "mjereno na PageSpeed Insights, možete ponoviti" },
+      spark: { t: "Učitavanje na telefonu", v: "3,2 s", was: "prije 21,6 s", note: "šest i po puta brže od starog sajta" },
+      bar:   { t: "Provjere koje rade i na serveru", v: "100%", chip: "4 rubna slučaja", note: "ista pravila se ne mogu zaobići iz preglednika" },
+    },
     storyPassed: "provjera prošla",
     storyBlocked: "spriječeno",
     bentoLabel: "Moduli sistema",
@@ -182,11 +182,11 @@ const T = {
         result: "Passing, one request succeeds and one fails",
       },
     ],
-    storyMetrics: [
-      { v: "0", l: "double bookings since launch" },
-      { v: "100%", l: "of checks also run on the server" },
-      { v: "4", l: "edge cases covered before delivery" },
-    ],
+    storyMetrics: {
+      dial:  { t: "Google performance score", v: 100, unit: "/100", note: "measured on PageSpeed Insights, you can rerun it" },
+      spark: { t: "Mobile load time", v: "3.2 s", was: "was 21.6 s", note: "six and a half times faster than the old site" },
+      bar:   { t: "Checks that also run on the server", v: "100%", chip: "4 edge cases", note: "the same rules cannot be bypassed from the browser" },
+    },
     storyPassed: "check passed",
     storyBlocked: "prevented",
     bentoLabel: "System modules",
@@ -744,6 +744,8 @@ function Story({ d }: { d: typeof T.bs }) {
                 <motion.button
                   key={step.t}
                   variants={up}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   type="button"
                   role="tab"
                   aria-selected={on}
@@ -751,40 +753,47 @@ function Story({ d }: { d: typeof T.bs }) {
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
                   className={`group relative overflow-hidden text-left rounded-2xl p-5 border
-                              transition-[border-color,background-color,transform] duration-300
+                              transition-[border-color,background-color,box-shadow] duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)]
                               ${on
-                                ? "border-brand-600/45 bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-sm"
-                                : "border-[var(--border)] bg-[var(--surface)] hover:border-brand-600/30 hover:-translate-y-0.5"}`}
+                                ? "border-brand-600/45 bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-sm shadow-xl shadow-brand-600/10"
+                                : "border-[var(--border)] bg-[var(--surface)] hover:border-brand-600/30 hover:shadow-lg hover:shadow-black/30"}`}
                 >
-                  {/* sjaj koji prati aktivnu stavku */}
                   {on && (
                     <motion.span layoutId="qa-glow" aria-hidden
-                      transition={{ type: "spring", stiffness: 260, damping: 32 }}
+                      transition={{ type: "spring", stiffness: 220, damping: 30 }}
                       className="absolute inset-0 -z-10 rounded-2xl
                                  bg-[radial-gradient(120%_120%_at_0%_0%,rgba(37,99,235,0.16),transparent_60%)]" />
                   )}
                   <span className="flex items-start gap-3.5">
                     <span className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0
-                                      text-[12px] font-extrabold transition-colors duration-300
+                                      text-[12px] font-extrabold transition-colors duration-[400ms]
                                       ${on ? "bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/30"
                                            : "bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
                       0{i + 1}
                     </span>
                     <span className="min-w-0">
-                      <span className={`block text-[14.5px] font-extrabold leading-tight
+                      <span className={`block text-[14.5px] font-extrabold leading-tight transition-colors duration-300
                                         ${on ? "text-[var(--text)]" : "text-[var(--text-muted)]"}`}>
                         {step.t}
                       </span>
-                      {on && (
-                        <motion.span
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          transition={{ duration: 0.3 }}
-                          className="block text-[12.5px] text-[var(--text-muted)] leading-relaxed mt-1.5"
-                        >
+
+                      {/* Opis je UVIJEK montiran, samo mu se mijenja visina i
+                         prozirnost. Tako nema naglog ubacivanja u DOM, pa ni
+                         trzaja: visina se amortizuje, tekst blijedi s malim
+                         zakašnjenjem da prati otvaranje. */}
+                      <motion.span
+                        initial={false}
+                        animate={{ height: on ? "auto" : 0, opacity: on ? 1 : 0 }}
+                        transition={{
+                          height:  { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+                          opacity: { duration: on ? 0.32 : 0.16, delay: on ? 0.12 : 0 },
+                        }}
+                        className="block overflow-hidden"
+                      >
+                        <span className="block text-[12.5px] text-[var(--text-muted)] leading-relaxed pt-1.5">
                           {step.d}
-                        </motion.span>
-                      )}
+                        </span>
+                      </motion.span>
                     </span>
                   </span>
 
@@ -859,22 +868,134 @@ function Story({ d }: { d: typeof T.bs }) {
           </motion.div>
         </div>
 
-        {/* ── metrike ── */}
+        {/* ── metrike: dial, sparkline i progres traka ─────────────────────
+           Sve tri brojke su provjerljive: ocjena s PageSpeed Insightsa,
+           izmjereno vrijeme učitavanja i pokrivenost provjera na serveru.  */}
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
-          className="grid sm:grid-cols-3 gap-3.5 mt-8">
-          {d.storyMetrics.map((m) => (
-            <motion.div key={m.l} variants={up} whileHover={{ y: -4 }}
-              className="group relative overflow-hidden rounded-2xl border border-[var(--border)]
-                         bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-sm p-6
-                         transition-[border-color] duration-300 hover:border-brand-600/40">
-              <span aria-hidden className="absolute -top-16 -right-12 w-40 h-40 rounded-full pointer-events-none
-                                           opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                                           bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)]" />
-              <p className="relative text-3xl font-extrabold tracking-tight text-[var(--text)]">{m.v}</p>
-              <p className="relative text-[12px] text-[var(--text-muted)] leading-snug mt-2">{m.l}</p>
-            </motion.div>
-          ))}
+          className="grid sm:grid-cols-3 gap-4 mt-10">
+
+          {/* 1 · dial */}
+          <motion.div variants={up} whileHover={{ y: -5 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative overflow-hidden rounded-2xl border border-white/10
+                       bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-md p-6
+                       transition-[border-color,box-shadow] duration-500
+                       hover:border-brand-600/40 hover:shadow-2xl hover:shadow-brand-600/10">
+            <span aria-hidden className="absolute -top-20 -right-16 w-52 h-52 rounded-full pointer-events-none
+                                         opacity-60 group-hover:opacity-100 transition-opacity duration-500
+                                         bg-[radial-gradient(closest-side,rgba(37,99,235,0.24),transparent_72%)]" />
+            <div className="relative flex items-center gap-4">
+              <div className="relative w-[74px] h-[74px] flex-shrink-0">
+                <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90" aria-hidden>
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9" />
+                  <motion.circle
+                    cx="50" cy="50" r="42" fill="none" stroke="url(#dialGrad)" strokeWidth="9" strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 42}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 42 }}
+                    whileInView={{ strokeDashoffset: 0 }}
+                    viewport={once}
+                    transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  <defs>
+                    <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#2563EB" /><stop offset="100%" stopColor="#60A5FA" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-[19px] font-extrabold text-[var(--text)] leading-none">
+                    {d.storyMetrics.dial.v}
+                  </span>
+                </span>
+              </div>
+              <div className="min-w-0">
+                <span className="inline-flex w-8 h-8 rounded-xl items-center justify-center mb-2
+                                 bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/25">
+                  <Server size={14} />
+                </span>
+                <p className="text-[13px] font-extrabold text-[var(--text)] leading-tight">{d.storyMetrics.dial.t}</p>
+              </div>
+            </div>
+            <p className="relative text-[11px] text-[var(--text-muted)] leading-snug mt-3.5">{d.storyMetrics.dial.note}</p>
+          </motion.div>
+
+          {/* 2 · sparkline */}
+          <motion.div variants={up} whileHover={{ y: -5 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative overflow-hidden rounded-2xl border border-white/10
+                       bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-md p-6
+                       transition-[border-color,box-shadow] duration-500
+                       hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-600/10">
+            <span aria-hidden className="absolute -top-20 -right-16 w-52 h-52 rounded-full pointer-events-none
+                                         opacity-60 group-hover:opacity-100 transition-opacity duration-500
+                                         bg-[radial-gradient(closest-side,rgba(16,185,129,0.2),transparent_72%)]" />
+            <div className="relative flex items-start justify-between gap-3 mb-3">
+              <span className="inline-flex w-8 h-8 rounded-xl items-center justify-center
+                               bg-gradient-to-br from-emerald-600 to-emerald-400 text-white shadow-lg shadow-emerald-600/25">
+                <Timer size={14} />
+              </span>
+              <span className="text-right">
+                <span className="block text-2xl font-extrabold text-emerald-400 leading-none">{d.storyMetrics.spark.v}</span>
+                <span className="block text-[10.5px] text-[var(--text-muted)] line-through mt-1">{d.storyMetrics.spark.was}</span>
+              </span>
+            </div>
+            <p className="relative text-[13px] font-extrabold text-[var(--text)] leading-tight mb-2.5">
+              {d.storyMetrics.spark.t}
+            </p>
+            <svg viewBox="0 0 120 34" className="relative w-full h-[34px]" fill="none" aria-hidden>
+              <motion.path
+                d="M2 6 C 16 8, 24 26, 38 27 S 62 30, 78 30 100 31, 118 31"
+                stroke="url(#sparkGrad)" strokeWidth="2" strokeLinecap="round"
+                initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={once}
+                transition={{ duration: 1.2, ease: "easeInOut" }}
+              />
+              <defs>
+                <linearGradient id="sparkGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#F87171" /><stop offset="100%" stopColor="#34D399" />
+                </linearGradient>
+              </defs>
+              <motion.circle cx="118" cy="31" r="3" fill="#34D399"
+                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={once}
+                transition={{ duration: 0.3, delay: 1.1 }} />
+            </svg>
+            <p className="relative text-[11px] text-[var(--text-muted)] leading-snug mt-2">{d.storyMetrics.spark.note}</p>
+          </motion.div>
+
+          {/* 3 · progres traka */}
+          <motion.div variants={up} whileHover={{ y: -5 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative overflow-hidden rounded-2xl border border-white/10
+                       bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] md:backdrop-blur-md p-6
+                       transition-[border-color,box-shadow] duration-500
+                       hover:border-brand-600/40 hover:shadow-2xl hover:shadow-brand-600/10">
+            <span aria-hidden className="absolute -top-20 -right-16 w-52 h-52 rounded-full pointer-events-none
+                                         opacity-60 group-hover:opacity-100 transition-opacity duration-500
+                                         bg-[radial-gradient(closest-side,rgba(37,99,235,0.24),transparent_72%)]" />
+            <div className="relative flex items-start justify-between gap-3 mb-3">
+              <span className="inline-flex w-8 h-8 rounded-xl items-center justify-center
+                               bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/25">
+                <ListChecks size={14} />
+              </span>
+              <span className="text-2xl font-extrabold text-[var(--text)] leading-none">{d.storyMetrics.bar.v}</span>
+            </div>
+            <p className="relative text-[13px] font-extrabold text-[var(--text)] leading-tight mb-3">
+              {d.storyMetrics.bar.t}
+            </p>
+            <div className="relative h-2 rounded-full bg-white/[.07] overflow-hidden mb-3">
+              <motion.span
+                initial={{ width: "0%" }} whileInView={{ width: "100%" }} viewport={once}
+                transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                className="block h-full rounded-full bg-gradient-to-r from-brand-600 via-brand-400 to-emerald-400"
+              />
+            </div>
+            <span className="relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                             text-[10px] font-bold text-brand-300 bg-brand-600/12 border border-brand-600/30">
+              <Check size={10} strokeWidth={3} /> {d.storyMetrics.bar.chip}
+            </span>
+            <p className="relative text-[11px] text-[var(--text-muted)] leading-snug mt-3">{d.storyMetrics.bar.note}</p>
+          </motion.div>
         </motion.div>
+
       </div>
     </section>
   );

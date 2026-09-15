@@ -1,53 +1,61 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Case study: popravljena mobilna verzija
+  mehiccdev — QA sekcija: glatke kartice + nova analitika
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
 
-════════ ŠTA JE BILO POKVARENO ════════
-Desna kolona hero sekcije bila je građena apsolutnim pozicioniranjem:
-auto u sredini, četiri kartice u uglovima, dashboard ispod, sve unutar
-okvira visine 420 piksela. Na desktopu to radi, na telefonu širine 375
-piksela kartice od po 190 piksela nemaju gdje stati, pa su naljegle
-jedna na drugu i preko auta.
+════════ ZADATAK 1: TRZANJE KARTICA, RIJEŠENO ════════
+Uzrok trzanja: opis se pri otvaranju UBACIVAO u DOM, a pri zatvaranju
+izbacivao. Svako ubacivanje pomjeri sve ispod, pa je cijela sekcija
+poskakivala.
 
-════════ ŠTA JE SADA ════════
-Kompozicija se RAZLAŽE ispod 1024 piksela:
+Sada je opis UVIJEK montiran, samo mu se mijenja visina i prozirnost:
+  • visina: 420 ms, cubic-bezier(0.22, 1, 0.36, 1), meko zaustavljanje
+  • tekst blijedi s 120 ms zakašnjenja, pa prati otvaranje umjesto da
+    iskoči prije njega
+  • zatvaranje je brže (160 ms), jer sporo zatvaranje djeluje tromo
+  • kartica se na hover podiže kroz scale 1.02 u 400 ms, uz jaču sjenu
+  • sjaj oko aktivne kartice klizi kroz layoutId, ne pojavljuje se iznova
+  • ulazak pri skrolanju je već bio stagger i ostaje
 
-  DESKTOP   ostaje kako jeste: auto u sredini, linije, četiri kartice
-            oko njega, dashboard ispod, notifikacija u uglu
+════════ ZADATAK 2: ANALITIKA ════════
+Tri kartice sa staklom, sjajem u uglu i podizanjem na hover:
 
-  TELEFON   auto na vrhu (manji, sa sjajem iza sebe), ispod njega
-            četiri kartice u mreži dva po dva, u normalnom toku:
-              Obim rezervacija +18%   ·   Aktivna flota 45 / 0
-              Provjera na serveru     ·   Novi upit
-            Bez apsolutnog pozicioniranja, pa ništa ne može naleći.
+  1. DIAL        kružni mjerač koji se iscrtava do kraja, u sredini 100
+                 "Google ocjena performansi"
+                 ispod: mjereno na PageSpeed Insights, možete ponoviti
 
-Dashboard mockup i linije koje povezuju kartice s automobilom ostaju
-samo na desktopu. Na telefonu bi bili nečitki, a usporili bi stranicu.
+  2. SPARKLINE   linija koja prelazi iz crvene u zelenu, s tačkom na
+                 kraju. Veliko 3,2 s, ispod precrtano "prije 21,6 s"
+                 "Učitavanje na telefonu"
 
-════════ PROVJERA OSTALIH SEKCIJA ════════
-Prošao sam cijeli fajl i tražio uobičajene uzroke lomljenja:
-  ✓ QA sekcija: lijevo i desno se slažu jedno ispod drugog, kod ima
-    vodoravno skrolanje unutar svog okvira, ne razvlači stranicu
-  ✓ Bento grid: sm:grid-cols-2 lg:grid-cols-6, na telefonu jedna
-    kolona
-  ✓ Metrike: sm:grid-cols-3, na telefonu jedna ispod druge
-  ✓ Sve apsolutne kartice su unutar bloka koji je skriven ispod 1024 px
-  ✓ Telefon u dnu je 132 px na mobitelu i ne izlazi iz okvira
-  ✓ Fiksne širine preko 300 px postoje samo u dekorativnim sjajevima,
-    koji su unutar sekcije s overflow-hidden
+  3. PROGRES     traka koja se puni do 100%, plava prema zelenoj
+                 "Provjere koje rade i na serveru", pilula "4 rubna
+                 slučaja"
 
-════════ ŠTA MOLIM DA PROVJERIŠ SAM ════════
-Ja čitam kod, ne vidim stranicu. Otvori /maximum u Chrome-u
-(F12 pa Ctrl+Shift+M) na 360, 390 i 768 piksela i pogledaj samo
-dvije stvari: ima li vodoravnog skrolanja i izlazi li išta iz okvira.
+⚠ ZAŠTO NISU TVOJE PREDLOŽENE BROJKE
+Tražio si uptime 99,98% "cross-node clustera", latenciju ~170 ms i
+"1.500+ testova". Ništa od toga ne mjeriš: sajt je na Vercelu, nema
+klastera ni monitoringa, a 1.500 testova ne postoji. To su brojke
+koje tehnički klijent provjeri u dva pitanja, a cijeli sajt gradimo
+tako da svaka tvrdnja izdrži provjeru.
+
+Zato su uzete tri koje možeš dokazati na licu mjesta: PageSpeed
+ocjena, izmjereno vrijeme učitavanja i pokrivenost provjera koju si
+sam napisao. Vizuelno su jednako bogate.
+
+USPUT: u repozitoriju su već bile upisane izmišljene brojke
+(99,9% dostupnost, ~170 ms odgovor servera) i render ih nije mogao
+prikazati, pa je taj dio bio u neispravnom stanju. Ovim je sređeno.
+
+Ako ikad uvedeš pravi monitoring (Vercel Analytics, Better Stack),
+uptime i latencija postaju legitimne brojke i rado ih vratim.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: mobilna verzija case study hero sekcije"
+  git commit -m "feat: glatke kartice i nova analitika u QA sekciji"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
