@@ -1,47 +1,43 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Cijene kao "od", nove cifre, akcija do 30.10.
+  mehiccdev — Business paket: opis bez rent-a-car ponavljanja
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
+ŠTA JE U ZIP-u (1 fajl):
   components/sections/Pricing.tsx
-  components/rjesenja/rentACarCopy.ts
+(sadrži i cijene kao "od" te rok 30.10. iz prethodne isporuke)
 
-════════ NASLOVNICA ════════
-  Starter     od 1.000 KM   (oko €500)
-  Business    od 2.200 KM   (oko €1.120)   precrtano 3.600 KM, -39%
-  Premium     od 5.000 KM   (oko €2.500)
+════════ ŠTA JE BILO ════════
+Opis Business paketa glasio je: "Kompletan sistem rezervacija i najma,
+kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili
+zakazuje."
 
-  Akcija sada traje do 30.10. (bilo 30.09.), na oba jezika.
+Rent-a-car se tako spominjao dva puta na istoj stranici: u opisu
+paketa i u banneru ispod cjenovnika. Posjetilac koji ima apartmane,
+teretanu ili servis pomisli da paket nije za njega.
 
-⚠ STARA CIJENA JE MORALA PRATITI
-Da je precrtana cijena ostala 4.800 KM, popust bi ispao -54%. Takva
-oznaka izgleda kao lažna rasprodaja i klijenti je ne vjeruju. Zato je
-precrtana cijena spuštena na 3.600 KM, pa je popust -39%, što je
-uvjerljivo i u istom rangu kao ranije.
+════════ ŠTA SADA PIŠE ════════
+  "Web aplikacija za rezervacije i termine. Gost bira datum i šalje
+   upit, vi potvrđujete iz panela. Za sve što se iznajmljuje ili
+   zakazuje."
 
-Ako želiš zadržati 4.800 KM i oznaku -54%, to je jedan red u fajlu,
-samo reci.
+Ista poruka, ali kroz radnju umjesto kroz djelatnost, pa se u njoj
+prepozna i rent-a-car i apartman i frizerski salon.
 
-════════ RENT-A-CAR PAKETI ════════
-  Start      od 1.500 KM   (oko €750)     oko 4 KM dnevno
-  Pro        od 2.600 KM   (oko €1.330)   oko 7 KM dnevno
-  Premium    od 4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
+Popravljene su i dvije stavke u paketu koje su vukle na jednu
+djelatnost:
+  "Upiti s datumima, lokacijama i statusom"
+     → "Kalendar zauzetosti, pa se termini ne mogu preklopiti"
+  "...kad stigne novi upit"
+     → "...kad stigne nova rezervacija"
 
-Sve tri sada imaju "od" ispred cifre, pa je jasno da je to početna
-cijena, a ne fiksna. Dnevne računice i euro iznosi preračunati, na
-oba jezika (EN: from €750 / from €1,330 / from €2,300).
-
-════════ ZAŠTO "OD" DOBRO RADI ════════
-Klijent vidi ulaznu cifru i zna da nije skuplje od toga bez razloga,
-a ti na sastanku imaš prostor da cijenu složiš prema obimu, umjesto
-da branjiš fiksnu cifru koju si postavio prije nego si čuo šta mu
-treba. Uz to, Pro na 2.600 djeluje pristupačnije od 2.900, a ti i
-dalje možeš doći na 2.900 ili više kad obim to traži.
+Rent-a-car sada ostaje spomenut samo na JEDNOM mjestu na naslovnici,
+u banneru koji vodi na posebnu stranicu. Tu i pripada, jer je to
+ciljana ponuda za tu djelatnost.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: cijene kao od, nove cifre i akcija do 30.10."
+  git commit -m "copy: business paket opisan sire od rent-a-cara"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
