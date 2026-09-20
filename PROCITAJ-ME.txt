@@ -1,38 +1,34 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — 2 mjeseca podrške, 4 sata mjesečno
+  mehiccdev — Case study hero: tiši meta red i ispravljena godina
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla):
-  components/sections/Pricing.tsx
-  components/rjesenja/rentACarCopy.ts
-(sadrže i sve prethodno: cijene kao "od", rok 30.10., novi opis
- Business paketa)
+ŠTA JE U ZIP-u (1 fajl):
+  components/portfolio/MaximumCaseStudy.tsx
 
-════════ ŠTA JE PROMIJENJENO ════════
-BESPLATNA PODRŠKA: 3 mjeseca → 2 mjeseca
-  • naslovnica, prva stavka Business paketa
-  • rent-a-car stranica, zeleni bonus okvir na Pro i Premium kartici
-  • traka "Nakon isporuke" na obje stranice
+════════ 1. GODINA ════════
+"Uživo od 2025." → "Uživo od 2026."  (EN: Live since 2026)
+Provjerio sam cijeli projekat, 2025. se nigdje drugdje ne spominje.
 
-MJESEČNA PODRŠKA: do 8 sati → do 4 sata
-  • naslovnica, traka "Nakon isporuke"
-  • rent-a-car stranica, kartica "Mjesečna podrška"
+════════ 2. META RED IZNAD DUGMETA ════════
+Bio je tri uokvirene pilule s pozadinom, jedna do druge. Takav blok
+ima istu vizuelnu težinu kao dugme ispod njega, pa se s njim takmičio
+i oko nije znalo gdje da stane.
 
-PRERAČUNATE PRATEĆE BROJKE:
-  • vrijednost bonusa: 300 KM → 200 KM (dva mjeseca po 100 KM)
-    na engleskom €150 → €100
-  • usporedba u tekstu: "8 sati po satnici bi bilo 400 KM"
-    → "4 sata po satnici bi bila 200 KM"
+Sada je to jedna tiha linija sivog teksta s tačkicama između:
 
-Ta usporedba i dalje radi u tvoju korist: 100 KM mjesečno naspram
-200 KM koliko bi ista četiri sata koštala po satnici. Odnos je i
-dalje dva prema jedan, samo su brojke manje, pa je i tvoja obaveza
-prema klijentu realnija.
+    Next.js i TypeScript · Dvojezično, HR i EN · Uživo od 2026.
+
+Bez okvira, bez pozadine. Podaci su i dalje tu, ali kao potpis ispod
+opisa, a ne kao dugmad. Dugme "Otvorite sajt" je sada jedini istaknut
+element u tom dijelu, kako i treba.
+
+Dugme je usput malo smanjeno (14 px tekst umjesto 12,5 u pilulama je
+bilo neuravnoteženo) i odvojeno vlastitim razmakom iznad.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: 2 mjeseca podrske i 4 sata mjesecno"
+  git commit -m "fix: tisi meta red u hero sekciji i godina 2026"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)

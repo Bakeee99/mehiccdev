@@ -28,7 +28,7 @@ const T = {
     h1a: "Maximum SaaS,",
     h1b: "digitalna transformacija rent-a-cara",
     sub: "Rent-a-car firma iz Mostara koja je rezervacije vodila kroz poruke i svesku dobila je sistem koji radi sam. Gost bira vozilo i datume, sistem provjerava dostupnost, vlasnik potvrđuje jednim klikom.",
-    meta: ["Next.js i TypeScript", "Dvojezično, HR i EN", "Uživo od 2025."],
+    meta: ["Next.js i TypeScript", "Dvojezično, HR i EN", "Uživo od 2026."],
     visit: "Otvorite sajt",
     stats: [
       { n: 100, dec: 0, suf: "", l: "Google ocjena performansi" },
@@ -123,7 +123,7 @@ const T = {
     h1a: "Maximum SaaS,",
     h1b: "digital transformation of a car rental company",
     sub: "A car rental company from Mostar that ran bookings through chat messages and a notebook now has a system that runs itself. The guest picks a vehicle and dates, the system checks availability, the owner confirms in one click.",
-    meta: ["Next.js and TypeScript", "Bilingual, HR and EN", "Live since 2025"],
+    meta: ["Next.js and TypeScript", "Bilingual, HR and EN", "Live since 2026"],
     visit: "Open the site",
     stats: [
       { n: 100, dec: 0, suf: "", l: "Google performance score" },
@@ -356,21 +356,27 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
               {d.sub}
             </motion.p>
 
-            <motion.div variants={up} className="mt-8 flex flex-wrap items-center gap-2.5">
-              {d.meta.map((mt) => (
-                <span key={mt} className="px-4 py-2.5 rounded-xl text-[12.5px] font-semibold
-                                          text-[var(--text)] border border-white/12
-                                          bg-[color-mix(in_srgb,var(--surface)_70%,transparent)]">
+            {/* Tiha meta linija umjesto tri uokvirene pilule. Okviri su vukli
+               pažnju na sebe i takmičili se s dugmetom ispod; ovako su podaci
+               i dalje tu, ali kao potpis, a dugme ostaje jedino istaknuto. */}
+            <motion.p variants={up}
+              className="mt-7 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[12.5px] text-[var(--text-muted)]">
+              {d.meta.map((mt, i) => (
+                <span key={mt} className="inline-flex items-center gap-2.5">
+                  {i > 0 && <span aria-hidden className="w-1 h-1 rounded-full bg-[var(--border)]" />}
                   {mt}
                 </span>
               ))}
+            </motion.p>
+
+            <motion.div variants={up} className="mt-6">
               <a href={SITE} target="_blank" rel="noopener noreferrer"
-                 className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl
-                            bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[12.5px] font-bold
+                 className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl
+                            bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[14px] font-bold
                             shadow-lg shadow-brand-600/30
                             transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-xl">
                 {d.visit}
-                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </a>
             </motion.div>
           </motion.div>
