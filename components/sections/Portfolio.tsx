@@ -28,7 +28,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 
 // ── Screenshot slotovi (prazno = CSS placeholder) ────────────────────────────
 const SCREEN_DESKTOP = "/portfolio/maximum-naslovna.png";
-const SCREEN_MOBILE  = "/portfolio/maximum-admin-mobitel.png";
+const SCREEN_MOBILE  = "/portfolio/maximum-admin-mob-tamna.webp";
 const FEATURE_URL = "https://maximum-rent.vercel.app";
 
 // ── Bilingual content ────────────────────────────────────────────────────────

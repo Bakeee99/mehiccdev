@@ -11,7 +11,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks, Crown, ZoomIn, X,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks, Crown, ZoomIn, X, LayoutDashboard, Sun, Moon,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -72,6 +72,17 @@ const T = {
       phoneNote: "Više od pola gostiju dolazi s telefona, pa je i ovdje razlika najveća.",
       phoneBefore: "Forma je zauzimala cijeli ekran, sadržaj je počinjao tek ispod nje.",
       phoneAfter: "Ponuda, ocjena i rezervacija odmah na prvom ekranu.",
+    },
+    admin: {
+      label: "Admin panel",
+      h1: "Panel koji vlasnik",
+      h2: "drži u ruci",
+      sub: "Ovoga prije nije bilo. Rezervacije su se vodile ručno, a sada sve stoji na jednom mjestu, isto na računaru i na telefonu.",
+      dark: "Tamna tema",
+      light: "Svijetla tema",
+      deskCap: "Na računaru · pregled svih rezervacija na čekanju",
+      mobCap: "Na telefonu · potvrda dok ste kod vozila",
+      note: "Prikazani podaci su testni unosi, ne stvarni gosti.",
     },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
@@ -188,6 +199,17 @@ const T = {
       phoneNote: "More than half of the guests arrive on a phone, so the difference matters most here.",
       phoneBefore: "The form filled the whole screen, content started below it.",
       phoneAfter: "The offer, rating and booking are right on the first screen.",
+    },
+    admin: {
+      label: "Admin panel",
+      h1: "A panel the owner",
+      h2: "keeps in hand",
+      sub: "This did not exist before. Bookings were tracked by hand, and now everything sits in one place, the same on a computer and on a phone.",
+      dark: "Dark theme",
+      light: "Light theme",
+      deskCap: "On a computer · all pending bookings at a glance",
+      mobCap: "On a phone · confirm while standing by the car",
+      note: "The data shown are test entries, not real guests.",
     },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
@@ -713,7 +735,7 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
               <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/15" />
               <div className="relative rounded-[20px] overflow-hidden aspect-[450/992] bg-[#0B1226]">
                 <Image
-                  src="/portfolio/maximum-admin-mobitel.png"
+                  src="/portfolio/maximum-admin-mob-tamna.webp"
                   alt={d.imgAlt}
                   fill quality={92}
                   sizes="200px"
@@ -951,6 +973,132 @@ function Compare({ d }: { d: typeof T.bs }) {
           </motion.div>
         )}
       </AnimatePresence>
+    </section>
+  );
+}
+
+/* ── Admin panel ────────────────────────────────────────────────────────────
+   Nema "prije", jer panel ranije nije postojao. Zato nema poređenja nego
+   prikaz: desktop veliki, telefon uz njega, a prekidač mijenja temu na oba
+   istovremeno. Slike se ukrštaju kroz prozirnost, pa prelaz izgleda kao da
+   se tema stvarno prebacuje, a ne kao zamjena slike.                       */
+function AdminPanel({ d }: { d: typeof T.bs }) {
+  const a = d.admin;
+  const [light, setLight] = useState(false);
+  const theme = light ? "svijetla" : "tamna";
+
+  return (
+    <section id="admin-panel" className="py-24 lg:py-28 relative overflow-hidden scroll-mt-24">
+      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
+      <div aria-hidden className="absolute top-24 right-0 w-[560px] h-[420px] pointer-events-none
+                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.14),transparent_72%)]" />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="text-center mb-8">
+          <motion.span variants={up}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
+                       border border-brand-600/30 bg-brand-600/10 text-brand-300
+                       text-xs font-semibold tracking-wider uppercase">
+            <LayoutDashboard size={12} /> {a.label}
+          </motion.span>
+          <motion.h2 variants={up} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            {a.h1}{" "}
+            <span className="text-gradient font-serif italic font-semibold tracking-normal">{a.h2}</span>
+          </motion.h2>
+          <motion.p variants={up} className="max-w-2xl mx-auto text-[var(--text-muted)] leading-relaxed mt-4">
+            {a.sub}
+          </motion.p>
+        </motion.div>
+
+        {/* prekidač teme */}
+        <motion.div variants={up} initial="hidden" whileInView="visible" viewport={once}
+          className="flex justify-center mb-10">
+          <div className="relative inline-flex p-1 rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
+               role="group" aria-label={a.label}>
+            <motion.span aria-hidden layout
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+              className="absolute top-1 bottom-1 rounded-xl bg-brand-600/15 border border-brand-600/40"
+              style={{ left: light ? "50%" : "0.25rem", right: light ? "0.25rem" : "50%" }} />
+            {[false, true].map((v) => (
+              <button key={String(v)} type="button"
+                onClick={() => setLight(v)}
+                aria-pressed={light === v}
+                className={`relative z-10 inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-xl
+                            text-[13px] font-bold transition-colors duration-300
+                            ${light === v ? "text-[var(--text)]" : "text-[var(--text-muted)] hover:text-[var(--text)]"}`}>
+                {v ? <Sun size={13} /> : <Moon size={13} />}
+                {v ? a.light : a.dark}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-[1.35fr_0.65fr] gap-6 lg:gap-8 items-start">
+
+          {/* desktop */}
+          <motion.figure variants={up} initial="hidden" whileInView="visible" viewport={once} className="min-w-0">
+            <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#070C1A]
+                            shadow-[0_50px_100px_-40px_rgba(2,8,30,0.9)]">
+              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
+                <span className="w-2 h-2 rounded-full bg-white/15" />
+                <span className="w-2 h-2 rounded-full bg-white/15" />
+                <span className="w-2 h-2 rounded-full bg-white/15" />
+                <span className="ml-2 text-[10.5px] font-mono text-white/35">maximum-rent.vercel.app/admin</span>
+              </div>
+              <div className="relative aspect-[2880/1715]">
+                <AnimatePresence mode="wait">
+                  <motion.div key={theme}
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute inset-0">
+                    <Image
+                      src={`/portfolio/maximum-admin-desktop-${theme}.webp`}
+                      alt={a.deskCap}
+                      fill quality={100}
+                      sizes="(max-width: 1024px) 100vw, 780px"
+                      className="object-cover object-top"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+            <figcaption className="text-[12px] text-[var(--text-muted)] mt-3 text-center lg:text-left">
+              {a.deskCap}
+            </figcaption>
+          </motion.figure>
+
+          {/* telefon */}
+          <motion.figure variants={up} initial="hidden" whileInView="visible" viewport={once}
+            className="justify-self-center w-[190px] sm:w-[220px]">
+            <div className="relative rounded-[26px] border border-white/12 bg-[#070C1A] p-1.5 pt-3
+                            shadow-[0_40px_80px_-25px_rgba(2,8,30,0.9)]">
+              <span aria-hidden className="absolute top-1.5 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/15" />
+              <div className="relative rounded-[19px] overflow-hidden aspect-[1179/2556]">
+                <AnimatePresence mode="wait">
+                  <motion.div key={theme}
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute inset-0">
+                    <Image
+                      src={`/portfolio/maximum-admin-mob-${theme}.webp`}
+                      alt={a.mobCap}
+                      fill quality={100}
+                      sizes="240px"
+                      className="object-cover object-top"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+            <figcaption className="text-[12px] text-[var(--text-muted)] mt-3 text-center">{a.mobCap}</figcaption>
+          </motion.figure>
+        </div>
+
+        <motion.p variants={up} initial="hidden" whileInView="visible" viewport={once}
+          className="text-center text-[11.5px] text-[var(--text-muted)] mt-8">
+          {a.note}
+        </motion.p>
+      </div>
     </section>
   );
 }
@@ -1593,6 +1741,7 @@ export function MaximumCaseStudy() {
     <main className="relative">
       <Hero d={d} calm={calm} />
       <Compare d={d} />
+      <AdminPanel d={d} />
       <Story d={d} />
       <Bento d={d} />
       <Cta d={d} />

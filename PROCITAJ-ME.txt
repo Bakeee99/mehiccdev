@@ -1,51 +1,51 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Prije i poslije: dodan mobilni par
+  mehiccdev — Admin panel: prave slike i prekidač tema
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (5 fajlova):
+ŠTA JE U ZIP-u (6 fajlova):
   components/portfolio/MaximumCaseStudy.tsx
-  public/portfolio/maximum-prije.webp         zamijeniti
-  public/portfolio/maximum-poslije.webp       zamijeniti
-  public/portfolio/maximum-prije-mob.webp     zamijeniti
-  public/portfolio/maximum-poslije-mob.webp   zamijeniti
+  components/sections/Portfolio.tsx
+  public/portfolio/maximum-admin-desktop-tamna.webp
+  public/portfolio/maximum-admin-desktop-svijetla.webp
+  public/portfolio/maximum-admin-mob-tamna.webp
+  public/portfolio/maximum-admin-mob-svijetla.webp
 
-⚠ AKO U public/portfolio/ IMAŠ fajlove s nastavkom "-mobitel.webp",
-obriši ih. To su bili duplikati istih slika pod drugim imenom.
+⚠ OBRIŠI maximum-admin-mobitel.png iz public/portfolio/
+Stara, mutnija PNG slika se više ne koristi. Obje njene upotrebe
+(portfolio sekcija na naslovnici i hero case studyja) sada gledaju
+na novu WebP verziju.
 
-════════ ŠTA JE NOVO ════════
-Ispod desktop para dodan je red s telefonima:
+════════ SLIKE ════════
+Sve četiri su izvezene iz tvojih snimaka, u punoj rezoluciji i
+kvaliteti 100:
+  desktop  2880 px širine   (207 i 221 KB)
+  telefon  1179 x 2556      (176 i 177 KB)
 
-    ISTI SAJT NA TELEFONU
-    Više od pola gostiju dolazi s telefona, pa je i ovdje razlika
-    najveća.
+════════ SEKCIJA ════════
+Sekcija "Admin panel" već je postojala u kodu, ali je pokazivala
+stare slike i imala neusklađene tekstove. Sada radi kako treba:
 
-    [ PRIJE ]              [ POSLIJE ]
-    stari sajt             novi sajt
-    Forma je zauzimala     Ponuda, ocjena i rezervacija
-    cijeli ekran...        odmah na prvom ekranu.
+  • prekidač TAMNA / SVIJETLA tema s klizačem, ikonica mjeseca i
+    sunca; slike se mijenjaju mekim prelazom, bez treptanja
+  • lijevo desktop u okviru prozora, desno telefon u okviru
+  • ispod svake slike kratak natpis:
+      "Na računaru · pregled svih rezervacija na čekanju"
+      "Na telefonu · potvrda dok ste kod vozila"
+  • na dnu sitna napomena: "Prikazani podaci su testni unosi, ne
+    stvarni gosti."
 
-Telefoni su u okvirima s rupicom za zvučnik, crveni odnosno zeleni
-rub, oznaka iznad okvira. Klik otvara uvećani prikaz prilagođen
-uspravnom formatu, u punoj rezoluciji 1179 x 2556.
+════════ O PRIVATNOSTI ════════
+Ništa nije zamućeno, i to je namjerno. Na snimcima su testni unosi
+koje smo napravili (Anna Kowalska, Lukas Weber), dakle izmišljeni
+ljudi. Zamućena polja uvijek izgledaju kao da se nešto krije, a
+ovako panel izgleda kao alat koji stvarno radi.
 
-════════ RESPONZIVNOST ════════
-Telefoni stoje JEDAN PORED DRUGOG na svim širinama, jer su uski
-(45 posto širine, najviše 210 px), pa stanu i na ekran od 360 px.
-To je i bitno: poređenje radi samo kad se oba vide istovremeno,
-a da se slažu jedan ispod drugog, izgubio bi se smisao.
-
-Desktop par se i dalje slaže jedan ispod drugog na mobitelu, jer su
-te slike široke.
-
-════════ USPUT POČIŠĆENO ════════
-U repozitoriju su postojala DVA reda s telefonima: jedan raniji
-(s ključevima mobLabel, mobSub) i moj novi. Stari je uklonjen
-zajedno sa svojim mrtvim tekstovima, pa sada postoji samo jedan.
+Ako ipak želiš da se email adrese zamute, javi, to je brza obrada.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: mobilni par u sekciji prije i poslije"
+  git commit -m "feat: admin panel sa prekidacem tema i pravim slikama"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
