@@ -1,38 +1,49 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Oznaka paketa u hero sekciji case studyja
+  mehiccdev — Sekcija "Prije i poslije" na /maximum
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
+ŠTA JE U ZIP-u (3 fajla):
   components/portfolio/MaximumCaseStudy.tsx
+  public/portfolio/maximum-prije.webp      NOVA slika
+  public/portfolio/maximum-poslije.webp    NOVA slika
 
-════════ ŠTA JE DODANO ════════
-Uz postojeću oznaku "CASE STUDY · RENT A CAR", u istom redu, stoji
-druga pilula:
+════════ KVALITETA SLIKA ════════
+Obje tvoje slike su bile 2880 x 1800, u identičnom kadru, što je
+idealno za poređenje jer se ništa nije moralo kropovati.
 
-     ♛ PREMIUM PAKET ↗
+Pripremljene su ovako:
+  • 1920 x 1200 piksela, WebP, kvalitet 92
+  • u kartici se prikazuju na oko 600 px širine, znači TROSTRUKA
+    gustina piksela, pa su oštre i na Retina ekranima
+  • 183 KB i 133 KB, dakle zajedno manje od jedne obične PNG slike
+  • u kodu je postavljen quality 95, a u uvećanom prikazu 100, pa
+    Next.js ne smije dodatno da ih stisne
 
-Klik vodi na /rjesenja/rent-a-car#paketi, dakle pravo na cjenovnik
-paketa, gdje posjetilac odmah vidi šta taj paket sadrži i koliko
-košta.
+Ako ti i to bude nedovoljno oštro, imam originale od 2880 px i mogu
+ih izvesti u toj veličini, samo se onda plaća brzinom stranice.
 
-════════ ZAŠTO OVAKO ════════
-  • ISTI RED, ISTA VISINA kao oznaka case studyja, pa se čita kao
-    par podataka o projektu, a ne kao reklama ubačena u sredinu
-  • SIVA, NE PLAVA: plava bi se takmičila s naslovom. Jedina boja je
-    mala zlatna kruna, taman da se oko zakači
-  • STRELICA gore desno odmah kaže da je klikabilno, bez ijedne
-    dodatne riječi
-  • na hover se podigne i rub postane plav, pa se potvrdi da je link
+════════ ŠTA SEKCIJA RADI ════════
+Nalazi se ODMAH POSLIJE HERO SEKCIJE, prije QA dijela, jer tako
+stranica prvo pokaže problem pa rješenje.
 
-Poruka koju nosi je jaka a nenametljiva: ovo nije demo nego stvaran
-klijent koji je uzeo najveći paket.
+  • dvije slike jedna do druge, oznake "Prije" (crveno) i "Poslije"
+    (zeleno) u gornjem lijevom uglu
+  • ispod svake: naziv, jedna rečenica šta je bilo, i brojka
+    21,6 s naspram 3,2 s u crvenoj i zelenoj
+  • na hover se kartica podigne i pojavi se natpis "Kliknite za
+    uvećanje"
+  • klik otvara sliku preko cijelog ekrana u punoj rezoluciji;
+    zatvara se tipkom Escape, klikom van slike ili na X
 
-⚠ Sidro #paketi postoji na rent-a-car stranici, provjereno.
+Namjerno nema animacija unutar slika: razlika se vidi samo kada oko
+može mirno da skače lijevo-desno.
+
+Na telefonu slike idu jedna ispod druge, prvo stara pa nova.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: oznaka premium paketa u case study hero sekciji"
+  git commit -m "feat: sekcija prije i poslije na case studyju"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)

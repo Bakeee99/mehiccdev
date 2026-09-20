@@ -11,7 +11,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks, Crown,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks, Crown, ZoomIn, X,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -52,6 +52,22 @@ const T = {
       url: "maximum-rent.vercel.app",
       nav: ["POČETNA", "POSLOVNO", "O NAMA", "FLOTA", "USLOVI NAJMA", "KONTAKT"],
       title: "Vaš ključ slobode",
+    },
+    compare: {
+      label: "Prije i poslije",
+      h1: "Ista firma,",
+      h2: "dva različita sajta",
+      sub: "Lijevo je sajt koji je Maximum imao ranije, desno je onaj koji danas radi. Kliknite na sliku za uvećanje.",
+      beforeTag: "Prije",
+      afterTag: "Poslije",
+      beforeTitle: "Stari sajt",
+      afterTitle: "Novi sistem",
+      beforeNote: "Forma je samo slala upit, dostupnost se provjeravala ručno.",
+      afterNote: "Gost vidi slobodna vozila, bira datume i dobija potvrdu.",
+      beforeSpeed: "21,6 s",
+      afterSpeed: "3,2 s",
+      speedLabel: "učitavanje na telefonu",
+      hint: "Kliknite za uvećanje",
     },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
@@ -148,6 +164,22 @@ const T = {
       url: "maximum-rent.vercel.app",
       nav: ["HOME", "BUSINESS", "ABOUT US", "FLEET", "RENTAL TERMS", "CONTACT"],
       title: "Your key to freedom",
+    },
+    compare: {
+      label: "Before and after",
+      h1: "The same company,",
+      h2: "two very different websites",
+      sub: "On the left, the website Maximum used before. On the right, the one running today. Click an image to enlarge.",
+      beforeTag: "Before",
+      afterTag: "After",
+      beforeTitle: "The old website",
+      afterTitle: "The new system",
+      beforeNote: "The form only sent a request, availability was checked by hand.",
+      afterNote: "The guest sees free vehicles, picks dates and gets a confirmation.",
+      beforeSpeed: "21.6 s",
+      afterSpeed: "3.2 s",
+      speedLabel: "mobile load time",
+      hint: "Click to enlarge",
     },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
@@ -712,6 +744,144 @@ function Code({ code }: { code: string }) {
     <pre className="text-[11.5px] sm:text-[12.5px] leading-[1.75] font-mono overflow-x-auto">
       <code>{code.split("\n").map(tint)}</code>
     </pre>
+  );
+}
+
+/* ── Prije i poslije ────────────────────────────────────────────────────────
+   Dvije mirne slike jedna do druge, bez animacije unutar njih, jer se razlika
+   vidi samo kad oko može da skače lijevo-desno. Klik otvara uvećani prikaz
+   preko cijelog ekrana, gdje se slika vidi u punoj rezoluciji.            */
+function Compare({ d }: { d: typeof T.bs }) {
+  const c = d.compare;
+  const [zoom, setZoom] = useState<null | "before" | "after">(null);
+
+  useEffect(() => {
+    if (!zoom) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setZoom(null); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [zoom]);
+
+  const shots = [
+    { key: "before" as const, src: "/portfolio/maximum-prije.webp",   tag: c.beforeTag, title: c.beforeTitle, note: c.beforeNote, speed: c.beforeSpeed, tone: "red" as const },
+    { key: "after"  as const, src: "/portfolio/maximum-poslije.webp", tag: c.afterTag,  title: c.afterTitle,  note: c.afterNote,  speed: c.afterSpeed,  tone: "green" as const },
+  ];
+
+  return (
+    <section id="prije-poslije" className="py-24 lg:py-28 relative scroll-mt-24">
+      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="text-center mb-12">
+          <motion.span variants={up}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
+                       border border-brand-600/30 bg-brand-600/10 text-brand-300
+                       text-xs font-semibold tracking-wider uppercase">
+            {c.label}
+          </motion.span>
+          <motion.h2 variants={up} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            {c.h1}{" "}
+            <span className="text-gradient font-serif italic font-semibold tracking-normal">{c.h2}</span>
+          </motion.h2>
+          <motion.p variants={up} className="max-w-2xl mx-auto text-[var(--text-muted)] leading-relaxed mt-4">
+            {c.sub}
+          </motion.p>
+        </motion.div>
+
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}
+          className="grid md:grid-cols-2 gap-5">
+          {shots.map((s) => {
+            const red = s.tone === "red";
+            return (
+              <motion.figure key={s.key} variants={up} className="min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setZoom(s.key)}
+                  aria-label={`${s.title} · ${c.hint}`}
+                  className={`group relative block w-full rounded-2xl overflow-hidden border
+                              transition-[border-color,box-shadow,transform] duration-300
+                              hover:-translate-y-1
+                              ${red ? "border-red-500/25 hover:border-red-500/45 hover:shadow-2xl hover:shadow-red-900/20"
+                                    : "border-emerald-500/25 hover:border-emerald-500/45 hover:shadow-2xl hover:shadow-emerald-900/20"}`}
+                >
+                  <span className={`absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full
+                                    text-[10px] font-bold uppercase tracking-wider border
+                                    ${red ? "text-red-300 bg-red-950/70 border-red-500/40"
+                                          : "text-emerald-300 bg-emerald-950/70 border-emerald-500/40"}`}>
+                    {s.tag}
+                  </span>
+                  <span className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                                   text-[10px] font-bold bg-black/55 text-white/80 border border-white/15
+                                   opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <ZoomIn size={11} /> {c.hint}
+                  </span>
+
+                  <Image
+                    src={s.src}
+                    alt={s.title}
+                    width={1920}
+                    height={1200}
+                    quality={95}
+                    sizes="(max-width: 768px) 100vw, 620px"
+                    className="w-full h-auto"
+                  />
+                </button>
+
+                <figcaption className="mt-4">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="text-[15px] font-extrabold text-[var(--text)]">{s.title}</p>
+                    <p className={`text-[15px] font-extrabold tabular-nums ${red ? "text-red-400" : "text-emerald-400"}`}>
+                      {s.speed}
+                    </p>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-3 mt-1">
+                    <p className="text-[12.5px] text-[var(--text-muted)] leading-snug">{s.note}</p>
+                    <p className="text-[10.5px] text-[var(--text-muted)] whitespace-nowrap">{c.speedLabel}</p>
+                  </div>
+                </figcaption>
+              </motion.figure>
+            );
+          })}
+        </motion.div>
+      </div>
+
+      {/* uvećani prikaz */}
+      <AnimatePresence>
+        {zoom && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setZoom(null)}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-black/90 cursor-zoom-out"
+          >
+            <button type="button" onClick={() => setZoom(null)} aria-label="Zatvori"
+              className="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center
+                         border border-white/15 text-white/70 hover:text-white hover:border-white/35
+                         transition-colors duration-200">
+              <X size={18} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.97, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-6xl rounded-2xl overflow-hidden border border-white/12 cursor-default"
+            >
+              <Image
+                src={zoom === "before" ? "/portfolio/maximum-prije.webp" : "/portfolio/maximum-poslije.webp"}
+                alt={zoom === "before" ? c.beforeTitle : c.afterTitle}
+                width={1920} height={1200} quality={100}
+                sizes="100vw"
+                className="w-full h-auto"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }
 
@@ -1352,6 +1522,7 @@ export function MaximumCaseStudy() {
   return (
     <main className="relative">
       <Hero d={d} calm={calm} />
+      <Compare d={d} />
       <Story d={d} />
       <Bento d={d} />
       <Cta d={d} />
