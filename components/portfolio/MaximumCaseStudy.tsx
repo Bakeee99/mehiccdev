@@ -68,6 +68,10 @@ const T = {
       afterSpeed: "3,2 s",
       speedLabel: "učitavanje na telefonu",
       hint: "Kliknite za uvećanje",
+      phoneLabel: "Isti sajt na telefonu",
+      phoneNote: "Više od pola gostiju dolazi s telefona, pa je i ovdje razlika najveća.",
+      phoneBefore: "Forma je zauzimala cijeli ekran, sadržaj je počinjao tek ispod nje.",
+      phoneAfter: "Ponuda, ocjena i rezervacija odmah na prvom ekranu.",
     },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
@@ -180,6 +184,10 @@ const T = {
       afterSpeed: "3.2 s",
       speedLabel: "mobile load time",
       hint: "Click to enlarge",
+      phoneLabel: "The same site on a phone",
+      phoneNote: "More than half of the guests arrive on a phone, so the difference matters most here.",
+      phoneBefore: "The form filled the whole screen, content started below it.",
+      phoneAfter: "The offer, rating and booking are right on the first screen.",
     },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
@@ -753,7 +761,7 @@ function Code({ code }: { code: string }) {
    preko cijelog ekrana, gdje se slika vidi u punoj rezoluciji.            */
 function Compare({ d }: { d: typeof T.bs }) {
   const c = d.compare;
-  const [zoom, setZoom] = useState<null | "before" | "after">(null);
+  const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null);
 
   useEffect(() => {
     if (!zoom) return;
@@ -770,6 +778,8 @@ function Compare({ d }: { d: typeof T.bs }) {
     { key: "before" as const, src: "/portfolio/maximum-prije.webp",   tag: c.beforeTag, title: c.beforeTitle, note: c.beforeNote, speed: c.beforeSpeed, tone: "red" as const },
     { key: "after"  as const, src: "/portfolio/maximum-poslije.webp", tag: c.afterTag,  title: c.afterTitle,  note: c.afterNote,  speed: c.afterSpeed,  tone: "green" as const },
   ];
+
+  const isPhoneZoom = zoom?.src.includes("-mob") ?? false;
 
   return (
     <section id="prije-poslije" className="py-24 lg:py-28 relative scroll-mt-24">
@@ -800,7 +810,7 @@ function Compare({ d }: { d: typeof T.bs }) {
               <motion.figure key={s.key} variants={up} className="min-w-0">
                 <button
                   type="button"
-                  onClick={() => setZoom(s.key)}
+                  onClick={() => setZoom({ src: s.src, alt: s.title })}
                   aria-label={`${s.title} · ${c.hint}`}
                   className={`group relative block w-full rounded-2xl overflow-hidden border
                               transition-[border-color,box-shadow,transform] duration-300
@@ -847,6 +857,61 @@ function Compare({ d }: { d: typeof T.bs }) {
             );
           })}
         </motion.div>
+
+        {/* ── isti sajt na telefonu ─────────────────────────────────────────
+           Uspravne slike u okvirima telefona, jedna do druge i na mobitelu,
+           jer su dovoljno uske da stanu čak i na 360 px. Klik otvara isti
+           uvećani prikaz, samo prilagođen uspravnom formatu.            */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once} className="mt-16">
+          <motion.div variants={up} className="text-center mb-8">
+            <p className="text-[15px] font-extrabold text-[var(--text)]">{c.phoneLabel}</p>
+            <p className="text-[12.5px] text-[var(--text-muted)] mt-1.5 max-w-lg mx-auto leading-relaxed">
+              {c.phoneNote}
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center items-start gap-4 sm:gap-10">
+            {[
+              { src: "/portfolio/maximum-prije-mob.webp",   tag: c.beforeTag, title: c.beforeTitle, note: c.phoneBefore, red: true },
+              { src: "/portfolio/maximum-poslije-mob.webp", tag: c.afterTag,  title: c.afterTitle,  note: c.phoneAfter,  red: false },
+            ].map((p) => (
+              <motion.figure key={p.src} variants={up} className="w-[45%] max-w-[210px]">
+                <button
+                  type="button"
+                  onClick={() => setZoom({ src: p.src, alt: p.title })}
+                  aria-label={`${p.title} · ${c.hint}`}
+                  className={`group relative block w-full rounded-[22px] border p-1.5 pt-2.5
+                              bg-[#070C1A] transition-[border-color,box-shadow,transform] duration-300
+                              hover:-translate-y-1
+                              ${p.red ? "border-red-500/25 hover:border-red-500/45"
+                                      : "border-emerald-500/25 hover:border-emerald-500/45"}`}
+                >
+                  <span aria-hidden className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-white/15" />
+                  <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 px-2 py-0.5 rounded-full
+                                    text-[9px] font-bold uppercase tracking-wider border whitespace-nowrap
+                                    ${p.red ? "text-red-300 bg-red-950 border-red-500/40"
+                                            : "text-emerald-300 bg-emerald-950 border-emerald-500/40"}`}>
+                    {p.tag}
+                  </span>
+                  <span className="block rounded-[16px] overflow-hidden">
+                    <Image
+                      src={p.src}
+                      alt={p.title}
+                      width={1179}
+                      height={2556}
+                      quality={100}
+                      sizes="(max-width: 640px) 45vw, 210px"
+                      className="w-full h-auto"
+                    />
+                  </span>
+                </button>
+                <figcaption className="text-[11.5px] text-[var(--text-muted)] leading-snug mt-3 text-center">
+                  {p.note}
+                </figcaption>
+              </motion.figure>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* uvećani prikaz */}
@@ -868,17 +933,19 @@ function Compare({ d }: { d: typeof T.bs }) {
               initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.97, opacity: 0 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-6xl rounded-2xl overflow-hidden border border-white/12 cursor-default"
+              className={`relative w-full rounded-2xl overflow-hidden border border-white/12 cursor-default
+                          ${isPhoneZoom ? "max-w-[380px]" : "max-w-6xl"}`}
             >
               {/* unoptimized: Next ne dira fajl, pa se isporučuje original od
                  2880 px. Tako uvećani prikaz nema nikakvo gubljenje oštrine. */}
               <Image
-                src={zoom === "before" ? "/portfolio/maximum-prije.webp" : "/portfolio/maximum-poslije.webp"}
-                alt={zoom === "before" ? c.beforeTitle : c.afterTitle}
-                width={2880} height={1800}
+                src={zoom.src}
+                alt={zoom.alt}
+                width={isPhoneZoom ? 1179 : 2880}
+                height={isPhoneZoom ? 2556 : 1800}
                 unoptimized
                 priority
-                className="w-full h-auto"
+                className={zoom.src.includes("-mob") ? "w-auto h-full" : "w-full h-auto"}
               />
             </motion.div>
           </motion.div>

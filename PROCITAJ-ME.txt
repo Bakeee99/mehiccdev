@@ -1,39 +1,51 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Puna kvaliteta slika u sekciji "Prije i poslije"
+  mehiccdev — Prije i poslije: dodan mobilni par
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
+ŠTA JE U ZIP-u (5 fajlova):
   components/portfolio/MaximumCaseStudy.tsx
-  public/portfolio/maximum-prije.webp      ZAMIJENITI postojeću
-  public/portfolio/maximum-poslije.webp    ZAMIJENITI postojeću
+  public/portfolio/maximum-prije.webp         zamijeniti
+  public/portfolio/maximum-poslije.webp       zamijeniti
+  public/portfolio/maximum-prije-mob.webp     zamijeniti
+  public/portfolio/maximum-poslije-mob.webp   zamijeniti
 
-════════ ZAŠTO JE BILO MUTNO ════════
-Slike su bile smanjene na 1920 px. U kartici to izgleda oštro, ali
-kad se otvori uvećani prikaz preko cijelog ekrana, slika se razvlači
-na 2560 ili više piksela, pa je bila uvećana preko svoje veličine.
-Otud mutnoća, i to samo u uvećanju.
+⚠ AKO U public/portfolio/ IMAŠ fajlove s nastavkom "-mobitel.webp",
+obriši ih. To su bili duplikati istih slika pod drugim imenom.
 
-════════ ŠTA JE URAĐENO ════════
-1. SLIKE SU SADA U PUNOJ REZOLUCIJI
-   2880 x 1800, WebP, kvalitet 100, bez ikakvog smanjivanja.
-   Veličina: 547 KB i 370 KB.
+════════ ŠTA JE NOVO ════════
+Ispod desktop para dodan je red s telefonima:
 
-2. UVEĆANI PRIKAZ SERVIRA ORIGINAL
-   Postavljena je oznaka koja govori Next.js-u da NE dira fajl, pa
-   se u uvećanju isporučuje tačno ovaj original od 2880 px. Nema
-   ponovne obrade, nema gubitka oštrine.
+    ISTI SAJT NA TELEFONU
+    Više od pola gostiju dolazi s telefona, pa je i ovdje razlika
+    najveća.
 
-3. SLIČICE I DALJE OSTAJU LAGANE
-   U samoj sekciji Next.js sam pravi manju verziju prema veličini
-   ekrana, pa posjetilac pri učitavanju stranice ne skida pola
-   megabajta. Velika slika se povlači tek kad neko klikne na nju.
+    [ PRIJE ]              [ POSLIJE ]
+    stari sajt             novi sajt
+    Forma je zauzimala     Ponuda, ocjena i rezervacija
+    cijeli ekran...        odmah na prvom ekranu.
 
-Praktično: stranica ostaje brza, a uvećanje je oštro kao original.
+Telefoni su u okvirima s rupicom za zvučnik, crveni odnosno zeleni
+rub, oznaka iznad okvira. Klik otvara uvećani prikaz prilagođen
+uspravnom formatu, u punoj rezoluciji 1179 x 2556.
+
+════════ RESPONZIVNOST ════════
+Telefoni stoje JEDAN PORED DRUGOG na svim širinama, jer su uski
+(45 posto širine, najviše 210 px), pa stanu i na ekran od 360 px.
+To je i bitno: poređenje radi samo kad se oba vide istovremeno,
+a da se slažu jedan ispod drugog, izgubio bi se smisao.
+
+Desktop par se i dalje slaže jedan ispod drugog na mobitelu, jer su
+te slike široke.
+
+════════ USPUT POČIŠĆENO ════════
+U repozitoriju su postojala DVA reda s telefonima: jedan raniji
+(s ključevima mobLabel, mobSub) i moj novi. Stari je uklonjen
+zajedno sa svojim mrtvim tekstovima, pa sada postoji samo jedan.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: pune rezolucije slika u sekciji prije i poslije"
+  git commit -m "feat: mobilni par u sekciji prije i poslije"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
