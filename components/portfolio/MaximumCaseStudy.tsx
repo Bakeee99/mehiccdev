@@ -83,6 +83,7 @@ const T = {
       deskCap: "Na računaru · pregled svih rezervacija na čekanju",
       mobCap: "Na telefonu · potvrda dok ste kod vozila",
       note: "Prikazani podaci su testni unosi, ne stvarni gosti.",
+      hint: "Kliknite za uvećanje",
     },
     storyLabel: "Kako je nastao",
     storyH1: "Rezervacije koje",
@@ -210,6 +211,7 @@ const T = {
       deskCap: "On a computer · all pending bookings at a glance",
       mobCap: "On a phone · confirm while standing by the car",
       note: "The data shown are test entries, not real guests.",
+      hint: "Click to enlarge",
     },
     storyLabel: "How it was built",
     storyH1: "Bookings that",
@@ -986,6 +988,15 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
   const a = d.admin;
   const [light, setLight] = useState(false);
   const theme = light ? "svijetla" : "tamna";
+  const [zoom, setZoom] = useState<null | { src: string; alt: string; phone: boolean }>(null);
+
+  useEffect(() => {
+    if (!zoom) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setZoom(null); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [zoom]);
 
   return (
     <section id="admin-panel" className="py-24 lg:py-28 relative overflow-hidden scroll-mt-24">
@@ -1045,7 +1056,17 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
                 <span className="w-2 h-2 rounded-full bg-white/15" />
                 <span className="ml-2 text-[10.5px] font-mono text-white/35">maximum-rent.vercel.app/admin</span>
               </div>
-              <div className="relative aspect-[2880/1715]">
+              <button
+                type="button"
+                onClick={() => setZoom({ src: `/portfolio/maximum-admin-desktop-${theme}.webp`, alt: a.deskCap, phone: false })}
+                aria-label={`${a.deskCap} · ${a.hint}`}
+                className="group relative block w-full aspect-[2880/1715] cursor-zoom-in"
+              >
+                <span className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full
+                                 text-[10px] font-bold bg-black/60 text-white/85 border border-white/15
+                                 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <ZoomIn size={11} /> {a.hint}
+                </span>
                 <AnimatePresence mode="wait">
                   <motion.div key={theme}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1054,13 +1075,12 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
                     <Image
                       src={`/portfolio/maximum-admin-desktop-${theme}.webp`}
                       alt={a.deskCap}
-                      fill quality={100}
-                      sizes="(max-width: 1024px) 100vw, 780px"
+                      fill unoptimized
                       className="object-cover object-top"
                     />
                   </motion.div>
                 </AnimatePresence>
-              </div>
+              </button>
             </div>
             <figcaption className="text-[12px] text-[var(--text-muted)] mt-3 text-center lg:text-left">
               {a.deskCap}
@@ -1073,7 +1093,12 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
             <div className="relative rounded-[26px] border border-white/12 bg-[#070C1A] p-1.5 pt-3
                             shadow-[0_40px_80px_-25px_rgba(2,8,30,0.9)]">
               <span aria-hidden className="absolute top-1.5 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/15" />
-              <div className="relative rounded-[19px] overflow-hidden aspect-[1179/2556]">
+              <button
+                type="button"
+                onClick={() => setZoom({ src: `/portfolio/maximum-admin-mob-${theme}.webp`, alt: a.mobCap, phone: true })}
+                aria-label={`${a.mobCap} · ${a.hint}`}
+                className="relative block w-full rounded-[19px] overflow-hidden aspect-[1179/2556] cursor-zoom-in"
+              >
                 <AnimatePresence mode="wait">
                   <motion.div key={theme}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -1082,13 +1107,12 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
                     <Image
                       src={`/portfolio/maximum-admin-mob-${theme}.webp`}
                       alt={a.mobCap}
-                      fill quality={100}
-                      sizes="240px"
+                      fill unoptimized
                       className="object-cover object-top"
                     />
                   </motion.div>
                 </AnimatePresence>
-              </div>
+              </button>
             </div>
             <figcaption className="text-[12px] text-[var(--text-muted)] mt-3 text-center">{a.mobCap}</figcaption>
           </motion.figure>
@@ -1099,6 +1123,41 @@ function AdminPanel({ d }: { d: typeof T.bs }) {
           {a.note}
         </motion.p>
       </div>
+
+      {/* uvećani prikaz: original, bez ikakve obrade */}
+      <AnimatePresence>
+        {zoom && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setZoom(null)}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 bg-black/90 cursor-zoom-out"
+          >
+            <button type="button" onClick={() => setZoom(null)} aria-label="Zatvori"
+              className="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center
+                         border border-white/15 text-white/70 hover:text-white hover:border-white/35
+                         transition-colors duration-200">
+              <X size={18} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.97, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative rounded-2xl overflow-hidden border border-white/12 cursor-default
+                          ${zoom.phone ? "w-auto h-[86vh]" : "w-full max-w-6xl"}`}
+            >
+              <Image
+                src={zoom.src}
+                alt={zoom.alt}
+                width={zoom.phone ? 1179 : 2880}
+                height={zoom.phone ? 2556 : 1715}
+                unoptimized priority
+                className={zoom.phone ? "w-auto h-full" : "w-full h-auto"}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

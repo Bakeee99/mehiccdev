@@ -1,51 +1,44 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Admin panel: prave slike i prekidač tema
+  mehiccdev — Admin panel: puna oštrina i uvećanje na klik
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (6 fajlova):
+ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
-  components/sections/Portfolio.tsx
-  public/portfolio/maximum-admin-desktop-tamna.webp
-  public/portfolio/maximum-admin-desktop-svijetla.webp
-  public/portfolio/maximum-admin-mob-tamna.webp
-  public/portfolio/maximum-admin-mob-svijetla.webp
 
-⚠ OBRIŠI maximum-admin-mobitel.png iz public/portfolio/
-Stara, mutnija PNG slika se više ne koristi. Obje njene upotrebe
-(portfolio sekcija na naslovnici i hero case studyja) sada gledaju
-na novu WebP verziju.
+Slike su već poslane u prethodnom ZIP-u i ne mijenjaju se.
 
-════════ SLIKE ════════
-Sve četiri su izvezene iz tvojih snimaka, u punoj rezoluciji i
-kvaliteti 100:
-  desktop  2880 px širine   (207 i 221 KB)
-  telefon  1179 x 2556      (176 i 177 KB)
+════════ ZAŠTO JE IZGLEDALO MUTNO ════════
+Kvalitet je već bio postavljen na 100, ali to nije bio problem.
+Next.js je slici govorio da će biti prikazana na oko 780 piksela, pa
+je isporučivao smanjenu verziju umjesto originala od 2880 px. Na
+većim ekranima se to vidi kao mekoća.
 
-════════ SEKCIJA ════════
-Sekcija "Admin panel" već je postojala u kodu, ali je pokazivala
-stare slike i imala neusklađene tekstove. Sada radi kako treba:
+════════ ŠTA JE URAĐENO ════════
+1. ORIGINALI SE SERVIRAJU NETAKNUTI
+   Obje slike, i desktop i telefon, sada idu bez ikakve obrade, kao
+   što smo uradili i za uvećanje u sekciji "Prije i poslije". Fajlovi
+   su ionako mali (207 do 221 KB desktop, oko 177 KB telefon), pa se
+   brzina ne gubi.
 
-  • prekidač TAMNA / SVIJETLA tema s klizačem, ikonica mjeseca i
-    sunca; slike se mijenjaju mekim prelazom, bez treptanja
-  • lijevo desktop u okviru prozora, desno telefon u okviru
-  • ispod svake slike kratak natpis:
-      "Na računaru · pregled svih rezervacija na čekanju"
-      "Na telefonu · potvrda dok ste kod vozila"
-  • na dnu sitna napomena: "Prikazani podaci su testni unosi, ne
-    stvarni gosti."
+2. UVEĆANJE NA KLIK
+   Obje slike su sada klikabilne, isto kao u sekciji "Prije i
+   poslije":
+     • na hover se na desktop slici pojavi natpis "Kliknite za
+       uvećanje" s ikonicom lupe
+     • klik otvara prikaz preko cijelog ekrana u punoj rezoluciji
+     • telefon se otvara u uspravnom formatu, prilagođen visini
+       ekrana, da se ne razvlači
+     • zatvara se tipkom Escape, klikom van slike ili na X
+     • dok je uvećanje otvoreno, pozadina se ne skrola
 
-════════ O PRIVATNOSTI ════════
-Ništa nije zamućeno, i to je namjerno. Na snimcima su testni unosi
-koje smo napravili (Anna Kowalska, Lukas Weber), dakle izmišljeni
-ljudi. Zamućena polja uvijek izgledaju kao da se nešto krije, a
-ovako panel izgleda kao alat koji stvarno radi.
-
-Ako ipak želiš da se email adrese zamute, javi, to je brza obrada.
+3. PREKIDAČ TEMA I DALJE RADI
+   Uvećanje otvara onu temu koja je trenutno izabrana, pa možeš
+   pokazati i tamnu i svijetlu u punoj veličini.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: admin panel sa prekidacem tema i pravim slikama"
+  git commit -m "feat: uvecanje i puna ostrina slika admin panela"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
