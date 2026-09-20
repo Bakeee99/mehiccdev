@@ -11,7 +11,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight, ArrowRight, Check, Gauge, ShieldCheck, Car, FileSignature,
-  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks,
+  ScanLine, MapPinned, AlertTriangle, Clock, Languages, BellRing, Fuel, Server, Timer, ListChecks, Crown,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
@@ -30,6 +30,7 @@ const T = {
     sub: "Rent-a-car firma iz Mostara koja je rezervacije vodila kroz poruke i svesku dobila je sistem koji radi sam. Gost bira vozilo i datume, sistem provjerava dostupnost, vlasnik potvrđuje jednim klikom.",
     meta: ["Next.js i TypeScript", "Dvojezično, HR i EN", "Uživo od 2026."],
     visit: "Otvorite sajt",
+    premiumTag: "Premium paket",
     stats: [
       { n: 100, dec: 0, suf: "", l: "Google ocjena performansi" },
       { n: 3.2, dec: 1, suf: " s", l: "učitavanje na telefonu, ranije 21,6 s" },
@@ -125,6 +126,7 @@ const T = {
     sub: "A car rental company from Mostar that ran bookings through chat messages and a notebook now has a system that runs itself. The guest picks a vehicle and dates, the system checks availability, the owner confirms in one click.",
     meta: ["Next.js and TypeScript", "Bilingual, HR and EN", "Live since 2026"],
     visit: "Open the site",
+    premiumTag: "Premium package",
     stats: [
       { n: 100, dec: 0, suf: "", l: "Google performance score" },
       { n: 3.2, dec: 1, suf: " s", l: "mobile load time, was 21.6 s" },
@@ -330,13 +332,32 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
 
           {/* ══ LIJEVO ══ */}
           <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={once}>
-            <motion.span variants={up}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6
-                         border border-brand-600/30 bg-brand-600/10 text-brand-300
-                         text-[11px] font-bold tracking-[0.14em] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-400" aria-hidden />
-              {d.eyebrow}
-            </motion.span>
+            {/* Oznaka case studyja i, uz nju, koji je paket klijent uzeo.
+               Druga pilula je link na taj paket u cjenovniku rent-a-car
+               stranice: kratka, ista visina, samo drugačija boja i strelica,
+               pa se primijeti a ne odvlači pažnju s naslova. */}
+            <motion.div variants={up} className="flex flex-wrap items-center gap-2 mb-6">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full
+                               border border-brand-600/30 bg-brand-600/10 text-brand-300
+                               text-[11px] font-bold tracking-[0.14em] uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-400" aria-hidden />
+                {d.eyebrow}
+              </span>
+
+              <a
+                href="/rjesenja/rent-a-car#paketi"
+                className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full
+                           border border-white/12 bg-[color-mix(in_srgb,var(--surface)_70%,transparent)]
+                           text-[11px] font-bold tracking-[0.1em] uppercase text-[var(--text-muted)]
+                           transition-[border-color,color,transform] duration-300
+                           hover:border-brand-600/45 hover:text-[var(--text)] hover:-translate-y-0.5"
+              >
+                <Crown size={11} className="text-amber-400" />
+                {d.premiumTag}
+                <ArrowUpRight size={11} className="transition-transform duration-300
+                                                   group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </motion.div>
 
             <h1 className="text-[36px] leading-[1.06] sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-[var(--text)]">
               <motion.span variants={up} className="block">{d.h1a}</motion.span>

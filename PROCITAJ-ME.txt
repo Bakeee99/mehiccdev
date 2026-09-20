@@ -1,34 +1,38 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Case study hero: tiši meta red i ispravljena godina
+  mehiccdev — Oznaka paketa u hero sekciji case studyja
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl):
   components/portfolio/MaximumCaseStudy.tsx
 
-════════ 1. GODINA ════════
-"Uživo od 2025." → "Uživo od 2026."  (EN: Live since 2026)
-Provjerio sam cijeli projekat, 2025. se nigdje drugdje ne spominje.
+════════ ŠTA JE DODANO ════════
+Uz postojeću oznaku "CASE STUDY · RENT A CAR", u istom redu, stoji
+druga pilula:
 
-════════ 2. META RED IZNAD DUGMETA ════════
-Bio je tri uokvirene pilule s pozadinom, jedna do druge. Takav blok
-ima istu vizuelnu težinu kao dugme ispod njega, pa se s njim takmičio
-i oko nije znalo gdje da stane.
+     ♛ PREMIUM PAKET ↗
 
-Sada je to jedna tiha linija sivog teksta s tačkicama između:
+Klik vodi na /rjesenja/rent-a-car#paketi, dakle pravo na cjenovnik
+paketa, gdje posjetilac odmah vidi šta taj paket sadrži i koliko
+košta.
 
-    Next.js i TypeScript · Dvojezično, HR i EN · Uživo od 2026.
+════════ ZAŠTO OVAKO ════════
+  • ISTI RED, ISTA VISINA kao oznaka case studyja, pa se čita kao
+    par podataka o projektu, a ne kao reklama ubačena u sredinu
+  • SIVA, NE PLAVA: plava bi se takmičila s naslovom. Jedina boja je
+    mala zlatna kruna, taman da se oko zakači
+  • STRELICA gore desno odmah kaže da je klikabilno, bez ijedne
+    dodatne riječi
+  • na hover se podigne i rub postane plav, pa se potvrdi da je link
 
-Bez okvira, bez pozadine. Podaci su i dalje tu, ali kao potpis ispod
-opisa, a ne kao dugmad. Dugme "Otvorite sajt" je sada jedini istaknut
-element u tom dijelu, kako i treba.
+Poruka koju nosi je jaka a nenametljiva: ovo nije demo nego stvaran
+klijent koji je uzeo najveći paket.
 
-Dugme je usput malo smanjeno (14 px tekst umjesto 12,5 u pilulama je
-bilo neuravnoteženo) i odvojeno vlastitim razmakom iznad.
+⚠ Sidro #paketi postoji na rent-a-car stranici, provjereno.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: tisi meta red u hero sekciji i godina 2026"
+  git commit -m "feat: oznaka premium paketa u case study hero sekciji"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
