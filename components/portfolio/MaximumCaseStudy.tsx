@@ -823,10 +823,10 @@ function Compare({ d }: { d: typeof T.bs }) {
                   <Image
                     src={s.src}
                     alt={s.title}
-                    width={1920}
-                    height={1200}
-                    quality={95}
-                    sizes="(max-width: 768px) 100vw, 620px"
+                    width={2880}
+                    height={1800}
+                    quality={100}
+                    sizes="(max-width: 768px) 100vw, 640px"
                     className="w-full h-auto"
                   />
                 </button>
@@ -870,11 +870,14 @@ function Compare({ d }: { d: typeof T.bs }) {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-6xl rounded-2xl overflow-hidden border border-white/12 cursor-default"
             >
+              {/* unoptimized: Next ne dira fajl, pa se isporučuje original od
+                 2880 px. Tako uvećani prikaz nema nikakvo gubljenje oštrine. */}
               <Image
                 src={zoom === "before" ? "/portfolio/maximum-prije.webp" : "/portfolio/maximum-poslije.webp"}
                 alt={zoom === "before" ? c.beforeTitle : c.afterTitle}
-                width={1920} height={1200} quality={100}
-                sizes="100vw"
+                width={2880} height={1800}
+                unoptimized
+                priority
                 className="w-full h-auto"
               />
             </motion.div>

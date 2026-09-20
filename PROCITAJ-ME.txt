@@ -1,49 +1,39 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Sekcija "Prije i poslije" na /maximum
+  mehiccdev — Puna kvaliteta slika u sekciji "Prije i poslije"
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (3 fajla):
   components/portfolio/MaximumCaseStudy.tsx
-  public/portfolio/maximum-prije.webp      NOVA slika
-  public/portfolio/maximum-poslije.webp    NOVA slika
+  public/portfolio/maximum-prije.webp      ZAMIJENITI postojeću
+  public/portfolio/maximum-poslije.webp    ZAMIJENITI postojeću
 
-════════ KVALITETA SLIKA ════════
-Obje tvoje slike su bile 2880 x 1800, u identičnom kadru, što je
-idealno za poređenje jer se ništa nije moralo kropovati.
+════════ ZAŠTO JE BILO MUTNO ════════
+Slike su bile smanjene na 1920 px. U kartici to izgleda oštro, ali
+kad se otvori uvećani prikaz preko cijelog ekrana, slika se razvlači
+na 2560 ili više piksela, pa je bila uvećana preko svoje veličine.
+Otud mutnoća, i to samo u uvećanju.
 
-Pripremljene su ovako:
-  • 1920 x 1200 piksela, WebP, kvalitet 92
-  • u kartici se prikazuju na oko 600 px širine, znači TROSTRUKA
-    gustina piksela, pa su oštre i na Retina ekranima
-  • 183 KB i 133 KB, dakle zajedno manje od jedne obične PNG slike
-  • u kodu je postavljen quality 95, a u uvećanom prikazu 100, pa
-    Next.js ne smije dodatno da ih stisne
+════════ ŠTA JE URAĐENO ════════
+1. SLIKE SU SADA U PUNOJ REZOLUCIJI
+   2880 x 1800, WebP, kvalitet 100, bez ikakvog smanjivanja.
+   Veličina: 547 KB i 370 KB.
 
-Ako ti i to bude nedovoljno oštro, imam originale od 2880 px i mogu
-ih izvesti u toj veličini, samo se onda plaća brzinom stranice.
+2. UVEĆANI PRIKAZ SERVIRA ORIGINAL
+   Postavljena je oznaka koja govori Next.js-u da NE dira fajl, pa
+   se u uvećanju isporučuje tačno ovaj original od 2880 px. Nema
+   ponovne obrade, nema gubitka oštrine.
 
-════════ ŠTA SEKCIJA RADI ════════
-Nalazi se ODMAH POSLIJE HERO SEKCIJE, prije QA dijela, jer tako
-stranica prvo pokaže problem pa rješenje.
+3. SLIČICE I DALJE OSTAJU LAGANE
+   U samoj sekciji Next.js sam pravi manju verziju prema veličini
+   ekrana, pa posjetilac pri učitavanju stranice ne skida pola
+   megabajta. Velika slika se povlači tek kad neko klikne na nju.
 
-  • dvije slike jedna do druge, oznake "Prije" (crveno) i "Poslije"
-    (zeleno) u gornjem lijevom uglu
-  • ispod svake: naziv, jedna rečenica šta je bilo, i brojka
-    21,6 s naspram 3,2 s u crvenoj i zelenoj
-  • na hover se kartica podigne i pojavi se natpis "Kliknite za
-    uvećanje"
-  • klik otvara sliku preko cijelog ekrana u punoj rezoluciji;
-    zatvara se tipkom Escape, klikom van slike ili na X
-
-Namjerno nema animacija unutar slika: razlika se vidi samo kada oko
-može mirno da skače lijevo-desno.
-
-Na telefonu slike idu jedna ispod druge, prvo stara pa nova.
+Praktično: stranica ostaje brza, a uvećanje je oštro kao original.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: sekcija prije i poslije na case studyju"
+  git commit -m "fix: pune rezolucije slika u sekciji prije i poslije"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
