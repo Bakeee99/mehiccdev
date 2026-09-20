@@ -171,22 +171,22 @@ export const COPY = {
       recommended: "Preporučeno",
       items: [
         {
-          name: "Start", size: "3 do 9 vozila", price: "1.500 KM", priceNote: "jednokratno · oko €750",
+          name: "Start", size: "3 do 9 vozila", price: "od 1.500 KM", priceNote: "jednokratno · oko €750",
           perDay: "oko 4 KM dnevno u prvoj godini",
           catch: "Izmjene vozila i cijena radimo mi i naplaćuju se po satu.",
           features: ["Sajt na jednom jeziku", "Katalog vozila s cijenama", "Forma za rezervaciju", "Prilagođeno telefonu", "Bez admin panela"],
           cta: "Zatražite ponudu",
         },
         {
-          name: "Pro", size: "10 do 20 vozila", price: "2.900 KM", priceNote: "jednokratno · oko €1.480",
-          perDay: "oko 8 KM dnevno u prvoj godini",
+          name: "Pro", size: "10 do 20 vozila", price: "od 2.600 KM", priceNote: "jednokratno · oko €1.330",
+          perDay: "oko 7 KM dnevno u prvoj godini",
           bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost 300 KM",
           catch: "Sve mijenjate sami iz panela, bez dodatnih troškova.",
           features: ["Sve iz Start paketa", "Dvojezični sajt", "Admin panel za flotu i cijene", "Kalendar dostupnosti po vozilu", "Obavijesti o novom upitu"],
           cta: "Zatražite ponudu",
         },
         {
-          name: "Premium", size: "20+ vozila, više lokacija", price: "4.500 KM", priceNote: "jednokratno · oko €2.300",
+          name: "Premium", size: "20+ vozila, više lokacija", price: "od 4.500 KM", priceNote: "jednokratno · oko €2.300",
           perDay: "oko 12,50 KM dnevno u prvoj godini",
           bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost €150",
           catch: "Za firme koje rade iz više poslovnica.",
@@ -434,22 +434,22 @@ export const COPY = {
       recommended: "Recommended",
       items: [
         {
-          name: "Start", size: "3 to 9 vehicles", price: "€750", priceNote: "one time · 1,500 KM",
+          name: "Start", size: "3 to 9 vehicles", price: "from €750", priceNote: "one time · 1,500 KM",
           perDay: "about €2 a day in the first year",
           catch: "We make vehicle and price changes for you, billed by the hour.",
           features: ["Single language website", "Vehicle catalogue with prices", "Booking form", "Built for phones", "No admin panel"],
           cta: "Request a quote",
         },
         {
-          name: "Pro", size: "10 to 20 vehicles", price: "€1,480", priceNote: "one time · 2,900 KM",
-          perDay: "about €4 a day in the first year",
+          name: "Pro", size: "10 to 20 vehicles", price: "from €1,330", priceNote: "one time · 2,600 KM",
+          perDay: "about €3.60 a day in the first year",
           bonus: "3 months of free support", bonusNote: "€150 value",
           catch: "You change everything yourself from the panel, at no extra cost.",
           features: ["Everything in Start", "Bilingual website", "Admin panel for fleet and pricing", "Availability calendar per vehicle", "Alerts on every new inquiry"],
           cta: "Request a quote",
         },
         {
-          name: "Premium", size: "20+ vehicles, several locations", price: "€2,300", priceNote: "one time · 4,500 KM",
+          name: "Premium", size: "20+ vehicles, several locations", price: "from €2,300", priceNote: "one time · 4,500 KM",
           perDay: "about €6.30 a day in the first year",
           bonus: "3 months of free support", bonusNote: "€150 value",
           catch: "For companies working from several branches.",

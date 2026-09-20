@@ -74,7 +74,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "Jedan alat koji rješava jedan problem, npr. evidencija ili jednostavan katalog.",
-        price: "1.000 KM", alt: "oko €500", monthly: "50", gift: "Start",
+        price: "1.000 KM", alt: "oko €500", from: true, monthly: "50", gift: "Start",
         features: [
           "Jedna glavna funkcija (npr. katalog vozila ili evidencija klijenata)",
           "Vi i vaš tim se prijavljujete lozinkom",
@@ -86,7 +86,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Kompletan sistem rezervacija i najma, kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili zakazuje.",
-        price: "3.000 KM", alt: "oko €1.500", oldPrice: "4.800 KM", discountBadge: "-38%", promoNote: "Za prve klijente · vrijedi do 30.09.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
+        price: "2.200 KM", alt: "oko €1.120", from: true, oldPrice: "3.600 KM", discountBadge: "-39%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -168,7 +168,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     apps: [
       {
         name: "Starter", tag: "One tool that solves one problem, e.g. records or a simple catalog.",
-        price: "€500", alt: "about 1,000 KM", monthly: "50", gift: "Start",
+        price: "€500", alt: "about 1,000 KM", from: true, monthly: "50", gift: "Start",
         features: [
           "One main feature (e.g. vehicle catalog or client records)",
           "You and your team log in with a password",
@@ -180,7 +180,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A complete booking and rental system, like Maximum Rent a Car. Adaptable to anything you rent out or schedule.",
-        price: "€1,500", alt: "about 3,000 KM", oldPrice: "€2,400", discountBadge: "-38%", promoNote: "Early-client price · until Sep 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,840", discountBadge: "-39%", promoNote: "Early-client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "3 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",

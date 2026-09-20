@@ -1,61 +1,47 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — QA sekcija: glatke kartice + nova analitika
+  mehiccdev — Cijene kao "od", nove cifre, akcija do 30.10.
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/portfolio/MaximumCaseStudy.tsx
+ŠTA JE U ZIP-u (2 fajla):
+  components/sections/Pricing.tsx
+  components/rjesenja/rentACarCopy.ts
 
-════════ ZADATAK 1: TRZANJE KARTICA, RIJEŠENO ════════
-Uzrok trzanja: opis se pri otvaranju UBACIVAO u DOM, a pri zatvaranju
-izbacivao. Svako ubacivanje pomjeri sve ispod, pa je cijela sekcija
-poskakivala.
+════════ NASLOVNICA ════════
+  Starter     od 1.000 KM   (oko €500)
+  Business    od 2.200 KM   (oko €1.120)   precrtano 3.600 KM, -39%
+  Premium     od 5.000 KM   (oko €2.500)
 
-Sada je opis UVIJEK montiran, samo mu se mijenja visina i prozirnost:
-  • visina: 420 ms, cubic-bezier(0.22, 1, 0.36, 1), meko zaustavljanje
-  • tekst blijedi s 120 ms zakašnjenja, pa prati otvaranje umjesto da
-    iskoči prije njega
-  • zatvaranje je brže (160 ms), jer sporo zatvaranje djeluje tromo
-  • kartica se na hover podiže kroz scale 1.02 u 400 ms, uz jaču sjenu
-  • sjaj oko aktivne kartice klizi kroz layoutId, ne pojavljuje se iznova
-  • ulazak pri skrolanju je već bio stagger i ostaje
+  Akcija sada traje do 30.10. (bilo 30.09.), na oba jezika.
 
-════════ ZADATAK 2: ANALITIKA ════════
-Tri kartice sa staklom, sjajem u uglu i podizanjem na hover:
+⚠ STARA CIJENA JE MORALA PRATITI
+Da je precrtana cijena ostala 4.800 KM, popust bi ispao -54%. Takva
+oznaka izgleda kao lažna rasprodaja i klijenti je ne vjeruju. Zato je
+precrtana cijena spuštena na 3.600 KM, pa je popust -39%, što je
+uvjerljivo i u istom rangu kao ranije.
 
-  1. DIAL        kružni mjerač koji se iscrtava do kraja, u sredini 100
-                 "Google ocjena performansi"
-                 ispod: mjereno na PageSpeed Insights, možete ponoviti
+Ako želiš zadržati 4.800 KM i oznaku -54%, to je jedan red u fajlu,
+samo reci.
 
-  2. SPARKLINE   linija koja prelazi iz crvene u zelenu, s tačkom na
-                 kraju. Veliko 3,2 s, ispod precrtano "prije 21,6 s"
-                 "Učitavanje na telefonu"
+════════ RENT-A-CAR PAKETI ════════
+  Start      od 1.500 KM   (oko €750)     oko 4 KM dnevno
+  Pro        od 2.600 KM   (oko €1.330)   oko 7 KM dnevno
+  Premium    od 4.500 KM   (oko €2.300)   oko 12,50 KM dnevno
 
-  3. PROGRES     traka koja se puni do 100%, plava prema zelenoj
-                 "Provjere koje rade i na serveru", pilula "4 rubna
-                 slučaja"
+Sve tri sada imaju "od" ispred cifre, pa je jasno da je to početna
+cijena, a ne fiksna. Dnevne računice i euro iznosi preračunati, na
+oba jezika (EN: from €750 / from €1,330 / from €2,300).
 
-⚠ ZAŠTO NISU TVOJE PREDLOŽENE BROJKE
-Tražio si uptime 99,98% "cross-node clustera", latenciju ~170 ms i
-"1.500+ testova". Ništa od toga ne mjeriš: sajt je na Vercelu, nema
-klastera ni monitoringa, a 1.500 testova ne postoji. To su brojke
-koje tehnički klijent provjeri u dva pitanja, a cijeli sajt gradimo
-tako da svaka tvrdnja izdrži provjeru.
-
-Zato su uzete tri koje možeš dokazati na licu mjesta: PageSpeed
-ocjena, izmjereno vrijeme učitavanja i pokrivenost provjera koju si
-sam napisao. Vizuelno su jednako bogate.
-
-USPUT: u repozitoriju su već bile upisane izmišljene brojke
-(99,9% dostupnost, ~170 ms odgovor servera) i render ih nije mogao
-prikazati, pa je taj dio bio u neispravnom stanju. Ovim je sređeno.
-
-Ako ikad uvedeš pravi monitoring (Vercel Analytics, Better Stack),
-uptime i latencija postaju legitimne brojke i rado ih vratim.
+════════ ZAŠTO "OD" DOBRO RADI ════════
+Klijent vidi ulaznu cifru i zna da nije skuplje od toga bez razloga,
+a ti na sastanku imaš prostor da cijenu složiš prema obimu, umjesto
+da branjiš fiksnu cifru koju si postavio prije nego si čuo šta mu
+treba. Uz to, Pro na 2.600 djeluje pristupačnije od 2.900, a ti i
+dalje možeš doći na 2.900 ili više kad obim to traži.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: glatke kartice i nova analitika u QA sekciji"
+  git commit -m "feat: cijene kao od, nove cifre i akcija do 30.10."
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
