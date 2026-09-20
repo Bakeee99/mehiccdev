@@ -1,43 +1,38 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Business paket: opis bez rent-a-car ponavljanja
+  mehiccdev — 2 mjeseca podrške, 4 sata mjesečno
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
+ŠTA JE U ZIP-u (2 fajla):
   components/sections/Pricing.tsx
-(sadrži i cijene kao "od" te rok 30.10. iz prethodne isporuke)
+  components/rjesenja/rentACarCopy.ts
+(sadrže i sve prethodno: cijene kao "od", rok 30.10., novi opis
+ Business paketa)
 
-════════ ŠTA JE BILO ════════
-Opis Business paketa glasio je: "Kompletan sistem rezervacija i najma,
-kao Maximum Rent a Car. Prilagodljiv svemu što se iznajmljuje ili
-zakazuje."
+════════ ŠTA JE PROMIJENJENO ════════
+BESPLATNA PODRŠKA: 3 mjeseca → 2 mjeseca
+  • naslovnica, prva stavka Business paketa
+  • rent-a-car stranica, zeleni bonus okvir na Pro i Premium kartici
+  • traka "Nakon isporuke" na obje stranice
 
-Rent-a-car se tako spominjao dva puta na istoj stranici: u opisu
-paketa i u banneru ispod cjenovnika. Posjetilac koji ima apartmane,
-teretanu ili servis pomisli da paket nije za njega.
+MJESEČNA PODRŠKA: do 8 sati → do 4 sata
+  • naslovnica, traka "Nakon isporuke"
+  • rent-a-car stranica, kartica "Mjesečna podrška"
 
-════════ ŠTA SADA PIŠE ════════
-  "Web aplikacija za rezervacije i termine. Gost bira datum i šalje
-   upit, vi potvrđujete iz panela. Za sve što se iznajmljuje ili
-   zakazuje."
+PRERAČUNATE PRATEĆE BROJKE:
+  • vrijednost bonusa: 300 KM → 200 KM (dva mjeseca po 100 KM)
+    na engleskom €150 → €100
+  • usporedba u tekstu: "8 sati po satnici bi bilo 400 KM"
+    → "4 sata po satnici bi bila 200 KM"
 
-Ista poruka, ali kroz radnju umjesto kroz djelatnost, pa se u njoj
-prepozna i rent-a-car i apartman i frizerski salon.
-
-Popravljene su i dvije stavke u paketu koje su vukle na jednu
-djelatnost:
-  "Upiti s datumima, lokacijama i statusom"
-     → "Kalendar zauzetosti, pa se termini ne mogu preklopiti"
-  "...kad stigne novi upit"
-     → "...kad stigne nova rezervacija"
-
-Rent-a-car sada ostaje spomenut samo na JEDNOM mjestu na naslovnici,
-u banneru koji vodi na posebnu stranicu. Tu i pripada, jer je to
-ciljana ponuda za tu djelatnost.
+Ta usporedba i dalje radi u tvoju korist: 100 KM mjesečno naspram
+200 KM koliko bi ista četiri sata koštala po satnici. Odnos je i
+dalje dva prema jedan, samo su brojke manje, pa je i tvoja obaveza
+prema klijentu realnija.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "copy: business paket opisan sire od rent-a-cara"
+  git commit -m "feat: 2 mjeseca podrske i 4 sata mjesecno"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)

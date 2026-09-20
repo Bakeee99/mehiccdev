@@ -180,7 +180,7 @@ export const COPY = {
         {
           name: "Pro", size: "10 do 20 vozila", price: "od 2.600 KM", priceNote: "jednokratno · oko €1.330",
           perDay: "oko 7 KM dnevno u prvoj godini",
-          bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost 300 KM",
+          bonus: "2 mjeseca besplatne podrške", bonusNote: "vrijednost 200 KM",
           catch: "Sve mijenjate sami iz panela, bez dodatnih troškova.",
           features: ["Sve iz Start paketa", "Dvojezični sajt", "Admin panel za flotu i cijene", "Kalendar dostupnosti po vozilu", "Obavijesti o novom upitu"],
           cta: "Zatražite ponudu",
@@ -188,7 +188,7 @@ export const COPY = {
         {
           name: "Premium", size: "20+ vozila, više lokacija", price: "od 4.500 KM", priceNote: "jednokratno · oko €2.300",
           perDay: "oko 12,50 KM dnevno u prvoj godini",
-          bonus: "3 mjeseca besplatne podrške", bonusNote: "vrijednost €150",
+          bonus: "2 mjeseca besplatne podrške", bonusNote: "vrijednost 200 KM",
           catch: "Za firme koje rade iz više poslovnica.",
           features: ["Sve iz Pro paketa", "Upravljanje po lokacijama", "Flota i preuzimanje po poslovnici", "Prioritetna podrška"],
           cta: "Zatražite ponudu",
@@ -201,8 +201,8 @@ export const COPY = {
       support: {
         subLabel: "Mjesečna podrška",
         subPrice: "100 KM", subPer: "/mj",
-        subDesc: "Oko €50. Do 8 sati mjesečno za izmjene, nadogradnje i pomoć kad nešto zapne. Javljam se prioritetno.",
-        subAnchor: "Za poređenje, tih 8 sati po satnici bi bilo 400 KM.",
+        subDesc: "Oko €50. Do 4 sata mjesečno za izmjene, nadogradnje i pomoć kad nešto zapne. Javljam se prioritetno.",
+        subAnchor: "Za poređenje, ta 4 sata po satnici bi bila 200 KM.",
         hourLabel: "Bez pretplate",
         hourPrice: "50 KM", hourPer: "/h",
         hourDesc: "Oko €25. Plaćate samo kada nešto zatreba, po utrošenom vremenu.",
@@ -443,7 +443,7 @@ export const COPY = {
         {
           name: "Pro", size: "10 to 20 vehicles", price: "from €1,330", priceNote: "one time · 2,600 KM",
           perDay: "about €3.60 a day in the first year",
-          bonus: "3 months of free support", bonusNote: "€150 value",
+          bonus: "2 months of free support", bonusNote: "€100 value",
           catch: "You change everything yourself from the panel, at no extra cost.",
           features: ["Everything in Start", "Bilingual website", "Admin panel for fleet and pricing", "Availability calendar per vehicle", "Alerts on every new inquiry"],
           cta: "Request a quote",
@@ -451,7 +451,7 @@ export const COPY = {
         {
           name: "Premium", size: "20+ vehicles, several locations", price: "from €2,300", priceNote: "one time · 4,500 KM",
           perDay: "about €6.30 a day in the first year",
-          bonus: "3 months of free support", bonusNote: "€150 value",
+          bonus: "2 months of free support", bonusNote: "€100 value",
           catch: "For companies working from several branches.",
           features: ["Everything in Pro", "Multi location management", "Fleet and pickup per branch", "Priority support"],
           cta: "Request a quote",
@@ -464,8 +464,8 @@ export const COPY = {
       support: {
         subLabel: "Monthly support",
         subPrice: "€50", subPer: "/mo",
-        subDesc: "About 100 KM. Up to 8 hours a month for changes, upgrades and help when something goes wrong. You get priority.",
-        subAnchor: "For comparison, those 8 hours at the hourly rate would be €200.",
+        subDesc: "About 100 KM. Up to 4 hours a month for changes, upgrades and help when something goes wrong. You get priority.",
+        subAnchor: "For comparison, those 4 hours at the hourly rate would be €100.",
         hourLabel: "No subscription",
         hourPrice: "€25", hourPer: "/h",
         hourDesc: "About 50 KM. You pay only when you need something, for the time spent.",

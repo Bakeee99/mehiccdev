@@ -51,9 +51,9 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     monthlyLabel: "Hosting + podrška · opciono",
     monthlySub: "nije obavezno, samo ako želite našu podršku i održavanje",
     afterHeading: "Nakon isporuke",
-    afterSub: "Prva 3 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
+    afterSub: "Prva 2 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
     afterBoxes: [
-      { label: "Mjesečna podrška", price: "100 KM", alt: "oko €50", per: "/mj", sub: "do 8 sati mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
+      { label: "Mjesečna podrška", price: "100 KM", alt: "oko €50", per: "/mj", sub: "do 4 sata mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
       { label: "Bez pretplate", price: "50 KM", alt: "oko €25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
     ],
     hostingNote: "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine sajtova je to vrlo mali iznos.",
@@ -88,7 +88,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         name: "Business", tag: "Web aplikacija za rezervacije i termine. Gost bira datum i šalje upit, vi potvrđujete iz panela. Za sve što se iznajmljuje ili zakazuje.",
         price: "2.200 KM", alt: "oko €1.120", from: true, oldPrice: "3.600 KM", discountBadge: "-39%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
-          "3 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
+          "2 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog, upiti i admin panel)",
           "Više uloga: vlasnik vidi sve, osoblje samo svoje",
@@ -145,9 +145,9 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     monthlyLabel: "Hosting + support · optional",
     monthlySub: "not required, only if you want our support and maintenance",
     afterHeading: "After launch",
-    afterSub: "The first 3 months of support are free with the Business package. After that, everything is optional.",
+    afterSub: "The first 2 months of support are free with the Business package. After that, everything is optional.",
     afterBoxes: [
-      { label: "Monthly support", price: "€50", alt: "about 100 KM", per: "/mo", sub: "up to 8 hours a month for changes, upgrades and help · priority response" },
+      { label: "Monthly support", price: "€50", alt: "about 100 KM", per: "/mo", sub: "up to 4 hours a month for changes, upgrades and help · priority response" },
       { label: "No subscription", price: "€25", alt: "about 50 KM", per: "/h", sub: "you pay only when you need something, for the time spent" },
     ],
     hostingNote: "Hosting is billed separately based on actual usage, and for most sites it is a very small amount.",
@@ -182,7 +182,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
         name: "Business", tag: "A web app for bookings and appointments. The guest picks a date and sends a request, you confirm it from the panel. For anything you rent out or schedule.",
         price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,840", discountBadge: "-39%", promoNote: "Early-client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
-          "3 months of free support after launch, for any questions or issues",
+          "2 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
           "Multiple connected parts (catalog + inquiries + admin panel)",
           "Multiple roles: owner sees all, staff see their own",
