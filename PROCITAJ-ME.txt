@@ -1,44 +1,45 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Admin panel: puna oštrina i uvećanje na klik
+  mehiccdev — Nove slike u prozoru i telefonu hero sekcije
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
+ŠTA JE U ZIP-u (3 fajla):
   components/portfolio/MaximumCaseStudy.tsx
+  public/portfolio/maximum-hero-desktop.webp   NOVA
+  public/portfolio/maximum-hero-mob.webp       NOVA
 
-Slike su već poslane u prethodnom ZIP-u i ne mijenjaju se.
+════════ ŠTA JE ZAMIJENJENO ════════
+PROZOR PREGLEDNIKA (desktop)
+  bilo:  stari screenshot naslovne, PNG, isporučivan smanjen
+  sada:  nova tamna naslovna, 2880 x 1800, kvalitet 100
 
-════════ ZAŠTO JE IZGLEDALO MUTNO ════════
-Kvalitet je već bio postavljen na 100, ali to nije bio problem.
-Next.js je slici govorio da će biti prikazana na oko 780 piksela, pa
-je isporučivao smanjenu verziju umjesto originala od 2880 px. Na
-većim ekranima se to vidi kao mekoća.
+TELEFON
+  bilo:  admin panel (to je sada ionako u svojoj sekciji niže)
+  sada:  tamna naslovna na telefonu, 1179 x 2556, kvalitet 100
 
-════════ ŠTA JE URAĐENO ════════
-1. ORIGINALI SE SERVIRAJU NETAKNUTI
-   Obje slike, i desktop i telefon, sada idu bez ikakve obrade, kao
-   što smo uradili i za uvećanje u sekciji "Prije i poslije". Fajlovi
-   su ionako mali (207 do 221 KB desktop, oko 177 KB telefon), pa se
-   brzina ne gubi.
+Obje se isporučuju NETAKNUTE, bez ponovne obrade, pa su oštre kao
+original i na velikim ekranima. Veličine: 378 KB i 229 KB.
 
-2. UVEĆANJE NA KLIK
-   Obje slike su sada klikabilne, isto kao u sekciji "Prije i
-   poslije":
-     • na hover se na desktop slici pojavi natpis "Kliknite za
-       uvećanje" s ikonicom lupe
-     • klik otvara prikaz preko cijelog ekrana u punoj rezoluciji
-     • telefon se otvara u uspravnom formatu, prilagođen visini
-       ekrana, da se ne razvlači
-     • zatvara se tipkom Escape, klikom van slike ili na X
-     • dok je uvećanje otvoreno, pozadina se ne skrola
+Telefon je dobio i tačan omjer stranica originala (1179:2556), pa
+se slika više ne kropuje niti razvlači.
 
-3. PREKIDAČ TEMA I DALJE RADI
-   Uvećanje otvara onu temu koja je trenutno izabrana, pa možeš
-   pokazati i tamnu i svijetlu u punoj veličini.
+════════ ZAŠTO JE TELEFON PROMIJENIO SADRŽAJ ════════
+Ranije je telefon u heroju pokazivao admin panel. Sada kad admin
+panel ima svoju sekciju s prekidačem tema, bilo bi to ponavljanje.
+Ovako hero pokazuje ISTU stranicu na dva uređaja, što je i jasnija
+poruka: sajt izgleda jednako dobro i na računaru i na telefonu.
+
+════════ STARA SLIKA SE JOŠ KORISTI NA DVA MJESTA ════════
+maximum-naslovna.png (stari, svijetli screenshot) i dalje stoji u:
+  • portfolio sekciji na naslovnici (Maximum kartica)
+  • case study bloku na rent-a-car stranici
+Ne diram je bez tvoje riječi, jer si tamo možda namjerno htio
+svijetlu verziju. Ako želiš i tamo novu tamnu, javi, to je jedna
+zamjena putanje po mjestu.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: uvecanje i puna ostrina slika admin panela"
+  git commit -m "feat: nove tamne slike u hero sekciji case studyja"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)

@@ -707,11 +707,12 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
 
             {/* visina je ograničena, pa se vidi samo vrh stranice */}
             <div className="relative h-[240px] sm:h-[330px] lg:h-[400px] overflow-hidden">
+              {/* unoptimized: isporučuje se original od 2880 px, bez ponovne
+                 obrade, pa je slika oštra i na velikim ekranima */}
               <Image
-                src="/portfolio/maximum-naslovna.png"
+                src="/portfolio/maximum-hero-desktop.webp"
                 alt={d.imgAlt}
-                fill priority quality={92}
-                sizes="(max-width: 1024px) 100vw, 1000px"
+                fill priority unoptimized
                 className="object-cover object-top"
               />
               <span aria-hidden className="absolute inset-x-0 bottom-0 h-24
@@ -735,12 +736,11 @@ function Hero({ d, calm }: { d: typeof T.bs; calm: boolean }) {
                          shadow-[0_40px_80px_-25px_rgba(2,8,30,0.95)]"
             >
               <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/15" />
-              <div className="relative rounded-[20px] overflow-hidden aspect-[450/992] bg-[#0B1226]">
+              <div className="relative rounded-[20px] overflow-hidden aspect-[1179/2556] bg-[#0B1226]">
                 <Image
-                  src="/portfolio/maximum-admin-mob-tamna.webp"
+                  src="/portfolio/maximum-hero-mob.webp"
                   alt={d.imgAlt}
-                  fill quality={92}
-                  sizes="200px"
+                  fill unoptimized
                   className="object-cover object-top"
                 />
               </div>
