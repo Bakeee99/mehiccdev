@@ -1,46 +1,44 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Nove slike u prozoru i telefonu hero sekcije
+  mehiccdev — Odsječeni repovi slova u naslovima
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla):
-  components/portfolio/MaximumCaseStudy.tsx
-  public/portfolio/maximum-hero-desktop.webp   NOVA
-  public/portfolio/maximum-hero-mob.webp       NOVA
+ŠTA JE U ZIP-u (1 fajl):
+  app/globals.css
 
-════════ ŠTA JE ZAMIJENJENO ════════
-PROZOR PREGLEDNIKA (desktop)
-  bilo:  stari screenshot naslovne, PNG, isporučivan smanjen
-  sada:  nova tamna naslovna, 2880 x 1800, kvalitet 100
+════════ ŠTA JE BIO UZROK ════════
+Plavi dio naslova koristi gradijent koji se isijeca po tekstu.
+Takvo isijecanje ide po kutiji retka, a repovi slova g, j, y i sličnih
+u serif kurzivu izlaze ISPOD te kutije. Zato su se odsijecali, i to
+samo na plavom tekstu, dok je bijeli bio uredan.
 
-TELEFON
-  bilo:  admin panel (to je sada ionako u svojoj sekciji niže)
-  sada:  tamna naslovna na telefonu, 1179 x 2556, kvalitet 100
+Problem se pojavljivao na svim naslovima sa plavim kurzivom, dakle na
+naslovnici, rent-a-car stranici i case studyju.
 
-Obje se isporučuju NETAKNUTE, bez ponovne obrade, pa su oštre kao
-original i na velikim ekranima. Veličine: 378 KB i 229 KB.
+════════ ŠTA JE URAĐENO ════════
+Klasa .text-gradient je dobila donju ispunu od 0,14em, taman toliko
+da repovi stanu unutar kutije koja se isijeca.
 
-Telefon je dobio i tačan omjer stranica originala (1179:2556), pa
-se slika više ne kropuje niti razvlači.
+Zašto baš tako, a ne povećanjem visine retka: element je u toku
+teksta, a kod takvih elemenata okomita ispuna NE pomjera raspored.
+Znači razmaci između redova ostaju isti kao sada, a tekst se i dalje
+normalno prelama u novi red. Da smo koristili display: inline-block,
+naslov se ne bi mogao prelomiti, pa bi na telefonu izlazio iz ekrana.
 
-════════ ZAŠTO JE TELEFON PROMIJENIO SADRŽAJ ════════
-Ranije je telefon u heroju pokazivao admin panel. Sada kad admin
-panel ima svoju sekciju s prekidačem tema, bilo bi to ponavljanje.
-Ovako hero pokazuje ISTU stranicu na dva uređaja, što je i jasnija
-poruka: sajt izgleda jednako dobro i na računaru i na telefonu.
+Popravka je na jednom mjestu i automatski važi za sve naslove na
+cijelom sajtu, sadašnje i buduće.
 
-════════ STARA SLIKA SE JOŠ KORISTI NA DVA MJESTA ════════
-maximum-naslovna.png (stari, svijetli screenshot) i dalje stoji u:
-  • portfolio sekciji na naslovnici (Maximum kartica)
-  • case study bloku na rent-a-car stranici
-Ne diram je bez tvoje riječi, jer si tamo možda namjerno htio
-svijetlu verziju. Ako želiš i tamo novu tamnu, javi, to je jedna
-zamjena putanje po mjestu.
+════════ PROVJERA ════════
+Poslije ubacivanja pogledaj naslove u kojima ima g, j ili y:
+  • "digitalna transformacija rent-a-cara" (case study)
+  • "Treba mu sistem." (naslovnica)
+  • "rade zajedno" (Usluge)
+  • "dva potpuno različita dana" (rent-a-car)
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: nove tamne slike u hero sekciji case studyja"
+  git commit -m "fix: odsjeceni repovi slova u gradijentnim naslovima"
   git push
 
-Build verifikovan prije slanja: npm run build ✓ (12/12 stranica)
+Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════

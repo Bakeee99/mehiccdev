@@ -82,5 +82,13 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+
+    /* Gradijent se isijeca po kutiji retka, a repovi slova (g, j, y) u serif
+       kurzivu izlaze ispod nje, pa su se odsijecali. Donja ispuna proširuje
+       tu kutiju taman toliko da repovi stanu.
+       Element je u toku teksta (inline), a kod takvih elemenata okomita
+       ispuna NE pomjera raspored, pa se razmaci između redova ne mijenjaju
+       i tekst se i dalje normalno prelama u novi red. */
+    padding-bottom: 0.14em;
   }
 }
