@@ -1,44 +1,45 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Odsječeni repovi slova u naslovima
+  mehiccdev — Instagram ikonice vode na profil firme
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  app/globals.css
+ŠTA JE U ZIP-u (2 fajla):
+  components/sections/Footer.tsx
+  app/layout.tsx
 
-════════ ŠTA JE BIO UZROK ════════
-Plavi dio naslova koristi gradijent koji se isijeca po tekstu.
-Takvo isijecanje ide po kutiji retka, a repovi slova g, j, y i sličnih
-u serif kurzivu izlaze ISPOD te kutije. Zato su se odsijecali, i to
-samo na plavom tekstu, dok je bijeli bio uredan.
-
-Problem se pojavljivao na svim naslovima sa plavim kurzivom, dakle na
-naslovnici, rent-a-car stranici i case studyju.
+════════ ISPRAVKA MOJE GREŠKE ════════
+U prošloj poruci sam ti rekao da je sve već podešeno. Bio sam u
+krivu: gledao sam stariju kopiju projekta. Na sajtu uživo ikonice su
+stvarno vodile na lične naloge:
+    mehicbakir  i  nedim.40
 
 ════════ ŠTA JE URAĐENO ════════
-Klasa .text-gradient je dobila donju ispunu od 0,14em, taman toliko
-da repovi stanu unutar kutije koja se isijeca.
+1. Obje ikonice u footeru sada vode na
+       https://www.instagram.com/mehiccdev
+   Link stoji u jednoj konstanti na vrhu fajla, pa se ubuduće mijenja
+   na jednom mjestu.
 
-Zašto baš tako, a ne povećanjem visine retka: element je u toku
-teksta, a kod takvih elemenata okomita ispuna NE pomjera raspored.
-Znači razmaci između redova ostaju isti kao sada, a tekst se i dalje
-normalno prelama u novi red. Da smo koristili display: inline-block,
-naslov se ne bi mogao prelomiti, pa bi na telefonu izlazio iz ekrana.
+2. Oznaka za čitače ekrana je bila "Bakir Mehić Instagram", što bi
+   slabovidnoj osobi reklo da ide na lični profil. Sada glasi
+   "mehiccdev na Instagramu".
 
-Popravka je na jednom mjestu i automatski važi za sve naslove na
-cijelom sajtu, sadašnje i buduće.
+3. U strukturirane podatke (JSON-LD) dodan je profil firme, pa Google
+   zna da mehiccdev.com i taj Instagram pripadaju istoj firmi. To
+   pomaže da se profil pojavi uz sajt u rezultatima pretrage.
 
-════════ PROVJERA ════════
-Poslije ubacivanja pogledaj naslove u kojima ima g, j ili y:
-  • "digitalna transformacija rent-a-cara" (case study)
-  • "Treba mu sistem." (naslovnica)
-  • "rade zajedno" (Usluge)
-  • "dva potpuno različita dana" (rent-a-car)
+LinkedIn linkovi NISU dirani i vode na vaše lične profile. To je
+namjerno: LinkedIn je po prirodi lični profil, a uz ime osobe se
+očekuje njen nalog, i to gradi povjerenje koje firmina stranica
+nema.
+
+NAPOMENA O LINKU: iz onog koji si poslao uklonjeni su parametri
+?stkn=... i utm_source=qr. To su tragovi iz QR koda, ne trebaju na
+sajtu i samo bi produžili adresu.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: odsjeceni repovi slova u gradijentnim naslovima"
+  git commit -m "fix: instagram ikonice vode na profil firme"
   git push
 
-Build verifikovan prije slanja: npm run build ✓
+Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
 ════════════════════════════════════════════════════════════════════

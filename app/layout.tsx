@@ -75,6 +75,8 @@ const JSON_LD = {
   address: { "@type": "PostalAddress", addressLocality: "Mostar", addressCountry: "BA" },
   areaServed: ["Bosnia and Herzegovina", "Croatia", "Serbia", "Montenegro"],
   knowsLanguage: ["bs", "en"],
+  // zvanični profili firme, da ih Google poveže s mehiccdev.com
+  sameAs: ["https://www.instagram.com/mehiccdev"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

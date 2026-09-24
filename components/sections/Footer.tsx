@@ -22,15 +22,20 @@ import { staggerContainer, fadeUp } from "@/lib/animations";
 import { useReveal } from "@/lib/useReveal";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
+/* Instagram firme. Obje ikonice u footeru vode ovdje, a ne na lične naloge:
+   posjetilac koji klikne na društvenu mrežu uz ime traži firmu, ne privatni
+   profil, a i sav promet tako ide na jedno mjesto. */
+const INSTAGRAM = "https://www.instagram.com/mehiccdev";
+
 const TEAM_CONTACTS = [
   {
     name: "Bakir Mehić", role: "Development", email: "bakir.mehic@mehiccdev.com",
-    instagram: "https://www.instagram.com/mehicbakir",
+    instagram: INSTAGRAM,
     linkedin:  "https://www.linkedin.com/in/bakir-mehic-qa-engineer/",
   },
   {
     name: "Nedim Kupusija", role: "Marketing", email: "nedim.kupusija@mehiccdev.com",
-    instagram: "https://www.instagram.com/nedim.40",
+    instagram: INSTAGRAM,
     linkedin:  "https://www.linkedin.com/in/nedim-kupusija-4632a533b/",
   },
 ];
@@ -197,7 +202,7 @@ export function Footer() {
                     <span className="break-all">{m.email}</span>
                   </a>
                   <div className="flex gap-2">
-                    <a href={m.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} Instagram`}
+                    <a href={m.instagram} target="_blank" rel="noopener noreferrer" aria-label="mehiccdev na Instagramu"
                        className="w-8 h-8 rounded-lg flex items-center justify-center
                                   bg-[color-mix(in_srgb,var(--bg)_70%,transparent)] border border-[var(--border)] text-[var(--text-muted)]
                                   transition-all duration-200 hover:text-brand-600 dark:hover:text-brand-400
