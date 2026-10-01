@@ -5,7 +5,7 @@
  */
 
 import { HomeRail }      from "@/components/sections/HomeRail";
-import { RentACarPromo } from "@/components/sections/RentACarPromo";
+import { SystemDemo } from "@/components/sections/SystemDemo";
 import { Navbar }       from "@/components/sections/Navbar";
 import { Hero }         from "@/components/sections/Hero";
 import { Services }     from "@/components/sections/Services";
@@ -26,7 +26,7 @@ export default function HomePage() {
       <HomeRail />
       <Hero />
       <About />
-      <RentACarPromo />
+      <SystemDemo />
       <Services />
       <Results />
       <Portfolio />

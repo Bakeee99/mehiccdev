@@ -1,69 +1,56 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Redizajn naslovnice, korak 1: HERO
+  mehiccdev — Prikaz sistema u pokretu, ispod sekcije "O nama"
 ════════════════════════════════════════════════════════════════════
 
-GLAVNI FAJLOVI OVOG KORAKA:
-  components/sections/Hero.tsx      potpuno nov hero
-  components/sections/Navbar.tsx    ravna bijela traka na naslovnici
-  app/globals.css                   usklađena pravila
+ŠTA JE U ZIP-u (3 fajla + pregled):
+  components/sections/SystemDemo.tsx   NOVO: sekcija s prikazom
+  public/demo/rent-a-car.html          tvoja prezentacija, prilagođena
+  app/page.tsx                         nova sekcija umjesto stare promo
 
-OSTALI FAJLOVI su iz prethodne isporuke (svijetla tema naslovnice).
-Uključeni su da ovaj ZIP radi sam za sebe, čak i ako onu isporuku
-nisi ubacio. Ako jesi, samo potvrdi zamjenu.
+Stara sekcija components/sections/RentACarPromo.tsx se više ne
+koristi. Obriši je komandom ispod (git rm), da ne ostane mrtav kod.
 
-⚠ POSLIJE RASPAKIVANJA:  npm install   (paket za font Inter)
+════════ ŠTA JE TO ════════
+Fajl koji si poslao nije video nego animirana HTML prezentacija:
+počinje porukom "Imate li auto za vikend?" i za oko 65 sekundi
+prolazi cijeli tok, od izbora teme, jezika i datuma, preko slobodnih
+vozila i opreme, do admin panela, ugovora i aktivnih rezervacija.
 
-Pregled: pregled-hero-desktop.png i pregled-hero-mobitel.png
+Sekcija stoji tačno gdje je bila stara "Naš sistem za rent-a-car",
+s istim naslovom, tekstom, dugmetom "Pogledajte sistem i cijene" i
+pilulom s cijenom. Samo je opis zamijenjen prikazom.
 
-════════ HERO ════════
-Ostalo je samo ono što si tražio, sve centrirano:
-  1. bedž "Novo · Rezervacioni sistem za rent-a-car firme"
-     (zelena oznaka, vodi na rent-a-car stranicu)
-  2. naslov u tri uravnotežena reda; drugi dio, "Treba mu sistem.",
-     uvijek je u svom redu i u prigušenoj sivoj
-  3. podnaslov
-  4. crveno dugme "Besplatne konsultacije" i obrubljeno
-     "Šta smo napravili"
-  5. tri telefona koja se preklapaju
+════════ KAKO SE PONAŠA (sve provjereno) ════════
+  • učitava se tek kad se posjetilac približi sekciji, pa NE usporava
+    prvo otvaranje naslovnice
+  • kreće od početka tek kad sekcija dođe u vid, pa je niko ne
+    gleda od sredine
+  • pauzira se kad posjetilac odskrola dalje, nastavlja kad se vrati
+  • prati jezik sajta: promjena zastavice gore mijenja i jezik
+    prezentacije (zato su BS/EN dugmad unutar nje skrivena)
+  • uvijek je u svijetloj varijanti, i kad posjetilac na računaru ima
+    tamnu temu, da se uklopi u bijelu naslovnicu
+  • visina okvira se prilagođava sama, bez praznog prostora
+  • na telefonu ide od ivice do ivice ekrana, da bude što veća
+  • uz isključene animacije prikazuje se mirna slika, bez vrtenja
+  • dugmad Pauza i Ispočetka ostaju, da posjetilac ima kontrolu
 
-Izbačeno: plutajuće kartice sa strane (Nova rezervacija, PageSpeed),
-bedž dostupnosti, red "Uživo u produkciji", strelica za skrol i
-duplirana pilula.
+TEHNIČKI: prezentacija je u <iframe>, pa se njeni stilovi i skripta
+ne miješaju sa sajtom. Sajt i prezentacija razgovaraju porukama, i to
+samo unutar istog domena.
 
-TELEFONI: srednji je naprijed i najveći, bočni su umanjeni, nagnuti
-prema van i spušteni iza njega. Vidi se samo gornji dio, a donji se
-utapa u bijelo, kao na tvojoj referenci.
-  lijevo   admin panel, svijetla tema
-  sredina  naslovna Maximuma, svijetla
-  desno    ista naslovna u tamnoj temi
-Svaki telefon ima statusnu traku s dinamičkim ostrvom u boji vrha
-stranice, pa ostrvo ne prekriva sadržaj. Slike se isporučuju
-netaknute, oštre i na Retina ekranima.
-
-POZADINA je čista bijela, bez sjaja, stakla i gradijenata. Jedine
-sjene su one ispod telefona, mekane i neobojene.
-
-════════ NAVBAR ════════
-Na naslovnici više nema pilule: puna bijela traka preko cijele
-širine, tamni tekst, a tanka linija ispod se pojavi tek kad sadržaj
-krene prolaziti ispod nje. Dugme "Kontakt" je tamno plavo, da se ne
-takmiči s crvenim u heroju.
-
-Na podstranicama (rent-a-car, case study) navbar je ostao kakav je
-bio, s pilulom.
-
-════════ ISPRAVLJENA GREŠKA USPUT ════════
-U prvoj verziji novog heroja, posjetioci koji su na telefonu ili
-računaru isključili animacije ne bi vidjeli NIŠTA: sadržaj bi
-ostao proziran. Uhvaćeno na provjeri i popravljeno, animacija se
-sada uvijek zadaje, samo uz isključene animacije traje nula sekundi.
+════════ NAPOMENA O SADRŽAJU ════════
+Prezentacija prikazuje izmišljenu firmu na demo.mehiccdev.com, s
+podacima poput "40 vozila" i "ocjena 4.9". Pošto je jasno da je
+riječ o prikazu sistema a ne o klijentu, to je u redu. Samo pazi da
+se te brojke nigdje ne predstave kao rezultati stvarnog klijenta.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
-  npm install
+  git rm components/sections/RentACarPromo.tsx
   npm run build
   git add .
-  git commit -m "feat: novi minimalisticki hero i ravan navbar na naslovnici"
+  git commit -m "feat: prikaz sistema u pokretu umjesto promo sekcije"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

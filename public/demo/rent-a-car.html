@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Rezervacijski sistem za rent-a-car · mehiccdev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================================
+ * TOKENS
+ * The stage is a fixed piece of artwork; only the page around it follows
+ * the viewer's light or dark setting.
+ * ===================================================================== */
+:root {
+  --page: #eef1f4; --page-ink: #1b2430; --page-muted: #5d6874; --ctl: #fff; --ctl-line: #d5dbe2;
+
+  --sea: #0f3554; --sea-deep: #081f33;
+  --paper: #ffffff; --wash: #f5f7f9; --ink: #121a23; --muted: #69737e; --line: #e4e9ee;
+  --side: #0e1923; --side-ink: #c9d3dc;
+  --red: #e0302b; --red-soft: #fdecec;
+  --green: #1f9d63; --green-soft: #e4f5ec;
+  --blue: #2a6bd8; --blue-soft: #e7effc;
+  --amber: #e58a12; --amber-soft: #fdf1e1;
+  --sun: #f4b63f;
+  --chrome: #eceff2; --chrome-line: #dde2e7; --hero1: #f3f6f9; --hero2: #e9eef3; --hill: #d5dee6;
+
+  --ui: "Geist", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --ease: cubic-bezier(.65, 0, .35, 1);
+  --pop: cubic-bezier(.2, .8, .2, 1);
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --page: #0b1219; --page-ink: #e6ebf0; --page-muted: #93a0ad; --ctl: #15202b; --ctl-line: #263341; }
+}
+:root[data-theme="dark"] { --page: #0b1219; --page-ink: #e6ebf0; --page-muted: #93a0ad; --ctl: #15202b; --ctl-line: #263341; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  min-height: 100%; background: var(--page); color: var(--page-ink); font-family: var(--ui);
+  -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 18px; padding: 24px 16px;
+}
+
+/* =====================================================================
+ * STAGE: designed at 1280x720, scaled to the container.
+ * ===================================================================== */
+.frame { width: 100%; max-width: 1180px; }
+.viewport { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(8,31,51,.7); }
+.stage {
+  position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden;
+  background:
+    radial-gradient(70% 60% at 50% 0%, rgba(80,140,190,.28), transparent 70%),
+    radial-gradient(120% 100% at 50% 40%, var(--sea) 0%, var(--sea-deep) 100%);
+}
+/* A faint grid on the ground, so the space reads as a surface rather than a void. */
+.stage::before {
+  content: ""; position: absolute; inset: 0; opacity: .07; pointer-events: none;
+  background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+  background-size: 48px 48px; mask-image: radial-gradient(80% 70% at 50% 45%, #000 30%, transparent 80%);
+}
+
+/* The camera holds everything that should zoom: the browser, the cursor and
+ * anything that pops out of the browser. Captions sit outside it. */
+.camera { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; transition: transform 1.15s var(--ease); will-change: transform; }
+
+/* =====================================================================
+ * BROWSER WINDOW
+ * ===================================================================== */
+.browser {
+  position: absolute; left: 96px; top: 28px; width: 1088px; height: 604px; border-radius: 14px;
+  background: var(--paper); overflow: hidden; color: var(--ink);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 50px 90px -40px rgba(0,0,0,.75);
+  transition: transform 1.2s var(--ease), opacity .7s ease; transform-origin: 50% 50%;
+  opacity: 0; transform: translateY(40px) scale(.97);
+}
+.browser.in { opacity: 1; transform: none; }
+.browser.summary { transform: translate(-44px, -16px) scale(.56); }
+.chrome { height: 36px; background: var(--chrome); border-bottom: 1px solid var(--chrome-line); display: flex; align-items: center; gap: 14px; padding: 0 14px; }
+.dots { display: flex; gap: 7px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.dots i:nth-child(2) { background: #febc2e; } .dots i:nth-child(3) { background: #28c840; }
+.url {
+  flex: 0 1 460px; margin: 0 auto; height: 24px; border-radius: 7px; background: var(--paper); border: 1px solid var(--chrome-line);
+  display: flex; align-items: center; gap: 7px; padding: 0 10px; font-size: 12px; color: var(--muted);
+}
+.url svg { width: 11px; height: 11px; flex: none; }
+.url b { color: var(--ink); font-weight: 500; }
+.content { position: absolute; left: 0; right: 0; top: 36px; bottom: 0; }
+
+/* Pages dissolve the way a film cut does: the outgoing one stays solid
+ * underneath while the incoming one fades in on top. Fading both at once
+ * leaves a washed-out double image at the midpoint, which reads as a glitch. */
+.page { position: absolute; inset: 0; opacity: 0; visibility: hidden; z-index: 0; background: var(--paper); }
+.page.on { opacity: 1; visibility: visible; z-index: 2; transition: opacity .36s ease; }
+.page.prev { opacity: 1; visibility: visible; z-index: 1; }
+
+/* =====================================================================
+ * PUBLIC SITE
+ * ===================================================================== */
+.nav { height: 52px; display: flex; align-items: center; gap: 28px; padding: 0 32px; border-bottom: 1px solid var(--line); background: var(--paper); position: relative; z-index: 2; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+.logo i { width: 22px; height: 22px; border-radius: 6px; background: var(--red); display: grid; place-items: center; }
+.logo i::after { content: ""; width: 9px; height: 9px; border: 2px solid #fff; border-radius: 2px; transform: rotate(45deg); }
+.links { display: flex; gap: 22px; font-size: 13px; color: var(--muted); }
+.links .cur { color: var(--ink); font-weight: 600; }
+.navend { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 12px; }
+.pill { height: 28px; padding: 0 11px; border-radius: 8px; border: 1px solid var(--line); display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+
+.hero { position: relative; height: 516px; overflow: hidden; background: linear-gradient(180deg, var(--hero1) 0%, var(--hero2) 100%); }
+.hero-copy { position: absolute; left: 56px; top: 64px; width: 470px; }
+.hero h1 { font-family: var(--display); font-size: 50px; line-height: 1.02; letter-spacing: -.035em; font-weight: 800; }
+.hero p { margin-top: 16px; font-size: 15px; line-height: 1.55; color: var(--muted); max-width: 40ch; }
+.hero-trust { margin-top: 22px; display: flex; gap: 22px; font-size: 13px; color: var(--muted); }
+.hero-trust b { display: block; font-size: 20px; color: var(--ink); font-family: var(--display); letter-spacing: -.02em; }
+.hero-art { position: absolute; right: -10px; top: 40px; width: 600px; height: 330px; }
+.hero-art svg { width: 100%; height: 100%; }
+
+.search {
+  position: absolute; left: 56px; right: 56px; bottom: 44px; height: 86px; background: var(--paper); border-radius: 16px;
+  box-shadow: 0 24px 50px -24px rgba(18,26,35,.35), 0 0 0 1px var(--line);
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr auto; align-items: center; padding: 0 12px 0 8px;
+}
+.field { padding: 0 18px; border-right: 1px solid var(--line); height: 54px; display: flex; flex-direction: column; justify-content: center; }
+.field:nth-child(3) { border-right: 0; }
+.field small { font-size: 11px; color: var(--muted); font-weight: 500; }
+.field span { font-size: 15px; font-weight: 600; margin-top: 3px; transition: color .3s ease; }
+.field span.empty { color: var(--muted); opacity: .7; font-weight: 500; }
+.field.focus { background: var(--wash); border-radius: 12px; }
+.go { height: 56px; padding: 0 28px; border-radius: 12px; background: var(--red); color: #fff; font-weight: 600; font-size: 15px; display: grid; place-items: center; }
+
+.toolbar { height: 52px; display: flex; align-items: center; gap: 8px; padding: 0 32px; }
+.chip { height: 30px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--line); font-size: 12.5px; display: inline-flex; align-items: center; font-weight: 500; color: var(--muted); }
+.chip.cur { background: var(--ink); color: #fff; border-color: var(--ink); }
+.found { margin-left: auto; font-size: 13px; color: var(--muted); }
+.found b { color: var(--ink); font-size: 15px; font-variant-numeric: tabular-nums; }
+.searchsum { margin: 0 32px; height: 40px; border-radius: 10px; background: var(--wash); display: flex; align-items: center; gap: 18px; padding: 0 14px; font-size: 13px; color: var(--muted); }
+.searchsum b { color: var(--ink); font-weight: 600; }
+
+.grid { padding: 14px 32px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.card { position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; transition: opacity .45s ease, box-shadow .3s ease, border-color .3s ease; }
+.card .ph { height: 104px; background: #e6edf3; position: relative; }
+.card .ph svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .bd { padding: 11px 13px 13px; }
+.card .nm { font-size: 14px; font-weight: 600; }
+.card .sp { margin-top: 5px; display: flex; gap: 5px; flex-wrap: wrap; }
+.card .sp span { font-size: 10.5px; padding: 2px 7px; border-radius: 6px; background: var(--wash); color: var(--muted); }
+.card .pr { margin-top: 9px; display: flex; align-items: center; justify-content: space-between; }
+.card .pr b { font-size: 15px; }
+.card .pr small { font-size: 11px; color: var(--muted); }
+.card .bk { font-size: 11.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; background: var(--ink); color: #fff; }
+.card .veil { position: absolute; inset: 0; background: rgba(224,48,43,.88); color: #fff; display: grid; place-items: center; text-align: center; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity .35s ease; padding: 20px; line-height: 1.35; }
+.card.taken .veil { opacity: 1; }
+.card.gone { opacity: 0; }
+.card.hover { border-color: var(--ink); box-shadow: 0 16px 30px -18px rgba(18,26,35,.45); }
+
+/* Vehicle page */
+.crumbs { height: 34px; padding: 0 32px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+.crumbs b { color: var(--ink); font-weight: 500; }
+.vgrid { display: grid; grid-template-columns: 560px 1fr; gap: 28px; padding: 4px 32px 0; }
+.gal { border-radius: 16px; overflow: hidden; height: 330px; position: relative; background: #e3eaf1; }
+.gal svg { width: 100%; height: 100%; display: block; }
+.galdots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px 9px; border-radius: 999px; background: rgba(0,0,0,.4); }
+.galdots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.6); }
+.galdots i.cur { width: 18px; background: #fff; }
+.thumbs { margin-top: 10px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.thumbs span { height: 64px; border-radius: 10px; background: #e3eaf1; overflow: hidden; border: 2px solid transparent; }
+.thumbs span.cur { border-color: var(--ink); }
+.thumbs svg { width: 100%; height: 100%; }
+.vt { font-family: var(--display); font-size: 30px; font-weight: 800; letter-spacing: -.03em; }
+.vp { margin-top: 2px; font-size: 14px; color: var(--muted); }
+.vp b { font-size: 20px; color: var(--ink); }
+.specs { margin-top: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.specs div { padding: 8px 10px; border-radius: 10px; background: var(--wash); font-size: 11px; color: var(--muted); }
+.specs div b { display: block; font-size: 13px; color: var(--ink); margin-top: 1px; }
+.extras { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; }
+.ex { height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 13px; border-bottom: 1px solid var(--line); transition: background .3s ease; }
+.ex:last-child { border-bottom: 0; }
+.ex small { color: var(--muted); margin-left: 6px; }
+.ex.on { background: var(--wash); }
+.step { display: flex; align-items: center; gap: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.step i { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-style: normal; font-weight: 500; background: #fff; }
+.sum { margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+.sum div { display: flex; justify-content: space-between; padding: 2px 0; }
+.sum .tot { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--line); color: var(--ink); align-items: baseline; }
+.sum .tot b { font-family: var(--display); font-size: 28px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.sendbtn { margin-top: 12px; height: 44px; border-radius: 11px; background: var(--red); color: #fff; font-weight: 600; font-size: 14px; display: grid; place-items: center; transition: transform .15s ease; }
+.sendbtn.press { transform: scale(.97); }
+
+/* Toast */
+.toast {
+  position: absolute; right: 24px; top: 20px; z-index: 6; display: flex; align-items: center; gap: 10px;
+  background: var(--ink); color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 500;
+  box-shadow: 0 20px 40px -20px rgba(0,0,0,.6); opacity: 0; transform: translateY(-10px); transition: opacity .35s ease, transform .5s var(--pop);
+}
+.toast.in { opacity: 1; transform: none; }
+.toast i { width: 20px; height: 20px; border-radius: 50%; background: var(--green); display: grid; place-items: center; flex: none; }
+.toast i::after { content: ""; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px,-1px); }
+
+/* =====================================================================
+ * ADMIN
+ * ===================================================================== */
+.admin { position: absolute; inset: 0; display: grid; grid-template-columns: 196px 1fr; }
+.sidebar { background: var(--side); color: var(--side-ink); padding: 18px 12px; }
+.sidebar .logo { color: #fff; margin: 0 6px 22px; font-size: 13.5px; white-space: nowrap; }
+.sidebar .logo small { font-weight: 500; color: #7f8fa0; margin-left: 2px; letter-spacing: 0; }
+.sn { height: 36px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border-radius: 9px; font-size: 13px; margin-bottom: 2px; }
+.sn.cur { background: rgba(255,255,255,.08); color: #fff; font-weight: 500; }
+.sn .bdg { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; display: grid; place-items: center; transition: transform .35s cubic-bezier(.3,1.7,.5,1); }
+.sn .bdg.bump { transform: scale(1.35); }
+.amain { position: relative; padding: 20px 24px; background: #fbfcfd; overflow: hidden; }
+.ahead { display: flex; align-items: center; gap: 12px; }
+.ahead h2 { font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+.ahead .sp { margin-left: auto; }
+.btn-ink { height: 34px; padding: 0 14px; border-radius: 9px; background: var(--ink); color: #fff; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; }
+.sbox { height: 34px; width: 230px; border-radius: 9px; border: 1px solid var(--line); background: #fff; display: flex; align-items: center; gap: 8px; padding: 0 11px; font-size: 12.5px; color: #a3adb7; }
+.tabs { margin-top: 16px; display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab { padding: 0 12px 10px; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; display: flex; gap: 6px; align-items: center; }
+.tab.cur { color: var(--ink); font-weight: 600; border-color: var(--ink); }
+.tab em { font-style: normal; font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--wash); color: var(--muted); }
+
+.table { margin-top: 12px; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.tr { display: grid; grid-template-columns: 92px 1.25fr 1.2fr 1.05fr 82px 118px; align-items: center; gap: 10px; padding: 0 16px; height: 50px; border-bottom: 1px solid var(--line); font-size: 12.5px; transition: background .5s ease, opacity .5s ease, transform .6s var(--pop); }
+.tr:last-child { border-bottom: 0; }
+.tr.th { height: 34px; font-size: 11px; color: var(--muted); font-weight: 500; background: var(--wash); }
+.tr .ref { font-variant-numeric: tabular-nums; color: var(--muted); }
+.tr .g b { font-weight: 600; display: block; }
+.tr .g small { color: var(--muted); font-size: 11px; }
+.tr .amt { font-weight: 600; font-variant-numeric: tabular-nums; }
+.st { justify-self: start; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; transition: background .4s ease, color .4s ease; white-space: nowrap; }
+.st.new { background: var(--red-soft); color: var(--red); }
+.st.ok { background: var(--green-soft); color: var(--green); }
+.st.road { background: var(--blue-soft); color: var(--blue); }
+.st.done { background: #eef1f4; color: var(--muted); }
+.st.late { background: var(--red); color: #fff; animation: beat 1.4s ease-in-out infinite; }
+.st.soon { background: var(--amber-soft); color: var(--amber); }
+@keyframes beat { 50% { box-shadow: 0 0 0 5px rgba(224,48,43,.18); } }
+.tr.fresh { opacity: 0; transform: translateY(-12px); background: #fff7f6; }
+.tr.fresh.in { opacity: 1; transform: none; }
+.tr.fresh.ok { background: #f3fbf6; }
+.act { justify-self: end; font-size: 11.5px; font-weight: 600; padding: 6px 11px; border-radius: 8px; background: var(--ink); color: #fff; transition: opacity .3s ease, transform .15s ease; }
+.act.press { transform: scale(.93); }
+.act.hide { opacity: 0; }
+.cellact { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
+
+/* Contracts */
+.cwrap { margin-top: 16px; display: grid; grid-template-columns: 250px 1fr; gap: 16px; }
+.clist { display: flex; flex-direction: column; gap: 8px; }
+.ci { border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; background: #fff; }
+.ci.cur { border-color: var(--ink); box-shadow: 0 10px 22px -16px rgba(18,26,35,.5); }
+.ci .tm { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--red); letter-spacing: -.02em; }
+.ci .tm small { font-family: var(--ui); font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 6px; letter-spacing: 0; }
+.ci .nm { font-size: 13px; font-weight: 600; margin-top: 2px; }
+.ci .cr { font-size: 11.5px; color: var(--muted); }
+.ced { border: 1px solid var(--line); border-radius: 14px; background: #fff; padding: 18px 20px; }
+.ced h3 { font-size: 15px; font-weight: 700; }
+.ced .ref { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.fgrid { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.fg small { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.fg div { height: 34px; border-radius: 9px; border: 1px solid var(--line); display: flex; align-items: center; padding: 0 11px; font-size: 13px; font-weight: 500; background: var(--wash); }
+.fg div.input { background: #fff; border-color: var(--ink); }
+.cbtns { margin-top: 16px; display: flex; gap: 8px; }
+.btn-red { height: 38px; padding: 0 16px; border-radius: 10px; background: var(--red); color: #fff; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px; transition: transform .15s ease; }
+.btn-red.press { transform: scale(.95); }
+.btn-ghost { height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; }
+
+/* The contract that pops out of the browser */
+.paper {
+  position: absolute; width: 260px; padding: 20px 20px 18px; border-radius: 6px; background: #fff; color: var(--ink);
+  box-shadow: 0 40px 70px -24px rgba(0,0,0,.7); z-index: 20; opacity: 0;
+  transform: translateY(30px) rotate(-2deg) scale(.92); transition: opacity .5s ease, transform .9s var(--pop);
+}
+.paper.in { opacity: 1; transform: translateY(0) rotate(-4deg) scale(1); }
+.paper .ph { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+.paper .ph b { font-size: 12px; letter-spacing: .04em; }
+.paper .ph small { display: block; font-size: 8.5px; color: var(--muted); line-height: 1.5; margin-top: 3px; }
+.paper .pt { margin: 12px 0 10px; font-size: 13px; font-weight: 700; }
+.paper .pref { display: block; font-size: 10px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.paper i { display: block; height: 6px; border-radius: 3px; background: #e9edf1; margin-bottom: 7px; }
+.paper .sig { margin-top: 18px; display: flex; gap: 18px; }
+.paper .sig span { flex: 1; border-top: 1px solid var(--ink); padding-top: 4px; font-size: 7.5px; color: var(--muted); }
+.paper .badge { position: absolute; right: -12px; top: -12px; background: var(--red); color: #fff; font-size: 11px; font-weight: 800; padding: 5px 9px; border-radius: 7px; }
+
+/* Return modal */
+.modal { position: absolute; inset: 0; background: rgba(14,25,35,.45); display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility 0s linear .35s; z-index: 5; }
+.modal.in { opacity: 1; visibility: visible; transition: opacity .35s ease; }
+.mbox { width: 380px; background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 40px 70px -30px rgba(0,0,0,.6); transform: translateY(14px) scale(.98); transition: transform .5s var(--pop); }
+.modal.in .mbox { transform: none; }
+.mbox h4 { font-size: 16px; font-weight: 700; }
+.mbox .ms { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.mlbl { margin-top: 14px; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+.seg { margin-top: 6px; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg span { height: 34px; display: grid; place-items: center; font-size: 12.5px; font-weight: 500; border-right: 1px solid var(--line); transition: background .25s ease, color .25s ease; }
+.seg span:last-child { border-right: 0; }
+.seg span.cur { background: var(--ink); color: #fff; }
+.sel { margin-top: 6px; height: 36px; border: 1px solid var(--line); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: 500; }
+.mbtn { margin-top: 16px; height: 40px; border-radius: 10px; background: var(--ink); color: #fff; font-weight: 600; font-size: 13px; display: grid; place-items: center; transition: transform .15s ease; }
+.mbtn.press { transform: scale(.97); }
+
+/* Analytics */
+.range { height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--line); background: #fff; font-size: 12.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+.kpis { margin-top: 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 13px 15px; }
+.kpi small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+.kpi b { display: block; font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -.03em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--green); }
+.charts { margin-top: 12px; display: grid; grid-template-columns: 1.65fr 1fr; gap: 12px; }
+.box { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 14px 16px; }
+.box h6 { font-size: 13px; font-weight: 600; }
+.box h6 small { font-weight: 500; color: var(--muted); margin-left: 6px; }
+.line { margin-top: 8px; height: 172px; }
+.line svg { width: 100%; height: 100%; overflow: visible; }
+.line .pth { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s var(--ease); }
+.line .area { opacity: 0; transition: opacity 1s ease .8s; }
+.line.draw .pth { stroke-dashoffset: 0; }
+.line.draw .area { opacity: 1; }
+.donutwrap { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+.donut { width: 132px; height: 132px; position: relative; flex: none; }
+.donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.donut circle.seg2 { transition: stroke-dasharray 1.3s var(--ease); }
+.donut .ctr { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.donut .ctr b { font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -.03em; display: block; line-height: 1; }
+.donut .ctr small { font-size: 10.5px; color: var(--muted); }
+.legend { font-size: 12px; display: flex; flex-direction: column; gap: 7px; }
+.legend span { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+.legend span b { color: var(--ink); margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
+.legend i { width: 9px; height: 9px; border-radius: 3px; }
+.tops { margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.top { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 11px 14px; }
+.top .tn { font-size: 12.5px; font-weight: 600; display: flex; justify-content: space-between; }
+.top .tn span { font-variant-numeric: tabular-nums; }
+.top .tb { margin-top: 8px; height: 6px; border-radius: 3px; background: var(--wash); overflow: hidden; }
+.top .tb i { display: block; height: 100%; width: 0; border-radius: 3px; background: var(--ink); transition: width 1.2s var(--ease); }
+.top:first-child .tb i { background: var(--red); }
+
+/* =====================================================================
+ * CURSOR
+ * ===================================================================== */
+.cursor { position: absolute; left: 700px; top: 760px; width: 22px; height: 22px; z-index: 30; transition: left .9s var(--ease), top .9s var(--ease); pointer-events: none; }
+.cursor svg { width: 22px; height: 22px; filter: drop-shadow(0 3px 5px rgba(0,0,0,.35)); transition: transform .12s ease; transform-origin: 3px 3px; }
+.cursor.down svg { transform: scale(.82); }
+.ripple { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2px solid var(--red); z-index: 29; pointer-events: none; animation: rip .6s ease-out forwards; }
+@keyframes rip { from { transform: scale(.4); opacity: .9; } to { transform: scale(3.4); opacity: 0; } }
+
+/* =====================================================================
+ * OVERLAYS OUTSIDE THE CAMERA
+ * ===================================================================== */
+.caption {
+  position: absolute; left: 40px; bottom: 30px; z-index: 40; display: flex; align-items: center; gap: 14px;
+  padding: 11px 20px 11px 11px; border-radius: 16px; background: rgba(8,24,40,.72);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #fff;
+  box-shadow: 0 20px 40px -20px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.08);
+  opacity: 0; transform: translateY(12px); transition: opacity .45s ease, transform .55s var(--pop);
+}
+.caption.in { opacity: 1; transform: none; }
+.caption .n { width: 34px; height: 34px; border-radius: 10px; background: var(--red); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 16px; }
+.caption .tx { font-family: var(--display); font-size: 21px; font-weight: 600; letter-spacing: -.015em; }
+
+.chapters { position: absolute; right: 40px; bottom: 44px; z-index: 40; display: flex; gap: 6px; opacity: 0; transition: opacity .5s ease; }
+.chapters.in { opacity: 1; }
+.chapters i { width: 22px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.22); transition: background .4s ease, width .4s ease; }
+.chapters i.done { background: rgba(255,255,255,.6); }
+.chapters i.cur { background: var(--red); width: 34px; }
+
+/* Intro */
+.intro { position: absolute; inset: 0; z-index: 35; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.intro.on { opacity: 1; }
+.bubble { position: absolute; padding: 15px 21px; border-radius: 22px 22px 22px 6px; background: #fff; color: var(--ink); font-size: 25px; font-weight: 500; letter-spacing: -.01em; white-space: nowrap; box-shadow: 0 18px 36px -16px rgba(0,0,0,.5); opacity: 0; transform: translateY(14px) scale(.97); transition: opacity .35s ease, transform .5s var(--pop); }
+.bubble.in { opacity: 1; transform: none; }
+.bubble.gone { opacity: 0; transform: translateY(-10px) scale(.96); }
+.turn { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-family: var(--display); font-size: 80px; font-weight: 800; letter-spacing: -.04em; opacity: 0; transition: opacity .5s ease; z-index: 35; }
+.turn.on { opacity: 1; }
+
+/* Dark theme for whatever is inside the browser. The page outside keeps
+ * following the viewer's own setting; this one follows the story. */
+.browser.dark {
+  --paper: #0e151c; --wash: #17212b; --ink: #e8edf2; --muted: #8e9cab; --line: #223040;
+  --chrome: #161e27; --chrome-line: #222c37; --hero1: #111a23; --hero2: #0b1218; --hill: #1a2531;
+}
+/* Only while switching: everything eases across together, then the
+ * component transitions take over again. */
+.browser.theming, .browser.theming * {
+  transition: background-color .75s ease, color .75s ease, border-color .75s ease, fill .75s ease, box-shadow .75s ease !important;
+}
+.tbtn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink); }
+.tbtn svg { width: 14px; height: 14px; }
+.tbtn .sun { display: none; }
+.browser.dark .tbtn .sun { display: block; }
+.browser.dark .tbtn .moon { display: none; }
+
+/* ---------- ADMIN, as the real panel looks ---------- */
+.adm { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--paper); }
+.ah { height: 48px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 max(28px, calc((100% - 960px) / 2)); border-bottom: 1px solid var(--line); }
+.abrand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.abrand svg { width: 17px; height: 17px; }
+.abrand span { color: var(--red); }
+.ahr { display: flex; gap: 8px; }
+.ibtn { width: 30px; height: 30px; border-radius: 9px; border: 1px solid var(--line); display: grid; place-items: center; }
+.ibtn svg, .obtn svg { width: 14px; height: 14px; }
+.obtn { height: 30px; padding: 0 11px; border-radius: 9px; border: 1px solid var(--line); display: inline-flex; gap: 6px; align-items: center; font-size: 12.5px; font-weight: 500; }
+.atabs { height: 40px; flex: none; display: flex; gap: 20px; padding: 0 max(28px, calc((100% - 960px) / 2)); border-bottom: 1px solid var(--line); }
+.atab { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.atab svg { width: 13px; height: 13px; }
+.atab.cur { color: var(--red); border-color: var(--red); font-weight: 500; }
+.bdg { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 10.5px; font-weight: 700; display: grid; place-items: center; transition: transform .35s cubic-bezier(.3,1.7,.5,1); }
+.bdg.bump { transform: scale(1.35); }
+.adm .amain { flex: 1; position: relative; padding: 16px max(28px, calc((100% - 960px) / 2)) 0; background: var(--paper); overflow: hidden; }
+
+.rhead { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; }
+.rhead h2 { font-family: var(--display); font-size: 26px; font-weight: 800; letter-spacing: -.03em; }
+.rdesc { margin-top: 4px; font-size: 12.5px; line-height: 1.5; color: var(--muted); max-width: 470px; }
+.sbox2 { height: 34px; width: 250px; flex: none; border-radius: 10px; border: 1px solid var(--line); display: flex; align-items: center; gap: 8px; padding: 0 11px; font-size: 12.5px; color: var(--muted); }
+.sbox2 svg { width: 13px; height: 13px; }
+.newbtn { margin-top: 12px; height: 36px; padding: 0 16px; border-radius: 10px; background: var(--red); color: #fff; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 10px 20px -10px rgba(224,48,43,.7); }
+.fpills { margin-top: 12px; display: flex; gap: 7px; }
+.fp { height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 500; }
+.fp em { font-style: normal; font-size: 11px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--wash); color: var(--muted); display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.fp.cur { background: var(--red); border-color: var(--red); color: #fff; }
+.fp.cur em { background: rgba(255,255,255,.22); color: #fff; }
+.tpills { margin-top: 9px; display: flex; gap: 6px; align-items: center; color: var(--muted); }
+.tpills svg { width: 14px; height: 14px; margin-right: 2px; }
+.tp { height: 26px; padding: 0 11px; border-radius: 999px; border: 1px solid var(--line); display: inline-flex; align-items: center; font-size: 11.5px; color: var(--ink); }
+.tp.cur { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+
+.rlist { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.rcard {
+  border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; background: var(--paper);
+  box-shadow: 0 6px 18px -14px rgba(18,26,35,.35); overflow: hidden; max-height: 260px;
+  transition: max-height .7s var(--ease), opacity .5s ease, padding .7s var(--ease), border-color .4s ease, background .4s ease, margin .7s var(--ease);
+}
+.rcard.pre { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; border-width: 0; margin-bottom: -10px; }
+.rcard.ok { border-color: var(--green); background: #f6fbf8; }
+.rcard.late { border-color: rgba(224,48,43,.45); }
+.rtop { display: flex; align-items: center; gap: 12px; }
+.rmeta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.rb { font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; transition: background .35s ease, color .35s ease; white-space: nowrap; }
+.rb.new { background: var(--amber-soft); color: var(--amber); }
+.rb.ok { background: var(--green-soft); color: var(--green); }
+.rb.road { background: var(--blue-soft); color: var(--blue); }
+.rb.done { background: #eef1f4; color: var(--muted); }
+.rb.late { background: var(--red); color: #fff; animation: beat 1.4s ease-in-out infinite; }
+.rb.soon { background: var(--amber-soft); color: var(--amber); }
+.racts { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.racts .sp { width: 22px; }
+.ob, .gb { height: 30px; padding: 0 11px; border-radius: 9px; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; transition: opacity .3s ease, transform .15s ease; }
+.ob { border: 1px solid var(--line); }
+.gb { background: var(--green); color: #fff; font-weight: 600; }
+.ob svg, .gb svg { width: 12px; height: 12px; }
+.gb.press, .ob.press { transform: scale(.93); }
+.hide { opacity: 0 !important; }
+.rcar { margin-top: 8px; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+.rline { margin-top: 5px; display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.rline small { font-size: 11.5px; color: var(--muted); }
+.rcar svg, .rline svg, .rg svg { width: 14px; height: 14px; color: var(--red); flex: none; }
+.rsep { height: 1px; background: var(--line); margin: 11px 0 9px; }
+.rguest { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: 12.5px; color: #3c4651; }
+.rg { display: flex; align-items: center; gap: 7px; }
+.rg svg { color: var(--muted); }
+.rguest .nm { color: var(--muted); }
+
+/* Language and currency menus on the public site */
+.pw { position: relative; }
+.menu {
+  position: absolute; right: 0; top: 36px; width: 150px; background: #fff; border-radius: 11px; z-index: 8;
+  box-shadow: 0 18px 36px -14px rgba(18,26,35,.4), 0 0 0 1px var(--line); padding: 5px;
+  opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .3s var(--pop); pointer-events: none;
+}
+.menu.in { opacity: 1; transform: none; }
+.mi { height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border-radius: 8px; font-size: 12.5px; font-weight: 500; }
+.mi.hl { background: var(--wash); }
+.mi.sel::after { content: ""; width: 8px; height: 4px; border-left: 2px solid var(--red); border-bottom: 2px solid var(--red); transform: rotate(-45deg) translateY(-1px); }
+.mi small { color: var(--muted); font-weight: 500; }
+.hero-from { margin-top: 18px; font-size: 14px; color: var(--muted); }
+.hero-from b { color: var(--ink); font-size: 16px; }
+
+/* Callout beside the menu. Outside the camera, placed from the camera's
+ * own position, so it reads as a note on top of the footage. */
+.callout {
+  position: absolute; z-index: 41; display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  padding: 11px 15px 11px 11px; border-radius: 14px; background: #fff; color: var(--ink);
+  font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -.01em;
+  box-shadow: 0 24px 44px -20px rgba(0,0,0,.65);
+  opacity: 0; transform: translateX(10px); transition: opacity .35s ease, transform .5s var(--pop);
+}
+.callout.in { opacity: 1; transform: none; }
+.callout i { width: 28px; height: 28px; border-radius: 8px; background: var(--red); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 18px; font-weight: 700; flex: none; }
+
+/* Phone notification. Outside the camera, so it stays the same size while
+ * the panel behind it is zoomed: it belongs to the owner's phone, not the
+ * screen we are looking at. */
+.notif {
+  position: absolute; right: 36px; top: 26px; z-index: 42; width: 340px; display: flex; gap: 12px;
+  padding: 13px 15px; border-radius: 18px; background: rgba(250,251,252,.94); color: var(--ink);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 26px 50px -22px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.6);
+  opacity: 0; transform: translateY(-24px) scale(.97); transition: opacity .4s ease, transform .6s var(--pop);
+}
+.notif.in { opacity: 1; transform: none; }
+.notif .ico { width: 38px; height: 38px; border-radius: 10px; background: #2aa3e0; display: grid; place-items: center; flex: none; }
+.notif .ico svg { width: 20px; height: 20px; }
+.notif .hd { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.notif .hd b { color: var(--ink); font-weight: 600; }
+.notif .ttl { font-size: 14px; font-weight: 600; margin-top: 2px; }
+.notif .bd { font-size: 13px; color: #3c4651; margin-top: 1px; line-height: 1.35; }
+
+/* The same site on a phone, shown beside the browser at the end. */
+.mphone {
+  position: absolute; left: 832px; top: 300px; width: 150px; height: 300px; border-radius: 26px; z-index: 24;
+  background: #0b141d; padding: 7px; box-shadow: 0 30px 60px -24px rgba(0,0,0,.75);
+  opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .8s var(--pop);
+}
+.mphone.in { opacity: 1; transform: none; }
+.mscreen { width: 100%; height: 100%; border-radius: 20px; background: #fff; overflow: hidden; color: var(--ink); }
+.mbar { height: 30px; display: flex; align-items: center; gap: 5px; padding: 0 9px; font-size: 8.5px; font-weight: 700; letter-spacing: .03em; border-bottom: 1px solid var(--line); }
+.mbar i { width: 11px; height: 11px; border-radius: 3px; background: var(--red); }
+.msum { margin: 7px 8px; padding: 6px 8px; border-radius: 8px; background: var(--wash); font-size: 7.5px; color: var(--muted); }
+.msum b { display: block; color: var(--ink); font-size: 8.5px; }
+.mcard { margin: 0 8px 7px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+.mcard .mp { height: 52px; background: #e6edf3; }
+.mcard .mp svg { width: 100%; height: 100%; }
+.mcard .mb { padding: 5px 7px; display: flex; justify-content: space-between; align-items: center; font-size: 8px; }
+.mcard .mb b { font-size: 8.5px; display: block; }
+.mcard .mb span { font-size: 7.5px; padding: 3px 6px; border-radius: 5px; background: var(--ink); color: #fff; font-weight: 600; }
+
+/* Speed scores. Laid over the public site, in this piece's own style rather
+ * than a copy of any tool's interface. */
+.speed {
+  position: absolute; left: 548px; top: 148px; width: 600px; padding: 22px 24px 24px; border-radius: 22px; z-index: 22;
+  background: #fff; color: var(--ink); box-shadow: 0 50px 90px -30px rgba(0,0,0,.75);
+  opacity: 0; transform: translateY(26px) scale(.97); transition: opacity .5s ease, transform .8s var(--pop);
+}
+.speed.in { opacity: 1; transform: none; }
+.speed .sh { display: flex; align-items: center; gap: 10px; }
+.speed .sh b { font-family: var(--display); font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.speed .sh span { font-size: 13px; color: var(--muted); }
+.speed .sh em { margin-left: auto; font-style: normal; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: var(--wash); }
+.gauges { margin-top: 22px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; }
+.gauge { position: relative; width: 104px; height: 104px; margin: 0 auto; }
+.gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge .arc { transition: stroke-dashoffset 1.3s var(--ease); }
+.gauge b { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); font-size: 32px; font-weight: 700; letter-spacing: -.03em; color: var(--green); font-variant-numeric: tabular-nums; }
+.glabel { margin-top: 10px; font-size: 13px; font-weight: 500; color: #3c4651; }
+
+/* Summary chips around the shrunken browser */
+.feat { position: absolute; z-index: 25; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 14px; background: #fff; color: var(--ink); font-size: 15px; font-weight: 600; box-shadow: 0 24px 44px -22px rgba(0,0,0,.6); opacity: 0; transform: translateY(12px) scale(.96); transition: opacity .45s ease, transform .6s var(--pop); white-space: nowrap; }
+.feat.in { opacity: 1; transform: none; }
+.feat i { width: 28px; height: 28px; border-radius: 8px; background: var(--red-soft); display: grid; place-items: center; flex: none; }
+.feat i svg { width: 15px; height: 15px; }
+
+/* End card */
+.end { position: absolute; inset: 0; z-index: 45; display: grid; place-items: center; text-align: center; color: #fff; opacity: 0; transition: opacity .7s ease; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, var(--sea) 0%, var(--sea-deep) 100%); }
+.end.on { opacity: 1; }
+.end .w { font-family: var(--display); font-size: 104px; font-weight: 800; letter-spacing: -.05em; line-height: 1; }
+.end .w span { color: var(--red); }
+.end .l { margin-top: 18px; font-family: var(--display); font-size: 27px; font-weight: 500; color: #c6d4e1; letter-spacing: -.01em; }
+.end .u { margin-top: 26px; font-size: 17px; color: #8fa7bd; }
+.end .r { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .8s var(--pop); }
+.end .r.in { opacity: 1; transform: none; }
+
+.progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--red); z-index: 50; opacity: .85; }
+
+/* =====================================================================
+ * CONTROLS
+ * ===================================================================== */
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.btn { font: inherit; font-size: 14px; font-weight: 600; color: var(--page-ink); background: var(--ctl); border: 1px solid var(--ctl-line); border-radius: 12px; padding: 9px 16px; cursor: pointer; }
+.btn:hover { border-color: var(--page-muted); }
+.btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.btn[aria-pressed="true"] { background: var(--page-ink); color: var(--page); border-color: var(--page-ink); }
+.note { font-size: 14px; color: var(--page-muted); text-align: center; max-width: 64ch; line-height: 1.5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .camera, .browser, .page, .card, .tr, .toast, .paper, .modal, .mbox, .caption, .feat, .bubble, .cursor, .line .pth, .line .area, .top .tb i, .end, .end .r { transition: none !important; }
+  .st.late { animation: none; }
+}
+
+/* ── Ugradnja u mehiccdev.com (?embed) ───────────────────────────────────
+   Bez vlastite pozadine i razmaka, jer stoji unutar sekcije naslovnice.
+   Jezik se bira na sajtu, pa su BS/EN dugmad ovdje skrivena, a i napomena
+   ispod, jer sekcija ima svoj tekst. */
+html.embed body { padding: 0 0 4px; background: transparent; gap: 14px; justify-content: flex-start; }
+html.embed #lang-bs, html.embed #lang-en, html.embed #note { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage" aria-hidden="true">
+
+      <div class="camera" id="cam">
+        <div class="browser" id="browser">
+          <div class="chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url">
+              <svg viewBox="0 0 12 12"><path d="M3.5 5V3.6a2.5 2.5 0 015 0V5" fill="none" stroke="#69737e" stroke-width="1.3"/><rect x="2.2" y="5" width="7.6" height="5.6" rx="1.4" fill="#69737e"/></svg>
+              <span id="url"><b>demo.mehiccdev.com</b></span>
+            </div>
+            <div style="width:54px"></div>
+          </div>
+
+          <div class="content" id="content">
+
+            <!-- ============ PUBLIC: HOME ============ -->
+            <section class="page" id="pg-home">
+              <nav class="nav"><div class="logo"><i></i>RENT A CAR</div>
+                <div class="links"><span class="cur" data-s="nVehicles"></span><span data-s="nLocations"></span><span data-s="nAbout"></span><span data-s="nContact"></span></div>
+                <div class="navend"><span class="tbtn" id="themeBtn"><svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg><svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13.5 9.6A5.6 5.6 0 016.4 2.5a5.6 5.6 0 107.1 7.1z"/></svg></span><div class="pw"><span class="pill lp" id="langPill"></span>
+                    <div class="menu" id="langMenu"><div class="mi sel" id="miBs">Bosanski</div><div class="mi" id="miEn">English</div></div></div>
+                  <div class="pw"><span class="pill cp" id="curPill"></span>
+                    <div class="menu" id="curMenu"><div class="mi sel" id="miKm">KM <small>BAM</small></div><div class="mi" id="miEur">EUR <small>€</small></div></div></div></div></nav>
+              <div class="hero">
+                <div class="hero-copy">
+                  <h1 data-s="heroH"></h1>
+                  <p data-s="heroP"></p>
+                  <div class="hero-trust">
+                    <div><b>40</b><span data-s="tFleet"></span></div>
+                    <div><b>4</b><span data-s="tLoc"></span></div>
+                    <div><b data-s="tRatingV"></b><span data-s="tRating"></span></div>
+                  </div>
+                  <div class="hero-from"><span data-s="heroFrom"></span> <b class="px" data-km="38"></b> <span data-s="perDay"></span></div>
+                </div>
+                <div class="hero-art" id="heroArt"></div>
+                <div class="search" id="search">
+                  <div class="field" id="fLoc"><small data-s="sLoc"></small><span class="empty" id="vLoc"></span></div>
+                  <div class="field" id="fFrom"><small data-s="sFrom"></small><span class="empty" id="vFrom"></span></div>
+                  <div class="field" id="fTo"><small data-s="sTo"></small><span class="empty" id="vTo"></span></div>
+                  <div class="go" id="go" data-s="sGo"></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ============ PUBLIC: RESULTS ============ -->
+            <section class="page" id="pg-results">
+              <nav class="nav"><div class="logo"><i></i>RENT A CAR</div>
+                <div class="links"><span class="cur" data-s="nVehicles"></span><span data-s="nLocations"></span><span data-s="nAbout"></span><span data-s="nContact"></span></div>
+                <div class="navend"><span class="tbtn"><svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg><svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13.5 9.6A5.6 5.6 0 016.4 2.5a5.6 5.6 0 107.1 7.1z"/></svg></span><span class="pill lp"></span><span class="pill cp"></span></div></nav>
+              <div class="toolbar">
+                <span class="chip cur" data-s="cAll"></span><span class="chip" data-s="cSuv"></span><span class="chip" data-s="cSedan"></span><span class="chip" data-s="cVan"></span>
+                <span class="found"><span data-s="foundA"></span> <b id="found">8</b> <span data-s="foundB"></span></span>
+              </div>
+              <div class="searchsum"><span data-s="sLoc"></span><b data-s="vLoc"></b><span data-s="sumDates"></span><b data-s="vDates"></b><span data-s="sumDays"></span><b>5</b></div>
+              <div class="grid" id="grid"></div>
+            </section>
+
+            <!-- ============ PUBLIC: VEHICLE ============ -->
+            <section class="page" id="pg-car">
+              <nav class="nav"><div class="logo"><i></i>RENT A CAR</div>
+                <div class="links"><span class="cur" data-s="nVehicles"></span><span data-s="nLocations"></span><span data-s="nAbout"></span><span data-s="nContact"></span></div>
+                <div class="navend"><span class="tbtn"><svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg><svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13.5 9.6A5.6 5.6 0 016.4 2.5a5.6 5.6 0 107.1 7.1z"/></svg></span><span class="pill lp"></span><span class="pill cp"></span></div></nav>
+              <div class="crumbs"><span data-s="nVehicles"></span><span>/</span><b>Škoda Octavia</b></div>
+              <div class="vgrid">
+                <div>
+                  <div class="gal" id="gal"><div class="galdots"><i class="cur"></i><i></i><i></i><i></i></div></div>
+                  <div class="thumbs" id="thumbs"></div>
+                </div>
+                <div id="vside">
+                  <div class="vt">Škoda Octavia</div>
+                  <div class="vp"><b class="px" data-km="90"></b> <span data-s="perDay"></span></div>
+                  <div class="specs">
+                    <div><span data-s="spGear"></span><b data-s="spGearV"></b></div>
+                    <div><span data-s="spSeats"></span><b>5</b></div>
+                    <div><span data-s="spFuel"></span><b data-s="spFuelV"></b></div>
+                    <div><span data-s="spBags"></span><b>4</b></div>
+                    <div><span data-s="spAc"></span><b data-s="spAcV"></b></div>
+                    <div><span data-s="spYear"></span><b>2024</b></div>
+                  </div>
+                  <div class="extras">
+                    <div class="ex" id="exSeat"><span><span data-s="xSeat"></span><small><span class="px" data-km="6"></span> <span data-s="perDayShort"></span></small></span><div class="step"><i>−</i><span id="qty">0</span><i>+</i></div></div>
+                    <div class="ex"><span><span data-s="xGps"></span><small><span class="px" data-km="4"></span> <span data-s="perDayShort"></span></small></span><div class="step"><i>−</i><span>0</span><i>+</i></div></div>
+                    <div class="ex"><span><span data-s="xDriver"></span><small class="px" data-km="10"></small></span><div class="step"><i>−</i><span>0</span><i>+</i></div></div>
+                  </div>
+                  <div class="sum">
+                    <div><span data-s="sumRent"></span><span class="px" data-km="450"></span></div>
+                    <div><span data-s="sumExtras"></span><span id="exAmt">0 KM</span></div>
+                    <div class="tot"><span data-s="sumTotal"></span><b id="total">450 KM</b></div>
+                  </div>
+                  <div class="sendbtn" id="send" data-s="send"></div>
+                </div>
+              </div>
+              <div class="toast" id="toastSent"><i></i><span data-s="toastSent"></span></div>
+            </section>
+
+            <!-- ============ ADMIN: BOOKINGS ============ -->
+            <section class="page" id="pg-admin">
+              <div class="adm">
+                <div class="achrome" data-tab="res" data-main="1"></div>
+                <div class="amain">
+                  <div class="rhead">
+                    <div><h2 data-t="aRes"></h2><p class="rdesc" data-t="aDesc"></p></div>
+                    <div class="sbox2"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.6"/><path d="M10.5 10.5L14 14" stroke-linecap="round"/></svg><span data-t="aSearch"></span></div>
+                  </div>
+                  <span class="newbtn"><span>+</span><span data-t="aNew"></span></span>
+                  <div class="fpills"><span class="fp cur"><span data-t="fPending"></span><em id="tabNewN">3</em></span><span class="fp"><span data-t="fConfirmed"></span><em id="cntConfirmed">2</em></span><span class="fp"><span data-t="fActive"></span><em>3</em></span><span class="fp"><span data-t="fCanceled"></span><em>6</em></span><span class="fp"><span data-t="fAll"></span><em>14</em></span></div>
+                  <div class="tpills"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M8 4.8V8l2.2 1.4" stroke-linecap="round"/></svg><span class="tp" data-t="t24"></span><span class="tp" data-t="t7"></span><span class="tp" data-t="t30"></span><span class="tp cur" data-t="tAll"></span></div>
+                  <div class="rlist" id="rlist"></div>
+                  <div class="toast" id="toastOk"><i></i><span data-t="toastOk"></span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ============ ADMIN: CONTRACTS ============ -->
+            <section class="page" id="pg-contracts">
+              <div class="adm">
+                <div class="achrome" data-tab="contracts"></div>
+                <div class="amain">
+                  <div class="ahead"><h2 data-t="aContracts"></h2></div>
+                  <div class="cwrap">
+                    <div class="clist">
+                      <div class="ci cur"><div class="tm">10:00<small data-t="cDate1"></small></div><div class="nm">Emma Fischer</div><div class="cr">Škoda Octavia</div></div>
+                      <div class="ci"><div class="tm">13:30<small data-t="cDate2"></small></div><div class="nm">Amar Hadžić</div><div class="cr">VW Passat</div></div>
+                      <div class="ci"><div class="tm">09:00<small data-t="cDate3"></small></div><div class="nm">Lucas Martin</div><div class="cr">Audi Q5</div></div>
+                    </div>
+                    <div class="ced">
+                      <h3 data-t="cTitle"></h3><div class="ref">MR-4TQ8</div>
+                      <div class="fgrid">
+                        <div class="fg"><small data-t="cGuest"></small><div>Emma Fischer</div></div>
+                        <div class="fg"><small data-t="cCar"></small><div>Škoda Octavia</div></div>
+                        <div class="fg"><small data-t="cPlate"></small><div>A17-K-482</div></div>
+                        <div class="fg"><small data-t="cLicence"></small><div>DE 4410982</div></div>
+                        <div class="fg"><small data-t="cPick"></small><div data-t="cPickV"></div></div>
+                        <div class="fg"><small data-t="cRet"></small><div data-t="cRetV"></div></div>
+                        <div class="fg"><small data-t="cKm"></small><div class="input" id="km">48 210 km</div></div>
+                        <div class="fg"><small data-t="cFuel"></small><div data-t="cFuelV"></div></div>
+                      </div>
+                      <div class="cbtns"><span class="btn-red" id="pdfBtn" data-t="cPdf"></span><span class="btn-ghost" data-t="cWord"></span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ============ ADMIN: ACTIVE ============ -->
+            <section class="page" id="pg-active">
+              <div class="adm">
+                <div class="achrome" data-tab="res"></div>
+                <div class="amain">
+                  <div class="rhead">
+                    <div><h2 data-t="aRes"></h2><p class="rdesc" data-t="aDesc"></p></div>
+                    <div class="sbox2"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.6"/><path d="M10.5 10.5L14 14" stroke-linecap="round"/></svg><span data-t="aSearch"></span></div>
+                  </div>
+                  <span class="newbtn"><span>+</span><span data-t="aNew"></span></span>
+                  <div class="fpills"><span class="fp"><span data-t="fPending"></span><em>3</em></span><span class="fp"><span data-t="fConfirmed"></span><em>2</em></span><span class="fp cur"><span data-t="fActive"></span><em>3</em></span><span class="fp"><span data-t="fCanceled"></span><em>6</em></span><span class="fp"><span data-t="fAll"></span><em>14</em></span></div>
+                  <div class="tpills"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M8 4.8V8l2.2 1.4" stroke-linecap="round"/></svg><span class="tp" data-t="t24"></span><span class="tp" data-t="t7"></span><span class="tp" data-t="t30"></span><span class="tp cur" data-t="tAll"></span></div>
+                  <div class="rlist" id="alist"></div>
+                  <div class="modal" id="modal">
+                    <div class="mbox">
+                      <h4 data-t="mTitle"></h4><div class="ms">Mehmet Yılmaz, VW T-Roc</div>
+                      <div class="mlbl" data-t="mFuel"></div>
+                      <div class="seg" id="seg"><span>¼</span><span>½</span><span>¾</span><span data-t="mFull"></span></div>
+                      <div class="mlbl" data-t="mDeposit"></div>
+                      <div class="sel"><span data-t="mDepositV"></span><span>⌄</span></div>
+                      <div class="mbtn" id="mbtn" data-t="mBtn"></div>
+                    </div>
+                  </div>
+                  <div class="toast" id="toastFree"><i></i><span data-t="toastFree"></span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ============ ADMIN: ANALYTICS ============ -->
+            <section class="page" id="pg-stats">
+              <div class="adm">
+                <div class="achrome" data-tab="stats"></div>
+                <div class="amain">
+                  <div class="ahead"><h2 data-t="aStats"></h2><span class="sp"></span><span class="range"><span data-t="rMonth"></span><span>⌄</span></span></div>
+                  <div class="kpis">
+                    <div class="kpi"><small data-t="kRev"></small><b id="kRev">0 KM</b><em>+18%</em></div>
+                    <div class="kpi"><small data-t="kRes"></small><b id="kRes">0</b><em>+9%</em></div>
+                    <div class="kpi"><small data-t="kUtil"></small><b id="kUtil">0%</b><em>+6%</em></div>
+                    <div class="kpi"><small data-t="kAvg"></small><b id="kAvg">0</b><em>+0,4</em></div>
+                  </div>
+                  <div class="charts">
+                    <div class="box"><h6><span data-t="chTrend"></span><small data-t="chTrendS"></small></h6>
+                      <div class="line" id="line">
+                        <svg viewBox="0 0 520 172" preserveAspectRatio="none">
+                          <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0302b" stop-opacity=".22"/><stop offset="1" stop-color="#e0302b" stop-opacity="0"/></linearGradient></defs>
+                          <g stroke="#eef1f4" stroke-width="1"><line x1="0" y1="20" x2="520" y2="20"/><line x1="0" y1="70" x2="520" y2="70"/><line x1="0" y1="120" x2="520" y2="120"/><line x1="0" y1="170" x2="520" y2="170"/></g>
+                          <path class="area" d="M0 140 C40 132 60 118 90 120 S150 96 180 100 S240 80 270 86 S330 58 360 64 S420 40 450 44 S500 26 520 22 L520 172 L0 172 Z" fill="url(#ag)"/>
+                          <path class="pth" pathLength="1" d="M0 140 C40 132 60 118 90 120 S150 96 180 100 S240 80 270 86 S330 58 360 64 S420 40 450 44 S500 26 520 22" fill="none" stroke="#e0302b" stroke-width="2.6" stroke-linecap="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="box"><h6 data-t="chFleet"></h6>
+                      <div class="donutwrap">
+                        <div class="donut">
+                          <svg viewBox="0 0 42 42">
+                            <circle cx="21" cy="21" r="15.9" fill="none" stroke="#eef1f4" stroke-width="5"/>
+                            <circle class="seg2" id="d1" cx="21" cy="21" r="15.9" fill="none" stroke="#e0302b" stroke-width="5" stroke-dasharray="0 100" pathLength="100"/>
+                            <circle class="seg2" id="d2" cx="21" cy="21" r="15.9" fill="none" stroke="#2a6bd8" stroke-width="5" stroke-dasharray="0 100" stroke-dashoffset="0" pathLength="100"/>
+                            <circle class="seg2" id="d3" cx="21" cy="21" r="15.9" fill="none" stroke="#e58a12" stroke-width="5" stroke-dasharray="0 100" stroke-dashoffset="0" pathLength="100"/>
+                          </svg>
+                          <div class="ctr"><div><b>35</b><small data-t="dCars"></small></div></div>
+                        </div>
+                        <div class="legend">
+                          <span><i style="background:#e0302b"></i><span data-t="lOut"></span><b>22</b></span>
+                          <span><i style="background:#2a6bd8"></i><span data-t="lFree"></span><b>10</b></span>
+                          <span><i style="background:#e58a12"></i><span data-t="lService"></span><b>3</b></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tops">
+                    <div class="top"><div class="tn">Škoda Octavia<span>6.840 KM</span></div><div class="tb"><i data-w="100"></i></div></div>
+                    <div class="top"><div class="tn">Audi Q5<span>5.920 KM</span></div><div class="tb"><i data-w="86"></i></div></div>
+                    <div class="top"><div class="tn">VW Transporter<span>4.610 KM</span></div><div class="tb"><i data-w="67"></i></div></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <!-- The contract that comes out of the browser -->
+        <div class="paper" id="paper" style="left:780px;top:150px">
+          <span class="badge">PDF</span>
+          <div class="ph"><div><b>RENT A CAR</b><small>Sarajevo, Bosna i Hercegovina<br/>demo.mehiccdev.com</small></div></div>
+          <div class="pt"><span data-t="pTitle"></span><small class="pref">MR-4TQ8</small></div>
+          <i></i><i style="width:85%"></i><i style="width:70%"></i><i></i><i style="width:60%"></i><i></i><i style="width:78%"></i>
+          <div class="sig"><span data-t="pSig1"></span><span data-t="pSig2"></span></div>
+        </div>
+
+        <!-- Summary chips -->
+        <div class="feat" id="f1" style="right:1004px;top:118px"><i><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="2" fill="none" stroke="#e0302b" stroke-width="1.6"/><path d="M2 7h12M5 1.5v3M11 1.5v3" stroke="#e0302b" stroke-width="1.6" stroke-linecap="round"/></svg></i><span data-t="f1"></span></div>
+        <div class="feat" id="f2" style="left:1004px;top:118px"><i><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="#e0302b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i><span data-t="f2"></span></div>
+        <div class="feat" id="f3" style="right:1022px;top:246px"><i><svg viewBox="0 0 16 16"><path d="M4 1.5h5l3 3v10H4z" fill="none" stroke="#e0302b" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 8h4M6 11h4" stroke="#e0302b" stroke-width="1.6" stroke-linecap="round"/></svg></i><span data-t="f3"></span></div>
+        <div class="feat" id="f4" style="left:1022px;top:246px"><i><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="#e0302b" stroke-width="1.6"/><path d="M8 4.5V8l2.5 1.5" stroke="#e0302b" stroke-width="1.6" stroke-linecap="round"/></svg></i><span data-t="f4"></span></div>
+        <div class="feat" id="f5" style="right:1022px;top:374px"><i><svg viewBox="0 0 16 16"><path d="M2 13.5V9M6 13.5V5M10 13.5V7.5M14 13.5V2.5" stroke="#e0302b" stroke-width="1.8" stroke-linecap="round"/></svg></i><span data-t="f5"></span></div>
+        <div class="feat" id="f7" style="right:1004px;top:502px"><i><svg viewBox="0 0 16 16"><rect x="4.5" y="1.5" width="7" height="13" rx="1.6" fill="none" stroke="#e0302b" stroke-width="1.6"/><circle cx="8" cy="11.8" r=".9" fill="#e0302b"/></svg></i><span data-t="f7"></span></div>
+        <div class="feat" id="f8" style="left:1004px;top:502px"><i><svg viewBox="0 0 16 16"><path d="M8 1.8v12.4M11.4 4.6c-.6-1-1.9-1.6-3.4-1.6-1.9 0-3.3 1-3.3 2.4 0 3.2 7 1.8 7 5.1 0 1.4-1.5 2.5-3.6 2.5-1.6 0-3-.7-3.6-1.8" fill="none" stroke="#e0302b" stroke-width="1.5" stroke-linecap="round"/></svg></i><span data-t="f8"></span></div>
+        <div class="feat" id="f6" style="left:1022px;top:374px"><i><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="#e0302b" stroke-width="1.6"/><path d="M2 8h12M8 2c2 2 2 10 0 12M8 2c-2 2-2 10 0 12" fill="none" stroke="#e0302b" stroke-width="1.3"/></svg></i><span data-t="f6"></span></div>
+
+        <div class="speed" id="speed">
+          <div class="sh"><b>Google PageSpeed</b><span>demo.mehiccdev.com</span><em>Desktop</em></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+
+        <div class="mphone" id="mphone">
+          <div class="mscreen">
+            <div class="mbar"><i></i>RENT A CAR</div>
+            <div class="msum"><span data-s="sLoc"></span><b data-s="vDates"></b></div>
+            <div class="mcard"><div class="mp" id="mp1"></div><div class="mb"><div><b>Škoda Octavia</b><span class="px" data-km="90"></span></div><span data-s="book"></span></div></div>
+            <div class="mcard"><div class="mp" id="mp2"></div><div class="mb"><div><b>Audi Q5</b><span class="px" data-km="140"></span></div><span data-s="book"></span></div></div>
+          </div>
+        </div>
+
+        <div class="cursor" id="cursor"><svg viewBox="0 0 22 22"><path d="M3 2.5l14 7.2-6 1.7-2.4 6.1z" fill="#fff" stroke="#121a23" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+      </div>
+
+      <!-- Intro and end sit above everything -->
+      <div class="intro" id="intro"></div>
+      <div class="turn" id="turn" data-t="turn"></div>
+
+      <div class="callout" id="callout"><i>+</i><span data-t="callout"></span></div>
+
+      <div class="notif" id="notif">
+        <div class="ico"><svg viewBox="0 0 20 20"><path d="M3 9.6l12.6-5.2c.6-.2 1.1.2.9.9l-2.1 10.1c-.1.6-.8.8-1.2.5l-3.3-2.4-1.7 1.6c-.2.2-.5.1-.5-.2l.2-2.6 5.7-5.2c.2-.2 0-.4-.3-.2L6.2 11.4 3.3 10.5c-.6-.2-.6-.7-.3-.9z" fill="#fff"/></svg></div>
+        <div style="flex:1;min-width:0">
+          <div class="hd"><b>Telegram</b><span data-t="nNow"></span></div>
+          <div class="ttl" data-t="nTitle"></div>
+          <div class="bd" data-t="nBody"></div>
+        </div>
+      </div>
+
+      <div class="caption" id="caption"><span class="n" id="capN">1</span><span class="tx" id="capT"></span></div>
+      <div class="chapters" id="chapters"></div>
+
+      <div class="end" id="end">
+        <div>
+          <div class="w r" id="eW">mehicc<span>dev</span></div>
+          <div class="l r" id="eL" data-t="endLine"></div>
+          <div class="u r" id="eU">mehiccdev.com</div>
+        </div>
+      </div>
+
+      <div class="progress" id="progress"></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="play" type="button"></button>
+  <button class="btn" id="replay" type="button"></button>
+  <button class="btn" id="lang-bs" type="button" aria-pressed="true">BS</button>
+  <button class="btn" id="lang-en" type="button" aria-pressed="false">EN</button>
+</div>
+<p class="note" id="note"></p>
+
+<script>
+/* =====================================================================
+ * COPY
+ * Every visible word, in both languages. Nothing in the timeline below
+ * contains text, so switching language is just a re-render.
+ * ===================================================================== */
+const COPY = {
+  bs: {
+    calls: ["Imate li auto za vikend?", "Do you have an automatic?", "Koliko košta Octavia?", "Ist der Wagen am 15. frei?", "Ima li dječija sjedalica?"],
+    turn: "Sve to, na jednom mjestu.",
+    caps: [
+      "Tema, jezik i valuta po želji gosta",
+      "Gost bira mjesto i datume",
+      "Vidi samo vozila koja su tada slobodna",
+      "Dodaje opremu, cijena se računa odmah",
+      "Upit stiže u panel, potvrda je jedan klik",
+      "Ugovor se popuni sam iz rezervacije",
+      "Zna se ko je na cesti i ko kasni",
+      "Prihod i flota, u stvarnom vremenu",
+      "Brz sajt, spreman za Google",
+    ],
+    nVehicles: "Vozila", nLocations: "Lokacije", nAbout: "O nama", nContact: "Kontakt",
+    heroH: "Rent a car Sarajevo",
+    heroP: "Provjerite slobodna vozila za svoje datume i rezervišite za minut. Preuzimanje na aerodromu ili u gradu.",
+    tFleet: "vozila", tLoc: "lokacije", tRating: "ocjena gostiju", tRatingV: "4,9", heroFrom: "Cijene od",
+    sLoc: "Lokacija preuzimanja", sFrom: "Preuzimanje", sTo: "Vraćanje", sGo: "Pretraži",
+    vLoc: "Sarajevo, aerodrom", vFrom: "12. sep, 10:00", vTo: "17. sep, 10:00", ph: "Odaberite",
+    cAll: "Sva vozila", cSuv: "SUV", cSedan: "Limuzina", cVan: "Kombi",
+    foundA: "Slobodno:", foundB: "vozila",
+    sumDates: "Termin", vDates: "12. do 17. septembra", sumDays: "Dana",
+    perDay: "po danu", perDayShort: "/ dan", book: "Rezerviši", taken: "Zauzeto u tom periodu",
+    spGear: "Mjenjač", spGearV: "Automatik", spSeats: "Sjedišta", spFuel: "Gorivo", spFuelV: "Dizel",
+    spBags: "Kofera", spAc: "Klima", spAcV: "Da", spYear: "Godište",
+    xSeat: "Dječija sjedalica", xGps: "GPS navigacija", xDriver: "Dodatni vozač",
+    sumRent: "Najam, 5 dana", sumExtras: "Oprema", sumTotal: "Ukupno", send: "Pošalji upit",
+    toastSent: "Upit je poslan. Potvrda stiže na e-mail.",
+    aRes: "Rezervacije", aCars: "Vozila", aExtras: "Oprema", aContracts: "Ugovori", aStats: "Analitika", aCompany: "Firma",
+    aSearch: "Ime, telefon, broj rezervacije", aNew: "Nova rezervacija",
+    tabAll: "Sve", tabNew: "Nove", tabActive: "Aktivne", tabDone: "Završene",
+    hRef: "Broj", hGuest: "Gost", hCar: "Vozilo", hDates: "Termin", hAmt: "Iznos", hSt: "Status",
+    stNew: "Novo", stOk: "Potvrđeno", stRoad: "U toku", stDone: "Završeno", confirm: "Potvrdi", finish: "Završi najam",
+    toastOk: "Potvrđeno. Gost je dobio e-mail.",
+    late: "Kasni 40 min", soon: "Ističe za 3 h", later: "Ističe za 2 dana",
+    cDate1: "danas", cDate2: "danas", cDate3: "sutra",
+    cTitle: "Ugovor o najmu vozila", cGuest: "Gost", cCar: "Vozilo", cPlate: "Registracija", cLicence: "Vozačka dozvola",
+    cPick: "Preuzimanje", cPickV: "12.09.2026. u 10:00", cRet: "Vraćanje", cRetV: "17.09.2026. u 10:00",
+    cKm: "Kilometraža", cFuel: "Gorivo", cFuelV: "Pun rezervoar", cPdf: "Preuzmi PDF", cWord: "Word",
+    pTitle: "Ugovor o najmu vozila", pSig1: "Za iznajmljivača", pSig2: "Za korisnika",
+    mTitle: "Povrat vozila", mFuel: "Gorivo pri povratu", mFull: "Puno", mDeposit: "Depozit", mDepositV: "Vraćen u cijelosti", mBtn: "Završi najam",
+    toastFree: "Najam zatvoren. Vozilo je ponovo slobodno.",
+    rMonth: "Ovaj mjesec", kRev: "Prihod", kRes: "Rezervacije", kUtil: "Iskoristivost flote", kAvg: "Prosječan najam, dana",
+    chTrend: "Prihod", chTrendS: "po danima", chFleet: "Flota trenutno", dCars: "vozila",
+    lOut: "U najmu", lFree: "Slobodno", lService: "Na servisu",
+    f1: "Provjera dostupnosti", f2: "Online rezervacije", f3: "Ugovori u PDF i Word", f4: "Primopredaja vozila", f5: "Analitika i izvještaji", f6: "Više jezika i valuta", f7: "Obavijest na telefon", f8: "Sezonske cijene",
+    nNow: "sada", nTitle: "Novi upit MR-4TQ8", nBody: "Emma Fischer, Škoda Octavia, 12.9.–17.9., 510 KM",
+    callout: "Više jezika i valuta po dogovoru",
+    gPerf: "Performanse", gA11y: "Pristupačnost", gBest: "Najbolje prakse", gSeo: "SEO",
+    aMsgs: "Poruke", aExport: "Izvoz", aLogout: "Odjava",
+    aDesc: "Potvrdite upit da zauzme vozilo. Potvrđene rezervacije i blokade automatski skrivaju vozilo iz pretrage za taj period.",
+    fPending: "Na čekanju", fConfirmed: "Potvrđene", fActive: "Aktivne", fCanceled: "Otkazane", fAll: "Sve",
+    t24: "Zadnjih 24h", t7: "Zadnjih 7 dana", t30: "Zadnjih 30 dana", tAll: "Sve",
+    view: "Pogledaj", edit: "Uredi", cancel: "Otkaži", days: "dana", rentExtras: "najam i oprema",
+    gAuto: "Automatik", gMan: "Manuelni", fDiesel: "Dizel", fPetrol: "Benzin",
+    endLine: "Rezervacijski sistemi za rent-a-car",
+    play: "Pauza", resume: "Pusti", replay: "Ispočetka",
+    note: "Rezervacijski sistem za rent-a-car, od upita gosta do ugovora i izvještaja, bez ijednog poziva. Jezici, valute i izgled se prilagođavaju svakoj agenciji.",
+  },
+  en: {
+    calls: ["Got a car for the weekend?", "Imate li automatik?", "How much is the Octavia?", "Ist der Wagen am 15. frei?", "Do you have a child seat?"],
+    turn: "All of it, in one place.",
+    caps: [
+      "Theme, language and currency, the guest's choice",
+      "The guest picks a place and dates",
+      "Only cars that are actually free show up",
+      "Extras are added, the price updates at once",
+      "The request lands in the panel, one click to confirm",
+      "The contract fills itself in from the booking",
+      "Who is on the road, and who is late",
+      "Revenue and fleet, live",
+      "Fast, and ready for Google",
+    ],
+    nVehicles: "Fleet", nLocations: "Locations", nAbout: "About", nContact: "Contact",
+    heroH: "Car rental in Sarajevo",
+    heroP: "See which cars are free for your dates and book in a minute. Pick up at the airport or in town.",
+    tFleet: "cars", tLoc: "locations", tRating: "guest rating", tRatingV: "4.9", heroFrom: "Prices from",
+    sLoc: "Pick-up location", sFrom: "Pick-up", sTo: "Return", sGo: "Search",
+    vLoc: "Sarajevo, airport", vFrom: "12 Sep, 10:00", vTo: "17 Sep, 10:00", ph: "Choose",
+    cAll: "All cars", cSuv: "SUV", cSedan: "Saloon", cVan: "Van",
+    foundA: "Free:", foundB: "cars",
+    sumDates: "Dates", vDates: "12 to 17 September", sumDays: "Days",
+    perDay: "per day", perDayShort: "/ day", book: "Book", taken: "Booked for these dates",
+    spGear: "Gearbox", spGearV: "Automatic", spSeats: "Seats", spFuel: "Fuel", spFuelV: "Diesel",
+    spBags: "Suitcases", spAc: "Air con", spAcV: "Yes", spYear: "Year",
+    xSeat: "Child seat", xGps: "GPS navigation", xDriver: "Additional driver",
+    sumRent: "Rental, 5 days", sumExtras: "Extras", sumTotal: "Total", send: "Send request",
+    toastSent: "Request sent. Confirmation is on its way by e-mail.",
+    aRes: "Bookings", aCars: "Fleet", aExtras: "Extras", aContracts: "Contracts", aStats: "Analytics", aCompany: "Company",
+    aSearch: "Name, phone, booking number", aNew: "New booking",
+    tabAll: "All", tabNew: "New", tabActive: "Active", tabDone: "Completed",
+    hRef: "Ref", hGuest: "Guest", hCar: "Car", hDates: "Dates", hAmt: "Amount", hSt: "Status",
+    stNew: "New", stOk: "Confirmed", stRoad: "On the road", stDone: "Completed", confirm: "Confirm", finish: "Close rental",
+    toastOk: "Confirmed. The guest has been e-mailed.",
+    late: "40 min late", soon: "Due in 3 h", later: "Due in 2 days",
+    cDate1: "today", cDate2: "today", cDate3: "tomorrow",
+    cTitle: "Vehicle rental agreement", cGuest: "Guest", cCar: "Car", cPlate: "Plate", cLicence: "Driving licence",
+    cPick: "Pick-up", cPickV: "12 Sep 2026, 10:00", cRet: "Return", cRetV: "17 Sep 2026, 10:00",
+    cKm: "Mileage", cFuel: "Fuel", cFuelV: "Full tank", cPdf: "Download PDF", cWord: "Word",
+    pTitle: "Vehicle rental agreement", pSig1: "For the company", pSig2: "For the renter",
+    mTitle: "Vehicle return", mFuel: "Fuel on return", mFull: "Full", mDeposit: "Deposit", mDepositV: "Returned in full", mBtn: "Close rental",
+    toastFree: "Rental closed. The car is free again.",
+    rMonth: "This month", kRev: "Revenue", kRes: "Bookings", kUtil: "Fleet utilisation", kAvg: "Average rental, days",
+    chTrend: "Revenue", chTrendS: "by day", chFleet: "Fleet right now", dCars: "cars",
+    lOut: "On rental", lFree: "Free", lService: "In service",
+    f1: "Live availability", f2: "Online booking", f3: "PDF and Word contracts", f4: "Handover and return", f5: "Analytics and reports", f6: "Several languages and currencies", f7: "Alerts on your phone", f8: "Seasonal pricing",
+    nNow: "now", nTitle: "New request MR-4TQ8", nBody: "Emma Fischer, Škoda Octavia, 12–17 Sep, 510 KM",
+    callout: "More languages and currencies on request",
+    gPerf: "Performance", gA11y: "Accessibility", gBest: "Best practices", gSeo: "SEO",
+    aMsgs: "Messages", aExport: "Export", aLogout: "Log out",
+    aDesc: "Confirm a request to reserve the car. Confirmed bookings and blocks hide the car from search for that period automatically.",
+    fPending: "Pending", fConfirmed: "Confirmed", fActive: "Active", fCanceled: "Cancelled", fAll: "All",
+    t24: "Last 24h", t7: "Last 7 days", t30: "Last 30 days", tAll: "All",
+    view: "View", edit: "Edit", cancel: "Cancel", days: "days", rentExtras: "rental and extras",
+    gAuto: "Automatic", gMan: "Manual", fDiesel: "Diesel", fPetrol: "Petrol",
+    endLine: "Booking systems for car rental",
+    play: "Pause", resume: "Play", replay: "Replay",
+    note: "A booking system for car rental, from a guest's request to the contract and the report, without a single phone call. Languages, currencies and branding are set up for each agency.",
+  },
+};
+
+let lang = "bs";
+const $ = (id) => document.getElementById(id);
+const t = (k) => COPY[lang][k];
+
+/*
+ * The public site has its own language and currency, separate from the
+ * video's. In the story a foreign guest switches it to English and euros,
+ * while the owner's panel stays in the owner's language and in KM: the same
+ * booking, seen from both sides.
+ */
+let siteLang = "bs", siteCur = "KM";
+const S = (k) => COPY[siteLang][k];
+const EUR_RATE = 1.95583; // fixed statutory rate, as the system itself uses
+function money(km) {
+  if (siteCur === "KM") return Math.round(km).toLocaleString("de-DE") + " KM";
+  const eur = km / EUR_RATE;
+  return siteLang === "en"
+    ? "€" + eur.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : eur.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+}
+function applySite() {
+  document.querySelectorAll("[data-s]").forEach((el) => { const v = S(el.dataset.s); if (typeof v === "string") el.textContent = v; });
+  document.querySelectorAll(".px").forEach((el) => { el.textContent = money(+el.dataset.km); });
+  // Empty search fields follow the language too; filled ones keep what was typed.
+  ["vLoc", "vFrom", "vTo"].forEach((id) => { const el = $(id); if (el && el.classList.contains("empty")) el.textContent = S("ph"); });
+  document.querySelectorAll(".lp").forEach((el) => (el.textContent = siteLang === "bs" ? "BS" : "EN"));
+  document.querySelectorAll(".cp").forEach((el) => (el.textContent = siteCur));
+  $("miBs").classList.toggle("sel", siteLang === "bs"); $("miEn").classList.toggle("sel", siteLang === "en");
+  $("miKm").classList.toggle("sel", siteCur === "KM"); $("miEur").classList.toggle("sel", siteCur === "EUR");
+}
+
+/* Where a point of the footage currently sits on screen, given the camera. */
+let camState = { x: 640, y: 360, s: 1 };
+function onScreen(pt) {
+  if (camState.s === 1 && camState.free) return pt;
+  return { x: 640 - camState.x * camState.s + pt.x * camState.s, y: FOCUS_Y - camState.y * camState.s + pt.y * camState.s };
+}
+
+/* =====================================================================
+ * ILLUSTRATION
+ * Cars are drawn, not photographed: no external images, crisp at any
+ * zoom, and the camera can push in without anything turning to mush.
+ * ===================================================================== */
+function car(body, sky = "#e3ebf2", ground = "#cdd6df", big = false) {
+  return `<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">
+    <rect width="320" height="200" fill="${sky}"/>
+    ${big ? '<circle cx="250" cy="52" r="26" fill="#f4b63f" opacity=".55"/><path d="M0 128 Q80 96 160 112 T320 104 L320 200 L0 200Z" style="fill:var(--hill)"/>' : ""}
+    <rect y="146" width="320" height="54" fill="${ground}"/>
+    <ellipse cx="164" cy="150" rx="122" ry="9" fill="#000" opacity=".12"/>
+    <path d="M46 134 Q52 100 92 92 L126 66 Q142 56 170 56 L208 56 Q236 58 252 82 L276 94 Q292 102 292 122 L292 134 Z" fill="${body}"/>
+    <path d="M132 72 Q144 64 168 64 L204 64 Q224 66 236 84 L128 84 Z" fill="#d4e3ee" opacity=".92"/>
+    <path d="M178 64 L178 84" stroke="${body}" stroke-width="5"/>
+    <rect x="272" y="104" width="16" height="7" rx="3" fill="#ffe8a6"/>
+    <circle cx="102" cy="138" r="22" fill="#18212b"/><circle cx="102" cy="138" r="9" fill="#a3afbb"/>
+    <circle cx="242" cy="138" r="22" fill="#18212b"/><circle cx="242" cy="138" r="9" fill="#a3afbb"/>
+  </svg>`;
+}
+
+const FLEET = [
+  { n: "Škoda Octavia", p: 90, c: "#3d5a73", free: true, sp: ["gAuto", "5", "fDiesel"] },
+  { n: "VW Passat", p: 110, c: "#8a2a2a", free: false, sp: ["gAuto", "5", "fDiesel"] },
+  { n: "Audi Q5", p: 140, c: "#2b2f34", free: true, sp: ["gAuto", "5", "fDiesel"] },
+  { n: "VW T-Roc", p: 95, c: "#c6ccd2", free: false, sp: ["gMan", "5", "fPetrol"] },
+  { n: "Škoda Kodiaq", p: 125, c: "#56694e", free: true, sp: ["gAuto", "7", "fDiesel"] },
+  { n: "VW Golf", p: 75, c: "#dfe3e7", free: false, sp: ["gMan", "5", "fPetrol"] },
+  { n: "VW Transporter", p: 150, c: "#eef1f3", free: true, sp: ["gMan", "9", "fDiesel"] },
+  { n: "Škoda Superb", p: 120, c: "#6f7780", free: false, sp: ["gAuto", "5", "fDiesel"] },
+];
+
+function build() {
+  $("heroArt").innerHTML = car("#3d5a73", "transparent", "transparent", true);
+  $("grid").innerHTML = FLEET.map((f, i) => `
+    <div class="card" id="cd${i}">
+      <div class="ph">${car(f.c)}</div>
+      <div class="bd">
+        <div class="nm">${f.n}</div>
+        <div class="sp">${f.sp.map((k) => `<span ${/^\d+$/.test(k) ? "" : `data-s="${k}"`}>${/^\d+$/.test(k) ? k : S(k)}</span>`).join("")}</div>
+        <div class="pr"><span><b class="px" data-km="${f.p}"></b> <small data-s="perDayShort"></small></span><span class="bk" data-s="book"></span></div>
+      </div>
+      <div class="veil" data-s="taken"></div>
+    </div>`).join("");
+
+  $("gal").insertAdjacentHTML("afterbegin", car("#3d5a73", "#dde7ef", "#c8d2dc", true));
+  $("mp1").innerHTML = car("#3d5a73"); $("mp2").innerHTML = car("#2b2f34");
+  const shades = [["#3d5a73", "#dde7ef"], ["#3d5a73", "#e9e2d6"], ["#3d5a73", "#d9e4dc"], ["#3d5a73", "#e2e6ec"]];
+  $("thumbs").innerHTML = shades.map(([c, s], i) => `<span class="${i ? "" : "cur"}">${car(c, s)}</span>`).join("");
+
+  /* ---------- the admin, built to match the real panel ---------- */
+  const ic = (d, extra = "") => `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+  const I = {
+    shield: ic('<path d="M8 1.5l5 2v4.2c0 3-2.1 5.4-5 6.8-2.9-1.4-5-3.8-5-6.8V3.5z" stroke="#e0302b"/><path d="M5.8 8l1.6 1.6L10.4 6.4" stroke="#e0302b"/>'),
+    moon: ic('<path d="M13.5 9.6A5.6 5.6 0 016.4 2.5a5.6 5.6 0 107.1 7.1z"/>'),
+    logout: ic('<path d="M6 2.5H3.5v11H6M10.5 5l3 3-3 3M13.5 8H6.5"/>'),
+    cal: ic('<rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 7h12M5.5 1.5v3M10.5 1.5v3"/>'),
+    car: ic('<path d="M2 11V8.5l1.6-3.2A1.5 1.5 0 015 4.5h6a1.5 1.5 0 011.4.8L14 8.5V11z"/><circle cx="4.8" cy="11.5" r="1.3"/><circle cx="11.2" cy="11.5" r="1.3"/>'),
+    doc: ic('<path d="M4 1.5h5l3 3v10H4z"/><path d="M6 8.5h4M6 11h3"/>'),
+    chart: ic('<path d="M2.5 13.5h11M4.5 11V7M8 11V4M11.5 11V8.5"/>'),
+    msg: ic('<path d="M2.5 3.5h11v7.5H6L3 13.5v-2.5h-.5z"/>'),
+    box: ic('<path d="M8 1.8l5.5 3v6.4L8 14.2l-5.5-3V4.8z"/><path d="M2.5 4.8L8 7.8l5.5-3M8 7.8v6.4"/>'),
+    down: ic('<path d="M8 2v8M5 7l3 3 3-3M2.5 13.5h11"/>'),
+    bld: ic('<rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 5h1M9 5h1M6 8h1M9 8h1M7 14v-3h2v3"/>'),
+    money: ic('<rect x="2" y="2" width="12" height="12" rx="2"/><path d="M9.6 5.6c-.4-.6-1-.9-1.7-.9-1 0-1.7.5-1.7 1.3 0 1.7 3.6 1 3.6 2.7 0 .8-.8 1.4-1.9 1.4-.8 0-1.5-.4-1.8-1M8 3.6v1M8 10.4v1"/>'),
+    phone: ic('<path d="M4.5 2h2l1 3-1.5 1a8 8 0 004 4l1-1.5 3 1v2A1.5 1.5 0 0112.5 13 10.5 10.5 0 013 3.5 1.5 1.5 0 014.5 2z"/>'),
+    mail: ic('<rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="M2.5 4.5L8 9l5.5-4.5"/>'),
+    eye: ic('<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/>'),
+    pen: ic('<path d="M10.5 2.5l3 3L5.5 13.5h-3v-3z"/>'),
+    check: ic('<path d="M3 8.5l3 3 7-7"/>'),
+    x: ic('<path d="M4 4l8 8M12 4l-8 8"/>'),
+    key: ic('<circle cx="5.5" cy="10.5" r="3"/><path d="M7.6 8.4L13.5 2.5M11.5 4.5l1.5 1.5"/>'),
+  };
+
+  const TABS = [["res", "aRes", I.cal, "3"], ["cars", "aCars", I.car], ["contracts", "aContracts", I.doc], ["stats", "aStats", I.chart],
+                ["msgs", "aMsgs", I.msg, "1"], ["extras", "aExtras", I.box], ["export", "aExport", I.down], ["company", "aCompany", I.bld]];
+  document.querySelectorAll(".achrome").forEach((el) => {
+    const main = el.dataset.main === "1";
+    el.outerHTML = `
+      <header class="ah">
+        <div class="abrand">${I.shield}Rent a Car <span>Admin</span></div>
+        <div class="ahr"><span class="ibtn">${I.moon}</span><span class="obtn">${I.logout}<span data-t="aLogout">${t("aLogout")}</span></span></div>
+      </header>
+      <nav class="atabs">${TABS.map(([k, label, icon, n]) => `
+        <span class="atab${k === el.dataset.tab ? " cur" : ""}">${icon}<span data-t="${label}">${t(label)}</span>${n ? `<span class="bdg"${main && k === "res" ? ' id="bdg"' : ""}>${n}</span>` : ""}</span>`).join("")}
+      </nav>`;
+  });
+
+  /* One reservation card, laid out as in the panel. */
+  const card = (c) => `
+    <div class="rcard${c.cls ? " " + c.cls : ""}" ${c.id ? `id="${c.id}"` : ""}>
+      <div class="rtop">
+        <div class="rmeta"><span class="rb ${c.st}" ${c.id ? `id="${c.id}St"` : ""}>${c.badge}</span><span>${c.meta}</span></div>
+        <div class="racts">
+          <span class="ob">${I.eye}${t("view")}</span><span class="ob">${I.pen}${t("edit")}</span><span class="sp"></span>
+          ${c.mode === "pending"
+            ? `<span class="gb" ${c.id ? `id="${c.id}Ok"` : ""}>${I.check}${t("confirm")}</span><span class="ob" ${c.id ? `id="${c.id}No"` : ""}>${I.x}${t("cancel")}</span>`
+            : `<span class="gb" style="background:var(--ink)" ${c.id ? `id="${c.id}Btn"` : ""}>${I.key}${t("finish")}</span>`}
+        </div>
+      </div>
+      <div class="rcar">${I.car}${c.car}</div>
+      <div class="rline">${I.cal}${c.from} → ${c.to} <small>· ${c.days} ${t("days")}</small></div>
+      <div class="rline">${I.money}<b>${c.amt}</b> <small>${t("rentExtras")}</small></div>
+      <div class="rsep"></div>
+      <div class="rguest">
+        <div class="nm">${c.guest}</div><div class="rg">${I.mail}${c.mail}</div>
+        <div class="rg">${I.phone}${c.phone}</div><div></div>
+        <div class="rg">${I.box}${c.extras}</div>
+      </div>
+    </div>`;
+
+  $("rlist").innerHTML = [
+    { id: "fresh", cls: "pre", st: "new", badge: t("stNew"), meta: "20. 09. 2026. 14:10 · MR-4TQ8", mode: "pending",
+      car: "Škoda Octavia", from: "12. 09. 2026. 10:00", to: "17. 09. 2026. 10:00", days: 5, amt: "510 KM",
+      guest: "Emma Fischer", mail: "emma.f•••@gmail.com", phone: "+49 151 2•• ••47", extras: `${t("xSeat")} ×2` },
+    { st: "new", badge: t("stNew"), meta: "20. 09. 2026. 11:42 · MR-9KD2", mode: "pending",
+      car: "VW Passat", from: "14. 10. 2026. 09:00", to: "20. 10. 2026. 09:00", days: 6, amt: "660 KM",
+      guest: "Amar Hadžić", mail: "amar.h•••@gmail.com", phone: "+387 61 2•• •45", extras: t("xGps") },
+    { st: "new", badge: t("stNew"), meta: "19. 09. 2026. 18:05 · MR-3LV6", mode: "pending",
+      car: "Audi Q5", from: "02. 11. 2026. 12:00", to: "06. 11. 2026. 12:00", days: 4, amt: "560 KM",
+      guest: "Lucas Martin", mail: "l.martin•••@orange.fr", phone: "+33 6 12 •• •• 80", extras: t("xDriver") },
+  ].map(card).join("");
+
+  $("alist").innerHTML = [
+    { id: "lateRow", cls: "late", st: "late", badge: t("late"), meta: "08. 09. 2026. 09:14 · MR-7HN4", mode: "active",
+      car: "VW T-Roc", from: "08. 09. 2026. 10:00", to: "12. 09. 2026. 10:00", days: 4, amt: "380 KM",
+      guest: "Mehmet Yılmaz", mail: "mehmet.y•••@gmail.com", phone: "+90 532 4•• ••18", extras: t("xSeat") },
+    { st: "soon", badge: t("soon"), meta: "09. 09. 2026. 16:30 · MR-2PX7", mode: "active",
+      car: "Škoda Kodiaq", from: "09. 09. 2026. 13:00", to: "13. 09. 2026. 13:00", days: 4, amt: "500 KM",
+      guest: "Ivana Kovačević", mail: "ivana.k•••@gmail.com", phone: "+385 98 7•• •04", extras: t("xGps") },
+  ].map(card).join("");
+
+  $("chapters").innerHTML = t("caps").map(() => "<i></i>").join("");
+
+  // Four gauges; the arc runs on pathLength 100 so a score maps straight to it.
+  $("gauges").innerHTML = ["gPerf", "gA11y", "gBest", "gSeo"].map((k) => `
+    <div>
+      <div class="gauge">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#e4f5ec" stroke-width="7"/>
+          <circle class="arc" cx="40" cy="40" r="34" fill="none" stroke="#1f9d63" stroke-width="7" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+        </svg>
+        <b>0</b>
+      </div>
+      <div class="glabel">${t(k)}</div>
+    </div>`).join("");
+}
+
+function applyCopy() {
+  applySite();
+  document.documentElement.lang = lang === "bs" ? "bs" : "en";
+  document.querySelectorAll("[data-t]").forEach((el) => { const v = t(el.dataset.t); if (typeof v === "string") el.textContent = v; });
+  $("note").textContent = t("note");
+  $("replay").textContent = t("replay");
+  $("play").textContent = playing ? t("play") : t("resume");
+  $("lang-bs").setAttribute("aria-pressed", String(lang === "bs"));
+  $("lang-en").setAttribute("aria-pressed", String(lang === "en"));
+}
+
+/* =====================================================================
+ * CAMERA AND CURSOR
+ * Positions are read from layout offsets, which ignore transforms, so
+ * they stay correct while the camera is zoomed in.
+ * ===================================================================== */
+const CAM = $("cam");
+function local(el) {
+  let x = 0, y = 0, n = el;
+  while (n && n !== CAM) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+  return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+}
+function center(el, dx = 0, dy = 0) { const r = local(el); return { x: r.x + r.w / 2 + dx, y: r.y + r.h / 2 + dy }; }
+
+/* Puts point (x, y) slightly above the middle of the frame at zoom s.
+ * Above, not at, the middle: the caption lives along the bottom edge, and
+ * the thing being shown should never sit underneath it. */
+const FOCUS_Y = 318;
+function cam(target, s = 1, dur) {
+  const p = target && target.nodeType ? center(target) : target || { x: 640, y: 360 };
+  if (dur) CAM.style.transitionDuration = dur + "ms";
+  camState = { x: p.x, y: p.y, s, free: s === 1 && !target };
+  CAM.style.transform = s === 1 && !target ? "" : `translate(${640 - p.x * s}px, ${FOCUS_Y - p.y * s}px) scale(${s})`;
+}
+function point(el, dx = 0, dy = 0, dur = 900) {
+  const c = center(el, dx, dy), cur = $("cursor");
+  cur.style.transitionDuration = dur + "ms";
+  cur.style.left = c.x - 3 + "px"; cur.style.top = c.y - 3 + "px";
+}
+function click() {
+  const cur = $("cursor");
+  cur.classList.add("down");
+  setTimeout(() => cur.classList.remove("down"), 160);
+  const r = document.createElement("div");
+  r.className = "ripple";
+  r.style.left = parseFloat(cur.style.left) + 3 + "px"; r.style.top = parseFloat(cur.style.top) + 3 + "px";
+  CAM.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+}
+
+let prevTimer = 0;
+function page(id, url) {
+  clearTimeout(prevTimer);
+  document.querySelectorAll(".page").forEach((p) => {
+    const wasOn = p.classList.contains("on");
+    p.classList.remove("prev");
+    if (p.id === id) { p.classList.add("on"); return; }
+    p.classList.remove("on");
+    if (wasOn) p.classList.add("prev");
+  });
+  // Once the new page is opaque, the old one can go.
+  prevTimer = setTimeout(() => document.querySelectorAll(".page.prev").forEach((p) => p.classList.remove("prev")), 400);
+  if (url) $("url").innerHTML = url;
+}
+let capTimer = 0;
+function hideCaption() { clearTimeout(capTimer); $("caption").classList.remove("in"); }
+function caption(i) {
+  const c = $("caption");
+  hideCaption();
+  capTimer = setTimeout(() => {
+    $("capN").textContent = i + 1; $("capT").textContent = t("caps")[i]; c.classList.add("in");
+    [...$("chapters").children].forEach((d, k) => { d.className = k < i ? "done" : k === i ? "cur" : ""; });
+  }, 220);
+}
+function toast(id, ms = 2400) { $(id).classList.add("in"); setTimeout(() => $(id).classList.remove("in"), ms); }
+function countUp(el, a, b, ms, fmt = (n) => n) {
+  const t0 = performance.now();
+  const f = (now) => { const p = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(a + (b - a) * e); if (p < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+}
+const km = (n) => Math.round(n).toLocaleString("de-DE") + " KM";
+
+/* FLIP: remove the taken cards, then glide the remaining ones into place
+ * instead of letting the grid jump. */
+function collapseGrid() {
+  const cards = [...$("grid").children];
+  const first = new Map(cards.map((c) => [c, { x: c.offsetLeft, y: c.offsetTop }]));
+  cards.forEach((c, i) => { if (!FLEET[i].free) c.style.display = "none"; });
+  cards.forEach((c, i) => {
+    if (!FLEET[i].free) return;
+    const a = first.get(c), dx = a.x - c.offsetLeft, dy = a.y - c.offsetTop;
+    c.style.transition = "none"; c.style.transform = `translate(${dx}px, ${dy}px)`;
+    void c.offsetWidth;
+    c.style.transition = "transform .8s cubic-bezier(.65,0,.35,1)"; c.style.transform = "";
+  });
+}
+
+/* =====================================================================
+ * TIMELINE · 52 seconds
+ * ===================================================================== */
+const TOTAL = 67800;
+let cues = [], start = 0, paused = 0, playing = true, raf = 0, next = 0;
+/* OFF lets a chapter be inserted without renumbering every cue after it. */
+let OFF = 0;
+const at = (ms, fn) => cues.push({ ms: ms + OFF, fn });
+
+function reset() {
+  siteLang = "bs"; siteCur = "KM";
+  build(); applyCopy();
+  ["langMenu", "curMenu", "callout"].forEach((id) => $(id).classList.remove("in"));
+  ["miEn", "miEur"].forEach((id) => $(id).classList.remove("hl"));
+  CAM.style.transitionDuration = ""; CAM.style.transform = "";
+  $("browser").className = "browser dark";
+  page("pg-home", "<b>demo.mehiccdev.com</b>");
+  ["intro", "turn", "end"].forEach((id) => $(id).classList.remove("on"));
+  $("intro").innerHTML = "";
+  hideCaption(); $("chapters").classList.remove("in");
+  ["vLoc", "vFrom", "vTo"].forEach((id) => { $(id).textContent = S("ph"); $(id).classList.add("empty"); });
+  ["fLoc", "fFrom", "fTo"].forEach((id) => $(id).classList.remove("focus"));
+  $("found").textContent = "8";
+  $("qty").textContent = "0"; $("exAmt").textContent = money(0); $("total").textContent = money(450); $("exSeat").classList.remove("on");
+  $("tabNewN").textContent = "3"; $("cntConfirmed").textContent = "2";
+  $("paper").classList.remove("in"); $("modal").classList.remove("in");
+  [...$("seg").children].forEach((s) => s.classList.remove("cur"));
+  ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "eW", "eL", "eU", "notif", "mphone", "speed"].forEach((id) => $(id).classList.remove("in"));
+  document.querySelectorAll(".toast").forEach((x) => x.classList.remove("in"));
+  $("line").classList.remove("draw");
+  ["d1", "d2", "d3"].forEach((id) => { $(id).setAttribute("stroke-dasharray", "0 100"); });
+  document.querySelectorAll(".top .tb i").forEach((i) => (i.style.width = "0"));
+  ["kRev", "kRes", "kUtil", "kAvg"].forEach((id) => ($(id).textContent = id === "kRev" ? "0 KM" : id === "kUtil" ? "0%" : "0"));
+  const cur = $("cursor"); cur.style.transitionDuration = "0ms"; cur.style.left = "700px"; cur.style.top = "760px";
+}
+
+function timeline() {
+  cues = [];
+  OFF = 0; // every replay starts from an unshifted clock
+
+  /* 0 – 4.6 s · the phone keeps ringing */
+  at(0, () => $("intro").classList.add("on"));
+  const spots = [[150, 170], [700, 120], [330, 320], [780, 300], [500, 470]];
+  t("calls").forEach((txt, i) => at(200 + i * 480, () => {
+    const b = document.createElement("div");
+    b.className = "bubble"; b.textContent = txt;
+    b.style.left = spots[i][0] + "px"; b.style.top = spots[i][1] + "px"; b.style.rotate = `${i % 2 ? 1.5 : -1.5}deg`;
+    $("intro").appendChild(b); requestAnimationFrame(() => b.classList.add("in"));
+  }));
+  at(3000, () => $("intro").querySelectorAll(".bubble").forEach((b) => b.classList.add("gone")));
+  at(3400, () => $("turn").classList.add("on"));
+  at(4900, () => { $("turn").classList.remove("on"); $("intro").classList.remove("on"); });
+
+  /* 5.2 – 10.8 s · 1. the site in the guest's language and currency */
+  at(5200, () => { $("browser").classList.add("in"); $("chapters").classList.add("in"); caption(0); });
+
+  /* The site opens dark; the guest flips it to light and it stays light. */
+  const pinTopRight = (s) => ({ x: 1184 - 640 / s, y: 28 + FOCUS_Y / s });
+  at(5900, () => { cam(pinTopRight(1.5), 1.5); point($("themeBtn"), 0, 0, 1100); });
+  at(6900, () => {
+    click();
+    const b = $("browser");
+    b.classList.add("theming"); b.classList.remove("dark");
+    setTimeout(() => b.classList.remove("theming"), 900);
+  });
+  at(7300, () => cam({ x: 640, y: 330 }, 1.04));
+
+  OFF = 2400;
+  /*
+   * Zoom in to act, pull back to show the effect. Close enough on the menus
+   * that the click is legible, then wide enough that the whole page can be
+   * seen changing language and currency underneath.
+   * The browser's top-right corner is pinned to the frame's, so no empty
+   * stage shows above or beside it while zoomed.
+   */
+  at(6000, () => { cam(pinTopRight(1.5), 1.5); point($("langPill"), 0, 0, 1100); });
+  at(7100, () => { click(); $("langMenu").classList.add("in"); });
+  at(7600, () => { point($("miEn"), -20, 0, 450); $("miEn").classList.add("hl"); });
+  at(8100, () => { click(); siteLang = "en"; applySite(); $("langMenu").classList.remove("in"); $("miEn").classList.remove("hl"); });
+  at(8400, () => cam({ x: 640, y: 330 }, 1.04));
+  at(9500, () => { cam(pinTopRight(1.5), 1.5); point($("curPill"), 0, 0, 900); });
+  at(10400, () => { click(); $("curMenu").classList.add("in"); });
+  at(10800, () => { point($("miEur"), -20, 0, 450); $("miEur").classList.add("hl"); });
+  at(11300, () => { click(); siteCur = "EUR"; applySite(); $("curMenu").classList.remove("in"); $("miEur").classList.remove("hl"); });
+  at(11500, () => cam({ x: 640, y: 330 }, 1.04));
+  at(11900, () => {
+    // The note lands beside the switches once the frame has settled wide.
+    const m = local($("langPill")), scr = onScreen({ x: m.x, y: m.y + m.h / 2 });
+    const co = $("callout"); co.style.left = scr.x - 380 + "px"; co.style.top = scr.y + 26 + "px"; co.classList.add("in");
+  });
+  OFF = 10600;
+
+  /* 2. the guest picks a place and dates */
+  at(5200, () => caption(1));
+  at(5900, () => $("callout").classList.remove("in"));
+  at(6000, () => { const c = center($("search")); cam({ x: c.x, y: c.y - 120 }, 1.26); point($("fLoc"), -40, 6, 1100); });
+  at(7100, () => { click(); $("fLoc").classList.add("focus"); });
+  at(7350, () => { $("vLoc").textContent = S("vLoc"); $("vLoc").classList.remove("empty"); $("fLoc").classList.remove("focus"); });
+  at(7600, () => point($("fFrom"), -30, 6, 600));
+  at(8200, () => { click(); $("fFrom").classList.add("focus"); });
+  at(8450, () => { $("vFrom").textContent = S("vFrom"); $("vFrom").classList.remove("empty"); $("fFrom").classList.remove("focus"); });
+  at(8650, () => point($("fTo"), -30, 6, 550));
+  at(9200, () => { click(); $("fTo").classList.add("focus"); });
+  at(9450, () => { $("vTo").textContent = S("vTo"); $("vTo").classList.remove("empty"); $("fTo").classList.remove("focus"); });
+  at(9700, () => point($("go"), 0, 4, 550));
+  at(10300, () => click());
+
+  /* 10.6 – 16 s · 2. only free cars */
+  at(10600, () => { page("pg-results", "demo.mehiccdev.com<b>/vozila</b>"); cam(null, 1); caption(2); });
+  at(11000, () => point($("grid"), 380, 160, 900));
+  at(12200, () => FLEET.forEach((f, i) => { if (!f.free) setTimeout(() => $("cd" + i).classList.add("taken"), i * 70); }));
+  at(13500, () => FLEET.forEach((f, i) => { if (!f.free) $("cd" + i).classList.add("gone"); }));
+  at(13900, () => { collapseGrid(); countUp($("found"), 8, 4, 700, (n) => Math.round(n)); });
+  at(14800, () => cam({ x: 640, y: 260 }, 1.16));
+  at(15200, () => { point($("cd0"), 10, 10, 800); });
+  at(15900, () => $("cd0").classList.add("hover"));
+  at(16300, () => click());
+
+  /* 16.6 – 22.4 s · 3. extras and price */
+  at(16600, () => { page("pg-car", "demo.mehiccdev.com<b>/vozila/skoda-octavia</b>"); $("cd0").classList.remove("hover"); cam(null, 1); caption(3); });
+  at(17600, () => { cam($("vside"), 1.24); point($("exSeat"), 180, 0, 1000); });
+  at(18800, () => { click(); $("exSeat").classList.add("on"); $("qty").textContent = "1"; countUp($("exAmt"), 0, 30, 450, money); countUp($("total"), 450, 480, 450, money); });
+  at(19500, () => { click(); $("qty").textContent = "2"; countUp($("exAmt"), 30, 60, 450, money); countUp($("total"), 480, 510, 450, money); });
+  at(20300, () => { cam($("send"), 1.3); point($("send"), 0, 2, 800); });
+  at(21200, () => { click(); $("send").classList.add("press"); });
+  at(21350, () => $("send").classList.remove("press"));
+  at(21500, () => { cam(null, 1); toast("toastSent", 2000); });
+
+  /* 23 – 29.4 s · 4. the request reaches the panel */
+  at(23000, () => { page("pg-admin", "demo.mehiccdev.com<b>/admin</b>"); caption(4); });
+  at(23450, () => $("notif").classList.add("in"));
+  at(26000, () => $("notif").classList.remove("in"));
+  at(23700, () => { $("fresh").classList.remove("pre"); $("bdg").textContent = "4"; $("bdg").classList.add("bump"); $("tabNewN").textContent = "4"; });
+  at(24050, () => $("bdg").classList.remove("bump"));
+  at(24400, () => { cam($("fresh"), 1.12); point($("freshOk"), 0, 0, 1000); });
+  at(25800, () => { click(); $("freshOk").classList.add("press"); });
+  at(25950, () => {
+    $("freshOk").classList.add("hide"); $("freshNo").classList.add("hide"); $("fresh").classList.add("ok");
+    $("freshSt").className = "rb ok"; $("freshSt").textContent = t("stOk");
+    $("bdg").textContent = "3"; $("tabNewN").textContent = "3"; $("cntConfirmed").textContent = "3";
+  });
+  at(26600, () => { cam(null, 1); toast("toastOk", 2300); });
+  // A confirmed booking leaves the pending list, as it does in the panel.
+  at(27400, () => $("fresh").classList.add("pre"));
+
+  /* 29.4 – 35 s · 5. the contract */
+  at(29400, () => { page("pg-contracts", "demo.mehiccdev.com<b>/admin/ugovori</b>"); caption(5); });
+  at(30200, () => { cam($("km"), 1.35); point($("km"), 40, 0, 1000); });
+  at(31300, () => click());
+  at(31800, () => { cam($("pdfBtn"), 1.3); point($("pdfBtn"), 0, 0, 800); });
+  at(32700, () => { click(); $("pdfBtn").classList.add("press"); });
+  at(32850, () => $("pdfBtn").classList.remove("press"));
+  at(33000, () => { cam({ x: 760, y: 330 }, 1.08); $("paper").classList.add("in"); });
+
+  /* 35.2 – 41.6 s · 6. who is on the road, who is late */
+  at(35200, () => { $("paper").classList.remove("in"); page("pg-active", "demo.mehiccdev.com<b>/admin?filter=aktivne</b>"); cam(null, 1); caption(6); });
+  at(36100, () => { cam($("lateRow"), 1.12); point($("lateRowBtn"), 0, 0, 1000); });
+  at(37400, () => { click(); $("modal").classList.add("in"); cam(null, 1.12); });
+  at(38000, () => point($("seg").children[3], 0, 0, 700));
+  at(38800, () => { click(); $("seg").children[3].classList.add("cur"); });
+  at(39300, () => point($("mbtn"), 0, 0, 600));
+  at(40000, () => { click(); $("mbtn").classList.add("press"); });
+  at(40150, () => { $("mbtn").classList.remove("press"); $("modal").classList.remove("in"); $("lateRow").classList.remove("late"); $("lateRowSt").className = "rb done"; $("lateRowSt").textContent = t("stDone"); $("lateRowBtn").classList.add("hide"); });
+  at(40400, () => { cam(null, 1); toast("toastFree", 2000); });
+
+  /* 41.8 – 47 s · 7. analytics */
+  at(41800, () => { page("pg-stats", "demo.mehiccdev.com<b>/admin/analitika</b>"); caption(7); point($("line"), 200, 40, 1200); });
+  at(42300, () => {
+    countUp($("kRev"), 0, 24860, 1300, km);
+    countUp($("kRes"), 0, 41, 1300, (n) => Math.round(n));
+    countUp($("kUtil"), 0, 78, 1300, (n) => Math.round(n) + "%");
+    countUp($("kAvg"), 0, 4.6, 1300, (n) => n.toFixed(1).replace(".", lang === "bs" ? "," : "."));
+    $("line").classList.add("draw");
+  });
+  at(42700, () => {
+    $("d1").setAttribute("stroke-dasharray", "63 100");
+    $("d2").setAttribute("stroke-dasharray", "28.5 100"); $("d2").setAttribute("stroke-dashoffset", "-63");
+    $("d3").setAttribute("stroke-dasharray", "8.5 100"); $("d3").setAttribute("stroke-dashoffset", "-91.5");
+    document.querySelectorAll(".top .tb i").forEach((i) => (i.style.width = i.dataset.w + "%"));
+  });
+  at(43600, () => cam({ x: 640, y: 360 }, 1.08));
+  at(46000, () => cam(null, 1));
+
+  /* 9. fast, and ready for Google */
+  at(47200, () => {
+    page("pg-home", "<b>demo.mehiccdev.com</b>"); caption(8);
+    // The cursor has nothing to do here, so it leaves the frame.
+    const c = $("cursor"); c.style.transitionDuration = "700ms"; c.style.left = "1240px"; c.style.top = "780px";
+  });
+  at(47700, () => $("speed").classList.add("in"));
+  [...Array(4).keys()].forEach((i) => at(48300 + i * 260, () => {
+    const g = $("gauges").children[i];
+    g.querySelector(".arc").setAttribute("stroke-dashoffset", "0");
+    countUp(g.querySelector("b"), 0, 100, 1300, (n) => Math.round(n));
+  }));
+  at(50400, () => cam({ x: 700, y: 290 }, 1.12));
+  at(52000, () => { cam(null, 1); $("speed").classList.remove("in"); });
+
+  OFF += 5200;
+
+  /* 47.2 – 50.4 s · everything at once */
+  at(47200, () => {
+    hideCaption(); $("chapters").classList.remove("in");
+    $("browser").classList.add("summary");
+    const c = $("cursor"); c.style.transitionDuration = "800ms"; c.style.top = "800px";
+  });
+  at(47700, () => $("mphone").classList.add("in"));
+  ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8"].forEach((id, i) => at(48000 + i * 140, () => $(id).classList.add("in")));
+
+  /* 50.4 – 52 s · end card */
+  at(50400, () => $("end").classList.add("on"));
+  at(50700, () => $("eW").classList.add("in"));
+  at(51000, () => $("eL").classList.add("in"));
+  at(51300, () => $("eU").classList.add("in"));
+
+  cues.sort((a, b) => a.ms - b.ms);
+}
+
+/* =====================================================================
+ * CLOCK
+ * ===================================================================== */
+function tick(now) {
+  const el = now - start;
+  while (next < cues.length && cues[next].ms <= el) { cues[next].fn(); next++; }
+  $("progress").style.width = Math.min(100, (el / (TOTAL + 2500)) * 100) + "%";
+  if (el >= TOTAL + 2500) { run(); return; }
+  raf = requestAnimationFrame(tick);
+}
+function run() {
+  cancelAnimationFrame(raf); reset(); timeline();
+  next = 0; start = performance.now(); paused = 0; playing = true; applyCopy();
+  raf = requestAnimationFrame(tick);
+}
+function toggle() {
+  if (playing) { playing = false; paused = performance.now() - start; cancelAnimationFrame(raf); }
+  else { playing = true; start = performance.now() - paused; raf = requestAnimationFrame(tick); }
+  applyCopy();
+}
+/* For anyone who asked for less motion: the closing summary, held still. */
+function still() {
+  cancelAnimationFrame(raf); reset(); timeline();
+  cues.filter((c) => c.ms <= 65100).forEach((c) => c.fn());
+  playing = false; applyCopy(); $("progress").style.width = "0";
+}
+function fit() { $("stage").style.transform = `scale(${$("viewport").clientWidth / 1280})`; }
+
+$("play").addEventListener("click", toggle);
+$("replay").addEventListener("click", run);
+$("lang-bs").addEventListener("click", () => { lang = "bs"; run(); });
+$("lang-en").addEventListener("click", () => { lang = "en"; run(); });
+window.addEventListener("resize", fit);
+document.addEventListener("visibilitychange", () => { if (document.hidden && playing) toggle(); });
+
+fit();
+
+/* ── Ugradnja u mehiccdev.com ─────────────────────────────────────────────
+   ?embed  : prezentacija stoji unutar sekcije naslovnice
+   ?lang=en: početni jezik prati jezik sajta
+   Sajt šalje poruke: "lang" (promjena jezika), "visible" i "hidden" (kad
+   sekcija uđe ili izađe iz vidnog polja). Prezentacija javlja svoju visinu,
+   da okvir na sajtu bude tačno toliki. */
+const PARAMS = new URLSearchParams(location.search);
+const EMBED = PARAMS.has("embed");
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (PARAMS.get("lang") === "en") lang = "en";
+if (EMBED) {
+  document.documentElement.classList.add("embed");
+  document.documentElement.dataset.theme = "light";   // uvijek svijetla, kao naslovnica
+}
+
+let started = false;
+function startOrResume() {
+  if (REDUCED) return;
+  if (!started) { started = true; run(); }
+  else if (!playing) toggle();
+}
+
+if (REDUCED) still();
+else if (EMBED) { still(); }          // čeka da sekcija uđe u vidno polje
+else { started = true; run(); }
+
+if (EMBED) {
+  window.addEventListener("message", (e) => {
+    if (e.origin !== location.origin) return;
+    const m = e.data || {};
+    if (m.type === "lang" && (m.lang === "bs" || m.lang === "en") && m.lang !== lang) {
+      lang = m.lang;
+      if (started && !REDUCED) run(); else { still(); applyCopy(); }
+    }
+    if (m.type === "visible") startOrResume();
+    if (m.type === "hidden" && playing) toggle();
+  });
+
+  const reportHeight = () => parent.postMessage(
+    { type: "demo-height", h: Math.ceil(document.documentElement.scrollHeight) }, location.origin);
+  new ResizeObserver(reportHeight).observe(document.body);
+  window.addEventListener("load", reportHeight);
+  reportHeight();
+}
+</script>
+</body>
+</html>
