@@ -1,32 +1,62 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Naglasak u naslovima: duboka plava umjesto sive
+  mehiccdev — Prikaz sistema kao plejer, vidljiva tračnica
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla + pregled):
-  app/globals.css
-  components/sections/Hero.tsx
-  components/sections/SystemDemo.tsx
+ŠTA JE U ZIP-u (4 fajla + pregled):
+  components/sections/SystemDemo.tsx   sekcija kao jedan plejer
+  public/demo/rent-a-car.html          prezentacija bez svojih kontrola
+  components/ui/SectionRail.tsx        oznake za stilove tračnice
+  app/globals.css                      boje tračnice na naslovnici
 
-ŠTA JE PROMIJENJENO:
-Drugi, naglašeni dio svih naslova na naslovnici sada je u boji
-pozadine prikaza sistema:
-    #0F3554  (duboka okean plava)
-umjesto dosadašnje svijetlo sive.
+════════ 1. KLIZAČ DESNO: UKLONJEN ════════
+Okvir je bio za par piksela niži od sadržaja prezentacije, pa je
+preglednik dodavao klizač. Sada je scena tačno u omjeru 16:9, kao i
+sama prezentacija, a klizanje unutar okvira je zaključano.
+Izmjereno: sadržaj 611 px, okvir 611 px.
 
-Važi za glavni naslov u heroju ("Treba mu sistem.") i za svih deset
-naslova sekcija. Izmjereno u pregledniku: svaki naglašeni dio ima
-tačno ovu boju, nijedan nije ostao siv.
+Uklonjen je i sivi pojas koji je sjena prezentacije bacala ispod
+kontrola.
 
-Zašto radi: dovoljno je tamna da se čita jednako dobro kao ostatak
-naslova, a opet se jasno razlikuje od crnog teksta. Uz to veže
-naslove za prikaz sistema u pokretu, jer je to ista boja.
+════════ 2. TRAČNICA LIJEVO: VIDLJIVA ════════
+Crtice su bile pravljene za tamnu pozadinu, pa su na bijeloj
+naslovnici gotovo nestajale. Sada su neaktivne crtice srednje sive,
+aktivna je tamno plava i duža, a njena oznaka (npr. "Rent-a-Car")
+čitljiva. Na telefonu je i linija napretka ispod navigacije tamna.
+Na podstranicama tračnica ostaje kakva je bila.
 
-Pregled svih naslova: pregled-naslova.png
+════════ 3. DUGMAD: SVE U JEDNOM PLEJERU ════════
+Ranije su Pauza i Ispočetka bili unutar prezentacije, a dugme i
+cijena ispod nje, odvojeno. Sada je sve jedna kartica:
+
+  ┌───────────────────────────────────────────────┐
+  │            prezentacija, 16:9                  │
+  ├───────────────────────────────────────────────┤
+  │ (❚❚)(↺) │ Paketi od 1.500 KM     [Pogledajte  │
+  │          │ Cijene, paketi i ...     sistem →]  │
+  └───────────────────────────────────────────────┘
+
+  • okruglo tamno dugme: Pauza / Pokreni, ikonica prati stvarno
+    stanje prezentacije
+  • obrubljeno dugme: Ispočetka
+  • cijena i kratki opis u sredini
+  • glavno dugme desno
+
+Na telefonu se traka slaže u dva reda, a dugme ide preko cijele
+širine. Kartica ima tanak sivi rub i mekanu, neobojenu sjenu.
+
+Sve provjereno u pregledniku: pauza, nastavak, ponovno pokretanje,
+promjena jezika i automatsko pokretanje kad sekcija dođe u vid.
+
+════════ PRIMIJETIO SAM ════════
+Na telefonu plutajuća dugmad (WhatsApp i strelica na vrh) prekriju
+dugme "Pogledajte sistem i cijene" kad se skrola baš do njega. To je
+do plutajućih dugmadi, ne do ove sekcije. Predlažem da WhatsApp na
+telefonu postane samo okrugla ikonica bez natpisa. Reci ako hoćeš.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "style: naglasak u naslovima u dubokoj plavoj"
+  git commit -m "feat: prikaz sistema kao plejer i vidljiva tracnica"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

@@ -584,8 +584,14 @@ body {
    Bez vlastite pozadine i razmaka, jer stoji unutar sekcije naslovnice.
    Jezik se bira na sajtu, pa su BS/EN dugmad ovdje skrivena, a i napomena
    ispod, jer sekcija ima svoj tekst. */
-html.embed body { padding: 0 0 4px; background: transparent; gap: 14px; justify-content: flex-start; }
-html.embed #lang-bs, html.embed #lang-en, html.embed #note { display: none !important; }
+/* Na sajtu prezentacija je samo scena: kontrole, okvir i sjenu daje plejer
+   na naslovnici. overflow: hidden uklanja klizač koji se pojavljivao kad bi
+   sadržaj bio koji piksel viši od okvira. */
+html.embed, html.embed body { overflow: hidden; height: 100%; }
+html.embed body { padding: 0; gap: 0; background: transparent; justify-content: flex-start; }
+html.embed .frame { max-width: none; }
+html.embed .viewport { border-radius: 0; box-shadow: none; }
+html.embed .controls, html.embed #note { display: none !important; }
 </style>
 </head>
 <body>
@@ -1595,7 +1601,20 @@ if (EMBED) {
     }
     if (m.type === "visible") startOrResume();
     if (m.type === "hidden" && playing) toggle();
+    // dugmad plejera na sajtu; klik je izričita želja posjetioca, pa radi
+    // i kad su animacije u sistemu isključene
+    if (m.type === "toggle") { if (!started) { started = true; run(); } else toggle(); }
+    if (m.type === "replay") { started = true; run(); }
   });
+
+  // plejer na sajtu prikazuje dugme Pauza ili Nastavi prema ovom stanju
+  let lastState = null;
+  setInterval(() => {
+    if (playing !== lastState) {
+      lastState = playing;
+      parent.postMessage({ type: "demo-state", playing }, location.origin);
+    }
+  }, 250);
 
   const reportHeight = () => parent.postMessage(
     { type: "demo-height", h: Math.ceil(document.documentElement.scrollHeight) }, location.origin);

@@ -300,3 +300,13 @@ html.light #vrijednost [class*="bg-red"]   { background-color: #F9FAFB !importan
 
 /* ── inicijali u kontaktu: tamni krugovi umjesto plavog gradijenta ───────── */
 html.light #kontakt :is([class*="from-blue-600"], [class*="from-indigo-500"]) { background: #0F172A !important; }
+
+/* ── tračnica sekcija na svijetloj naslovnici ────────────────────────────────
+   Crtice su bile pravljene za tamnu pozadinu, pa su na bijeloj nestajale.
+   Neaktivne su sada srednje sive, aktivna je tamno plava i duža, a njena
+   oznaka čitljiva. Podstranice (tamne) zadržavaju svoje boje. */
+html.light .section-rail button > span:first-child { background-color: #CBD5E1 !important; }
+html.light .section-rail button:hover > span:first-child { background-color: #64748B !important; }
+html.light .section-rail button[aria-current="true"] > span:first-child { background-color: #0F172A !important; }
+html.light .section-rail button > span:last-child { color: #0F172A !important; }
+html.light .section-progress > div { background: #0F172A !important; }

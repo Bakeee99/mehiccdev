@@ -85,7 +85,7 @@ export function SectionRail({ items }: { items: readonly RailItem[] }) {
   return (
     <>
       {/* ── MOBITEL: linija napretka ispod navbara ── */}
-      <div aria-hidden className="lg:hidden fixed top-[68px] inset-x-0 z-30 h-[2px] bg-transparent">
+      <div aria-hidden className="section-progress lg:hidden fixed top-[68px] inset-x-0 z-30 h-[2px] bg-transparent">
         <div ref={barRef}
              className="h-full origin-left bg-gradient-to-r from-brand-600 to-brand-400"
              style={{ transform: "scaleX(0)" }} />
@@ -94,7 +94,7 @@ export function SectionRail({ items }: { items: readonly RailItem[] }) {
       {/* ── DESKTOP: tračnica sekcija ── */}
       <nav aria-label="Sekcije stranice"
            aria-hidden={!past}
-           className={`hidden lg:flex fixed left-6 xl:left-10 top-1/2 -translate-y-1/2 z-30 flex-col gap-3
+           className={`section-rail hidden lg:flex fixed left-6 xl:left-10 top-1/2 -translate-y-1/2 z-30 flex-col gap-3
                        transition-[opacity,transform] duration-500
                        ${past ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3 pointer-events-none"}`}>
         {items.map((item) => {
