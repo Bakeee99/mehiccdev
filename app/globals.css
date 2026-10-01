@@ -196,7 +196,7 @@ html.light :is(.bg-\[\#080D1E\], .bg-\[\#0A122B\], .bg-\[\#070B1A\], .bg-\[\#070
 }
 
 /* ── prostor ─────────────────────────────────────────────────────────────── */
-html.light main > section:not(.ink):not(.hero-light) {
+html.light main > section:not(.ink):not(.hero-light):not(.strip) {
   padding-top: clamp(6rem, 9vw, 9rem) !important;
   padding-bottom: clamp(6rem, 9vw, 9rem) !important;
 }
@@ -310,3 +310,26 @@ html.light .section-rail button:hover > span:first-child { background-color: #64
 html.light .section-rail button[aria-current="true"] > span:first-child { background-color: #0F172A !important; }
 html.light .section-rail button > span:last-child { color: #0F172A !important; }
 html.light .section-progress > div { background: #0F172A !important; }
+
+/* ── traka s tehnologijama (TechMarquee.tsx) ─────────────────────────────── */
+@keyframes tech-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.tech-marquee {
+  /* ivice blijede u bijelo, logotipi ne nestaju naglo */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+.tech-track { animation: tech-scroll 45s linear infinite; }
+.tech-marquee:hover .tech-track { animation-play-state: paused; }
+
+/* jednobojno i mirno; na prelazak mišem prava boja brenda */
+.tech-item { color: #64748B; transition: color 200ms ease; }
+.tech-item:hover { color: var(--brand); }
+
+/* isključene animacije: traka stoji, logotipi se prelamaju u redove */
+@media (prefers-reduced-motion: reduce) {
+  .tech-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; }
+  .tech-track > ul:last-child { display: none; }
+  .tech-track > ul { flex-wrap: wrap; justify-content: center; row-gap: 1rem; }
+  .tech-marquee { -webkit-mask-image: none; mask-image: none; }
+}

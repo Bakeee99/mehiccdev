@@ -1,39 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Hero: telefoni jedan pored drugog, po referenci
+  mehiccdev — Traka s tehnologijama ispod heroja
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
-  components/sections/Hero.tsx
+ŠTA JE U ZIP-u (3 fajla + pregled):
+  components/sections/TechMarquee.tsx   NOVO: traka koja klizi
+  app/page.tsx                          traka odmah ispod heroja
+  app/globals.css                       animacija i boje trake
 
-════════ RASPORED ════════
-Telefoni se više NE preklapaju. Stoje jedan pored drugog s malim
-razmakom, kao na referenci:
-  • srednji je najveći i najviši
-  • bočni su manji, spušteni i blago nagnuti prema van
-  • vidi se gornji dio, a dno postepeno nestaje
+════════ ŠTA PRIKAZUJE ════════
+Natpis "Tehnologije i platforme s kojima radimo", a ispod 12 logotipa
+koji beskonačno klize ulijevo:
 
-════════ IZGLED TELEFONA ════════
-Po uzoru na referencu, tri sloja:
-  1. srebrni okvir, svijetli gradijent kao aluminijum
-  2. tanak crni rub oko ekrana
-  3. ekran sa statusnom trakom: 9:41 lijevo, dinamičko ostrvo u
-     sredini, signal i baterija desno
-Ikonice su tamne na svijetlim ekranima i svijetle na tamnom.
+  Next.js · React · TypeScript · Tailwind CSS · Vercel · Node.js ·
+  Resend · Zod · Google · Meta · Instagram · WhatsApp
 
-════════ DNO: ZAMUĆENJE ════════
-Dno se ne utapa samo u bijelo nego se postepeno zamućuje, kao na
-referenci. Dva sloja:
-  1. zamućenje koje jača prema dnu
-  2. preliv u bijelo preko njega, da donja ivica potpuno nestane
+Prvih osam su alati od kojih je sajt i aplikacije napravljeni, a
+zadnja četiri platforme za marketing i kontakt.
 
-════════ TELEFON ════════
-Na malim ekranima bočni telefoni su malo uži i manje nagnuti, da ih
-ivica ekrana ne odsiječe. Sva tri se vide cijela, jedan pored drugog.
+ZAŠTO NE BRENDOVI KLIJENATA ILI VELIKIH FIRMI: traka s logotipima
+ispod heroja se čita kao "naši klijenti". Logotipi poput Nikea bi tu
+zavaravali. Alati su iskreni, a natpis to i kaže.
+
+════════ IZGLED I PONAŠANJE ════════
+  • jednobojno sivo i mirno, da ne vuče pažnju s heroja
+  • na prelazak mišem traka stane, a logotip dobije svoju pravu boju
+    (npr. TypeScript plavu, Instagram rozu)
+  • ivice trake blijede u bijelo, logotipi ne nestaju naglo
+  • niz je ispisan dvaput i traka se pomjera za tačno pola širine,
+    pa je spoj nevidljiv (izmjereno: oba niza po 1918 px)
+  • čitači ekrana čuju niz samo jednom
+  • uz isključene animacije traka stoji i prelama se u redove
+
+Logotipi su zvanični oblici iz kolekcije Simple Icons, ugrađeni kao
+SVG putanje, bez dodatnog paketa i bez slika za učitavanje.
+
+════════ KAKO DA PROMIJENIŠ SPISAK ════════
+U TechMarquee.tsx je niz TECH. Svaka stavka je jedan red: obriši red
+za alat koji ne želiš prikazati. Ako trebaš novi, javi pa ga dodam
+(treba mu zvanični oblik logotipa).
+
+Moja preporuka: Zod i Resend su alati koje vlasnik firme neće
+prepoznati. Ako želiš traku koju razumiju i klijenti, ostavi Next.js,
+React, TypeScript, Tailwind, Vercel, Google, Metu, Instagram i
+WhatsApp.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: telefoni u heroju jedan pored drugog sa zamucenjem"
+  git commit -m "feat: traka s tehnologijama ispod heroja"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

@@ -6,6 +6,7 @@
 
 import { HomeRail }      from "@/components/sections/HomeRail";
 import { SystemDemo } from "@/components/sections/SystemDemo";
+import { TechMarquee } from "@/components/sections/TechMarquee";
 import { Navbar }       from "@/components/sections/Navbar";
 import { Hero }         from "@/components/sections/Hero";
 import { Services }     from "@/components/sections/Services";
@@ -25,6 +26,7 @@ export default function HomePage() {
       <Navbar />
       <HomeRail />
       <Hero />
+      <TechMarquee />
       <About />
       <SystemDemo />
       <Services />
