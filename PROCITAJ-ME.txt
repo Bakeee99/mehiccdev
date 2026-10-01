@@ -1,28 +1,39 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Prikaz sistema popunjava cijeli okvir
+  mehiccdev — Hero: telefoni jedan pored drugog, po referenci
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  public/demo/rent-a-car.html
+ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
+  components/sections/Hero.tsx
 
-UZROK: prezentacija je računala veličinu scene prije nego što se
-uključio ugrađeni način rada, koji okvir proširi. Scena je ostajala
-izračunata za uži okvir, pa je desno i dolje ostajao pojas druge
-nijanse plave.
+════════ RASPORED ════════
+Telefoni se više NE preklapaju. Stoje jedan pored drugog s malim
+razmakom, kao na referenci:
+  • srednji je najveći i najviši
+  • bočni su manji, spušteni i blago nagnuti prema van
+  • vidi se gornji dio, a dno postepeno nestaje
 
-POPRAVKA: veličina se preračuna odmah nakon uključivanja ugrađenog
-načina, i ponovo svaki put kad se okvir promijeni (npr. kad
-posjetilac suzi prozor ili okrene telefon).
+════════ IZGLED TELEFONA ════════
+Po uzoru na referencu, tri sloja:
+  1. srebrni okvir, svijetli gradijent kao aluminijum
+  2. tanak crni rub oko ekrana
+  3. ekran sa statusnom trakom: 9:41 lijevo, dinamičko ostrvo u
+     sredini, signal i baterija desno
+Ikonice su tamne na svijetlim ekranima i svijetle na tamnom.
 
-IZMJERENO u pregledniku, okvir i scena:
-  desktop 1440 px   1086 × 611  =  1086 × 611
-  tablet  1024 px    958 × 539  =   958 × 539
-  telefon  390 px    390 × 219  =   390 × 219
+════════ DNO: ZAMUĆENJE ════════
+Dno se ne utapa samo u bijelo nego se postepeno zamućuje, kao na
+referenci. Dva sloja:
+  1. zamućenje koje jača prema dnu
+  2. preliv u bijelo preko njega, da donja ivica potpuno nestane
+
+════════ TELEFON ════════
+Na malim ekranima bočni telefoni su malo uži i manje nagnuti, da ih
+ivica ekrana ne odsiječe. Sva tri se vide cijela, jedan pored drugog.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: prikaz sistema popunjava cijeli okvir"
+  git commit -m "feat: telefoni u heroju jedan pored drugog sa zamucenjem"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

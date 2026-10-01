@@ -66,28 +66,44 @@ const T: Record<"bs" | "en", Content> = {
   },
 };
 
-/* Meka, duboka sjena telefona: dva sloja, kratki i dugi, bez boje. */
+/* Meka sjena telefona: kratki sloj uz rub i dugi, blijedi ispod. */
 const PHONE_SHADOW =
-  "0 2px 6px rgba(15,23,42,0.06), 0 30px 60px -20px rgba(15,23,42,0.28)";
+  "0 1px 2px rgba(15,23,42,0.08), 0 24px 50px -18px rgba(15,23,42,0.30)";
 
-/* ── Okvir telefona ──────────────────────────────────────────────────────────
-   Tanak tamni rub i zaobljeni uglovi. Screenshotovi nemaju statusnu traku,
-   pa je dodajemo iznad slike, u boji vrha same stranice, i u nju stavljamo
-   dinamičko ostrvo. Tako ostrvo ništa ne prekriva, kao na pravom telefonu.
-   Slika se servira netaknuta (unoptimized), oštra i na Retina ekranima.  */
+/* ── Okvir telefona, po uzoru na referencu ──────────────────────────────────
+   Tri sloja, od spolja prema unutra:
+     1. srebrni okvir (svijetli gradijent, kao aluminijum)
+     2. tanak crni bezel
+     3. ekran: statusna traka s vremenom, ostrvom i ikonicama, pa slika
+
+   Statusnu traku crtamo sami, jer screenshotovi je nemaju. Boja trake prati
+   vrh stranice na slici, a ikonice su tamne na svijetloj ili svijetle na
+   tamnoj traci. Slika se servira netaknuta (unoptimized), oštra na Retini. */
 function Phone({ src, alt, bar = "light", priority = false }: {
   src: string; alt: string; bar?: "light" | "dark"; priority?: boolean;
 }) {
+  const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
   return (
-    <div className="relative rounded-[2.6rem] bg-[#0F172A] p-[7px]" style={{ boxShadow: PHONE_SHADOW }}>
-      <div className="relative overflow-hidden rounded-[2.15rem]">
-        <div className={`relative h-[26px] sm:h-[34px] ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}>
-          <span aria-hidden
-                className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[32%] h-[14px] sm:h-[18px] rounded-full bg-[#0F172A]" />
-        </div>
-        <div className="relative aspect-[1179/2556] bg-white">
-          <Image src={src} alt={alt} fill unoptimized priority={priority}
-                 className="object-cover object-top" />
+    <div
+      className="rounded-[2.9rem] p-[4px]"
+      style={{ background: "linear-gradient(145deg, #F4F5F7 0%, #D9DCE1 45%, #EEF0F3 100%)", boxShadow: PHONE_SHADOW }}
+    >
+      <div className="rounded-[2.65rem] bg-black p-[6px]">
+        <div className="relative overflow-hidden rounded-[2.2rem]">
+          {/* statusna traka */}
+          <div className={`relative flex items-center justify-between px-[9%] h-[30px] sm:h-[38px] ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}>
+            <span className="text-[9px] sm:text-[12px] font-semibold tracking-tight" style={{ color: ink }}>9:41</span>
+            <span aria-hidden className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[30%] h-[15px] sm:h-[20px] rounded-full bg-black" />
+            <span className="flex items-center gap-[3px]" aria-hidden>
+              <svg width="15" height="10" viewBox="0 0 17 12" className="w-[11px] sm:w-[15px]"><g fill={ink}><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="4.5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="9" y="3" width="3" height="9" rx=".8"/><rect x="13.5" y="0" width="3" height="12" rx=".8"/></g></svg>
+              <svg width="20" height="10" viewBox="0 0 26 12" className="w-[14px] sm:w-[20px]"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke={ink} strokeOpacity=".45" strokeWidth="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill={ink}/><rect x="23.5" y="4" width="1.8" height="4" rx=".9" fill={ink} fillOpacity=".45"/></svg>
+            </span>
+          </div>
+          {/* ekran */}
+          <div className="relative aspect-[1179/2556] bg-white">
+            <Image src={src} alt={alt} fill unoptimized priority={priority}
+                   className="object-cover object-top" />
+          </div>
         </div>
       </div>
     </div>
@@ -178,39 +194,42 @@ export function Hero() {
       </div>
 
       {/* ── 5. tri telefona ──────────────────────────────────────────────────
-          Srednji je naprijed i najveći. Bočni su umanjeni, nagnuti prema van
-          i spušteni, pa izgledaju kao da stoje iza njega. Donji dio sekcije
-          se utapa u bijelo, kao na referenci. */}
-      <motion.div
-        {...rise(0.28)}
-        className="relative mx-auto mt-16 sm:mt-20 max-w-5xl px-6"
-      >
-        {/* visina je ograničena pa se vidi gornji dio telefona, kao na
-            referenci; ostatak nestaje ispod ruba sekcije */}
-        <div className="relative flex items-start justify-center overflow-hidden
-                        h-[340px] sm:h-[460px] lg:h-[540px]">
-          {/* lijevi */}
-          <div className="relative z-0 w-[34%] max-w-[250px] -mr-[9%] mt-[9%]
-                          -rotate-[7deg] scale-[0.9] origin-bottom-right">
+          Po referenci: stoje JEDAN PORED DRUGOG s malim razmakom, bez
+          preklapanja. Srednji je najveći i najviši, bočni su manji, spušteni
+          i blago nagnuti prema van. Vidi se gornji dio, a dno se postepeno
+          zamućuje i nestaje u bijelom. */}
+      <motion.div {...rise(0.28)} className="relative mx-auto mt-16 sm:mt-20 max-w-5xl px-4 sm:px-6">
+        <div className="relative flex items-start justify-center gap-[3%] sm:gap-[2.5%] pt-2
+                        h-[300px] sm:h-[440px] lg:h-[520px] overflow-hidden">
+          {/* lijevi: manji, niže, nagnut ulijevo */}
+          <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] -rotate-[3deg] sm:-rotate-[5deg] origin-bottom">
             <Phone src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} />
           </div>
 
-          {/* srednji */}
-          <div className="relative z-10 w-[40%] max-w-[290px]">
+          {/* srednji: najveći i najviši */}
+          <div className="w-[33%] sm:w-[35%] max-w-[300px]">
             <Phone src="/portfolio/maximum-poslije-mob.webp" alt={d.shots.center} priority />
           </div>
 
-          {/* desni */}
-          <div className="relative z-0 w-[34%] max-w-[250px] -ml-[9%] mt-[9%]
-                          rotate-[7deg] scale-[0.9] origin-bottom-left">
+          {/* desni: manji, niže, nagnut udesno */}
+          <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] rotate-[3deg] sm:rotate-[5deg] origin-bottom">
             <Phone src="/portfolio/maximum-hero-mob.webp" alt={d.shots.right} bar="dark" />
           </div>
         </div>
 
-        {/* utapanje u bijelo pri dnu */}
-        <div aria-hidden
-             className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%]
-                        bg-gradient-to-b from-white/0 via-white/80 to-white" />
+        {/* Zamućenje pri dnu, u dva sloja:
+              1. zamućenje koje jača prema dnu (maska ga postepeno uvodi)
+              2. preliv u bijelo preko njega, da donja ivica potpuno nestane
+            Zamućenje je u style, jer stranica ima pravilo koje gasi klase
+            sa zamućenjem. */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%]"
+             style={{
+               backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+               maskImage: "linear-gradient(to bottom, transparent 0%, black 65%)",
+               WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 65%)",
+             }} />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%]"
+             style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 55%, #FFFFFF 100%)" }} />
       </motion.div>
 
       {/* sekcija se završava ispod telefona, bez dodatnog prostora */}
