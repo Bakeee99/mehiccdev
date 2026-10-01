@@ -140,7 +140,7 @@ export function Hero() {
         >
           {d.h1a}
           {/* drugi dio uvijek u svom redu, i na telefonu */}
-          <span className="block text-[#94A3B8]">{d.h1b}</span>
+          <span className="block text-[#0F3554]">{d.h1b}</span>
         </motion.h1>
 
         {/* ── 3. podnaslov ── */}

@@ -1,56 +1,32 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Prikaz sistema u pokretu, ispod sekcije "O nama"
+  mehiccdev — Naglasak u naslovima: duboka plava umjesto sive
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (3 fajla + pregled):
-  components/sections/SystemDemo.tsx   NOVO: sekcija s prikazom
-  public/demo/rent-a-car.html          tvoja prezentacija, prilagođena
-  app/page.tsx                         nova sekcija umjesto stare promo
+  app/globals.css
+  components/sections/Hero.tsx
+  components/sections/SystemDemo.tsx
 
-Stara sekcija components/sections/RentACarPromo.tsx se više ne
-koristi. Obriši je komandom ispod (git rm), da ne ostane mrtav kod.
+ŠTA JE PROMIJENJENO:
+Drugi, naglašeni dio svih naslova na naslovnici sada je u boji
+pozadine prikaza sistema:
+    #0F3554  (duboka okean plava)
+umjesto dosadašnje svijetlo sive.
 
-════════ ŠTA JE TO ════════
-Fajl koji si poslao nije video nego animirana HTML prezentacija:
-počinje porukom "Imate li auto za vikend?" i za oko 65 sekundi
-prolazi cijeli tok, od izbora teme, jezika i datuma, preko slobodnih
-vozila i opreme, do admin panela, ugovora i aktivnih rezervacija.
+Važi za glavni naslov u heroju ("Treba mu sistem.") i za svih deset
+naslova sekcija. Izmjereno u pregledniku: svaki naglašeni dio ima
+tačno ovu boju, nijedan nije ostao siv.
 
-Sekcija stoji tačno gdje je bila stara "Naš sistem za rent-a-car",
-s istim naslovom, tekstom, dugmetom "Pogledajte sistem i cijene" i
-pilulom s cijenom. Samo je opis zamijenjen prikazom.
+Zašto radi: dovoljno je tamna da se čita jednako dobro kao ostatak
+naslova, a opet se jasno razlikuje od crnog teksta. Uz to veže
+naslove za prikaz sistema u pokretu, jer je to ista boja.
 
-════════ KAKO SE PONAŠA (sve provjereno) ════════
-  • učitava se tek kad se posjetilac približi sekciji, pa NE usporava
-    prvo otvaranje naslovnice
-  • kreće od početka tek kad sekcija dođe u vid, pa je niko ne
-    gleda od sredine
-  • pauzira se kad posjetilac odskrola dalje, nastavlja kad se vrati
-  • prati jezik sajta: promjena zastavice gore mijenja i jezik
-    prezentacije (zato su BS/EN dugmad unutar nje skrivena)
-  • uvijek je u svijetloj varijanti, i kad posjetilac na računaru ima
-    tamnu temu, da se uklopi u bijelu naslovnicu
-  • visina okvira se prilagođava sama, bez praznog prostora
-  • na telefonu ide od ivice do ivice ekrana, da bude što veća
-  • uz isključene animacije prikazuje se mirna slika, bez vrtenja
-  • dugmad Pauza i Ispočetka ostaju, da posjetilac ima kontrolu
-
-TEHNIČKI: prezentacija je u <iframe>, pa se njeni stilovi i skripta
-ne miješaju sa sajtom. Sajt i prezentacija razgovaraju porukama, i to
-samo unutar istog domena.
-
-════════ NAPOMENA O SADRŽAJU ════════
-Prezentacija prikazuje izmišljenu firmu na demo.mehiccdev.com, s
-podacima poput "40 vozila" i "ocjena 4.9". Pošto je jasno da je
-riječ o prikazu sistema a ne o klijentu, to je u redu. Samo pazi da
-se te brojke nigdje ne predstave kao rezultati stvarnog klijenta.
+Pregled svih naslova: pregled-naslova.png
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
-  git rm components/sections/RentACarPromo.tsx
-  npm run build
   git add .
-  git commit -m "feat: prikaz sistema u pokretu umjesto promo sekcije"
+  git commit -m "style: naglasak u naslovima u dubokoj plavoj"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

@@ -129,6 +129,11 @@ html.light .text-gradient {
   color: #64748B;
   padding-bottom: 0;
 }
+/* Naglašeni dio svih naslova: duboka plava iz prikaza sistema (#0F3554),
+   umjesto sive. Dovoljno je tamna za čitanje, a razlikuje se od crnog
+   ostatka naslova. */
+html.light :is(h1, h2, h3) .text-gradient { color: #0F3554; }
+
 html.light :is(h1, h2, h3) .font-serif {
   font-family: inherit;
   font-style: normal;

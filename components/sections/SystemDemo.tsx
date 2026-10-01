@@ -124,7 +124,7 @@ export function SystemDemo() {
           </p>
           <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-5xl font-semibold tracking-[-0.03em] text-[#0F172A]"
               style={{ textWrap: "balance" }}>
-            {d.h1} <span className="text-[#94A3B8]">{d.accent}</span>
+            {d.h1} <span className="text-[#0F3554]">{d.accent}</span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-[#475569]">
             {d.sub}
