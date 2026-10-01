@@ -1578,6 +1578,11 @@ if (PARAMS.get("lang") === "en") lang = "en";
 if (EMBED) {
   document.documentElement.classList.add("embed");
   document.documentElement.dataset.theme = "light";   // uvijek svijetla, kao naslovnica
+  // Ugrađeni način proširi okvir, a fit() je već izračunao scenu za uži okvir,
+  // pa je desno i dolje ostajao pojas. Zato računamo ponovo, i svaki put kad
+  // se okvir promijeni (npr. kad posjetilac suzi prozor).
+  fit();
+  new ResizeObserver(fit).observe($("viewport"));
 }
 
 let started = false;

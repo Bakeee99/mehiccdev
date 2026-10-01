@@ -1,62 +1,28 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Prikaz sistema kao plejer, vidljiva tračnica
+  mehiccdev — Prikaz sistema popunjava cijeli okvir
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (4 fajla + pregled):
-  components/sections/SystemDemo.tsx   sekcija kao jedan plejer
-  public/demo/rent-a-car.html          prezentacija bez svojih kontrola
-  components/ui/SectionRail.tsx        oznake za stilove tračnice
-  app/globals.css                      boje tračnice na naslovnici
+ŠTA JE U ZIP-u (1 fajl):
+  public/demo/rent-a-car.html
 
-════════ 1. KLIZAČ DESNO: UKLONJEN ════════
-Okvir je bio za par piksela niži od sadržaja prezentacije, pa je
-preglednik dodavao klizač. Sada je scena tačno u omjeru 16:9, kao i
-sama prezentacija, a klizanje unutar okvira je zaključano.
-Izmjereno: sadržaj 611 px, okvir 611 px.
+UZROK: prezentacija je računala veličinu scene prije nego što se
+uključio ugrađeni način rada, koji okvir proširi. Scena je ostajala
+izračunata za uži okvir, pa je desno i dolje ostajao pojas druge
+nijanse plave.
 
-Uklonjen je i sivi pojas koji je sjena prezentacije bacala ispod
-kontrola.
+POPRAVKA: veličina se preračuna odmah nakon uključivanja ugrađenog
+načina, i ponovo svaki put kad se okvir promijeni (npr. kad
+posjetilac suzi prozor ili okrene telefon).
 
-════════ 2. TRAČNICA LIJEVO: VIDLJIVA ════════
-Crtice su bile pravljene za tamnu pozadinu, pa su na bijeloj
-naslovnici gotovo nestajale. Sada su neaktivne crtice srednje sive,
-aktivna je tamno plava i duža, a njena oznaka (npr. "Rent-a-Car")
-čitljiva. Na telefonu je i linija napretka ispod navigacije tamna.
-Na podstranicama tračnica ostaje kakva je bila.
-
-════════ 3. DUGMAD: SVE U JEDNOM PLEJERU ════════
-Ranije su Pauza i Ispočetka bili unutar prezentacije, a dugme i
-cijena ispod nje, odvojeno. Sada je sve jedna kartica:
-
-  ┌───────────────────────────────────────────────┐
-  │            prezentacija, 16:9                  │
-  ├───────────────────────────────────────────────┤
-  │ (❚❚)(↺) │ Paketi od 1.500 KM     [Pogledajte  │
-  │          │ Cijene, paketi i ...     sistem →]  │
-  └───────────────────────────────────────────────┘
-
-  • okruglo tamno dugme: Pauza / Pokreni, ikonica prati stvarno
-    stanje prezentacije
-  • obrubljeno dugme: Ispočetka
-  • cijena i kratki opis u sredini
-  • glavno dugme desno
-
-Na telefonu se traka slaže u dva reda, a dugme ide preko cijele
-širine. Kartica ima tanak sivi rub i mekanu, neobojenu sjenu.
-
-Sve provjereno u pregledniku: pauza, nastavak, ponovno pokretanje,
-promjena jezika i automatsko pokretanje kad sekcija dođe u vid.
-
-════════ PRIMIJETIO SAM ════════
-Na telefonu plutajuća dugmad (WhatsApp i strelica na vrh) prekriju
-dugme "Pogledajte sistem i cijene" kad se skrola baš do njega. To je
-do plutajućih dugmadi, ne do ove sekcije. Predlažem da WhatsApp na
-telefonu postane samo okrugla ikonica bez natpisa. Reci ako hoćeš.
+IZMJERENO u pregledniku, okvir i scena:
+  desktop 1440 px   1086 × 611  =  1086 × 611
+  tablet  1024 px    958 × 539  =   958 × 539
+  telefon  390 px    390 × 219  =   390 × 219
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: prikaz sistema kao plejer i vidljiva tracnica"
+  git commit -m "fix: prikaz sistema popunjava cijeli okvir"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
