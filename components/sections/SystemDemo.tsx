@@ -66,6 +66,7 @@ export function SystemDemo() {
 
   const wrapRef  = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);   // samo scena, bez trake ispod
 
   const [load,   setLoad]   = useState(false);   // je li okvir uopšte učitan
   const visibleRef = useRef(false);              // je li sekcija trenutno u vidu
@@ -87,16 +88,34 @@ export function SystemDemo() {
     return () => io.disconnect();
   }, []);
 
-  /* 2) Kreni kad je bar trećina vidljiva, pauziraj kad izađe iz vida. */
+  /* 2) Kreni tek kad je CIJELA scena u kadru, stani kad većim dijelom izađe.
+
+     Dva praga, namjerno različita (histereza): kreće na 95 posto, a staje
+     tek ispod 30 posto. Da je isti prag, prezentacija bi stala i krenula na
+     svaki mali pomak skrola oko te granice.
+
+     Ako je scena viša od ekrana (npr. telefon položeno), nikad ne bi bila
+     95 posto vidljiva, pa tada kreće kad zauzme 90 posto visine ekrana. */
   useEffect(() => {
-    const el = wrapRef.current;
+    const el = sceneRef.current;
     if (!el || !load) return;
     const io = new IntersectionObserver(
       ([e]) => {
-        visibleRef.current = e.isIntersecting;
-        send({ type: e.isIntersecting ? "visible" : "hidden" });
+        const r = e.intersectionRatio;
+        const fitsScreen = e.boundingClientRect.height <= window.innerHeight;
+        const fullyIn = fitsScreen
+          ? r >= 0.95
+          : e.intersectionRect.height >= window.innerHeight * 0.9;
+
+        if (fullyIn && !visibleRef.current) {
+          visibleRef.current = true;
+          send({ type: "visible" });
+        } else if (r < 0.3 && visibleRef.current) {
+          visibleRef.current = false;
+          send({ type: "hidden" });
+        }
       },
-      { threshold: 0.35 }
+      { threshold: [0, 0.1, 0.3, 0.5, 0.7, 0.9, 0.95, 1] }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -147,7 +166,7 @@ export function SystemDemo() {
           style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.04), 0 24px 48px -24px rgba(15,23,42,0.18)" }}
         >
           {/* scena: tačno 16:9, kao prezentacija, pa nema klizača ni praznine */}
-          <div className="relative aspect-video bg-[#0F3554]">
+          <div ref={sceneRef} className="relative aspect-video bg-[#0F3554]">
             {load && (
               <iframe
                 ref={frameRef}

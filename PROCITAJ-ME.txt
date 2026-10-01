@@ -1,53 +1,34 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Traka s tehnologijama ispod heroja
+  mehiccdev — Prikaz sistema kreće tek kad je cijeli u kadru
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (3 fajla + pregled):
-  components/sections/TechMarquee.tsx   NOVO: traka koja klizi
-  app/page.tsx                          traka odmah ispod heroja
-  app/globals.css                       animacija i boje trake
+ŠTA JE U ZIP-u (1 fajl):
+  components/sections/SystemDemo.tsx
 
-════════ ŠTA PRIKAZUJE ════════
-Natpis "Tehnologije i platforme s kojima radimo", a ispod 12 logotipa
-koji beskonačno klize ulijevo:
+RANIJE: prezentacija je kretala čim je trećina bila vidljiva, pa je
+posjetilac propuštao početak dok je skrolao do nje.
 
-  Next.js · React · TypeScript · Tailwind CSS · Vercel · Node.js ·
-  Resend · Zod · Google · Meta · Instagram · WhatsApp
+SADA:
+  • kreće tek kad je CIJELA scena u kadru
+  • staje tek kad većim dijelom izađe iz kadra (ispod 30 posto)
+  • ta dva praga su namjerno različita, da ne staje i kreće na svaki
+    mali pomak skrola
+  • ako je scena viša od ekrana (npr. telefon položeno), kreće kad
+    zauzme 90 posto visine ekrana, jer cijela nikad ne bi stala
 
-Prvih osam su alati od kojih je sajt i aplikacije napravljeni, a
-zadnja četiri platforme za marketing i kontakt.
-
-ZAŠTO NE BRENDOVI KLIJENATA ILI VELIKIH FIRMI: traka s logotipima
-ispod heroja se čita kao "naši klijenti". Logotipi poput Nikea bi tu
-zavaravali. Alati su iskreni, a natpis to i kaže.
-
-════════ IZGLED I PONAŠANJE ════════
-  • jednobojno sivo i mirno, da ne vuče pažnju s heroja
-  • na prelazak mišem traka stane, a logotip dobije svoju pravu boju
-    (npr. TypeScript plavu, Instagram rozu)
-  • ivice trake blijede u bijelo, logotipi ne nestaju naglo
-  • niz je ispisan dvaput i traka se pomjera za tačno pola širine,
-    pa je spoj nevidljiv (izmjereno: oba niza po 1918 px)
-  • čitači ekrana čuju niz samo jednom
-  • uz isključene animacije traka stoji i prelama se u redove
-
-Logotipi su zvanični oblici iz kolekcije Simple Icons, ugrađeni kao
-SVG putanje, bez dodatnog paketa i bez slika za učitavanje.
-
-════════ KAKO DA PROMIJENIŠ SPISAK ════════
-U TechMarquee.tsx je niz TECH. Svaka stavka je jedan red: obriši red
-za alat koji ne želiš prikazati. Ako trebaš novi, javi pa ga dodam
-(treba mu zvanični oblik logotipa).
-
-Moja preporuka: Zod i Resend su alati koje vlasnik firme neće
-prepoznati. Ako želiš traku koju razumiju i klijenti, ostavi Next.js,
-React, TypeScript, Tailwind, Vercel, Google, Metu, Instagram i
-WhatsApp.
+IZMJERENO u pregledniku, desktop i telefon:
+  vidljivo  20%  →  čeka
+  vidljivo  50%  →  čeka
+  vidljivo  80%  →  čeka
+  vidljivo 100%  →  krene
+  mali pomak skrola dok gleda  →  nastavlja
+  odskrola daleko  →  pauza
+  vrati se  →  nastavlja od istog mjesta
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: traka s tehnologijama ispod heroja"
+  git commit -m "fix: prikaz sistema krece tek kad je cijeli u kadru"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
