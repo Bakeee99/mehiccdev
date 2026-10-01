@@ -109,7 +109,7 @@ export function Footer() {
                    transition-colors duration-200 inline-flex items-center gap-1.5 group/link`;
 
   return (
-    <footer className="relative border-t border-[var(--border)] bg-[var(--surface)] overflow-hidden">
+    <footer className="ink relative border-t border-[var(--border)] bg-[var(--surface)] overflow-hidden">
       {/* sjaj + džinovski watermark koji viri iz dna */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-64 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.12),transparent_72%)] pointer-events-none" aria-hidden />
       <div

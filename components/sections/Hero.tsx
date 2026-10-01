@@ -153,7 +153,7 @@ export function Hero() {
   const revealMain = useReveal();
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col overflow-hidden">
+    <section className="ink relative min-h-[100svh] flex flex-col overflow-hidden">
 
       {/* ── Pozadina: grid + aurora ─────────────────────────────────────── */}
       <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
@@ -223,7 +223,7 @@ export function Hero() {
         {/* CTA */}
         <motion.div variants={fadeUp} className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <a href="#kontakt"
-             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+             className="cta-primary inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                         bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
                         shadow-xl shadow-brand-600/30
                         transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">

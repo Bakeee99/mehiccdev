@@ -368,7 +368,7 @@ export function Pricing() {
                   href="#kontakt"
                   className={`mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl font-semibold text-sm transition-all
                               ${popular
-                                ? "bg-brand-600 hover:bg-brand-700 text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+                                ? "cta-primary bg-brand-600 hover:bg-brand-700 text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
                                 : "border border-[var(--border)] text-[var(--text)] hover:border-brand-600/40"}`}
                 >
                   <span>{plan.ctaLabel ?? d.cta}</span>

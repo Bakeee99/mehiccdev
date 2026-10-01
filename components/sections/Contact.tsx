@@ -377,7 +377,7 @@ export function Contact() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-xl
+                      className="cta-primary inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-xl
                                  bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold
                                  transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed
                                  shadow-lg shadow-brand-600/30 hover:shadow-xl hover:shadow-brand-600/40

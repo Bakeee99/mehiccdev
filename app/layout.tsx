@@ -9,6 +9,12 @@ import type { Metadata } from "next";
 import { ThemeProvider }    from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/components/ui/LanguageProvider";
 import { BackgroundLayers, BlueprintLayer } from "@/components/ui/BackgroundFX";
+import { RouteTheme } from "@/components/ui/RouteTheme";
+/* Inter je font naslovnice. Servira se s našeg domena (npm paket), bez
+   poziva prema Google serverima, pa je brži i ne zavisi od tuđe usluge.
+   Koristi se samo u svijetloj temi (globals.css, html.light), pa podstranice
+   zadržavaju svoj font. */
+import "@fontsource-variable/inter";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { ScrollTopButton } from "@/components/ui/ScrollTopButton";
 import "./globals.css";
@@ -87,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       </head>
       <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+        <RouteTheme>
           <LanguageProvider>
             {/* ── Potpisna pozadina v2 "ŽIVI SISTEM": svjetlo, šine s pulsom
                    koji putuje kroz njih, zrno, i blueprint skice po dubini
@@ -105,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <WhatsAppButton />
             <ScrollTopButton />
           </LanguageProvider>
-        </ThemeProvider>
+        </RouteTheme>
       </body>
     </html>
   );

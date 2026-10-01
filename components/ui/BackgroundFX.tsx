@@ -23,13 +23,15 @@
 
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { useCoarsePointer } from "@/lib/useCoarsePointer";
 
 const SPOT = 900; // prečnik reflektora u px
 
-export function BackgroundLayers() {
+function BackgroundLayersInner() {
   const reduce = useReducedMotion() ?? false;
   const coarse = useCoarsePointer();
   const calm = reduce || coarse;
@@ -123,6 +125,17 @@ export function BackgroundLayers() {
 
 /* ── v4: blueprint skice uklonjene ("čisti minimum"). Prazna komponenta
      ostaje da layout.tsx ne mora mijenjati import. ── */
-export function BlueprintLayer() {
+function BlueprintLayerInner() {
   return null;
+}
+
+
+/* Omotači: provjera rute je ovdje, a ne unutar komponenti, da se hookovi
+   unutar njih uvijek pozivaju istim redom (pravilo Reacta). Naslovnica je
+   čista bijela, bez svjetla, zrna i šina. */
+export function BackgroundLayers() {
+  return usePathname() === "/" ? null : <BackgroundLayersInner />;
+}
+export function BlueprintLayer() {
+  return usePathname() === "/" ? null : <BlueprintLayerInner />;
 }
