@@ -89,26 +89,50 @@ function Phone({ src, alt, bar = "light", priority = false }: {
   src: string; alt: string; bar?: "light" | "dark"; priority?: boolean;
 }) {
   const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
+
+  /* SVE MJERE SU U cqw, odnosno u postocima ŠIRINE OVOG TELEFONA.
+     Ranije su uglovi bili fiksni (oko 46 px). Na mobitelu je telefon širok
+     svega ~110 px, pa je takav ugao zauzimao skoro pola širine i oblik je
+     postajao ovalan, kao jaje. Pravi iPhone ima ugao oko 14 posto širine,
+     okvir oko 1 posto, a ostrvo oko trećinu širine. Kad je sve izraženo u
+     odnosu na širinu, telefon izgleda isto na svakoj veličini.
+
+     Spoljni div je "kontejner" (container-type), a cqw unutar njega znači
+     "jedan posto širine tog kontejnera". */
   return (
-    <div
-      className="rounded-[2.9rem] p-[4px]"
-      style={{ background: "linear-gradient(145deg, #F4F5F7 0%, #D9DCE1 45%, #EEF0F3 100%)", boxShadow: PHONE_SHADOW }}
-    >
-      <div className="rounded-[2.65rem] bg-black p-[6px]">
-        <div className="relative overflow-hidden rounded-[2.2rem]">
-          {/* statusna traka */}
-          <div className={`relative flex items-center justify-between px-[9%] h-[30px] sm:h-[38px] ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}>
-            <span className="text-[9px] sm:text-[12px] font-semibold tracking-tight" style={{ color: ink }}>9:41</span>
-            <span aria-hidden className="absolute top-[7px] sm:top-[9px] left-1/2 -translate-x-1/2 w-[30%] h-[15px] sm:h-[20px] rounded-full bg-black" />
-            <span className="flex items-center gap-[3px]" aria-hidden>
-              <svg width="15" height="10" viewBox="0 0 17 12" className="w-[11px] sm:w-[15px]"><g fill={ink}><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="4.5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="9" y="3" width="3" height="9" rx=".8"/><rect x="13.5" y="0" width="3" height="12" rx=".8"/></g></svg>
-              <svg width="20" height="10" viewBox="0 0 26 12" className="w-[14px] sm:w-[20px]"><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke={ink} strokeOpacity=".45" strokeWidth="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill={ink}/><rect x="23.5" y="4" width="1.8" height="4" rx=".9" fill={ink} fillOpacity=".45"/></svg>
-            </span>
-          </div>
+    <div style={{ containerType: "inline-size" }}>
+      {/* srebrni okvir */}
+      <div
+        style={{
+          borderRadius: "15.5cqw",
+          padding: "1.1cqw",
+          background: "linear-gradient(145deg, #F4F5F7 0%, #D9DCE1 45%, #EEF0F3 100%)",
+          boxShadow: PHONE_SHADOW,
+        }}
+      >
+        {/* crni bezel */}
+        <div className="bg-black" style={{ borderRadius: "14.4cqw", padding: "1.9cqw" }}>
           {/* ekran */}
-          <div className="relative aspect-[1179/2556] bg-white">
-            <Image src={src} alt={alt} fill unoptimized priority={priority}
-                   className="object-cover object-top" />
+          <div className="relative overflow-hidden" style={{ borderRadius: "12.5cqw" }}>
+            {/* statusna traka */}
+            <div
+              className={`relative flex items-center justify-between ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}
+              style={{ height: "12.5cqw", paddingInline: "8cqw" }}
+            >
+              <span className="font-semibold tracking-tight" style={{ color: ink, fontSize: "4.4cqw" }}>9:41</span>
+              {/* dinamičko ostrvo */}
+              <span aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
+                    style={{ top: "2.6cqw", width: "32%", height: "8.6cqw" }} />
+              <span className="flex items-center" style={{ gap: "1.2cqw" }} aria-hidden>
+                <svg viewBox="0 0 17 12" style={{ width: "5.2cqw" }}><g fill={ink}><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="4.5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="9" y="3" width="3" height="9" rx=".8"/><rect x="13.5" y="0" width="3" height="12" rx=".8"/></g></svg>
+                <svg viewBox="0 0 26 12" style={{ width: "7.4cqw" }}><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke={ink} strokeOpacity=".45" strokeWidth="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill={ink}/><rect x="23.5" y="4" width="1.8" height="4" rx=".9" fill={ink} fillOpacity=".45"/></svg>
+              </span>
+            </div>
+            {/* sadržaj ekrana */}
+            <div className="relative aspect-[1179/2556] bg-white">
+              <Image src={src} alt={alt} fill unoptimized priority={priority}
+                     className="object-cover object-top" />
+            </div>
           </div>
         </div>
       </div>
@@ -135,13 +159,12 @@ export function Hero() {
   });
 
   return (
-    <section className="hero-light relative bg-white px-2 sm:px-3 pt-2 sm:pt-3">
+    <section className="hero-light relative bg-white">
       {/* ── PANEL ───────────────────────────────────────────────────────────
-          Hero stoji u zaobljenom panelu uvučenom od ivica ekrana, kao na
-          referenci. Pozadina je meki preliv iz svijetle nijanse naše plave
+          Pozadina heroja ide od ivice do ivice ekrana. Pozadina je meki preliv iz svijetle nijanse naše plave
           (#0F3554) u bijelo, a preko nje dva blaga dijagonalna odsjaja.
           Navigacija je na vrhu providna, pa se stapa s panelom. */}
-      <div className="relative overflow-hidden rounded-[26px] sm:rounded-[36px]"
+      <div className="relative overflow-hidden"
            style={{ background: "linear-gradient(180deg, #D9E4F0 0%, #E7EEF6 34%, #F4F7FB 68%, #FFFFFF 100%)" }}>
 
         {/* dijagonalni odsjaji, kao staklo na referenci */}

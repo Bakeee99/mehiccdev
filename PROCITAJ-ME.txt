@@ -1,44 +1,37 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Hero po referenci: ploča, prozorčići, strelica
+  mehiccdev — Hero od ivice do ivice, pravi iPhone mockupi
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
+ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
   components/sections/Hero.tsx
-  components/sections/Navbar.tsx
 
-════════ PLOČA ════════
-Hero stoji u zaobljenoj ploči uvučenoj od ivica ekrana, kao na
-referenci. Pozadina:
-  • meki preliv iz svijetle nijanse naše plave (#0F3554) u bijelo
-  • dva blaga dijagonalna odsjaja, kao staklo
-  • fina mreža koja blijedi prema dnu
-Bez sjaja, neona i jakih efekata, sve u tonovima palete.
+════════ 1. POZADINA OD IVICE DO IVICE ════════
+Pozadina heroja više nije uvučena ploča sa zaobljenim uglovima.
+Kreće odmah od ivica ekrana. Preliv, odsjaji i mreža su ostali.
 
-════════ NAVIGACIJA ════════
-Na vrhu je prozirna, pa izgleda kao dio ploče. Kad se skrola, dobije
-bijelu podlogu i tanku liniju ispod. Na podstranicama nepromijenjena.
+════════ 2. TELEFONI: KRAJ "JAJETA" ════════
+UZROK: zaobljenje uglova bilo je fiksno, oko 46 px. Na mobitelu je
+telefon širok svega oko 110 px, pa je takav ugao zauzimao skoro pola
+širine i oblik je postajao ovalan.
 
-════════ PROZORČIĆI SA STRANA ════════
-Popunjavaju prazninu pored naslova, blago nagnuti prema van, lagano
-lebde. Sadržaj NIJE izmišljen, za razliku od reference:
-  LIJEVO  Učitavanje sajta · 3,2 s (ranije 21,6 s) · Maximum Rent a Car
-          sa dvije trake: kratka zelena sada, puna siva ranije
-  DESNO   Nova rezervacija · VW Golf 8 · 10. do 13. jula
-          sa zelenom trakom "Potvrđeno"
-Prikazuju se od 1024 px naviše; na užim ekranima nemaju gdje stati.
+POPRAVKA: sve mjere telefona su sada u postocima NJEGOVE širine,
+kao kod pravog iPhonea:
+  uglovi okvira        ~15 posto širine
+  srebrni okvir        ~1 posto
+  crni rub ekrana      ~2 posto
+  statusna traka       ~12 posto visine u odnosu na širinu
+  dinamičko ostrvo     trećina širine
+  sat i ikonice        razmjerno širini
 
-════════ DETALJI ════════
-  • ikonica s trakama ispred "Treba mu sistem.", kao na referenci
-  • ručno nacrtana isprekidana strelica koja vodi pogled do crvenog
-    dugmeta (samo na širokim ekranima)
-  • na engleskom decimalni znak je tačka (3.2 s), na bosanskom zarez
-
-Telefoni ostaju na dnu ploče, jedan pored drugog, sa zamućenjem.
+Tehnički: telefon je "kontejner" (container-type), a mjere su u
+jedinici cqw, jedan posto širine kontejnera. Zato telefon izgleda
+isto i kad je širok 300 px na desktopu i kad je širok 110 px na
+mobitelu. Podržano u svim modernim preglednicima.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: hero u ploci s prozorcicima, po referenci"
+  git commit -m "fix: hero od ivice do ivice i razmjerni iphone mockupi"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
