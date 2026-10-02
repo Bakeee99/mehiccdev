@@ -233,13 +233,6 @@ html.light [class*="from-brand-600"][class*="bg-gradient-to-b"] { background: #E
    bez okvira i pozadine. Odvaja ih samo prazan prostor, pa se stranica
    smiruje, a ništa se ne gubi. */
 
-/* Rezultati: kartice s mjeračima i tri činjenice ispod njih */
-html.light #rezultati .grid > div,
-html.light #rezultati .grid > article {
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
 
 /* Isplativost: niz pilula s kvačicama postaje običan red teksta */
 html.light #vrijednost [class*="rounded-full"][class*="border"]:not(a, button) {

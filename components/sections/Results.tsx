@@ -1,42 +1,33 @@
 /**
  * components/sections/Results.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Rezultati" (v2: "Brojke koje možete provjeriti").
+ * Rezultati (v3, kompaktno).
  *
- * Filozofija v2: umjesto izmišljenih prosjeka (98% zadovoljstva itd.) koje
- * mlada agencija ne može imati, sekcija pokazuje STVARNA, PROVJERLJIVA
- * mjerenja s Maximum projekta:
+ * Ranije: tri bloka jedan ispod drugog (velika kartica s trkom, red s četiri
+ * kruga, red s tri činjenice), pa je sekcija bila duga i nabacana.
  *
- *   1. TRKA UČITAVANJA (centerpiece): stari sajt (21,6s) i naša aplikacija
- *      (3,2s) se utrkuju uživo, trake se pune u stvarnom omjeru, brojači
- *      broje sekunde. Aplikacija završi dok se stari sajt još vuče. 6,7× brže.
- *   2. GAUGES: prave Google PageSpeed ocjene (100/100/100, mobitel 90),
- *      s napomenom da mjerenje svako može ponoviti sam.
- *   3. TRI ISKRENE ČINJENICE u pilulama (projekti uživo, 0 poziva, 24h).
+ * Sada je sve u JEDNOJ kartici s dvije kolone:
+ *   lijevo   brzina: 3,2 s naspram 21,6 s, dvije tanke trake i "6,7× brže"
+ *   desno    četiri Google ocjene kao brojke, bez krugova, s izvorom ispod
+ * a tri činjenice su jedan tihi red ispod kartice.
  *
- * Animacije se pokreću kad blok uđe u ekran (jednom), poštuju reduced-motion,
- * i preživljavaju promjenu jezika/teme (isti princip kao useReveal; ovdje je
- * boolean "go" lokalan jer pokreće i trake/brojače, ne samo reveal).
+ * Svi podaci su ostali. Izbačena je samo animacija "trke" s brojačem i
+ * natpisima "Učitano" i "još se učitava", jer su efekat, a ne podatak.
  *
- * Self-contained (BS/EN), dark/light, bez crtica, id ostaje "rezultati".
+ * Trake se jednom izdužе kad uđu u vid (samo širina, nikakav filter), a uz
+ * isključene animacije odmah stoje na mjestu.
  */
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Rocket, PhoneOff, Clock, CheckCircle2, ExternalLink } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { staggerContainer, fadeUp, scaleIn, viewportOnce } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
+import { Rocket, PhoneOff, Clock, ArrowUpRight, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-/* ── Sadržaj ────────────────────────────────────────────────────────────────── */
 type Content = {
   label: string; heading1: string; headingAccent: string; sub: string;
-  raceTitle: string; raceSub: string;
-  oldLabel: string; newLabel: string; loadedLabel: string; stillLabel: string;
-  fasterBadge: string; raceNote: string;
+  raceTitle: string; raceSub: string; oldLabel: string; newLabel: string;
+  loadedLabel: string; stillLabel: string; fasterBadge: string; raceNote: string;
   gaugesCaptionPre: string; gaugesLink: string;
   gauges: { v: number; l: string; s: string }[];
   facts: { t: string }[];
@@ -103,253 +94,111 @@ const FACT_ICONS: LucideIcon[] = [Rocket, PhoneOff, Clock];
 
 const OLD_SEC = 21.6;
 const NEW_SEC = 3.2;
-// trajanje animacije trke (ms): aplikacija završi za ~1,3s, stari sajt u istom
-// omjeru izgleda beskonačno spor (~8,8s)
-const NEW_MS = 1300;
-const OLD_MS = Math.round(NEW_MS * (OLD_SEC / NEW_SEC));
 
-/* ── Brojač sekundi (rAF), staje na cilju ──────────────────────────────────── */
-function useSecondsCounter(go: boolean, target: number, durationMs: number, reduce: boolean) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!go) return;
-    if (reduce) { setVal(target); return; }
-    let raf = 0;
-    const t0 = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min((t - t0) / durationMs, 1);
-      setVal(target * p);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [go, target, durationMs, reduce]);
-  return val;
-}
-
-/* ── Jedna traka u trci ─────────────────────────────────────────────────────── */
-function RaceBar({
-  go, label, seconds, durationMs, isNew, loadedLabel, stillLabel, reduce, decimalComma,
-}: {
-  go: boolean; label: string; seconds: number; durationMs: number;
-  isNew: boolean; loadedLabel: string; stillLabel: string; reduce: boolean; decimalComma: boolean;
-}) {
-  const val = useSecondsCounter(go, seconds, durationMs, reduce);
-  const done = go && (reduce || val >= seconds - 0.001);
-  const fmt = (n: number) => {
-    const s = (Math.round(n * 10) / 10).toFixed(1);
-    return decimalComma ? s.replace(".", ",") : s;
-  };
-  return (
-    <div className={`rounded-2xl border p-4 sm:p-5 transition-colors duration-500
-                     ${isNew
-                       ? "bg-brand-600/[.06] border-brand-600/30"
-                       : "bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border-[var(--border)]"}`}>
-      <div className="flex items-baseline justify-between gap-3 mb-3">
-        <span className={`text-[12.5px] font-bold uppercase tracking-wider
-                          ${isNew ? "text-brand-600 dark:text-brand-400" : "text-[var(--text-muted)]"}`}>
-          {label}
-        </span>
-        <span className="flex items-baseline gap-1.5">
-          <b className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums
-                         ${isNew ? "text-brand-600 dark:text-brand-400" : "text-[var(--text)]"}`}>
-            {fmt(val)}s
-          </b>
-        </span>
-      </div>
-      {/* traka */}
-      <div className="relative h-3 rounded-full bg-[color-mix(in_srgb,var(--border)_60%,transparent)] overflow-hidden">
-        <div
-          className={`absolute inset-y-0 left-0 rounded-full
-                      ${isNew
-                        ? "bg-gradient-to-r from-brand-600 to-brand-400 shadow-[0_0_14px_rgba(96,165,250,0.6)]"
-                        : "bg-gradient-to-r from-red-500/70 to-orange-400/70"}`}
-          style={{
-            width: go ? "100%" : "0%",
-            transition: reduce ? "none" : `width ${durationMs}ms linear`,
-          }}
-        />
-      </div>
-      {/* status */}
-      <div className="mt-2.5 h-5 text-[11.5px] font-semibold">
-        {done ? (
-          <span className={`inline-flex items-center gap-1.5 ${isNew ? "text-green-600 dark:text-green-400" : "text-[var(--text-muted)]"}`}>
-            <CheckCircle2 size={13} /> {loadedLabel} · {fmt(seconds)}s
-          </span>
-        ) : go ? (
-          <span className="text-[var(--text-muted)] animate-pulse">{stillLabel}</span>
-        ) : null}
-      </div>
-    </div>
-  );
-}
-
-/* ── Gauge s brojačem ───────────────────────────────────────────────────────── */
-function Gauge({ go, value, label, sub, reduce }: { go: boolean; value: number; label: string; sub: string; reduce: boolean }) {
-  const C = 2 * Math.PI * 54;
-  const val = useSecondsCounter(go, value, 1400, reduce);
-  return (
-    <div className="group text-center rounded-[22px] p-4 sm:p-6 bg-[var(--surface)] border border-[var(--border)]
-                    transition-[border-color,transform] duration-300 hover:border-brand-600/40 hover:-translate-y-1">
-      <div className="relative w-[96px] h-[96px] sm:w-[120px] sm:h-[120px] mx-auto mb-3">
-        <svg className="w-full h-full" viewBox="0 0 130 130" style={{ transform: "rotate(-90deg)" }}>
-          <circle cx="65" cy="65" r="54" fill="none" stroke="var(--border)" strokeWidth="9" />
-          <circle
-            cx="65" cy="65" r="54" fill="none" stroke="url(#resGrad)" strokeWidth="9" strokeLinecap="round"
-            strokeDasharray={C}
-            strokeDashoffset={go ? C * (1 - value / 100) : C}
-            style={{ transition: reduce ? "none" : "stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-[22px] sm:text-[27px] font-extrabold tracking-tight text-[var(--text)] tabular-nums">
-          {Math.round(val)}
-        </div>
-      </div>
-      <div className="text-[13.5px] font-bold text-[var(--text)]">{label}</div>
-      <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{sub}</div>
-    </div>
-  );
-}
+/* broj u lokalnom formatu: 3,2 na bosanskom, 3.2 na engleskom */
+const fmt = (n: number, lang: string) => n.toFixed(1).replace(".", lang === "en" ? "." : ",");
 
 export function Results() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
   const reduce = useReducedMotion() ?? false;
 
-  const revealHead  = useReveal();
-  const revealFacts = useReveal();
-
-  // "go" pokreće i reveal i trke/brojače, jednom, i preživljava re-render.
-  // Trka NE kreće čim proviri prvi piksel kartice: čeka da je ~45% kartice
-  // u ekranu (viewport amount ispod), pa još 0,8s pauze da se pogled smjesti.
-  // Bez toga bi brza traka završila prije nego što je posjetilac uopšte vidi.
-  const [raceVisible, setRaceVisible] = useState(false);
-  const [raceGo, setRaceGo]           = useState(false);
-  const [gaugesGo, setGaugesGo]       = useState(false);
-
-  useEffect(() => {
-    if (!raceVisible) return;
-    if (reduce) { setRaceGo(true); return; }
-    const t = setTimeout(() => setRaceGo(true), 800);
-    return () => clearTimeout(t);
-  }, [raceVisible, reduce]);
+  /* traka koja se jednom izduži do svoje širine kad uđe u vid */
+  const bar = (pct: number) => ({
+    initial: { width: reduce ? `${pct}%` : "0%" },
+    whileInView: { width: `${pct}%` },
+    viewport: { once: true, amount: 0.6 },
+    transition: { duration: reduce ? 0 : 0.9, ease: [0.22, 1, 0.36, 1] as const },
+  });
 
   return (
-    <section id="rezultati" className="py-28 lg:py-32 relative overflow-hidden">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="absolute -left-56 top-24 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
+    <section id="rezultati" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
 
-      <svg width="0" height="0" aria-hidden><defs>
-        <linearGradient id="resGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#60A5FA" /><stop offset="1" stopColor="#2563EB" />
-        </linearGradient>
-      </defs></svg>
+        {/* ── zaglavlje ── */}
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.label}</p>
+          <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#0F172A]">
+            {d.heading1} <span className="text-[#0F3554]">{d.headingAccent}</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-[16px] leading-relaxed text-[#475569]">{d.sub}</p>
+        </div>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        {/* ── kartica: brzina lijevo, ocjene desno ── */}
+        <div className="mt-12 grid overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white lg:grid-cols-[1.3fr_1fr]">
 
-        {/* ── Header ─────────────────────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealHead} className="text-center mb-14">
-          <motion.div variants={fadeUp} className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.label}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            {d.heading1}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
-          </motion.h2>
-          <motion.p variants={fadeUp} className="max-w-xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">
-            {d.sub}
-          </motion.p>
-        </motion.div>
-
-        {/* ── 1 · Trka učitavanja ────────────────────────────────────────── */}
-        <motion.div
-          variants={scaleIn}
-          initial="hidden"
-          animate={raceVisible ? "visible" : "hidden"}
-          viewport={{ once: true, amount: 0.45 }}
-          onViewportEnter={() => setRaceVisible(true)}
-          className="relative rounded-3xl p-6 sm:p-9 overflow-hidden mb-6
-                     bg-[var(--surface)] border border-brand-600/25"
-        >
-          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_72%)] pointer-events-none" aria-hidden />
-          <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.035] pointer-events-none" aria-hidden />
-
-          <div className="relative flex flex-wrap items-start justify-between gap-3 mb-6">
-            <div>
-              <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight">{d.raceTitle}</h3>
-              <p className="text-[13px] text-[var(--text-muted)] mt-1">{d.raceSub}</p>
+          {/* brzina */}
+          <div className="p-6 sm:p-8">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-[17px] font-semibold text-[#0F172A]">{d.raceTitle}</h3>
+                <p className="mt-1 text-[13px] leading-relaxed text-[#64748B]">{d.raceSub}</p>
+              </div>
+              <span className="shrink-0 rounded-full bg-[#DCFCE7] px-2.5 py-1 text-[12px] font-semibold text-[#15803D]">
+                {d.fasterBadge}
+              </span>
             </div>
-            <span className="px-3.5 py-1.5 rounded-full text-sm font-extrabold
-                             text-green-600 dark:text-green-400 bg-green-500/10 border border-green-500/30">
-              {d.fasterBadge}
-            </span>
+
+            <dl className="mt-7 space-y-5">
+              <div>
+                <div className="flex items-baseline justify-between">
+                  <dt className="text-[13px] font-medium text-[#0F172A]">{d.newLabel}</dt>
+                  <dd className="text-[22px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{fmt(NEW_SEC, lang)} s</dd>
+                </div>
+                <div className="mt-2 h-1.5 rounded-full bg-[#F1F5F9]">
+                  <motion.div {...bar((NEW_SEC / OLD_SEC) * 100)} className="h-full rounded-full bg-[#0F172A]" />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-baseline justify-between">
+                  <dt className="text-[13px] font-medium text-[#64748B]">{d.oldLabel}</dt>
+                  <dd className="text-[22px] font-semibold tracking-tight text-[#94A3B8] tabular-nums">{fmt(OLD_SEC, lang)} s</dd>
+                </div>
+                <div className="mt-2 h-1.5 rounded-full bg-[#F1F5F9]">
+                  <motion.div {...bar(100)} className="h-full rounded-full bg-[#CBD5E1]" />
+                </div>
+              </div>
+            </dl>
+
+            <p className="mt-6 text-[13px] leading-relaxed text-[#64748B]">{d.raceNote}</p>
           </div>
 
-          <div className="relative grid gap-4">
-            <RaceBar go={raceGo} label={d.newLabel} seconds={NEW_SEC} durationMs={NEW_MS}
-                     isNew loadedLabel={d.loadedLabel} stillLabel={d.stillLabel} reduce={reduce}
-                     decimalComma={lang !== "en"} />
-            <RaceBar go={raceGo} label={d.oldLabel} seconds={OLD_SEC} durationMs={OLD_MS}
-                     isNew={false} loadedLabel={d.loadedLabel} stillLabel={d.stillLabel} reduce={reduce}
-                     decimalComma={lang !== "en"} />
+          {/* ocjene */}
+          <div className="border-t lg:border-t-0 lg:border-l border-[#E5E7EB] bg-[#F9FAFB] p-6 sm:p-8 flex flex-col">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-7">
+              {d.gauges.map((g) => (
+                <div key={g.l}>
+                  <dd className="flex items-baseline gap-1">
+                    <span className="text-[34px] leading-none font-semibold tracking-tight text-[#0F172A] tabular-nums">{g.v}</span>
+                    <span className="text-[13px] font-medium text-[#94A3B8]">/100</span>
+                  </dd>
+                  <dt className="mt-2 text-[13px] font-semibold text-[#0F172A]">{g.l}</dt>
+                  <p className="text-[12px] text-[#64748B]">{g.s}</p>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-auto pt-7 text-[12px] leading-relaxed text-[#64748B]">
+              {d.gaugesCaptionPre}{" "}
+              <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener noreferrer"
+                 className="inline-flex items-center gap-0.5 font-semibold text-[#0F172A] underline decoration-[#CBD5E1] underline-offset-2 hover:decoration-[#0F172A]">
+                {d.gaugesLink}<ArrowUpRight size={11} />
+              </a>
+            </p>
           </div>
+        </div>
 
-          <p className="relative text-[12.5px] text-[var(--text-muted)] leading-relaxed mt-5 max-w-2xl">
-            {d.raceNote}
-          </p>
-        </motion.div>
-
-        {/* ── 2 · Gauges: prave Google ocjene ───────────────────────────── */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={gaugesGo ? "visible" : "hidden"}
-          viewport={viewportOnce}
-          onViewportEnter={() => setGaugesGo(true)}
-        >
-          <motion.div variants={fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 mb-4">
-            {d.gauges.map((g) => (
-              <Gauge key={g.l} go={gaugesGo} value={g.v} label={g.l} sub={g.s} reduce={reduce} />
-            ))}
-          </motion.div>
-          <motion.p variants={fadeUp} className="text-center text-[11.5px] text-[var(--text-muted)] mb-12">
-            {d.gaugesCaptionPre}{" "}
-            <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-1 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-              {d.gaugesLink} <ExternalLink size={10} />
-            </a>
-          </motion.p>
-        </motion.div>
-
-        {/* ── 3 · Tri iskrene činjenice ─────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealFacts} className="grid sm:grid-cols-3 gap-3.5">
+        {/* ── činjenice: jedan tihi red ── */}
+        <ul className="mt-8 lg:-mx-6 flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-center gap-x-6 gap-y-3">
           {d.facts.map((f, i) => {
             const Icon = FACT_ICONS[i];
             return (
-              <motion.div
-                key={f.t}
-                variants={fadeUp}
-                className="flex items-center gap-3.5 p-4 rounded-2xl
-                           bg-[var(--surface)] border border-[var(--border)]
-                           transition-[border-color,transform] duration-300
-                           hover:border-brand-600/40 hover:-translate-y-1"
-              >
-                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
-                                 bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400">
-                  <Icon size={16} />
-                </span>
-                <span className="text-[13px] font-semibold text-[var(--text)] leading-snug">{f.t}</span>
-              </motion.div>
+              <li key={f.t} className="flex items-center gap-2.5 text-[13px] text-[#475569]">
+                <Icon size={15} className="shrink-0 text-[#0F3554]" />
+                {f.t}
+              </li>
             );
           })}
-        </motion.div>
+        </ul>
       </div>
     </section>
   );

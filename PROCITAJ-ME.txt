@@ -1,56 +1,47 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Link na video u heroju, sekcija "Šta radimo" uklonjena
+  mehiccdev — Sekcija "Rezultati": kompaktna i čista
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (6 fajlova + pregled):
-  components/sections/Hero.tsx         link ispod dugmadi
-  components/sections/SystemDemo.tsx   prima poziv i pušta od početka
-  app/page.tsx                         bez sekcije "Šta radimo"
-  components/sections/HomeRail.tsx     tračnica bez "Usluge"
-  components/sections/Navbar.tsx       meni bez "Usluge"
-  components/sections/Footer.tsx       linkovi preusmjereni
+ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
+  components/sections/Results.tsx   sekcija napisana ispočetka
+  app/globals.css                   uklonjeno staro pravilo za rezultate
 
-Stari fajl components/sections/Services.tsx se više ne koristi.
-Obriši ga prvom komandom ispod (git rm).
+════════ ŠTA JE BILO ════════
+Tri bloka naslagana jedan na drugi: velika kartica s "trkom" i
+brojačem, red s četiri kruga i red s tri kartice s činjenicama.
+Duga sekcija, a djelovala je nabacano.
 
-════════ 1. LINK "POGLEDAJTE SISTEM U POKRETU" ════════
-Ispod dva dugmeta, tih, kao rečenica, da se ne takmiči s njima:
-    (▶)  Pogledajte sistem u pokretu  · 1 min
-Krug s ikonicom za pokretanje, podvučen tekst i trajanje u sivom.
+════════ ŠTA JE SADA ════════
+Sve u JEDNOJ kartici s dvije kolone:
 
-Klik:
-  • dovuče video na sredinu ekrana, cijeli u kadru
-  • pusti prezentaciju OD POČETKA, čak i ako je ranije bila
-    pauzirana ili na sredini, jer je posjetilac izričito tražio
-  • radi i ako video još nije učitan: zahtjev se zapamti i izvrši
-    čim se učita
-  • uz isključene animacije skok je trenutan, bez klizanja
+  ┌─────────────────────────────────┬───────────────────────────┐
+  │ Koliko brzo se otvara? [6,7×]   │  100 /100      100 /100   │
+  │ Naša aplikacija          3,2 s  │  Performanse   SEO        │
+  │ ▬▬▬───────────────────────────  │                           │
+  │ Stari sajt klijenta     21,6 s  │  100 /100      90 /100    │
+  │ ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬   │  Pristupačnost Na telefonu│
+  │ Više od polovine posjetilaca... │  Izvor: pagespeed.web.dev │
+  └─────────────────────────────────┴───────────────────────────┘
+     🚀 Svi projekti uživo   📵 Bez ijednog poziva   🕐 24 sata
 
-Provjereno na desktopu i telefonu, i to u najtežem slučaju: video
-nije bio učitan prije klika, a ipak je stigao u kadar i krenuo.
+  • lijevo brzina: dvije tanke trake u pravom omjeru (3,2 naspram
+    21,6), koje se jednom izduže kad uđu u vid
+  • desno četiri Google ocjene kao čiste brojke, bez krugova, s
+    izvorom i linkom ispod
+  • tri činjenice su jedan tihi red ispod kartice, sa sitnim
+    ikonicama; provjereno da stanu u jedan red na oba jezika
 
-════════ 2. SEKCIJA "ŠTA RADIMO" UKLONJENA ════════
-Novi redoslijed naslovnice:
-  hero → tehnologije → o nama → prikaz sistema → rezultati →
-  projekti → cjenovnik → isplativost → flagship → kontakt
+SVE INFORMACIJE SU OSTALE. Izbačena je samo animacija "trke" s
+brojačem i natpisima "Učitano" i "još se učitava", jer su efekat, a
+ne podatak.
 
-Na sekciju su vodila četiri mjesta, sva su sređena:
-  • navigacija gore: stavka "Usluge" uklonjena
-  • tračnica sa strane: stavka "Usluge" uklonjena
-  • footer, tri linka pod uslugama:
-      Aplikacija za vaš biznis    →  prikaz sistema
-      Sajt koji sami uređujete    →  cjenovnik
-      Marketing koji dovodi goste →  cjenovnik
-    sada s "/#", pa rade i s podstranica
-
-Provjereno: nijedan link na sajtu više ne vodi u prazno.
+Sekcija je skoro upola niža nego prije. Brojevi su u lokalnom
+formatu: 3,2 s na bosanskom, 3.2 s na engleskom.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
-  git rm components/sections/Services.tsx
-  npm run build
   git add .
-  git commit -m "feat: link na video u heroju, uklonjena sekcija usluge"
+  git commit -m "feat: kompaktna sekcija rezultati"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
