@@ -24,7 +24,7 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, CarFront, Gauge } from "lucide-react";
+import { ArrowRight, Check, CarFront, Gauge, Play } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 type Content = {
@@ -35,6 +35,7 @@ type Content = {
   shots: { left: string; center: string; right: string };
   cardSpeed: { label: string; value: string; was: string; client: string };
   cardBooking: { title: string; detail: string; status: string };
+  watch: string; watchMeta: string;
 };
 
 const T: Record<"bs" | "en", Content> = {
@@ -52,6 +53,7 @@ const T: Record<"bs" | "en", Content> = {
       right: "Ista naslovna stranica u tamnoj temi",
     },
     cardSpeed: { label: "Učitavanje sajta", value: "3,2 s", was: "ranije 21,6 s", client: "Maximum Rent a Car" },
+    watch: "Pogledajte sistem u pokretu", watchMeta: "1 min",
     cardBooking: { title: "Nova rezervacija", detail: "VW Golf 8 · 10. do 13. jula", status: "Potvrđeno" },
   },
   en: {
@@ -68,6 +70,7 @@ const T: Record<"bs" | "en", Content> = {
       right: "The same home page in dark mode",
     },
     cardSpeed: { label: "Page load time", value: "3.2 s", was: "was 21.6 s", client: "Maximum Rent a Car" },
+    watch: "Watch the system in action", watchMeta: "1 min",
     cardBooking: { title: "New booking", detail: "VW Golf 8 · July 10 to 13", status: "Confirmed" },
   },
 };
@@ -313,6 +316,29 @@ export function Hero() {
                        transition-colors duration-200 hover:border-[#D1D5DB] hover:bg-[#F9FAFB]"
           >
             {d.ctaSecondary}
+          </a>
+        </motion.div>
+
+        {/* ── 4b. link na video ──
+            Tih, kao rečenica, da se ne takmiči s dva dugmeta iznad. Klik
+            šalje događaj sekciji s prikazom: ona se dovuče na sredinu ekrana
+            i pusti prezentaciju od početka. Bez JavaScripta href i dalje
+            vodi do sekcije. */}
+        <motion.div {...rise(0.24)} className="mt-6 flex justify-center">
+          <a
+            href="#rent-a-car"
+            onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("demo:watch")); }}
+            className="group inline-flex items-center gap-2.5 text-[14px] font-medium text-[#475569]
+                       transition-colors duration-200 hover:text-[#0F172A]"
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-full border border-[#CBD5E1] bg-white text-[#0F172A]
+                             transition-colors duration-200 group-hover:border-[#0F172A]">
+              <Play size={11} fill="currentColor" className="ml-[1px]" />
+            </span>
+            <span className="underline decoration-[#CBD5E1] underline-offset-4 transition-colors duration-200 group-hover:decoration-[#0F172A]">
+              {d.watch}
+            </span>
+            <span className="text-[#94A3B8]">· {d.watchMeta}</span>
           </a>
         </motion.div>
       </div>

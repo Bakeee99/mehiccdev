@@ -9,7 +9,6 @@ import { SystemDemo } from "@/components/sections/SystemDemo";
 import { TechMarquee } from "@/components/sections/TechMarquee";
 import { Navbar }       from "@/components/sections/Navbar";
 import { Hero }         from "@/components/sections/Hero";
-import { Services }     from "@/components/sections/Services";
 import { Satisfaction } from "@/components/sections/Satisfaction";
 import { About }        from "@/components/sections/About";
 import { Portfolio }    from "@/components/sections/Portfolio";
@@ -29,7 +28,6 @@ export default function HomePage() {
       <TechMarquee />
       <About />
       <SystemDemo />
-      <Services />
       <Results />
       <Portfolio />
       <Pricing />

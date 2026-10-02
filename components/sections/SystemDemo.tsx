@@ -71,6 +71,8 @@ export function SystemDemo() {
   const [load,   setLoad]   = useState(false);   // je li okvir uopšte učitan
   const visibleRef = useRef(false);              // je li sekcija trenutno u vidu
   const [playing, setPlaying] = useState(false); // za ikonicu Pauza / Pokreni
+  const frameReady = useRef(false);              // je li prezentacija učitana
+  const pendingReplay = useRef(false);           // čeka li "pusti od početka"
 
   /* Pošalji poruku prezentaciji (samo istom domenu). */
   const send = (msg: object) =>
@@ -131,6 +133,26 @@ export function SystemDemo() {
     return () => window.removeEventListener("message", onMsg);
   }, []);
 
+  /* 5) Link "Pogledajte sistem u pokretu" iz heroja.
+     Dovuče scenu na sredinu ekrana i pusti prezentaciju OD POČETKA, jer je
+     posjetilac izričito rekao da želi da je gleda. Ako prezentacija još nije
+     učitana (daleko je od heroja), zahtjev se zapamti i izvrši čim se učita. */
+  useEffect(() => {
+    const onWatch = () => {
+      setLoad(true);
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      sceneRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
+      if (frameReady.current) {
+        // malo sačekaj da skrol stigne, pa kreni ispočetka
+        window.setTimeout(() => send({ type: "replay" }), smooth ? 650 : 0);
+      } else {
+        pendingReplay.current = true;
+      }
+    };
+    window.addEventListener("demo:watch", onWatch);
+    return () => window.removeEventListener("demo:watch", onWatch);
+  }, []);
+
   /* 4) Promjena jezika na sajtu mijenja jezik i u prezentaciji. */
   useEffect(() => { send({ type: "lang", lang: l }); }, [l]);
 
@@ -177,8 +199,11 @@ export function SystemDemo() {
                 onLoad={() => {
                   // poruke poslate prije učitavanja su se izgubile, pa ih
                   // ponavljamo: jezik, i "kreni" ako je sekcija već u vidu
+                  frameReady.current = true;
                   send({ type: "lang", lang: l });
-                  if (visibleRef.current) send({ type: "visible" });
+                  // poziv iz heroja stigao prije učitavanja: pusti ispočetka
+                  if (pendingReplay.current) { pendingReplay.current = false; send({ type: "replay" }); }
+                  else if (visibleRef.current) send({ type: "visible" });
                 }}
                 className="absolute inset-0 h-full w-full border-0"
               />

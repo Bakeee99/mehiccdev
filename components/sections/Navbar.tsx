@@ -67,7 +67,6 @@ export function Navbar() {
 
   const NAV_LINKS = [
     { label: L.about,     href: "/#o-nama"    },
-    { label: L.services,  href: "/#usluge"    },
     { label: L.pricing,   href: "/#cjenovnik", promo: true },
     { label: L.saas,      href: "/#saas"      },
   ];

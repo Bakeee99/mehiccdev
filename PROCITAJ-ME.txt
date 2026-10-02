@@ -1,37 +1,56 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Hero od ivice do ivice, pravi iPhone mockupi
+  mehiccdev — Link na video u heroju, sekcija "Šta radimo" uklonjena
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
-  components/sections/Hero.tsx
+ŠTA JE U ZIP-u (6 fajlova + pregled):
+  components/sections/Hero.tsx         link ispod dugmadi
+  components/sections/SystemDemo.tsx   prima poziv i pušta od početka
+  app/page.tsx                         bez sekcije "Šta radimo"
+  components/sections/HomeRail.tsx     tračnica bez "Usluge"
+  components/sections/Navbar.tsx       meni bez "Usluge"
+  components/sections/Footer.tsx       linkovi preusmjereni
 
-════════ 1. POZADINA OD IVICE DO IVICE ════════
-Pozadina heroja više nije uvučena ploča sa zaobljenim uglovima.
-Kreće odmah od ivica ekrana. Preliv, odsjaji i mreža su ostali.
+Stari fajl components/sections/Services.tsx se više ne koristi.
+Obriši ga prvom komandom ispod (git rm).
 
-════════ 2. TELEFONI: KRAJ "JAJETA" ════════
-UZROK: zaobljenje uglova bilo je fiksno, oko 46 px. Na mobitelu je
-telefon širok svega oko 110 px, pa je takav ugao zauzimao skoro pola
-širine i oblik je postajao ovalan.
+════════ 1. LINK "POGLEDAJTE SISTEM U POKRETU" ════════
+Ispod dva dugmeta, tih, kao rečenica, da se ne takmiči s njima:
+    (▶)  Pogledajte sistem u pokretu  · 1 min
+Krug s ikonicom za pokretanje, podvučen tekst i trajanje u sivom.
 
-POPRAVKA: sve mjere telefona su sada u postocima NJEGOVE širine,
-kao kod pravog iPhonea:
-  uglovi okvira        ~15 posto širine
-  srebrni okvir        ~1 posto
-  crni rub ekrana      ~2 posto
-  statusna traka       ~12 posto visine u odnosu na širinu
-  dinamičko ostrvo     trećina širine
-  sat i ikonice        razmjerno širini
+Klik:
+  • dovuče video na sredinu ekrana, cijeli u kadru
+  • pusti prezentaciju OD POČETKA, čak i ako je ranije bila
+    pauzirana ili na sredini, jer je posjetilac izričito tražio
+  • radi i ako video još nije učitan: zahtjev se zapamti i izvrši
+    čim se učita
+  • uz isključene animacije skok je trenutan, bez klizanja
 
-Tehnički: telefon je "kontejner" (container-type), a mjere su u
-jedinici cqw, jedan posto širine kontejnera. Zato telefon izgleda
-isto i kad je širok 300 px na desktopu i kad je širok 110 px na
-mobitelu. Podržano u svim modernim preglednicima.
+Provjereno na desktopu i telefonu, i to u najtežem slučaju: video
+nije bio učitan prije klika, a ipak je stigao u kadar i krenuo.
+
+════════ 2. SEKCIJA "ŠTA RADIMO" UKLONJENA ════════
+Novi redoslijed naslovnice:
+  hero → tehnologije → o nama → prikaz sistema → rezultati →
+  projekti → cjenovnik → isplativost → flagship → kontakt
+
+Na sekciju su vodila četiri mjesta, sva su sređena:
+  • navigacija gore: stavka "Usluge" uklonjena
+  • tračnica sa strane: stavka "Usluge" uklonjena
+  • footer, tri linka pod uslugama:
+      Aplikacija za vaš biznis    →  prikaz sistema
+      Sajt koji sami uređujete    →  cjenovnik
+      Marketing koji dovodi goste →  cjenovnik
+    sada s "/#", pa rade i s podstranica
+
+Provjereno: nijedan link na sajtu više ne vodi u prazno.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
+  git rm components/sections/Services.tsx
+  npm run build
   git add .
-  git commit -m "fix: hero od ivice do ivice i razmjerni iphone mockupi"
+  git commit -m "feat: link na video u heroju, uklonjena sekcija usluge"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
