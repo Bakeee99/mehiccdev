@@ -1,34 +1,44 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Prikaz sistema kreće tek kad je cijeli u kadru
+  mehiccdev — Hero po referenci: ploča, prozorčići, strelica
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl):
-  components/sections/SystemDemo.tsx
+ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
+  components/sections/Hero.tsx
+  components/sections/Navbar.tsx
 
-RANIJE: prezentacija je kretala čim je trećina bila vidljiva, pa je
-posjetilac propuštao početak dok je skrolao do nje.
+════════ PLOČA ════════
+Hero stoji u zaobljenoj ploči uvučenoj od ivica ekrana, kao na
+referenci. Pozadina:
+  • meki preliv iz svijetle nijanse naše plave (#0F3554) u bijelo
+  • dva blaga dijagonalna odsjaja, kao staklo
+  • fina mreža koja blijedi prema dnu
+Bez sjaja, neona i jakih efekata, sve u tonovima palete.
 
-SADA:
-  • kreće tek kad je CIJELA scena u kadru
-  • staje tek kad većim dijelom izađe iz kadra (ispod 30 posto)
-  • ta dva praga su namjerno različita, da ne staje i kreće na svaki
-    mali pomak skrola
-  • ako je scena viša od ekrana (npr. telefon položeno), kreće kad
-    zauzme 90 posto visine ekrana, jer cijela nikad ne bi stala
+════════ NAVIGACIJA ════════
+Na vrhu je prozirna, pa izgleda kao dio ploče. Kad se skrola, dobije
+bijelu podlogu i tanku liniju ispod. Na podstranicama nepromijenjena.
 
-IZMJERENO u pregledniku, desktop i telefon:
-  vidljivo  20%  →  čeka
-  vidljivo  50%  →  čeka
-  vidljivo  80%  →  čeka
-  vidljivo 100%  →  krene
-  mali pomak skrola dok gleda  →  nastavlja
-  odskrola daleko  →  pauza
-  vrati se  →  nastavlja od istog mjesta
+════════ PROZORČIĆI SA STRANA ════════
+Popunjavaju prazninu pored naslova, blago nagnuti prema van, lagano
+lebde. Sadržaj NIJE izmišljen, za razliku od reference:
+  LIJEVO  Učitavanje sajta · 3,2 s (ranije 21,6 s) · Maximum Rent a Car
+          sa dvije trake: kratka zelena sada, puna siva ranije
+  DESNO   Nova rezervacija · VW Golf 8 · 10. do 13. jula
+          sa zelenom trakom "Potvrđeno"
+Prikazuju se od 1024 px naviše; na užim ekranima nemaju gdje stati.
+
+════════ DETALJI ════════
+  • ikonica s trakama ispred "Treba mu sistem.", kao na referenci
+  • ručno nacrtana isprekidana strelica koja vodi pogled do crvenog
+    dugmeta (samo na širokim ekranima)
+  • na engleskom decimalni znak je tačka (3.2 s), na bosanskom zarez
+
+Telefoni ostaju na dnu ploče, jedan pored drugog, sa zamućenjem.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "fix: prikaz sistema krece tek kad je cijeli u kadru"
+  git commit -m "feat: hero u ploci s prozorcicima, po referenci"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

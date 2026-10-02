@@ -77,10 +77,10 @@ export function Navbar() {
       <header className={cn(
         "fixed top-0 inset-x-0 z-50",
         isHome
-          // naslovnica: puna bijela traka preko cijele širine; tanka linija
-          // ispod se pojavi tek kad sadržaj počne prolaziti ispod nje
-          ? cn("bg-white transition-[border-color] duration-300 border-b",
-               scrolled ? "border-[#E5E7EB]" : "border-transparent")
+          // naslovnica: na vrhu providna, pa se stapa s panelom heroja;
+          // kad se skrola, dobije bijelu podlogu i tanku liniju ispod
+          ? cn("transition-[background-color,border-color] duration-300 border-b",
+               scrolled ? "bg-white border-[#E5E7EB]" : "bg-transparent border-transparent")
           : "px-3 sm:px-4 pt-3"
       )}>
         <nav

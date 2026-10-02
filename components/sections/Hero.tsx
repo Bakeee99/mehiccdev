@@ -24,7 +24,7 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, CarFront, Gauge } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 type Content = {
@@ -33,6 +33,8 @@ type Content = {
   sub: string;
   ctaPrimary: string; ctaSecondary: string;
   shots: { left: string; center: string; right: string };
+  cardSpeed: { label: string; value: string; was: string; client: string };
+  cardBooking: { title: string; detail: string; status: string };
 };
 
 const T: Record<"bs" | "en", Content> = {
@@ -49,6 +51,8 @@ const T: Record<"bs" | "en", Content> = {
       center: "Naslovna stranica sajta za iznajmljivanje vozila",
       right: "Ista naslovna stranica u tamnoj temi",
     },
+    cardSpeed: { label: "Učitavanje sajta", value: "3,2 s", was: "ranije 21,6 s", client: "Maximum Rent a Car" },
+    cardBooking: { title: "Nova rezervacija", detail: "VW Golf 8 · 10. do 13. jula", status: "Potvrđeno" },
   },
   en: {
     announceTag: "New",
@@ -63,6 +67,8 @@ const T: Record<"bs" | "en", Content> = {
       center: "Home page of a car rental website",
       right: "The same home page in dark mode",
     },
+    cardSpeed: { label: "Page load time", value: "3.2 s", was: "was 21.6 s", client: "Maximum Rent a Car" },
+    cardBooking: { title: "New booking", detail: "VW Golf 8 · July 10 to 13", status: "Confirmed" },
   },
 };
 
@@ -129,8 +135,86 @@ export function Hero() {
   });
 
   return (
-    <section className="hero-light relative bg-white overflow-hidden pt-36 sm:pt-40 lg:pt-44">
-      <div className="max-w-5xl mx-auto px-6 text-center">
+    <section className="hero-light relative bg-white px-2 sm:px-3 pt-2 sm:pt-3">
+      {/* ── PANEL ───────────────────────────────────────────────────────────
+          Hero stoji u zaobljenom panelu uvučenom od ivica ekrana, kao na
+          referenci. Pozadina je meki preliv iz svijetle nijanse naše plave
+          (#0F3554) u bijelo, a preko nje dva blaga dijagonalna odsjaja.
+          Navigacija je na vrhu providna, pa se stapa s panelom. */}
+      <div className="relative overflow-hidden rounded-[26px] sm:rounded-[36px]"
+           style={{ background: "linear-gradient(180deg, #D9E4F0 0%, #E7EEF6 34%, #F4F7FB 68%, #FFFFFF 100%)" }}>
+
+        {/* dijagonalni odsjaji, kao staklo na referenci */}
+        <div aria-hidden className="pointer-events-none absolute -left-[12%] top-0 h-[70%] w-[38%] -skew-x-[24deg] opacity-60"
+             style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%)" }} />
+        <div aria-hidden className="pointer-events-none absolute right-[-8%] top-0 h-[60%] w-[26%] -skew-x-[24deg] opacity-50"
+             style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%)" }} />
+        {/* fina mreža koja blijedi prema dnu */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.35]"
+             style={{
+               backgroundImage: "linear-gradient(to right, rgba(15,53,84,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,53,84,0.06) 1px, transparent 1px)",
+               backgroundSize: "56px 56px",
+               maskImage: "linear-gradient(to bottom, black 0%, transparent 60%)",
+               WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 60%)",
+             }} />
+
+      {/* ── PROZORČIĆI SA STRANE ─────────────────────────────────────────────
+          Popunjavaju prazninu pored naslova, kao na referenci. Sadržaj nije
+          izmišljen: lijevo je stvarni rezultat Maximuma, desno trenutak iz
+          sistema (rezervacija potvrđena jednim klikom). Nagnuti su blago
+          prema van i lagano lebde. Samo na širokim ekranima, jer na užim
+          ne bi imali gdje stati. */}
+      <motion.div
+        {...rise(0.35)}
+        className="pointer-events-none absolute left-[3%] xl:left-[6%] top-[300px] hidden lg:block"
+      >
+        <motion.div
+          animate={reduce ? undefined : { y: [0, -8, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="w-[230px] -rotate-[6deg] rounded-2xl border border-[#E5E7EB] bg-white p-4 text-left"
+          style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.05), 0 18px 40px -16px rgba(15,23,42,0.22)" }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#0F3554] text-white"><Gauge size={14} /></span>
+            <span className="text-[12px] font-medium text-[#64748B]">{d.cardSpeed.label}</span>
+          </div>
+          <p className="mt-3 text-[30px] font-semibold leading-none tracking-[-0.03em] text-[#0F172A]">{d.cardSpeed.value}</p>
+          {/* dvije trake: sada naspram ranije */}
+          <div className="mt-3 space-y-1.5">
+            <div className="h-1.5 w-[15%] rounded-full bg-[#16A34A]" />
+            <div className="h-1.5 w-full rounded-full bg-[#E5E7EB]" />
+          </div>
+          <div className="mt-2 flex items-center justify-between text-[11px]">
+            <span className="text-[#94A3B8]">{d.cardSpeed.was}</span>
+            <span className="font-medium text-[#475569]">{d.cardSpeed.client}</span>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        {...rise(0.45)}
+        className="pointer-events-none absolute right-[3%] xl:right-[6%] top-[230px] hidden lg:block"
+      >
+        <motion.div
+          animate={reduce ? undefined : { y: [0, -8, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+          className="w-[240px] rotate-[6deg] rounded-2xl border border-[#E5E7EB] bg-white p-4 text-left"
+          style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.05), 0 18px 40px -16px rgba(15,23,42,0.22)" }}
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#F1F5F9] text-[#0F3554]"><CarFront size={17} /></span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-semibold text-[#0F172A]">{d.cardBooking.title}</span>
+              <span className="block text-[11.5px] text-[#64748B]">{d.cardBooking.detail}</span>
+            </span>
+          </div>
+          <div className="mt-3.5 flex items-center gap-1.5 rounded-lg bg-[#16A34A] px-3 py-2 text-[12.5px] font-semibold text-white">
+            <Check size={14} strokeWidth={3} /> {d.cardBooking.status}
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <div className="relative max-w-5xl mx-auto px-6 pt-32 sm:pt-36 lg:pt-40 text-center">
 
         {/* ── 1. bedž ── */}
         <motion.div {...rise(0)} className="flex justify-center">
@@ -156,7 +240,16 @@ export function Hero() {
         >
           {d.h1a}
           {/* drugi dio uvijek u svom redu, i na telefonu */}
-          <span className="block text-[#0F3554]">{d.h1b}</span>
+          <span className="block text-[#0F3554]">
+            {/* mala ikonica rasta ispred naglašenog dijela, kao na referenci */}
+            <svg viewBox="0 0 24 24" aria-hidden
+                 className="hidden sm:inline-block h-[0.6em] w-[0.6em] mr-[0.16em] align-[0.02em]">
+              <rect x="2"  y="13" width="5" height="9"  rx="1.5" fill="currentColor" opacity=".45" />
+              <rect x="9.5" y="8" width="5" height="14" rx="1.5" fill="currentColor" opacity=".7" />
+              <rect x="17" y="2"  width="5" height="20" rx="1.5" fill="currentColor" />
+            </svg>
+            {d.h1b}
+          </span>
         </motion.h1>
 
         {/* ── 3. podnaslov ── */}
@@ -170,8 +263,16 @@ export function Hero() {
         {/* ── 4. dugmad ── */}
         <motion.div
           {...rise(0.18)}
-          className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3"
+          className="relative mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3"
         >
+          {/* isprekidana strelica koja vodi pogled do glavnog dugmeta */}
+          <svg aria-hidden viewBox="0 0 120 70" fill="none"
+               className="pointer-events-none absolute right-[calc(50%+188px)] top-[-14px] hidden md:block w-[104px] text-[#94A3B8]">
+            <path d="M6 8 C 10 44, 46 64, 104 52" stroke="currentColor" strokeWidth="1.6"
+                  strokeLinecap="round" strokeDasharray="5 6" />
+            <path d="M96 44 L106 52 L95 59" stroke="currentColor" strokeWidth="1.6"
+                  strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           <a
             href="#kontakt"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-6 py-3.5
@@ -232,8 +333,7 @@ export function Hero() {
              style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 55%, #FFFFFF 100%)" }} />
       </motion.div>
 
-      {/* sekcija se završava ispod telefona, bez dodatnog prostora */}
-      <div className="h-6 sm:h-10" aria-hidden />
+      </div>{/* kraj panela */}
     </section>
   );
 }
