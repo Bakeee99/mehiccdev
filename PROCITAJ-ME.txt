@@ -1,52 +1,41 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Sekcija "Naš rad" u stilu ostatka naslovnice
+  mehiccdev — Cjenovnik u bojama palete
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl + pregled):
-  components/sections/Portfolio.tsx   sekcija napisana ispočetka
-                                       (293 linije, bilo 511)
+ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
+  components/sections/Pricing.tsx   sekcija napisana ispočetka
 
-════════ ŠTA JE BILO ════════
-Velika kartica s još četiri male kartice brojki unutra, tri dugmeta i
-tamnim mockupom, a desno tri kartice različitog stila, od kojih jedna
-samo s plavim gradijentom umjesto slike. Previše okvira i boja.
+════════ ZAŠTO JE BILO MONOTONO ════════
+Sve kartice su bile iste svijetle boje, a ikonice sive pločice koje se
+skoro nisu vidjele, jer su ih ranija opšta pravila za naslovnicu
+utišala. Ništa nije odskakalo.
 
-════════ ŠTA JE SADA ════════
-1. ZAGLAVLJE centrirano, isto kao u Rezultatima i ostalim sekcijama.
+════════ BOJE PALETE I ČEMU SLUŽE ════════
+  #0F172A  Business je cijela TAMNO PLAVA kartica s bijelim tekstom,
+           pa se preporučeni paket vidi odmah
+  #0F3554  ikonice na bijelim karticama, okean plava na nježnoj podlozi
+  #16A34A  zelene kvačice, oznaka "Najpopularniji" i popust -39%
+  #DC2626  crvena SAMO na dugmetu "Zakažimo razgovor" kod Business
+           paketa, jer je to glavni klik u sekciji
 
-2. MAXIMUM U JEDNOJ KARTICI, dvije kolone:
-   lijevo  oznaka, naslov, opis
-           četiri brojke u JEDNOM REDU, bez kutija, odvojene tankim
-           linijama (na telefonu dvije po dvije)
-           četiri stavke sa zelenim kvačicama
-           jedno glavno dugme (Pogledajte detaljnije), jedno sporedno
-           (Pogledaj uživo) i tihi podvučeni link (Želim ovakvu
-           aplikaciju)
-   desno   svijetli prikaz: sajt u prozoru preglednika i admin panel
-           na telefonu preko ugla. Klik otvara sliku u punoj veličini.
+════════ ŠTA JE JOŠ PROMIJENJENO ════════
+  • dugmad su u svim karticama poravnata na dno i iste visine
+    (izmjereno: 47 px svako), bez obzira koliko stavki kartica ima
+  • oznaka "Za prve klijente · vrijedi do 30.10." je mala pločica sa
+    satom, umjesto žute trake
+  • "Nakon isporuke": dvije isprekidane kutije su sada jedna čista
+    kartica s dvije kolone i ikonicama
+  • rent-a-car baner: okean plava ikonica, tamno dugme desno
+  • marketing paketi imaju isti oblik kartica; preporučeni "Rast" je
+    istaknut tamnim rubom, a ne tamnom karticom, da se dvije tamne
+    kartice na stranici ne takmiče
 
-3. TRI MANJA PROJEKTA u redu ispod, kao jednake kartice: slika gore,
-   kategorija, naslov, opis i strelica. Oznaka "Uživo" na onima koji
-   rade.
-
-Fitness Trainer nema screenshot, pa umjesto plavog gradijenta ima
-mirnu sivu plohu s ikonicom. Kad dobiješ screenshot, upiši putanju u
-MINI_META na vrhu fajla i slika se sama pojavi.
-
-Svi tekstovi i linkovi su ostali isti. Uvećanje slike radi i zatvara
-se tipkom Escape, klikom van ili na X (provjereno).
-
-════════ SLIKE ════════
-Prikaz sada koristi svijetle screenshotove (maximum-poslije.webp i
-maximum-admin-mob-svijetla.webp), jer se slažu s bijelom stranicom.
-Oba već postoje u public/portfolio/.
-
-Stari maximum-naslovna.png sada koristi samo još rent-a-car stranica.
+Svi tekstovi, cijene i linkovi su ostali isti.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: sekcija nas rad u stilu naslovnice"
+  git commit -m "feat: cjenovnik u bojama palete"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

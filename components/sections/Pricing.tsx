@@ -1,29 +1,34 @@
 /**
  * components/sections/Pricing.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Cjenovnik — fully bilingual (BS/EN) + dark/light theme aware. Self-contained:
- * all package data lives here (no i18n changes needed).
+ * Cjenovnik (v3, u boji palete).
  *
- * Two blocks:
- *   1. Web application packages (Starter / Business / Premium) — one-time build
- *      price + monthly hosting/support, each with a FREE first-month marketing pack.
- *   2. Marketing packages (Start / Rast / Dominacija) — continue after the free month.
+ * Ranije su sve kartice bile iste svijetle boje, a ikonice sive pločice koje
+ * se skoro nisu vidjele, pa je sekcija djelovala monotono.
  *
- * Responsive: 3 columns on desktop, stacks to 1 column on mobile.
- * Edit any text/price below in the PRICING object.
+ * Boje palete i čemu služe ovdje:
+ *   #0F172A  tamno plava: preporučeni paket (Business) je cijela tamna
+ *            kartica, pa se odmah vidi bez ijedne jake boje
+ *   #0F3554  okean plava: ikonice na bijelim karticama, na nježnoj podlozi
+ *   #16A34A  zelena: kvačice i oznaka "Najpopularniji"
+ *   #DC2626  crvena: SAMO dugme preporučenog paketa, kao glavni klik
+ *
+ * Marketing paketi imaju isti oblik kartica, ali preporučeni je istaknut
+ * tamnim rubom, a ne tamnom karticom, da se dvije tamne kartice na istoj
+ * stranici ne takmiče.
+ *
+ * Sjene su postavljene kroz style, jer stranica ima pravilo koje utišava sve
+ * klase sa sjenom.
  */
 
 "use client";
 
-import { motion } from "framer-motion";
 import {
-  LayoutDashboard, Car, Crown, Rocket, TrendingUp, Star,
-  Gift, Check, ArrowRight, CarFront } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
+  ArrowRight, Check, Clock, Star, LayoutDashboard, Car, Crown, Rocket, TrendingUp,
+  CalendarClock, Wrench, type LucideIcon,
+} from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-// ── Types ───────────────────────────────────────────────────────────────────
 type AppPlan = { name: string; tag: string; price: string; alt?: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { alt?: string; name: string; tag: string; price: string; note: string; features: string[] };
 type PricingData = {
@@ -230,328 +235,228 @@ const PRICING: Record<"bs" | "en", PricingData> = {
   },
 };
 
-const APP_ICONS = [LayoutDashboard, Car, Crown];
-const MKT_ICONS = [Rocket, TrendingUp, Star];
+const APP_ICONS: LucideIcon[] = [LayoutDashboard, Car, Crown];
+const MKT_ICONS: LucideIcon[] = [Rocket, TrendingUp, Star];
 
+/* stavka koja je zapravo naslov grupe ("SVE iz Startera, plus:") */
 const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING");
+
+const SOFT = "0 1px 2px rgba(15,23,42,0.04)";
+const LIFT = "0 1px 2px rgba(15,23,42,0.06), 0 28px 56px -28px rgba(15,23,42,0.45)";
+
+/* ── Jedna kartica paketa ──────────────────────────────────────────────────
+   variant:
+     "dark"     preporučeni aplikacijski paket, tamno plava kartica
+     "outline"  preporučeni marketing paket, bijela s tamnim rubom
+     "plain"    ostali paketi */
+function PlanCard({
+  icon: Icon, name, tag, priceLabel, from, price, per, oldPrice, discount, alt, note,
+  promo, features, cta, href, badge, variant,
+}: {
+  icon: LucideIcon; name: string; tag: string; priceLabel?: string; from?: string;
+  price: string; per?: string; oldPrice?: string; discount?: string; alt?: string; note?: string;
+  promo?: string; features: string[]; cta: string; href: string; badge?: string;
+  variant: "dark" | "outline" | "plain";
+}) {
+  const dark = variant === "dark";
+  const txt   = dark ? "text-white" : "text-[#0F172A]";
+  const muted = dark ? "text-[#94A3B8]" : "text-[#64748B]";
+  const body  = dark ? "text-[#CBD5E1]" : "text-[#475569]";
+
+  return (
+    <article
+      className={`relative flex flex-col rounded-[20px] p-6 sm:p-7 ${
+        dark ? "bg-[#0F172A]"
+             : variant === "outline" ? "bg-white border-[1.5px] border-[#0F172A]"
+             : "bg-white border border-[#E5E7EB]"}`}
+      style={{ boxShadow: dark ? LIFT : SOFT }}
+    >
+      {/* ikonica, ime i oznaka */}
+      <div className="flex items-start justify-between gap-3">
+        <span className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/10 text-white" : "bg-[#EEF3F8] text-[#0F3554]"}`}>
+          <Icon size={20} strokeWidth={2} />
+        </span>
+        {badge && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#16A34A] px-2.5 py-1 text-[11px] font-semibold text-white">
+            <Star size={11} fill="currentColor" /> {badge}
+          </span>
+        )}
+      </div>
+      <h3 className={`mt-4 text-[19px] font-semibold ${txt}`}>{name}</h3>
+      <p className={`mt-1.5 text-[14px] leading-relaxed ${body}`}>{tag}</p>
+
+      {/* cijena */}
+      <div className={`mt-6 border-t pt-5 ${dark ? "border-white/10" : "border-[#F1F5F9]"}`}>
+        {priceLabel && <p className={`text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{priceLabel}</p>}
+        <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
+          {from && <span className={`text-[14px] font-medium ${muted}`}>{from}</span>}
+          <span className={`text-[34px] leading-none font-semibold tracking-tight tabular-nums ${txt}`}>{price}</span>
+          {per && <span className={`text-[14px] font-medium ${muted}`}>{per}</span>}
+          {oldPrice && <span className={`text-[15px] line-through ${muted}`}>{oldPrice}</span>}
+          {discount && (
+            <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${dark ? "bg-[#16A34A]/20 text-[#4ADE80]" : "bg-[#DCFCE7] text-[#15803D]"}`}>
+              {discount}
+            </span>
+          )}
+        </p>
+        {(alt || note) && <p className={`mt-1.5 text-[12.5px] ${muted}`}>{[alt, note].filter(Boolean).join(" · ")}</p>}
+        {promo && (
+          <p className={`mt-3 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium ${dark ? "bg-white/[0.06] text-[#E2E8F0]" : "bg-[#F8FAFC] text-[#334155]"}`}>
+            <Clock size={12} /> {promo}
+          </p>
+        )}
+      </div>
+
+      {/* stavke */}
+      <ul className="mt-6 space-y-2.5">
+        {features.map((f) =>
+          isHeader(f) ? (
+            <li key={f} className={`pt-2 text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{f}</li>
+          ) : (
+            <li key={f} className={`flex items-start gap-2.5 text-[14px] leading-snug ${body}`}>
+              <Check size={15} strokeWidth={2.5} className={`mt-0.5 shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
+              {f}
+            </li>
+          )
+        )}
+      </ul>
+
+      {/* dugme: crveno samo kod tamne (preporučene) kartice.
+          Omotač s mt-auto gura dugme na dno kartice, pa su dugmad u sve tri
+          kartice poravnata, bez obzira koliko stavki koja ima. */}
+      <div className="mt-auto pt-7">
+      <a
+        href={href}
+        className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-semibold transition-colors ${
+          dark
+            ? "border border-transparent bg-[#DC2626] text-white hover:bg-[#B91C1C]"
+            : variant === "outline"
+              ? "border border-transparent bg-[#0F172A] text-white hover:bg-[#1E293B]"
+              : "border border-[#E5E7EB] text-[#0F172A] hover:bg-[#F9FAFB]"
+        }`}
+      >
+        {cta} <ArrowRight size={15} />
+      </a>
+      </div>
+    </article>
+  );
+}
+
+/* zaglavlje bloka, isto kao u ostalim sekcijama */
+function Head({ eyebrow, h, accent, sub }: { eyebrow: string; h: string; accent?: string; sub: string }) {
+  return (
+    <div className="mx-auto max-w-2xl text-center">
+      <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{eyebrow}</p>
+      <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#0F172A]">
+        {h}{accent && <> <span className="text-[#0F3554]">{accent}</span></>}
+      </h2>
+      <p className="mx-auto mt-5 max-w-xl text-[16px] leading-relaxed text-[#475569]">{sub}</p>
+    </div>
+  );
+}
 
 export function Pricing() {
   const { lang } = useLanguage();
-  // One reveal per motion block — fires exactly once, survives language/theme switches
-  const revealAppsHead = useReveal();
-  const revealAppsGrid = useReveal();
-  const revealAppsNote = useReveal();
-  const revealAfter    = useReveal();
-  const revealRc       = useReveal();
-  const revealMktHead  = useReveal();
-  const revealMktGrid  = useReveal();
-  const revealMktNote  = useReveal();
   const d = PRICING[(lang as "bs" | "en")] ?? PRICING.bs;
+  const AFTER_ICONS: LucideIcon[] = [CalendarClock, Wrench];
 
   return (
-    <section id="cjenovnik" className="py-28 lg:py-36 relative overflow-hidden">
-      {/* Top divider */}
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      {/* Subtle background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full
-                      bg-[radial-gradient(closest-side,rgba(37,99,235,0.15),transparent_72%)] pointer-events-none" aria-hidden />
-      <div className="absolute bottom-0 -right-40 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.10),transparent_72%)] pointer-events-none" aria-hidden />
+    <section id="cjenovnik" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        {/* ══ aplikacije ══ */}
+        <Head eyebrow={d.eyebrow} h={d.heading} accent={d.headingAccent} sub={d.subtitle} />
 
-        {/* ════ WEB APPLICATION PACKAGES ════ */}
-        <motion.div
-          variants={staggerContainer}
-          {...revealAppsHead}
-          className="text-center mb-14"
-        >
-          <motion.div variants={fadeUp} className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.eyebrow}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            {d.heading}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
-          </motion.h2>
-          <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">
-            {d.subtitle}
-          </motion.p>
-        </motion.div>
+        <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+          {d.apps.map((plan, i) => (
+            <PlanCard
+              key={plan.name}
+              icon={APP_ICONS[i]}
+              name={plan.name}
+              tag={plan.tag}
+              priceLabel={d.buildLabel}
+              from={plan.from ? d.from : undefined}
+              price={plan.price}
+              oldPrice={plan.oldPrice}
+              discount={plan.discountBadge}
+              alt={[d.once, plan.alt].filter(Boolean).join(" · ")}
+              promo={plan.promoNote}
+              features={plan.features}
+              cta={plan.ctaLabel ?? d.cta}
+              href="#kontakt"
+              badge={i === 1 ? d.popular : undefined}
+              variant={i === 1 ? "dark" : "plain"}
+            />
+          ))}
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-[#64748B]">{d.appNote}</p>
 
-        <motion.div
-          variants={staggerContainerSlow}
-          {...revealAppsGrid}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-start"
-        >
-          {d.apps.map((plan, i) => {
-            const Icon = APP_ICONS[i] ?? Star;
-            const popular = i === 1;
-            return (
-              <motion.div
-                key={plan.name}
-                variants={scaleIn}
-                whileHover={{ y: -8 }}
-                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]
-                            transition-[border-color,box-shadow] duration-300
-                            ${popular
-                              ? "border-2 border-brand-600 shadow-2xl shadow-brand-600/20"
-                              : "border border-[var(--border)] hover:shadow-xl hover:shadow-brand-600/10"}`}
-              >
-                {plan.discountBadge && (
-                  <span className="absolute top-3 right-3 z-10 inline-flex items-center px-2.5 py-1 rotate-3 rounded-lg
-                                   bg-red-500 text-white text-xs font-extrabold
-                                   shadow-lg shadow-red-500/40 select-none pointer-events-none">
-                    {plan.discountBadge}
-                  </span>
-                )}
-                {popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-brand-600 text-white text-xs font-bold shadow-lg whitespace-nowrap">
-                      <Star size={11} fill="currentColor" /> {d.popular}
-                    </span>
+        {/* ══ nakon isporuke: jedna kartica, dvije kolone ══ */}
+        <div className="mt-16 mx-auto max-w-3xl">
+          <p className="text-center text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.afterHeading}</p>
+          <p className="mt-2 text-center text-[14px] text-[#475569]">{d.afterSub}</p>
+          <div className="mt-6 grid overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white sm:grid-cols-2" style={{ boxShadow: SOFT }}>
+            {d.afterBoxes.map((b, i) => {
+              const Icon = AFTER_ICONS[i];
+              return (
+                <div key={b.label} className={`flex gap-4 p-6 ${i > 0 ? "border-t sm:border-t-0 sm:border-l border-[#F1F5F9]" : ""}`}>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><Icon size={18} /></span>
+                  <div>
+                    <p className="text-[13px] font-semibold text-[#0F172A]">{b.label}</p>
+                    <p className="mt-1 flex items-baseline gap-1.5">
+                      <span className="text-[24px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{b.price}</span>
+                      <span className="text-[13px] text-[#64748B]">{b.per}</span>
+                      {b.alt && <span className="text-[12px] text-[#94A3B8]">· {b.alt}</span>}
+                    </p>
+                    <p className="mt-1 text-[13px] leading-relaxed text-[#64748B]">{b.sub}</p>
                   </div>
-                )}
-
-                <div className="flex items-center gap-2.5 mb-1">
-                  <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-brand-600 to-brand-400 text-white flex-shrink-0">
-                    <Icon size={18} />
-                  </span>
-                  <h3 className="text-lg font-bold text-[var(--text)]">{plan.name}</h3>
                 </div>
-                <p className="text-sm text-[var(--text-muted)] mb-5 min-h-[52px] leading-relaxed">{plan.tag}</p>
+              );
+            })}
+          </div>
+          <p className="mt-4 text-center text-[12.5px] text-[#64748B]">{d.hostingNote}</p>
+        </div>
 
-                {/* Build (one-time) price */}
-                <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)] mb-1">{d.buildLabel}</p>
-                <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                  {plan.from && <span className="text-base font-semibold text-[var(--text-muted)]">{d.from}</span>}
-                  <span className="text-4xl font-extrabold text-[var(--text)]">{plan.price}</span>
-                  {plan.oldPrice && (
-                    <span className="text-lg font-bold text-[var(--text-muted)] line-through decoration-red-500/60 decoration-2">
-                      {plan.oldPrice}
-                    </span>
-                  )}
-
-                </div>
-                <p className="text-xs text-[var(--text-muted)] mb-2">
-                  {d.once}{plan.alt ? ` · ${plan.alt}` : ""}
-                </p>
-                {plan.promoNote && (
-                  <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30
-                                px-3 py-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 mb-3 leading-snug">
-                    ⏳ {plan.promoNote}
-                  </p>
-                )}
-
-                {/* Free marketing banner */}
-                <ul className="flex flex-col gap-2.5 mb-6 flex-1">
-                  {plan.features.map((f) =>
-                    isHeader(f) ? (
-                      <li key={f} className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)] mt-1">{f}</li>
-                    ) : (
-                      <li key={f} className="flex items-start gap-2.5 text-sm text-[var(--text-muted)]">
-                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-600/10 dark:bg-brand-500/15 flex items-center justify-center text-brand-600 dark:text-brand-400 mt-0.5">
-                          <Check size={11} strokeWidth={3} />
-                        </span>
-                        {f}
-                      </li>
-                    )
-                  )}
-                </ul>
-
-                <a
-                  href="#kontakt"
-                  className={`mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl font-semibold text-sm transition-all
-                              ${popular
-                                ? "cta-primary bg-brand-600 hover:bg-brand-700 text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
-                                : "border border-[var(--border)] text-[var(--text)] hover:border-brand-600/40"}`}
-                >
-                  <span>{plan.ctaLabel ?? d.cta}</span>
-                  <ArrowRight size={17} className="flex-shrink-0" />
-                </a>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        <motion.p
-          variants={fadeUp}
-          {...revealAppsNote}
-          className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
+        {/* ══ rent-a-car ══ */}
+        <a
+          href="/rjesenja/rent-a-car"
+          className="group mt-12 mx-auto flex max-w-3xl flex-col sm:flex-row sm:items-center gap-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8FAFC] p-6 transition-colors hover:border-[#CBD5E1]"
         >
-          {d.appNote}
-        </motion.p>
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#0F3554] text-white"><Car size={22} /></span>
+          <span className="flex-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-[#64748B]">{d.rcBanner.eyebrow}</span>
+            <span className="mt-1 block text-[17px] font-semibold text-[#0F172A]">{d.rcBanner.title}</span>
+            <span className="mt-1 block text-[13.5px] leading-relaxed text-[#475569]">{d.rcBanner.desc}</span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0F172A] px-5 py-3 text-[14px] font-semibold text-white transition-colors group-hover:bg-[#1E293B]">
+            {d.rcBanner.cta} <ArrowRight size={15} />
+          </span>
+        </a>
 
-        {/* ════ NAKON ISPORUKE: fiksne dodatne usluge ════ */}
-        <motion.div variants={staggerContainer} {...revealAfter} className="mt-14 max-w-2xl mx-auto text-center">
-          <motion.p variants={fadeUp} className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] mb-2">
-            {d.afterHeading}
-          </motion.p>
-          <motion.p variants={fadeUp} className="text-sm text-[var(--text-muted)] mb-6">
-            {d.afterSub}
-          </motion.p>
-          <motion.div variants={fadeUp} className="grid sm:grid-cols-2 gap-3.5">
-            {d.afterBoxes.map((b) => (
-              <div key={b.label}
-                   className="rounded-2xl border border-dashed border-[var(--border)]
-                              bg-[color-mix(in_srgb,var(--bg)_40%,transparent)] px-5 py-4 text-center
-                              transition-[border-color] duration-300 hover:border-brand-600/40">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-1">{b.label}</p>
-                <p className="text-2xl font-extrabold text-[var(--text)]">
-                  {b.price}<span className="text-sm font-semibold text-[var(--text-muted)]">{b.per}</span>
-                </p>
-                {b.alt && <p className="text-[11px] text-[var(--text-muted)] mt-0.5">{b.alt}</p>}
-                <p className="text-[11px] text-[var(--text-muted)] mt-1">{b.sub}</p>
-              </div>
+        {/* ══ marketing ══ */}
+        <div className="mt-28">
+          <Head eyebrow={d.mktEyebrow} h={d.mktHeading} sub={d.mktSubtitle} />
+          <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+            {d.mkt.map((plan, i) => (
+              <PlanCard
+                key={plan.name}
+                icon={MKT_ICONS[i]}
+                name={plan.name}
+                tag={plan.tag}
+                price={plan.price}
+                per={d.perMonth}
+                alt={plan.alt}
+                note={plan.note}
+                features={plan.features}
+                cta={d.mktCta}
+                href="#kontakt"
+                badge={i === 1 ? d.popular : undefined}
+                variant={i === 1 ? "outline" : "plain"}
+              />
             ))}
-          </motion.div>
-          <motion.p variants={fadeUp} className="text-[11.5px] text-[var(--text-muted)] mt-4">
-            {d.hostingNote}
-          </motion.p>
-        </motion.div>
-
-        {/* ════ BANNER: rent-a-car landing ════════════════════════════════════
-           Rent-a-car firme imaju svoju stranicu s posebnim paketima, pa ih
-           odavde šaljemo tamo umjesto da im nudimo opšte pakete. */}
-        <motion.div variants={staggerContainer} {...revealRc} className="mt-14 max-w-4xl mx-auto">
-          <motion.a
-            variants={fadeUp}
-            href="/rjesenja/rent-a-car"
-            className="group relative flex flex-col sm:flex-row items-center gap-5 rounded-3xl p-6 sm:p-7 overflow-hidden
-                       transition-[box-shadow,transform] duration-300
-                       hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-600/20"
-            style={{
-              background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",
-              border: "1.5px solid transparent",
-            }}
-          >
-            <span aria-hidden className="absolute -top-24 -right-16 w-64 h-64 rounded-full pointer-events-none
-                                         bg-[radial-gradient(closest-side,rgba(37,99,235,0.18),transparent_72%)]" />
-            <span className="relative w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0
-                             bg-gradient-to-br from-brand-600 to-brand-400 text-white shadow-lg shadow-brand-600/30">
-              <CarFront size={20} />
-            </span>
-            <span className="relative flex-1 text-center sm:text-left">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-brand-300 mb-1">
-                {d.rcBanner.eyebrow}
-              </span>
-              <span className="block text-lg font-extrabold text-[var(--text)] mb-1">{d.rcBanner.title}</span>
-              <span className="block text-[13px] text-[var(--text-muted)] leading-relaxed">{d.rcBanner.desc}</span>
-            </span>
-            <span className="relative inline-flex items-center gap-1.5 px-5 py-3 rounded-xl flex-shrink-0
-                             bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold
-                             shadow-lg shadow-brand-600/30 transition-transform duration-300 group-hover:translate-x-0.5">
-              {d.rcBanner.cta} <ArrowRight size={14} />
-            </span>
-          </motion.a>
-        </motion.div>
-
-        {/* ════ MARKETING PACKAGES ════ */}
-        <motion.div
-          variants={staggerContainer}
-          {...revealMktHead}
-          className="text-center mb-14 mt-24"
-        >
-          <motion.div variants={fadeUp} className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-green-600/30 dark:border-green-500/30
-                             bg-green-600/8 dark:bg-green-500/10
-                             text-green-700 dark:text-green-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden />
-              {d.mktEyebrow}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            {d.mktHeading}
-          </motion.h2>
-          <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">
-            {d.mktSubtitle}
-          </motion.p>
-        </motion.div>
-
-        <motion.div
-          variants={staggerContainerSlow}
-          {...revealMktGrid}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch"
-        >
-          {d.mkt.map((plan, i) => {
-            const Icon = MKT_ICONS[i] ?? Rocket;
-            const popular = i === 1;
-            return (
-              <motion.div
-                key={plan.name}
-                variants={scaleIn}
-                whileHover={{ y: -8 }}
-                className={`relative flex flex-col p-7 rounded-3xl bg-[var(--surface)]
-                            transition-[border-color,box-shadow] duration-300
-                            ${popular
-                              ? "border-2 border-green-500 shadow-2xl shadow-green-500/20"
-                              : "border border-green-500/20 hover:shadow-xl hover:shadow-green-500/10"}`}
-              >
-                {popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-green-600 text-white text-xs font-bold shadow-lg whitespace-nowrap">
-                      <Star size={11} fill="currentColor" /> {d.popular}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2.5 mb-1">
-                  <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-green-600 to-green-400 text-white flex-shrink-0">
-                    <Icon size={18} />
-                  </span>
-                  <h3 className="text-lg font-bold text-[var(--text)]">{plan.name}</h3>
-                </div>
-                <p className="text-sm text-[var(--text-muted)] mb-5 min-h-[40px] leading-relaxed">{plan.tag}</p>
-
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-extrabold text-[var(--text)]">{plan.price}</span>
-                  <span className="text-sm text-[var(--text-muted)] font-medium">{d.perMonth}</span>
-                </div>
-                {plan.alt && <p className="text-[11.5px] text-[var(--text-muted)] -mt-0.5 mb-1">{plan.alt}</p>}
-                <p className="text-xs text-[var(--text-muted)] mb-5">{plan.note}</p>
-
-                <ul className="flex flex-col gap-2.5 mb-6 flex-1">
-                  {plan.features.map((f) =>
-                    isHeader(f) ? (
-                      <li key={f} className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)] mt-1">{f}</li>
-                    ) : (
-                      <li key={f} className="flex items-start gap-2.5 text-sm text-[var(--text-muted)]">
-                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/10 dark:bg-green-500/15 flex items-center justify-center text-green-600 dark:text-green-400 mt-0.5">
-                          <Check size={11} strokeWidth={3} />
-                        </span>
-                        {f}
-                      </li>
-                    )
-                  )}
-                </ul>
-
-                <a
-                  href="#kontakt"
-                  className="mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl font-semibold text-sm
-                             border border-[var(--border)] text-[var(--text)] hover:border-green-500/40 transition-all"
-                >
-                  <span>{d.mktCta}</span>
-                  <ArrowRight size={17} className="flex-shrink-0" />
-                </a>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        <motion.p
-          variants={fadeUp}
-          {...revealMktNote}
-          className="text-center text-xs text-[var(--text-muted)] mt-8 max-w-2xl mx-auto leading-relaxed"
-        >
-          {d.mktNote}
-        </motion.p>
+          </div>
+          <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-[#64748B]">{d.mktNote}</p>
+        </div>
       </div>
     </section>
   );
