@@ -1,50 +1,53 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — "Zašto se isplati": jasnija računica, pune boje
+  mehiccdev — Flagship sekcija: kartica proizvoda + forma koja radi
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
-  components/sections/Value.tsx
+ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
+  components/sections/SaasTeaser.tsx   sekcija napisana ispočetka
+  app/globals.css                      uklonjeno staro pravilo za flagship
 
-════════ PROBLEM 1: ZVUČALO JE KAO DNEVNA NAPLATA ════════
-"od 6 KM /dan" se čitalo kao da klijent plaća svaki dan. Zapravo je
-to aplikacija plaćena JEDNOM, razvučena na prvu godinu, a u toj
-cifri je bila i mjesečna podrška.
+════════ ⚠ VAŽNO: FORMA ZA RANI PRISTUP NIJE RADILA ════════
+Stara forma je samo glumila slanje: čekala je 1,2 sekunde i prikazala
+"Hvala na prijavi!", a email nije išao nikuda. Svaka agencija koja se
+do sada prijavila je izgubljena.
 
-Sada se to vidi jednim pogledom, kao vremenska linija:
+Sada prijava ide istim putem kao kontakt forma (/api/kontakt, Resend)
+i stiže ti na email s temom:
+    "Rani pristup · Real Estate SaaS"
+Ako slanje ne uspije, posjetilac vidi poruku s tvojim emailom umjesto
+lažnog "hvala". Provjereno lokalno: bez ključa API odbije, i greška
+se prikaže.
 
-   Godina 1        Godina 2       Godina 3       Godina 4 i dalje
-   1.000 KM        0 KM           0 KM           0 KM
-   plaćate jednom  aplikacija je  aplikacija je  aplikacija je
-                   vaša           vaša           vaša
+Na Vercelu moraju biti podešeni RESEND_API_KEY, UPIT_EMAIL_TO i
+UPIT_EMAIL_FROM (isti kao za kontakt formu). Poslije pusha pošalji
+sebi jednu probnu prijavu.
 
-uz zelenu oznaku "Ovo nije pretplata". Ispod je dnevna računica,
-jasno označena kao "raspoređeno na prvu godinu", i razdvojena:
-   Samo aplikacija         2,74 KM dnevno   (1.000 KM ÷ 365 dana)
-   S mjesečnom podrškom    oko 6 KM dnevno  (+ 100 KM mjesečno,
-                                             opciono, otkažite bilo kad)
+════════ DIZAJN ════════
+Cilj je da se osjeti da je ovo PROIZVOD, pa je sve u jednoj velikoj
+ploči, kao kartica proizvoda:
 
-Podnaslov: "Aplikaciju plaćate jednom i ona je zauvijek vaša. Nema
-mjesečne pretplate na samu aplikaciju."
+  STATUSNA TRAKA  ikonica i naziv platforme, zelena oznaka "U razvoju",
+                  a desno vremenska linija: Novembar 2026 (početak
+                  razvoja, tačka "sada") → Oktobar 2027 (lansiranje)
+  LIJEVO          naslov, opis, četiri tržišta i šest funkcija kao
+                  uredna lista u dvije kolone s plavim ikonicama
+  DESNO           SVIJETLI prikaz platforme umjesto tamnog plavog
+                  prozora: pretraga, filteri i četiri oglasa s
+                  ilustrovanim zgradama u prigušenim tonovima, uz
+                  oznake BOOST i AI; tri plutajuće oznake (AI opis,
+                  XML sync, kreditni kalkulator) postavljene tako da
+                  ne prekrivaju cijene ni filtere
+  DNO             rani pristup kao tamno plava traka: naslov sa
+                  zelenom iskrom, opis, bijelo polje za email i
+                  crveno dugme "Prijavi se"
 
-════════ PROBLEM 2: DJELOVALO JE PROZIRNO ════════
-  • prva godina je tamno plava pločica, ostale tri zelene, pa se
-    razlika "platite jednom, poslije 0" vidi bez čitanja
-  • kolona "Prije" više nije blijeda i prekrižena, nego čitljiv tekst
-    sa sivim X ispred; "Sa sistemom" je taman tekst sa zelenom kvačicom
-  • završni poziv je tamno plava kartica s bijelim dugmetom, bez
-    kurziva
-  • uklonjen znak beskonačnosti iz "Godina 4 i dalje"
-  • cijene u pločicama nikad ne lome red (ranije se "1.000 KM" lomilo
-    na telefonu)
-  • stavke ispod kartice staju u jedan red na desktopu
-
-Usput ispravljeno: stara stavka "3 mjeseca podrške" više ne važi,
-sada piše "2 mjeseca podrške uz Business", kako je u cjenovniku.
+Oglasi u prikazu su ilustrativni (izmišljene nekretnine i cijene),
+jer platforma još nije lansirana.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: jasnija racunica isplativosti i pune boje"
+  git commit -m "feat: flagship kao kartica proizvoda, prava forma za rani pristup"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

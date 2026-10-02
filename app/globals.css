@@ -234,20 +234,6 @@ html.light [class*="from-brand-600"][class*="bg-gradient-to-b"] { background: #E
    smiruje, a ništa se ne gubi. */
 
 
-/* Isplativost: niz pilula s kvačicama postaje običan red teksta */
-html.light #vrijednost [class*="rounded-full"][class*="border"]:not(a, button) {
-  background: transparent !important;
-  border-color: transparent !important;
-}
-
-/* Flagship: šest kartica funkcija postaje mreža bez okvira, s linijom iznad */
-html.light #saas .grid > div[class*="rounded"] {
-  background: transparent !important;
-  border: 0 !important;
-  border-top: 1px solid #F3F4F6 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
 
 /* ── bedževi: zelena je boja potvrda i oznaka ("Novo", "Najpopularnije") ── */
 html.light span[class*="bg-brand-600"][class*="text-white"] {
@@ -286,10 +272,6 @@ html.light a[class*="bg-brand-600/"] {
   border-color: #E5E7EB !important;
 }
 html.light a[class*="bg-brand-600/"]:hover { background: #E5E7EB !important; }
-
-/* ── crvena je samo za glavne klikove: "prije" u tabelama postaje siva ───── */
-html.light #vrijednost [class*="text-red"] { color: #9CA3AF !important; }
-html.light #vrijednost [class*="bg-red"]   { background-color: #F9FAFB !important; }
 
 /* ── inicijali u kontaktu: tamni krugovi umjesto plavog gradijenta ───────── */
 html.light #kontakt :is([class*="from-blue-600"], [class*="from-indigo-500"]) { background: #0F172A !important; }

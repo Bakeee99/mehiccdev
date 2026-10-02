@@ -1,19 +1,26 @@
 /**
  * components/sections/SaasTeaser.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * Flagship: Real Estate SaaS platforma (v3, premium redizajn).
+ * Flagship: platforma za nekretnine (v3).
  *
- * Kompozicija:
- *   1. Header (eyebrow + naslov sa serif akcentom)
- *   2. Showcase: lijevo priča (badge, naslov, opis, tržišta, ROADMAP s dva
- *      čvora: početak razvoja → lansiranje), desno MOCKUP platforme (browser
- *      okvir s feedom oglasa) + tri plutajuće glass kartice koje pokazuju
- *      AI opis, XML sync i kreditni kalkulator "uživo"
- *   3. Bento grid: 6 funkcionalnosti kao mini kartice s ikonicama
- *   4. Early access traka s formom preko cijele širine
+ * Cilj: da se osjeti da je ovo PROIZVOD, a ne još jedna sekcija. Zato je sve
+ * u jednoj velikoj ploči, kao kartica proizvoda:
  *
- * Self-contained (BS/EN), useReveal pattern, dark/light tema, bez crtica.
- * Plutanje kartica ide kroz framer-motion i poštuje reduced-motion.
+ *   ┌ statusna traka: oznaka platforme · vremenska linija razvoja ┐
+ *   │ lijevo: naslov, opis, tržišta, šest funkcija                  │
+ *   │ desno:  SVIJETLI prikaz platforme (pretraga, oglasi)          │
+ *   └ dno: tamno plava traka "rani pristup" s formom                ┘
+ *
+ * Tamni plavi prozor je zamijenjen svijetlim prikazom, jer je previše iskakao
+ * iz bijele stranice. "Fotografije" nekretnina su ilustracije zgrada u
+ * prigušenim tonovima, bez stvarnih slika i bez neonskih boja.
+ *
+ * FORMA: ranije je samo glumila slanje (čekala 1,2 s i rekla "hvala"), pa se
+ * nijedna prijava nije sačuvala. Sada šalje preko /api/kontakt (Resend), s
+ * jasnom temom poruke, a ako slanje ne uspije, posjetilac to vidi.
+ *
+ * Sjene su postavljene kroz style, jer stranica ima pravilo koje utišava sve
+ * klase sa sjenom.
  */
 
 "use client";
@@ -21,17 +28,10 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  Building2, Hammer, Rocket, CheckCircle2, ArrowRight, Sparkles,
-  RefreshCw, Landmark, Globe2, TrendingUp, Gauge, Search, Heart,
+  Sparkles, RefreshCw, Landmark, Globe2, TrendingUp, Gauge, Building2, Search,
+  Check, ArrowRight, Heart, type LucideIcon,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInRight } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
-import { useCoarsePointer } from "@/lib/useCoarsePointer";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-
-const MARKETS = ["🇧🇦 BiH", "🇷🇸 Srbija", "🇭🇷 Hrvatska", "🇲🇪 Crna Gora"];
-const FEATURE_ICONS: LucideIcon[] = [Sparkles, RefreshCw, Landmark, Globe2, TrendingUp, Gauge];
 
 type Content = {
   label: string; heading1: string; headingAccent: string;
@@ -42,6 +42,7 @@ type Content = {
   features: { t: string; d: string }[];
   earlyAccess: string; earlyAccessDesc: string;
   placeholder: string; submit: string; submitting: string; success: string;
+  error: string; status: string;
 };
 
 const T: Record<"bs" | "en", Content> = {
@@ -76,6 +77,8 @@ const T: Record<"bs" | "en", Content> = {
     submit: "Prijavi se",
     submitting: "Slanje…",
     success: "Hvala na prijavi! Javit ćemo vam se prije lansiranja.",
+    error: "Slanje nije uspjelo. Pišite nam na bakir.mehic@mehiccdev.com.",
+    status: "U razvoju",
   },
   en: {
     label: "Our flagship product",
@@ -108,50 +111,107 @@ const T: Record<"bs" | "en", Content> = {
     submit: "Sign up",
     submitting: "Sending…",
     success: "Thanks for signing up! We'll reach out before launch.",
+    error: "Sending failed. Email us at bakir.mehic@mehiccdev.com.",
+    status: "In development",
   },
 };
 
-/* ── Mockup: feed oglasa u browser okviru (namjerno taman, glumi proizvod) ── */
-function PlatformMock({ search }: { search: string }) {
+const FEATURE_ICONS: LucideIcon[] = [Sparkles, RefreshCw, Landmark, Globe2, TrendingUp, Gauge];
+const CHIP_ICONS: LucideIcon[]    = [Sparkles, RefreshCw, Landmark];
+const MARKETS = [["BA", "BiH"], ["RS", "Srbija"], ["HR", "Hrvatska"], ["ME", "Crna Gora"]] as const;
+
+/* Ilustrativni oglasi u prikazu platforme. Nisu stvarni, glume proizvod. */
+const LISTINGS = {
+  bs: [
+    { t: "Trosoban stan, Centar",  m: "78 m² · 3 sobe",  p: "185.000 KM", tag: "boost" },
+    { t: "Kuća s okućnicom, Bijeli Brijeg", m: "142 m² · 5 soba", p: "320.000 KM", tag: "ai" },
+    { t: "Dvosoban stan, Zalik",   m: "56 m² · 2 sobe",  p: "129.000 KM", tag: "" },
+    { t: "Penthouse, Rondo",       m: "110 m² · 4 sobe", p: "410.000 KM", tag: "" },
+  ],
+  en: [
+    { t: "3-room flat, Centre",    m: "78 m² · 3 rooms",  p: "€94,500",  tag: "boost" },
+    { t: "House with garden, Bijeli Brijeg", m: "142 m² · 5 rooms", p: "€163,500", tag: "ai" },
+    { t: "2-room flat, Zalik",     m: "56 m² · 2 rooms",  p: "€66,000",  tag: "" },
+    { t: "Penthouse, Rondo",       m: "110 m² · 4 rooms", p: "€209,500", tag: "" },
+  ],
+} as const;
+
+/* prigušeni tonovi za "fotografije": nebo i fasada svake ilustracije */
+const TONES = [
+  ["#E8EEF5", "#C9D6E4"], ["#EEF1E8", "#D3DCC6"], ["#F3EEE6", "#E0D4C2"], ["#E9ECF2", "#CDD3DF"],
+];
+
+const SOFT = "0 1px 2px rgba(15,23,42,0.04)";
+const FLOAT = "0 1px 2px rgba(15,23,42,0.06), 0 18px 36px -18px rgba(15,23,42,0.28)";
+
+/* ── ilustracija zgrade umjesto fotografije ───────────────────────────── */
+function Building({ i }: { i: number }) {
+  const [sky, wall] = TONES[i % TONES.length];
   return (
-    <div className="rounded-2xl overflow-hidden border border-brand-500/25 bg-[#080D1E]
-                    shadow-[0_44px_90px_-30px_rgba(37,99,235,0.5)]">
-      {/* traka browsera */}
-      <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/8 bg-white/[.03]">
-        <span className="w-2 h-2 rounded-full bg-white/15" />
-        <span className="w-2 h-2 rounded-full bg-white/15" />
-        <span className="w-2 h-2 rounded-full bg-white/15" />
-        <span className="flex-1 ml-2 h-[18px] rounded-md bg-white/[.06]" />
+    <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMax slice" className="h-full w-full" aria-hidden>
+      <rect width="160" height="100" fill={sky} />
+      <circle cx="128" cy="24" r="10" fill="#FFFFFF" opacity=".7" />
+      <rect x={i % 2 ? 22 : 36} y={i % 2 ? 34 : 26} width={i % 2 ? 70 : 54} height="74" fill={wall} />
+      <rect x={i % 2 ? 96 : 96} y="48" width="38" height="60" fill={wall} opacity=".75" />
+      {Array.from({ length: 12 }).map((_, k) => (
+        <rect key={k} x={(i % 2 ? 30 : 44) + (k % 4) * 14} y={(i % 2 ? 42 : 34) + Math.floor(k / 4) * 16}
+              width="8" height="9" rx="1" fill="#FFFFFF" opacity=".85" />
+      ))}
+      <rect x="0" y="92" width="160" height="8" fill="#FFFFFF" opacity=".6" />
+    </svg>
+  );
+}
+
+/* ── svijetli prikaz platforme ───────────────────────────────────────── */
+function PlatformMock({ lang, search }: { lang: "bs" | "en"; search: string }) {
+  const items = LISTINGS[lang];
+  return (
+    <div className="overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white" style={{ boxShadow: FLOAT }}>
+      {/* traka prozora */}
+      <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-4 py-2.5">
+        <span className="h-2 w-2 rounded-full bg-[#E2E8F0]" /><span className="h-2 w-2 rounded-full bg-[#E2E8F0]" /><span className="h-2 w-2 rounded-full bg-[#E2E8F0]" />
       </div>
+
       <div className="p-4 sm:p-5">
-        {/* pretraga */}
-        <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white/[.05] border border-white/10 mb-4">
-          <Search size={13} className="text-blue-300/80 flex-shrink-0" />
-          <span className="text-[11px] text-blue-100/60 truncate">{search}</span>
-          <span className="ml-auto w-14 h-5 rounded-md bg-blue-600 flex-shrink-0" />
+        {/* zaglavlje aplikacije */}
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <span className="grid h-6 w-6 place-items-center rounded-md bg-[#0F3554] text-white"><Building2 size={13} /></span>
+            <span className="h-2 w-16 rounded-full bg-[#0F172A]/80" />
+          </span>
+          <span className="flex gap-1.5">
+            <span className="h-2 w-10 rounded-full bg-[#E2E8F0]" /><span className="h-2 w-10 rounded-full bg-[#E2E8F0]" />
+          </span>
         </div>
-        {/* feed oglasa 2×2 */}
-        <div className="grid grid-cols-2 gap-3" aria-hidden>
-          {[
-            "from-blue-400/50 to-indigo-600/30",
-            "from-sky-400/50 to-blue-600/30",
-            "from-indigo-400/50 to-blue-700/30",
-            "from-cyan-400/45 to-blue-600/30",
-          ].map((g, i) => (
-            <div key={i} className="rounded-xl border border-white/10 bg-white/[.04] overflow-hidden">
-              <div className={`relative aspect-[16/10] bg-gradient-to-br ${g}`}>
-                <span className="absolute inset-0 opacity-30
-                                 bg-[linear-gradient(rgba(255,255,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.12)_1px,transparent_1px)]
-                                 bg-[size:16px_16px]" />
-                <Heart size={11} className="absolute top-2 right-2 text-white/70" />
-                {i === 0 && (
-                  <span className="absolute bottom-2 left-2 px-1.5 py-0.5 rounded text-[8px] font-bold
-                                   bg-blue-600 text-white uppercase tracking-wide">Boost</span>
-                )}
+
+        {/* pretraga i filteri */}
+        <div className="mt-4 flex items-center gap-2 rounded-xl border border-[#E5E7EB] px-3 py-2">
+          <Search size={14} className="text-[#94A3B8]" />
+          <span className="flex-1 truncate text-[12px] text-[#475569]">{search}</span>
+          <span className="rounded-lg bg-[#0F172A] px-2.5 py-1 text-[10.5px] font-semibold text-white">
+            <Search size={11} className="inline" />
+          </span>
+        </div>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {["BiH", "KM", lang === "en" ? "3+ rooms" : "3+ sobe", lang === "en" ? "For sale" : "Prodaja"].map((f, k) => (
+            <span key={f} className={`rounded-full px-2.5 py-1 text-[10.5px] font-medium ${k === 0 ? "bg-[#0F3554] text-white" : "bg-[#F1F5F9] text-[#475569]"}`}>{f}</span>
+          ))}
+        </div>
+
+        {/* oglasi */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          {items.map((it, i) => (
+            <div key={it.t} className="overflow-hidden rounded-xl border border-[#F1F5F9]">
+              <div className="relative aspect-[16/10]">
+                <Building i={i} />
+                <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-white/90 text-[#64748B]"><Heart size={11} /></span>
+                {it.tag === "boost" && <span className="absolute left-2 top-2 rounded-md bg-[#16A34A] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">Boost</span>}
+                {it.tag === "ai" && <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-md bg-[#0F3554] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white"><Sparkles size={9} /> AI</span>}
               </div>
               <div className="p-2.5">
-                <div className="h-[7px] w-3/4 rounded bg-white/20 mb-1.5" />
-                <div className="h-[7px] w-1/2 rounded bg-blue-400/50" />
+                <p className="text-[12.5px] font-semibold text-[#0F172A]">{it.p}</p>
+                <p className="mt-0.5 truncate text-[11px] text-[#475569]">{it.t}</p>
+                <p className="text-[10.5px] text-[#94A3B8]">{it.m}</p>
               </div>
             </div>
           ))}
@@ -161,251 +221,171 @@ function PlatformMock({ search }: { search: string }) {
   );
 }
 
-/* ── Plutajuća glass kartica ────────────────────────────────────────────────── */
-function FloatChip({
-  title, value, className, delay, icon: Icon,
-}: { title: string; value: string; className: string; delay: number; icon: LucideIcon }) {
-  // miruje i za reduced-motion i na touch uređajima (performanse skrolanja)
-  const reduce = useReducedMotion();
-  const coarse = useCoarsePointer();
-  const calm = reduce || coarse;
-  return (
-    <motion.div
-      animate={calm ? undefined : { y: [0, -9, 0] }}
-      transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay }}
-      className={`absolute z-10 flex items-center gap-2.5 pl-2.5 pr-3.5 py-2.5 rounded-2xl
-                  border border-brand-500/30 bg-[color-mix(in_srgb,var(--surface)_95%,transparent)] md:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] md:backdrop-blur-md
-                  shadow-[0_18px_40px_-12px_rgba(2,8,30,0.6)] ${className}`}
-    >
-      <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0
-                       bg-brand-600/15 border border-brand-600/30 text-brand-600 dark:text-brand-400">
-        <Icon size={14} />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 leading-tight">
-          {title}
-        </span>
-        <span className="block text-[11.5px] font-semibold text-[var(--text)] leading-tight whitespace-nowrap">
-          {value}
-        </span>
-      </span>
-      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse flex-shrink-0" aria-hidden />
-    </motion.div>
-  );
-}
-
 export function SaasTeaser() {
   const { lang } = useLanguage();
-  const d = T[(lang as "bs" | "en")] ?? T.bs;
+  const l = (lang === "en" ? "en" : "bs") as "bs" | "en";
+  const d = T[l];
+  const reduce = useReducedMotion() ?? false;
 
-  // One reveal per motion block — fires exactly once, survives language/theme switches
-  const revealHead  = useReveal();
-  const revealStory = useReveal();
-  const revealMock  = useReveal();
-  const revealBento = useReveal();
-  const revealCta   = useReveal();
+  const [email, setEmail]   = useState("");
+  const [state, setState]   = useState<"idle" | "sending" | "done" | "error">("idle");
 
-  const [email, setEmail]         = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]     = useState(false);
-
+  /* Prijava ide kroz isti put kao kontakt forma (/api/kontakt, Resend).
+     API traži ime i poruku, pa šaljemo jasnu temu i poruku s emailom. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200)); // replace with real API
-    setLoading(false);
-    setSubmitted(true);
+    if (!email || state === "sending") return;
+    setState("sending");
+    try {
+      const res = await fetch("/api/kontakt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: l === "en" ? "Early access (agency)" : "Rani pristup (agencija)",
+          email,
+          subject: "Rani pristup · Real Estate SaaS",
+          message: (l === "en"
+            ? "An agency signed up for early access to the real estate platform: "
+            : "Agencija se prijavila za rani pristup platformi za nekretnine: ") + email,
+          website: "",   // honeypot, uvijek prazno kod ljudi
+        }),
+      });
+      setState(res.ok ? "done" : "error");
+    } catch {
+      setState("error");
+    }
   };
 
-  const CHIP_ICONS: LucideIcon[] = [Sparkles, RefreshCw, Landmark];
+  /* plutajuće oznake oko prikaza: blago lebde, uz isključene animacije stoje */
+  const float = (delay: number) => reduce ? {} : {
+    animate: { y: [0, -6, 0] },
+    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay },
+  };
 
   return (
-    <section id="saas" className="py-28 lg:py-36 relative overflow-hidden">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      {/* pozadina: grid + radijalni sjaj, kontinuitet s Hero sekcijom */}
-      <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.04] pointer-events-none
-                      [mask-image:radial-gradient(70%_60%_at_50%_35%,black,transparent)]" aria-hidden />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_70%_35%,rgba(37,99,235,0.09),transparent)]
-                      dark:bg-[radial-gradient(ellipse_55%_45%_at_70%_35%,rgba(59,130,246,0.14),transparent)]" aria-hidden />
+    <section id="saas" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-
-        {/* ── 1 · Header ─────────────────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealHead} className="text-center mb-16">
-          <motion.div variants={fadeUp} className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.label}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-            {d.heading1}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
-          </motion.h2>
-        </motion.div>
-
-        {/* ── 2 · Showcase: priča + mockup ───────────────────────────────── */}
-        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-14 lg:gap-10 items-center mb-16">
-
-          {/* Priča */}
-          <motion.div variants={staggerContainer} {...revealStory}>
-            <motion.div variants={fadeUp}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full
-                         bg-brand-600/10 dark:bg-brand-500/15 border border-brand-600/25
-                         text-brand-700 dark:text-brand-300 text-sm font-semibold mb-6">
-              <Building2 size={15} />
-              {d.badge}
-            </motion.div>
-
-            <motion.h3 variants={fadeUp} className="text-2xl lg:text-[32px] font-extrabold text-[var(--text)] mb-4 leading-tight tracking-tight">
-              {d.title}
-            </motion.h3>
-            <motion.p variants={fadeUp} className="text-[var(--text-muted)] leading-relaxed mb-6">
-              {d.desc}
-            </motion.p>
-
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-2 mb-8">
-              {MARKETS.map((m) => (
-                <span key={m} className="px-3 py-1.5 rounded-full text-xs font-semibold
-                                         border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]">
-                  {m}
-                </span>
-              ))}
-            </motion.div>
-
-            {/* Roadmap: dva čvora povezana gradijentnom linijom */}
-            <motion.div variants={fadeUp} className="relative pl-1">
-              <div className="absolute left-[22px] top-6 bottom-6 w-px bg-gradient-to-b from-brand-600 via-brand-500/60 to-brand-400/30" aria-hidden />
-              {d.roadmap.map((r) => {
-                const Icon = r.icon === "start" ? Hammer : Rocket;
-                return (
-                  <div key={r.date} className="relative flex items-center gap-4 py-2.5">
-                    <span className="relative z-10 w-[44px] h-[44px] rounded-2xl flex items-center justify-center flex-shrink-0
-                                     bg-[var(--surface)] border border-brand-600/35 text-brand-600 dark:text-brand-400
-                                     shadow-lg shadow-brand-600/10">
-                      <Icon size={17} />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-extrabold text-[var(--text)] leading-tight">{r.date}</span>
-                      <span className="block text-xs text-[var(--text-muted)] mt-0.5">{r.label}</span>
-                    </span>
-                  </div>
-                );
-              })}
-            </motion.div>
-          </motion.div>
-
-          {/* Mockup + plutajuće kartice */}
-          <motion.div variants={slideInRight} {...revealMock} className="relative lg:pl-4">
-            <div className="relative px-2 sm:px-6 pt-8 pb-10">
-              {/* sjaj iza mockupa */}
-              <div className="absolute inset-x-8 top-10 bottom-4 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.26),transparent_72%)] pointer-events-none" aria-hidden />
-
-              <div className="relative [transform:perspective(1400px)_rotateY(-5deg)_rotateX(2deg)]
-                              hover:[transform:perspective(1400px)_rotateY(0deg)_rotateX(0deg)]
-                              transition-transform duration-700 will-change-transform">
-                <PlatformMock search={d.mockSearch} />
-              </div>
-
-              <FloatChip icon={CHIP_ICONS[0]} title={d.chips[0][0]} value={d.chips[0][1]}
-                         className="-top-1 -left-1 sm:left-0" delay={0} />
-              <FloatChip icon={CHIP_ICONS[1]} title={d.chips[1][0]} value={d.chips[1][1]}
-                         className="top-[38%] -right-1 sm:right-0" delay={2.1} />
-              <FloatChip icon={CHIP_ICONS[2]} title={d.chips[2][0]} value={d.chips[2][1]}
-                         className="-bottom-1 left-6 sm:left-10" delay={4.2} />
-            </div>
-          </motion.div>
+        {/* ── zaglavlje ── */}
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.label}</p>
+          <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#0F172A]"
+              style={{ textWrap: "balance" }}>
+            {d.heading1} <span className="text-[#0F3554]">{d.headingAccent}</span>
+          </h2>
         </div>
 
-        {/* ── 3 · Bento: funkcionalnosti ─────────────────────────────────── */}
-        <motion.div
-          variants={staggerContainerSlow}
-          {...revealBento}
-          className="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 mb-14"
-        >
-          {d.features.map((f, i) => {
-            const Icon = FEATURE_ICONS[i];
-            return (
-              <motion.div
-                key={f.t}
-                variants={scaleIn}
-                whileHover={{ y: -4 }}
-                className="group relative rounded-2xl p-4 sm:p-5 overflow-hidden
-                           bg-[var(--surface)] border border-[var(--border)]
-                           transition-[border-color,box-shadow] duration-300
-                           hover:border-brand-600/40 hover:shadow-xl hover:shadow-brand-600/10"
-              >
-                <span className="inline-flex w-9 h-9 sm:w-10 sm:h-10 rounded-xl items-center justify-center mb-3
-                                 bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400
-                                 transition-transform duration-300 group-hover:scale-110">
-                  <Icon size={16} />
-                </span>
-                <h4 className="text-[13.5px] sm:text-[15px] font-extrabold text-[var(--text)] mb-1 leading-tight">{f.t}</h4>
-                <p className="text-[11.5px] sm:text-[12.5px] text-[var(--text-muted)] leading-snug">{f.d}</p>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+        {/* ══ ploča proizvoda ══ */}
+        <div className="mt-12 overflow-hidden rounded-[28px] border border-[#E5E7EB]"
+             style={{ background: "linear-gradient(180deg, #F5F8FC 0%, #FFFFFF 38%)", boxShadow: SOFT }}>
 
-        {/* ── 4 · Early access traka ─────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealCta}>
-          <motion.div
-            variants={scaleIn}
-            className="relative rounded-3xl overflow-hidden"
-            style={{
-              background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",
-              border: "1.5px solid transparent",
-            }}
-          >
-            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
-            <div className="relative px-6 py-7 sm:px-10 sm:py-8 grid lg:grid-cols-[1fr_auto] gap-6 items-center">
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <Sparkles size={15} className="text-brand-600 dark:text-brand-400" />
-                  <p className="text-base sm:text-lg font-extrabold text-[var(--text)]">{d.earlyAccess}</p>
-                </div>
-                <p className="text-[13px] text-[var(--text-muted)]">{d.earlyAccessDesc}</p>
-              </div>
+          {/* statusna traka: oznaka i vremenska linija razvoja */}
+          <div className="flex flex-col gap-4 border-b border-[#E5E7EB] px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-9">
+            <span className="inline-flex flex-wrap items-center gap-2.5">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#0F3554] text-white"><Building2 size={16} /></span>
+              <span className="text-[14px] font-semibold text-[#0F172A]">{d.badge}</span>
+              <span className="whitespace-nowrap rounded-full bg-[#DCFCE7] px-2 py-0.5 text-[11px] font-semibold text-[#15803D]">{d.status}</span>
+            </span>
+            <ol className="flex items-center gap-3 text-[12px]">
+              {d.roadmap.map((r, i) => (
+                <li key={r.date} className="flex items-center gap-3">
+                  {i > 0 && <span className="h-px w-8 sm:w-14 bg-[#CBD5E1]" aria-hidden />}
+                  <span className="flex items-center gap-2">
+                    <span className={`h-2.5 w-2.5 rounded-full ${i === 0 ? "bg-[#0F3554] ring-4 ring-[#0F3554]/15" : "border-2 border-[#CBD5E1] bg-white"}`} />
+                    <span>
+                      <span className="block font-semibold text-[#0F172A]">{r.date}</span>
+                      <span className="block text-[#64748B]">{r.label}</span>
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
 
-              {submitted ? (
-                <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 font-semibold lg:justify-end">
-                  <CheckCircle2 size={16} />
-                  {d.success}
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 lg:min-w-[420px]">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={d.placeholder}
-                    required
-                    className="flex-1 px-4 py-3 rounded-xl text-sm bg-[var(--bg)]
-                               border border-[var(--border)] text-[var(--text)]
-                               placeholder:text-[var(--text-muted)] focus:outline-none
-                               focus:border-brand-600/60 focus:ring-2 focus:ring-brand-600/15 transition-all"
-                  />
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="inline-flex items-center justify-center gap-1.5 px-6 py-3 rounded-xl
-                               bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold
-                               transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed
-                               shadow-lg shadow-brand-600/30 hover:shadow-xl hover:shadow-brand-600/40 whitespace-nowrap"
-                  >
-                    {loading ? d.submitting : (<>{d.submit} <ArrowRight size={13} /></>)}
-                  </button>
-                </form>
-              )}
+          {/* sadržaj: tekst lijevo, prikaz desno */}
+          <div className="grid gap-12 px-6 py-10 sm:px-9 lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:py-12">
+            <div>
+              <h3 className="text-[26px] leading-[1.2] font-semibold tracking-tight text-[#0F172A]" style={{ textWrap: "balance" }}>{d.title}</h3>
+              <p className="mt-4 text-[15px] leading-relaxed text-[#475569]">{d.desc}</p>
+
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {MARKETS.map(([code, name]) => (
+                  <li key={code} className="inline-flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3 py-1 text-[12.5px] text-[#334155]">
+                    <span className="text-[10px] font-bold text-[#0F3554]">{code}</span> {name}
+                  </li>
+                ))}
+              </ul>
+
+              {/* šest funkcija kao uredna lista u dvije kolone */}
+              <ul className="mt-8 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+                {d.features.map((f, i) => {
+                  const Icon = FEATURE_ICONS[i];
+                  return (
+                    <li key={f.t} className="flex gap-3">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><Icon size={17} /></span>
+                      <span>
+                        <span className="block text-[14px] font-semibold text-[#0F172A]">{f.t}</span>
+                        <span className="mt-0.5 block text-[13px] leading-relaxed text-[#64748B]">{f.d}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-          </motion.div>
-        </motion.div>
 
+            {/* prikaz platforme s tri plutajuće oznake */}
+            <div className="relative self-center lg:pl-4">
+              <PlatformMock lang={l} search={d.mockSearch} />
+              {d.chips.map(([title, value], i) => {
+                const Icon = CHIP_ICONS[i];
+                // pozicije biraju prazna mjesta: traka prozora, fotografija oglasa i dno,
+                // da nijedna oznaka ne prekrije cijenu ili filter
+                const pos = ["-left-3 sm:-left-10 -top-5", "-right-3 sm:-right-10 top-[36%]", "left-[12%] -bottom-6"][i];
+                return (
+                  <motion.div key={title} {...float(i * 0.8)}
+                    className={`absolute ${pos} hidden sm:flex items-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-2`}
+                    style={{ boxShadow: FLOAT }}>
+                    <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#EEF3F8] text-[#0F3554]"><Icon size={14} /></span>
+                    <span className="leading-tight">
+                      <span className="block text-[11px] font-semibold text-[#0F172A]">{title}</span>
+                      <span className="block text-[11px] text-[#64748B]">{value}</span>
+                    </span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" aria-hidden />
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ══ rani pristup: tamno plava traka na dnu ploče ══ */}
+          <div className="m-3 sm:m-4 flex flex-col gap-5 rounded-[20px] bg-[#0F172A] px-6 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="flex items-center gap-2 text-[16px] font-semibold text-white">
+                <Sparkles size={16} className="text-[#4ADE80]" /> {d.earlyAccess}
+              </p>
+              <p className="mt-1 text-[13.5px] text-[#94A3B8]">{d.earlyAccessDesc}</p>
+            </div>
+
+            {state === "done" ? (
+              <p className="inline-flex items-center gap-2 rounded-xl bg-white/[0.06] px-4 py-3 text-[14px] font-medium text-white">
+                <Check size={16} className="text-[#4ADE80]" /> {d.success}
+              </p>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex w-full flex-col gap-2.5 sm:flex-row lg:w-auto lg:min-w-[440px]">
+                <input
+                  type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                  placeholder={d.placeholder} aria-label={d.placeholder}
+                  className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white px-4 py-3 text-[14px] text-[#0F172A] outline-none placeholder:text-[#94A3B8] focus:border-white"
+                />
+                <button type="submit" disabled={state === "sending"}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#B91C1C] disabled:opacity-70">
+                  {state === "sending" ? d.submitting : d.submit} {state !== "sending" && <ArrowRight size={15} />}
+                </button>
+              </form>
+            )}
+          </div>
+          {state === "error" && <p className="-mt-1 mb-4 px-6 text-center text-[13px] text-[#B91C1C]">{d.error}</p>}
+        </div>
       </div>
     </section>
   );
