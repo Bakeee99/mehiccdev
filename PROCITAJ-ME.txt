@@ -1,41 +1,50 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Cjenovnik u bojama palete
+  mehiccdev — "Zašto se isplati": jasnija računica, pune boje
 ════════════════════════════════════════════════════════════════════
 
 ŠTA JE U ZIP-u (1 fajl + 2 pregleda):
-  components/sections/Pricing.tsx   sekcija napisana ispočetka
+  components/sections/Value.tsx
 
-════════ ZAŠTO JE BILO MONOTONO ════════
-Sve kartice su bile iste svijetle boje, a ikonice sive pločice koje se
-skoro nisu vidjele, jer su ih ranija opšta pravila za naslovnicu
-utišala. Ništa nije odskakalo.
+════════ PROBLEM 1: ZVUČALO JE KAO DNEVNA NAPLATA ════════
+"od 6 KM /dan" se čitalo kao da klijent plaća svaki dan. Zapravo je
+to aplikacija plaćena JEDNOM, razvučena na prvu godinu, a u toj
+cifri je bila i mjesečna podrška.
 
-════════ BOJE PALETE I ČEMU SLUŽE ════════
-  #0F172A  Business je cijela TAMNO PLAVA kartica s bijelim tekstom,
-           pa se preporučeni paket vidi odmah
-  #0F3554  ikonice na bijelim karticama, okean plava na nježnoj podlozi
-  #16A34A  zelene kvačice, oznaka "Najpopularniji" i popust -39%
-  #DC2626  crvena SAMO na dugmetu "Zakažimo razgovor" kod Business
-           paketa, jer je to glavni klik u sekciji
+Sada se to vidi jednim pogledom, kao vremenska linija:
 
-════════ ŠTA JE JOŠ PROMIJENJENO ════════
-  • dugmad su u svim karticama poravnata na dno i iste visine
-    (izmjereno: 47 px svako), bez obzira koliko stavki kartica ima
-  • oznaka "Za prve klijente · vrijedi do 30.10." je mala pločica sa
-    satom, umjesto žute trake
-  • "Nakon isporuke": dvije isprekidane kutije su sada jedna čista
-    kartica s dvije kolone i ikonicama
-  • rent-a-car baner: okean plava ikonica, tamno dugme desno
-  • marketing paketi imaju isti oblik kartica; preporučeni "Rast" je
-    istaknut tamnim rubom, a ne tamnom karticom, da se dvije tamne
-    kartice na stranici ne takmiče
+   Godina 1        Godina 2       Godina 3       Godina 4 i dalje
+   1.000 KM        0 KM           0 KM           0 KM
+   plaćate jednom  aplikacija je  aplikacija je  aplikacija je
+                   vaša           vaša           vaša
 
-Svi tekstovi, cijene i linkovi su ostali isti.
+uz zelenu oznaku "Ovo nije pretplata". Ispod je dnevna računica,
+jasno označena kao "raspoređeno na prvu godinu", i razdvojena:
+   Samo aplikacija         2,74 KM dnevno   (1.000 KM ÷ 365 dana)
+   S mjesečnom podrškom    oko 6 KM dnevno  (+ 100 KM mjesečno,
+                                             opciono, otkažite bilo kad)
+
+Podnaslov: "Aplikaciju plaćate jednom i ona je zauvijek vaša. Nema
+mjesečne pretplate na samu aplikaciju."
+
+════════ PROBLEM 2: DJELOVALO JE PROZIRNO ════════
+  • prva godina je tamno plava pločica, ostale tri zelene, pa se
+    razlika "platite jednom, poslije 0" vidi bez čitanja
+  • kolona "Prije" više nije blijeda i prekrižena, nego čitljiv tekst
+    sa sivim X ispred; "Sa sistemom" je taman tekst sa zelenom kvačicom
+  • završni poziv je tamno plava kartica s bijelim dugmetom, bez
+    kurziva
+  • uklonjen znak beskonačnosti iz "Godina 4 i dalje"
+  • cijene u pločicama nikad ne lome red (ranije se "1.000 KM" lomilo
+    na telefonu)
+  • stavke ispod kartice staju u jedan red na desktopu
+
+Usput ispravljeno: stara stavka "3 mjeseca podrške" više ne važi,
+sada piše "2 mjeseca podrške uz Business", kako je u cjenovniku.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: cjenovnik u bojama palete"
+  git commit -m "feat: jasnija racunica isplativosti i pune boje"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)

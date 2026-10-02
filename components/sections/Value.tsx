@@ -1,60 +1,71 @@
 /**
  * components/sections/Value.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Zašto se isplati" — kompaktna value sekcija ispod cjenovnika (v2).
+ * "Zašto se isplati" (v3).
  *
- * v2 promjene:
- *   • Znatno kraća na mobitelu: dvije cjenovne kartice stoje JEDNA UZ DRUGU
- *     i na telefonu, check-stavke su spojene u jedan red čipova, a
- *     PRIJE → SA NAMA tabela je sabijena u 4 jednolinijska reda.
- *   • Brojke usklađene s paketima web aplikacija iz Pricing sekcije:
- *       Starter €900 + €49/mj  →  prva godina = €1.488  →  od €4,10/dan
- *       samo podrška €50/mj →  od €1,70/dan (manje od jedne kafe)
- *     Uz napomenu da je računica za Starter, a Business/Premium su iznad.
+ * PROBLEM S PRETHODNOM VERZIJOM
+ *   "Kompletna aplikacija 6 KM/dan" zvučalo je kao dnevna pretplata, a uz to
+ *   je miješalo dvije stvari: 6 KM je aplikacija PLUS mjesečna podrška.
+ *   Sama aplikacija je 1.000 KM jednom, što na prvu godinu daje ~2,74 KM/dan.
  *
- * Self-contained (BS/EN u fajlu), useReveal pattern, dark/light tema.
+ * NOVA LOGIKA, odozgo prema dolje
+ *   1. vremenska linija po godinama: prva godina je tamna pločica "1.000 KM,
+ *      jednom", sve poslije su "0 KM, vaša je". Na prvi pogled se vidi da se
+ *      plaća jednom i da je onda vlasništvo.
+ *   2. računica po danu, jasno označena kao računica, a ne cijena:
+ *        samo aplikacija       1.000 KM ÷ 365 ≈ 2,74 KM dnevno, prva godina
+ *        s podrškom (opciono)  (1.000 + 12 × 100) ÷ 365 ≈ 6 KM dnevno
+ *   3. šta je uključeno, kao red kvačica
+ *   4. "od haosa do kontrole": prije naspram sa sistemom
+ *   5. tamni baner s pozivom na konsultacije
+ *
+ * Boje: #0F172A (tamna pločica, baner), #0F3554 (naglasak), #16A34A
+ * (kvačice, "0 KM"). Sve pune, bez prozirnosti.
  */
 
 "use client";
 
-import { motion } from "framer-motion";
-import { Check, ArrowRight, Coffee } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
+import { Check, ArrowRight, X, Coffee } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
-/* ── Types & bilingual content ─────────────────────────────────────────────── */
-type Card = { label: string; lt: string; big: string; per: string; capPre: string; capStrong: string };
-type Pair = { b: string; a: string };
 type Content = {
-  eyebrow: string;
-  h: [string, string, string];
-  sub: string;
-  cards: [Card, Card];
-  coffee: string;
-  chips: string[];
-  note: string;
-  trHead: string;
-  pairs: Pair[];
+  eyebrow: string; h1: string; hAccent: string; sub: string;
+  notSub: string;
+  year: string; yearOnePrice: string; yearOneNote: string;
+  later: string; laterNote: string; forever: string;
+  calcTitle: string;
+  calcApp: { label: string; value: string; per: string; how: string };
+  calcSupport: { label: string; value: string; per: string; how: string };
+  calcNote: string;
+  included: string[];
+  trHead: string; before: string; after: string;
+  pairs: { b: string; a: string }[];
   summary: [string, string, string];
   banner: [string, string, string];
-  bannerSub: string;
-  btn: string;
+  bannerSub: string; btn: string;
 };
 
 const T: { bs: Content; en: Content } = {
   bs: {
-    eyebrow: "ZAŠTO SE ISPLATI",
-    h: ["Zvuči kao velika investicija? ", "Nije", "."],
-    sub: "Starter aplikacija razvučena na prvu godinu ispadne oko tri eura dnevno, a mjesečno održavanje manje od jedne kafe. I radi za vas non-stop.",
-    cards: [
-      { label: "KOMPLETNA APLIKACIJA", lt: "od", big: "6 KM", per: "/dan", capPre: "oko €3 · prva godina, zatim je ", capStrong: "zauvijek vaša" },
-      { label: "MJESEČNA PODRŠKA", lt: "od", big: "3,30 KM", per: "/dan", capPre: "100 KM (oko €50) mjesečno · ", capStrong: "otkažite bilo kad" },
-    ],
-    coffee: "održavanje košta manje od jedne kafe dnevno",
-    chips: ["Dizajn po mjeri", "Aplikacija je vaša", "3 mjeseca podrške", "Hosting i domena podešeni", "Izmjene bez developera"],
-    note: "Računica za Starter paket (1.000 KM, oko €500, plus 100 KM mjesečno za podršku, koja je opciona). Hosting se plaća zasebno po potrošnji. Business i Premium paketi su u cjenovniku iznad.",
+    eyebrow: "Zašto se isplati",
+    h1: "Zvuči kao velika investicija?",
+    hAccent: "Nije.",
+    sub: "Aplikaciju plaćate jednom i ona je zauvijek vaša. Nema mjesečne pretplate na samu aplikaciju.",
+    notSub: "Ovo nije pretplata",
+    year: "Godina",
+    yearOnePrice: "1.000 KM",
+    yearOneNote: "plaćate jednom",
+    later: "0 KM",
+    laterNote: "aplikacija je vaša",
+    forever: "i dalje",
+    calcTitle: "Koliko je to po danu, raspoređeno na prvu godinu",
+    calcApp:     { label: "Samo aplikacija", value: "2,74 KM", per: "dnevno", how: "1.000 KM ÷ 365 dana, samo prve godine" },
+    calcSupport: { label: "S mjesečnom podrškom", value: "oko 6 KM", per: "dnevno", how: "+ 100 KM mjesečno za podršku, opciono, otkažite bilo kad" },
+    calcNote: "Računica je za Starter paket (1.000 KM, oko €500). Hosting se plaća zasebno, po stvarnoj potrošnji. Business i Premium paketi su u cjenovniku iznad.",
+    included: ["Dizajn po mjeri", "Aplikacija je vaša", "Hosting i domena podešeni", "Izmjene bez developera", "2 mjeseca podrške uz Business"],
     trHead: "Od haosa do potpune kontrole",
+    before: "Prije",
+    after: "Sa sistemom",
     pairs: [
       { b: "Excel tabele i ručne bilješke", a: "Sve na jednom mjestu" },
       { b: "Sati izgubljeni na administraciju", a: "Vrijeme za rast biznisa" },
@@ -62,181 +73,163 @@ const T: { bs: Content; en: Content } = {
       { b: "Sve ručno, sve sporo", a: "Gotovo u 2 klika" },
     ],
     summary: ["Rezultat: ", "više vremena, manje stresa", " i sistem koji radi za vas, non-stop."],
-    banner: ["Održavanje manje od kafe dnevno, a dobijate ", "sistem koji radi 24/7", "."],
+    banner: ["Platite jednom, a dobijate ", "sistem koji radi 24/7", "."],
     bannerSub: "Računicu za vaš slučaj napravimo na besplatnim konsultacijama.",
     btn: "Zakaži besplatne konsultacije",
   },
   en: {
-    eyebrow: "WHY IT PAYS OFF",
-    h: ["Sounds like a big investment? ", "It isn't", "."],
-    sub: "Spread over the first year, a Starter app comes to about three euros a day, and monthly support costs less than a coffee. And it works for you non-stop.",
-    cards: [
-      { label: "COMPLETE APP", lt: "from", big: "€3", per: "/day", capPre: "about 6 KM · first year, then it's ", capStrong: "yours forever" },
-      { label: "MONTHLY SUPPORT", lt: "from", big: "€1.65", per: "/day", capPre: "€50 (about 100 KM) monthly · ", capStrong: "cancel anytime" },
-    ],
-    coffee: "support costs less than one coffee a day",
-    chips: ["Design made for you", "The app is yours", "3 months of support", "Hosting and domain set up", "Edits without a developer"],
-    note: "Based on the Starter package (€500 plus €50 a month for optional support). Hosting is billed separately based on usage. Business and Premium packages are in the pricing above.",
+    eyebrow: "Why it pays off",
+    h1: "Sounds like a big investment?",
+    hAccent: "It isn't.",
+    sub: "You pay for the app once and it's yours for good. There is no monthly subscription for the app itself.",
+    notSub: "This is not a subscription",
+    year: "Year",
+    yearOnePrice: "€500",
+    yearOneNote: "paid once",
+    later: "€0",
+    laterNote: "the app is yours",
+    forever: "and on",
+    calcTitle: "What it comes to per day, spread over the first year",
+    calcApp:     { label: "The app only", value: "€1.37", per: "a day", how: "€500 ÷ 365 days, first year only" },
+    calcSupport: { label: "With monthly support", value: "about €3", per: "a day", how: "+ €50 a month for support, optional, cancel anytime" },
+    calcNote: "Based on the Starter package (€500, about 1,000 KM). Hosting is billed separately, based on actual usage. Business and Premium packages are in the pricing above.",
+    included: ["Design made for you", "The app is yours", "Hosting and domain set up", "Edits without a developer", "2 months of support with Business"],
     trHead: "From chaos to full control",
+    before: "Before",
+    after: "With the system",
     pairs: [
-      { b: "Spreadsheets and manual notes", a: "Everything automated" },
+      { b: "Spreadsheets and manual notes", a: "Everything in one place" },
       { b: "Hours lost on admin", a: "Time to grow the business" },
       { b: "Missed inquiries and errors", a: "Every inquiry captured" },
       { b: "All manual, all slow", a: "Done in 2 clicks" },
     ],
     summary: ["The result: ", "more time, less stress", " and a system that works for you, non-stop."],
-    banner: ["Support for less than a coffee a day, and you get ", "a system that works 24/7", "."],
+    banner: ["Pay once, and you get ", "a system that works 24/7", "."],
     bannerSub: "We'll run the numbers for your case in a free consultation.",
     btn: "Book a free consultation",
   },
 };
 
+const SOFT = "0 1px 2px rgba(15,23,42,0.04)";
+
 export function Value() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
 
-  // One reveal per motion block — fires exactly once, survives language/theme switches
-  const revealHead   = useReveal();
-  const revealCards  = useReveal();
-  const revealTrans  = useReveal();
-  const revealBanner = useReveal();
-
   return (
-    <section id="vrijednost" className="py-20 lg:py-28 relative overflow-hidden">
-      <div className="absolute -right-48 top-1/4 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
+    <section id="vrijednost" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
 
-      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        {/* ── zaglavlje ── */}
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.eyebrow}</p>
+          <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#0F172A]">
+            {d.h1} <span className="text-[#0F3554]">{d.hAccent}</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-[16px] leading-relaxed text-[#475569]">{d.sub}</p>
+        </div>
 
-        {/* ── Header ─────────────────────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealHead} className="text-center mb-10">
-          <motion.div variants={fadeUp} className="mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.eyebrow}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold tracking-tight leading-tight">
-            {d.h[0]}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h[1]}</span>
-            {d.h[2]}
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-[var(--text-muted)] max-w-xl mx-auto mt-4 text-[15px] leading-relaxed">
-            {d.sub}
-          </motion.p>
-        </motion.div>
+        {/* ══ 1 + 2. godine i računica, jedna kartica ══ */}
+        <div className="mt-12 overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white" style={{ boxShadow: SOFT }}>
 
-        {/* ── Cijena po danu: dvije kartice jedna uz drugu i na mobitelu ── */}
-        <motion.div variants={staggerContainerSlow} {...revealCards}>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5">
-            {d.cards.map((c, i) => (
-              <motion.div
-                key={c.label}
-                variants={scaleIn}
-                className={`relative rounded-2xl p-4 sm:p-6 overflow-hidden border
-                            transition-[border-color,box-shadow] duration-300
-                            ${i === 0
-                              ? "bg-[var(--surface)] border-brand-600/30 hover:border-brand-600/50 hover:shadow-xl hover:shadow-brand-600/10"
-                              : "bg-[var(--surface)] border-[var(--border)] hover:border-green-500/40 hover:shadow-xl hover:shadow-green-500/10"}`}
-              >
-                <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest ${i === 0 ? "text-brand-600 dark:text-brand-400" : "text-green-600 dark:text-green-400"}`}>
-                  {c.label}
-                </span>
-                <div className="flex items-baseline gap-1.5 mt-2 mb-1 flex-wrap">
-                  <span className="text-xs text-[var(--text-muted)]">{c.lt}</span>
-                  <b className="text-[26px] sm:text-4xl font-extrabold tracking-tight text-[var(--text)] leading-none">{c.big}</b>
-                  <span className="text-xs sm:text-sm text-[var(--text-muted)]">{c.per}</span>
-                </div>
-                <p className="text-[11px] sm:text-xs text-[var(--text-muted)] leading-snug">
-                  {c.capPre}<b className="text-[var(--text)] font-semibold">{c.capStrong}</b>
-                </p>
-              </motion.div>
-            ))}
+          {/* vremenska linija po godinama */}
+          <div className="p-6 sm:p-8">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#DCFCE7] px-2.5 py-1 text-[12px] font-semibold text-[#15803D]">
+                <Check size={12} strokeWidth={3} /> {d.notSub}
+              </span>
+            </div>
+
+            <ol className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {/* prva godina: jedina koja košta */}
+              <li className="rounded-2xl bg-[#0F172A] p-4 sm:p-5 text-white">
+                <p className="text-[12px] font-medium text-[#94A3B8]">{d.year} 1</p>
+                <p className="whitespace-nowrap mt-2 text-[22px] sm:text-[26px] font-semibold tracking-tight tabular-nums">{d.yearOnePrice}</p>
+                <p className="mt-0.5 text-[12.5px] text-[#CBD5E1]">{d.yearOneNote}</p>
+              </li>
+              {/* sve poslije: 0 */}
+              {[2, 3, 4].map((y, i) => (
+                <li key={y} className="rounded-2xl border border-[#BBF7D0] bg-[#F0FDF4] p-4 sm:p-5">
+                  <p className="text-[12px] font-medium text-[#64748B]">
+                    {d.year} {y}{i === 2 && <> {d.forever}</>}
+                  </p>
+                  <p className="mt-2 whitespace-nowrap text-[22px] sm:text-[26px] font-semibold tracking-tight text-[#16A34A] tabular-nums">{d.later}</p>
+                  <p className="mt-0.5 text-[12.5px] text-[#15803D]">{d.laterNote}</p>
+                </li>
+              ))}
+            </ol>
           </div>
 
-          {/* kafa poređenje + čipovi + napomena */}
-          <motion.div variants={fadeUp} className="mt-4 flex flex-col items-center gap-3">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
-                             text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/30">
-              <Coffee size={13} /> {d.coffee}
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              {d.chips.map((ch) => (
-                <span key={ch} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium
-                                          text-[var(--text)] bg-[var(--surface)] border border-[var(--border)]">
-                  <Check size={11} strokeWidth={3.5} className="text-brand-600 dark:text-brand-400" /> {ch}
-                </span>
+          {/* računica po danu */}
+          <div className="border-t border-[#F1F5F9] bg-[#F8FAFC] p-6 sm:p-8">
+            <p className="text-[13px] font-semibold text-[#0F172A]">{d.calcTitle}</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {[d.calcApp, d.calcSupport].map((c, i) => (
+                <div key={c.label} className="flex gap-3.5 rounded-2xl border border-[#E5E7EB] bg-white p-4">
+                  <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]`}>
+                    {i === 0 ? <Check size={16} strokeWidth={2.5} /> : <Coffee size={16} />}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[12.5px] font-medium text-[#64748B]">{c.label}</p>
+                    <p className="mt-0.5 flex items-baseline gap-1.5">
+                      <span className="text-[22px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{c.value}</span>
+                      <span className="text-[13px] text-[#64748B]">{c.per}</span>
+                    </p>
+                    <p className="mt-1 text-[12.5px] leading-snug text-[#475569]">{c.how}</p>
+                  </div>
+                </div>
               ))}
             </div>
-            <p className="text-[11px] text-[var(--text-muted)] text-center max-w-md">{d.note}</p>
-          </motion.div>
-        </motion.div>
+            <p className="mt-4 text-[12.5px] leading-relaxed text-[#64748B]">{d.calcNote}</p>
+          </div>
+        </div>
 
-        {/* ── Transformacija: 4 kompaktna reda ───────────────────────────── */}
-        <motion.div variants={staggerContainerSlow} {...revealTrans} className="mt-12">
-          <motion.h3 variants={fadeUp} className="text-center text-xl sm:text-2xl font-extrabold tracking-tight mb-6">
-            {d.trHead}
-          </motion.h3>
+        {/* ══ 3. šta je uključeno ══ */}
+        <ul className="mt-8 lg:-mx-8 flex flex-wrap justify-center gap-x-5 gap-y-2.5">
+          {d.included.map((c) => (
+            <li key={c} className="flex items-center gap-2 text-[14px] text-[#334155]">
+              <Check size={15} strokeWidth={2.5} className="text-[#16A34A]" /> {c}
+            </li>
+          ))}
+        </ul>
 
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border)] overflow-hidden">
-            {d.pairs.map((p) => (
-              <motion.div
-                key={p.a}
-                variants={fadeUp}
-                className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3.5"
-              >
-                <span className="flex-1 text-[12.5px] sm:text-sm text-[var(--text-muted)] line-through decoration-red-500/50 decoration-[1.5px] leading-snug">
-                  {p.b}
-                </span>
-                <span className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
-                                 bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400">
-                  <ArrowRight size={13} />
-                </span>
-                <span className="flex-1 inline-flex items-center gap-2 text-[12.5px] sm:text-sm font-semibold text-green-600 dark:text-green-400 leading-snug">
-                  <Check size={13} strokeWidth={3.5} className="flex-shrink-0" /> {p.a}
-                </span>
-              </motion.div>
+        {/* ══ 4. od haosa do kontrole ══ */}
+        <div className="mt-20">
+          <h3 className="text-center text-[24px] sm:text-[28px] font-semibold tracking-[-0.02em] text-[#0F172A]">{d.trHead}</h3>
+          <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white" style={{ boxShadow: SOFT }}>
+            <div className="grid grid-cols-2 border-b border-[#F1F5F9] bg-[#F8FAFC] text-[11.5px] font-semibold uppercase tracking-[0.12em]">
+              <p className="px-5 sm:px-6 py-3 text-[#94A3B8]">{d.before}</p>
+              <p className="px-5 sm:px-6 py-3 text-[#0F3554] border-l border-[#F1F5F9]">{d.after}</p>
+            </div>
+            {d.pairs.map((p, i) => (
+              <div key={p.b} className={`grid grid-cols-2 ${i > 0 ? "border-t border-[#F1F5F9]" : ""}`}>
+                <p className="flex items-start gap-2.5 px-5 sm:px-6 py-4 text-[14px] text-[#475569]">
+                  <X size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#94A3B8]" />{p.b}
+                </p>
+                <p className="flex items-start gap-2 border-l border-[#F1F5F9] px-5 sm:px-6 py-4 text-[14px] font-medium text-[#0F172A]">
+                  <Check size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#16A34A]" /> {p.a}
+                </p>
+              </div>
             ))}
           </div>
+          <p className="mt-5 text-center text-[14px] text-[#475569]">
+            {d.summary[0]}<span className="font-semibold text-[#0F172A]">{d.summary[1]}</span>{d.summary[2]}
+          </p>
+        </div>
 
-          <motion.p variants={fadeUp} className="text-center text-[12.5px] sm:text-sm text-[var(--text-muted)] mt-4">
-            {d.summary[0]}<b className="text-[var(--text)] font-semibold">{d.summary[1]}</b>{d.summary[2]}
-          </motion.p>
-        </motion.div>
-
-        {/* ── CTA traka ──────────────────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealBanner} className="mt-12">
-          <motion.div
-            variants={scaleIn}
-            className="relative rounded-2xl overflow-hidden border border-brand-600/30
-                       bg-[var(--surface)] px-6 py-6 sm:px-9 sm:py-7
-                       flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8"
-          >
-            <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
-            <div className="relative flex-1">
-              <p className="text-base sm:text-lg font-bold leading-snug">
-                {d.banner[0]}
-                <span className="text-gradient font-serif italic font-semibold">{d.banner[1]}</span>
-                {d.banner[2]}
-              </p>
-              <p className="text-[12.5px] text-[var(--text-muted)] mt-1.5">{d.bannerSub}</p>
-            </div>
-            <a
-              href="#kontakt"
-              className="relative flex-shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl
-                         bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold
-                         shadow-lg shadow-brand-600/30
-                         transition-[background-color,transform,box-shadow] duration-300
-                         hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
-            >
-              {d.btn} <ArrowRight size={15} />
-            </a>
-          </motion.div>
-        </motion.div>
-
+        {/* ══ 5. tamni baner ══ */}
+        <div className="mt-14 flex flex-col sm:flex-row sm:items-center gap-6 rounded-[20px] bg-[#0F172A] p-7 sm:p-9">
+          <div className="flex-1">
+            <p className="text-[20px] sm:text-[22px] font-semibold leading-snug tracking-tight text-white">
+              {d.banner[0]}<span className="text-[#93C5FD]">{d.banner[1]}</span>{d.banner[2]}
+            </p>
+            <p className="mt-2 text-[14px] text-[#94A3B8]">{d.bannerSub}</p>
+          </div>
+          <a href="#kontakt"
+             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]">
+            {d.btn} <ArrowRight size={15} />
+          </a>
+        </div>
       </div>
     </section>
   );
