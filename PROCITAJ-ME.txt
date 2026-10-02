@@ -1,47 +1,52 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Sekcija "Rezultati": kompaktna i čista
+  mehiccdev — Sekcija "Naš rad" u stilu ostatka naslovnice
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
-  components/sections/Results.tsx   sekcija napisana ispočetka
-  app/globals.css                   uklonjeno staro pravilo za rezultate
+ŠTA JE U ZIP-u (1 fajl + pregled):
+  components/sections/Portfolio.tsx   sekcija napisana ispočetka
+                                       (293 linije, bilo 511)
 
 ════════ ŠTA JE BILO ════════
-Tri bloka naslagana jedan na drugi: velika kartica s "trkom" i
-brojačem, red s četiri kruga i red s tri kartice s činjenicama.
-Duga sekcija, a djelovala je nabacano.
+Velika kartica s još četiri male kartice brojki unutra, tri dugmeta i
+tamnim mockupom, a desno tri kartice različitog stila, od kojih jedna
+samo s plavim gradijentom umjesto slike. Previše okvira i boja.
 
 ════════ ŠTA JE SADA ════════
-Sve u JEDNOJ kartici s dvije kolone:
+1. ZAGLAVLJE centrirano, isto kao u Rezultatima i ostalim sekcijama.
 
-  ┌─────────────────────────────────┬───────────────────────────┐
-  │ Koliko brzo se otvara? [6,7×]   │  100 /100      100 /100   │
-  │ Naša aplikacija          3,2 s  │  Performanse   SEO        │
-  │ ▬▬▬───────────────────────────  │                           │
-  │ Stari sajt klijenta     21,6 s  │  100 /100      90 /100    │
-  │ ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬   │  Pristupačnost Na telefonu│
-  │ Više od polovine posjetilaca... │  Izvor: pagespeed.web.dev │
-  └─────────────────────────────────┴───────────────────────────┘
-     🚀 Svi projekti uživo   📵 Bez ijednog poziva   🕐 24 sata
+2. MAXIMUM U JEDNOJ KARTICI, dvije kolone:
+   lijevo  oznaka, naslov, opis
+           četiri brojke u JEDNOM REDU, bez kutija, odvojene tankim
+           linijama (na telefonu dvije po dvije)
+           četiri stavke sa zelenim kvačicama
+           jedno glavno dugme (Pogledajte detaljnije), jedno sporedno
+           (Pogledaj uživo) i tihi podvučeni link (Želim ovakvu
+           aplikaciju)
+   desno   svijetli prikaz: sajt u prozoru preglednika i admin panel
+           na telefonu preko ugla. Klik otvara sliku u punoj veličini.
 
-  • lijevo brzina: dvije tanke trake u pravom omjeru (3,2 naspram
-    21,6), koje se jednom izduže kad uđu u vid
-  • desno četiri Google ocjene kao čiste brojke, bez krugova, s
-    izvorom i linkom ispod
-  • tri činjenice su jedan tihi red ispod kartice, sa sitnim
-    ikonicama; provjereno da stanu u jedan red na oba jezika
+3. TRI MANJA PROJEKTA u redu ispod, kao jednake kartice: slika gore,
+   kategorija, naslov, opis i strelica. Oznaka "Uživo" na onima koji
+   rade.
 
-SVE INFORMACIJE SU OSTALE. Izbačena je samo animacija "trke" s
-brojačem i natpisima "Učitano" i "još se učitava", jer su efekat, a
-ne podatak.
+Fitness Trainer nema screenshot, pa umjesto plavog gradijenta ima
+mirnu sivu plohu s ikonicom. Kad dobiješ screenshot, upiši putanju u
+MINI_META na vrhu fajla i slika se sama pojavi.
 
-Sekcija je skoro upola niža nego prije. Brojevi su u lokalnom
-formatu: 3,2 s na bosanskom, 3.2 s na engleskom.
+Svi tekstovi i linkovi su ostali isti. Uvećanje slike radi i zatvara
+se tipkom Escape, klikom van ili na X (provjereno).
+
+════════ SLIKE ════════
+Prikaz sada koristi svijetle screenshotove (maximum-poslije.webp i
+maximum-admin-mob-svijetla.webp), jer se slažu s bijelom stranicom.
+Oba već postoje u public/portfolio/.
+
+Stari maximum-naslovna.png sada koristi samo još rent-a-car stranica.
 
 ════════ KOMANDE ZA KONZOLU ════════
   git remote -v
   git add .
-  git commit -m "feat: kompaktna sekcija rezultati"
+  git commit -m "feat: sekcija nas rad u stilu naslovnice"
   git push
 
 Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
