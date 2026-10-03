@@ -163,27 +163,8 @@ html.light :is(.bg-\[\#080D1E\], .bg-\[\#0A122B\], .bg-\[\#070B1A\], .bg-\[\#070
 }
 
 /* ── prostor ─────────────────────────────────────────────────────────────── */
-html.light main > section:not(.ink):not(.hero-light):not(.strip) {
-  padding-top: clamp(6rem, 9vw, 9rem) !important;
-  padding-bottom: clamp(6rem, 9vw, 9rem) !important;
-}
 
 /* ── tamni blokovi: hero i footer ────────────────────────────────────────── */
-/* Unutar .ink sve varijable dobijaju tamne vrijednosti, pa tekst postaje
-   bijel bez diranja svakog elementa pojedinačno. */
-html.light .ink {
-  --bg: #0F172A;
-  --surface: #1E293B;
-  --border: #1E293B;
-  --text: #F8FAFC;
-  --text-muted: #94A3B8;
-  background-color: #0F172A !important;
-  color: #F8FAFC;
-}
-html.light .ink .text-gradient { color: #94A3B8; }
-html.light .ink [class*="text-brand-"] { color: #E2E8F0 !important; }
-html.light .ink [class*="bg-brand-"]:not([class*="from-brand"]) { background-color: rgba(255,255,255,0.06) !important; }
-html.light .ink [class*="border-brand-"] { border-color: rgba(255,255,255,0.12) !important; }
 
 /* ── gradijentni rubovi upisani u style ──────────────────────────────────── */
 html.light [style*="border-box"] {
@@ -209,24 +190,13 @@ html.light span[class*="bg-brand-600"][class*="text-white"] {
 }
 
 /* ── pilula u heroju: tamna, uklopljena u tamni blok ─────────────────────── */
-html.light .ink a[class*="bg-brand-600/"] {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-}
-html.light .ink a[class*="bg-brand-600/"] span:not([class*="bg-brand-600"]) { color: #E2E8F0 !important; }
 
 
 
 /* ── pilule s gradijentnim rubom unutar tamnog bloka ─────────────────────── */
-html.light .ink [style*="border-box"] {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-}
-html.light .ink span[class*="from-brand-600"] { background: #16A34A !important; }
 
 /* ── preostali sjajevi upisani direktno u style ─────────────────────────── */
-html.light [style*="radial-gradient"] { display: none !important; }
-html.light .ink svg [stroke="#60A5FA"] { stroke: #16A34A; }  /* PageSpeed prsten: zelen, jer je 100 potvrda */
+html.light [style*="radial-gradient"] { display: none !important; }  /* PageSpeed prsten: zelen, jer je 100 potvrda */
 
 /* ── sporedni linkovi s plavom podlogom (npr. LinkedIn profil): neutralni ── */
 html.light a[class*="bg-brand-600/"] {
