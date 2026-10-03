@@ -282,20 +282,20 @@ export function Hero() {
           i blago nagnuti prema van. Vidi se gornji dio, a dno se postepeno
           zamućuje i nestaje u bijelom. */}
       <motion.div {...rise(0.28)} className="relative mx-auto mt-16 sm:mt-20 max-w-5xl px-4 sm:px-6">
-        <div className="relative flex items-start justify-center gap-[3%] sm:gap-[2.5%] pt-2
+        <div style={{ perspective: "1600px" }} className="relative flex items-start justify-center gap-[2%] sm:gap-[1.5%] pt-2
                         h-[300px] sm:h-[440px] lg:h-[520px] overflow-hidden">
           {/* lijevi: manji, niže, nagnut ulijevo */}
-          <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] -rotate-[3deg] sm:-rotate-[5deg] origin-bottom">
+          <div className="w-[29%] max-w-[255px] mt-[9%]" style={{ transform: "rotateY(26deg) rotateZ(-7deg)", transformOrigin: "100% 50%", filter: "drop-shadow(9px 0 0 #CDD1D7)" }}>
             <PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} />
           </div>
 
           {/* srednji: najveći i najviši */}
-          <div className="w-[33%] sm:w-[35%] max-w-[300px]">
+          <div className="relative z-10 w-[34%] max-w-[300px]">
             <PhoneMockup src="/portfolio/maximum-poslije-mob.webp" alt={d.shots.center} priority />
           </div>
 
           {/* desni: manji, niže, nagnut udesno */}
-          <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] rotate-[3deg] sm:rotate-[5deg] origin-bottom">
+          <div className="w-[29%] max-w-[255px] mt-[9%]" style={{ transform: "rotateY(-26deg) rotateZ(7deg)", transformOrigin: "0% 50%", filter: "drop-shadow(-9px 0 0 #CDD1D7)" }}>
             <PhoneMockup src="/portfolio/roobet-mob.webp" alt={d.shots.right} bar="dark" barColor="#191939" />
           </div>
         </div>
