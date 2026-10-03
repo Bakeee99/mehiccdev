@@ -215,10 +215,6 @@ html.light .ink a[class*="bg-brand-600/"] {
 }
 html.light .ink a[class*="bg-brand-600/"] span:not([class*="bg-brand-600"]) { color: #E2E8F0 !important; }
 
-/* ── okviri slika tima: tanka siva linija umjesto plavog gradijenta ──────── */
-html.light #o-nama :is([class*="from-blue-600"], [class*="from-indigo-500"]) {
-  background: #E5E7EB !important;
-}
 
 
 /* ── pilule s gradijentnim rubom unutar tamnog bloka ─────────────────────── */
