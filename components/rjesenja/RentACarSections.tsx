@@ -12,16 +12,17 @@ const PLAN_ICONS = [Car, CarFront, Building2];
 
 function Hero({ c }: { c: RcCopy }) {
   const h = c.hero;
+  const cs = c.caseStudy;
   return (
     <section className="hero-light relative bg-white">
       <Backdrop>
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 pb-20 pt-36 sm:pt-40 lg:grid-cols-[1.15fr_1fr] lg:px-8">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 pb-24 pt-36 sm:pt-40 lg:grid-cols-[1fr_1.05fr] lg:px-8">
           <Fade>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3 py-1 text-[12.5px] font-medium text-[#0F172A]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" /> {h.eyebrow}
             </span>
-            <h1 className="mt-6 text-[38px] leading-[1.08] sm:text-[56px] font-semibold tracking-[-0.035em] text-[#0F172A]" style={{ textWrap: "balance" }}>
-              {h.h1a} <span className="block text-[#0F3554]">{h.h1b.replace(/-/g, "‑")}</span>
+            <h1 className="mt-6 text-[38px] leading-[1.08] sm:text-[54px] font-semibold tracking-[-0.035em] text-[#0F172A]" style={{ textWrap: "balance" }}>
+              {h.h1a} <span className="block text-[#0F3554]">{h.h1b.replace(/-/g, "\u2011")}</span>
             </h1>
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#475569]">{h.sub}</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -32,23 +33,45 @@ function Hero({ c }: { c: RcCopy }) {
                 {h.ctaSecondary}
               </a>
             </div>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2">
               {h.points.map((p) => (
                 <li key={p} className="flex items-center gap-2 text-[14px] text-[#334155]"><Check size={15} strokeWidth={2.5} className="text-[#16A34A]" /> {p}</li>
               ))}
             </ul>
+            <a href="/maximum" className="group mt-10 flex max-w-xl items-center gap-5 rounded-2xl border border-[#E5E7EB] bg-white/80 p-4 transition-colors hover:border-[#CBD5E1]" style={{ boxShadow: SOFT }}>
+              <span className="hidden shrink-0 border-r border-[#F1F5F9] pr-5 sm:block">
+                <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-[#64748B]">{cs.label}</span>
+                <span className="mt-0.5 block text-[14px] font-semibold text-[#0F172A]">Maximum Rent a Car</span>
+              </span>
+              <dl className="grid flex-1 grid-cols-3 gap-3">
+                {cs.stats.map((x) => (
+                  <div key={x.l}>
+                    <dd className="text-[18px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{x.v}</dd>
+                    <dt className="text-[11px] leading-snug text-[#64748B]">{x.l}</dt>
+                  </div>
+                ))}
+              </dl>
+              <ArrowUpRight size={16} className="shrink-0 text-[#94A3B8] transition-colors group-hover:text-[#0F172A]" />
+            </a>
           </Fade>
 
-          <Fade delay={0.1} className="relative mx-auto w-full max-w-[420px]">
-            <div className="mx-auto w-[62%]"><PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={h.h1a} priority /></div>
-            <div className="absolute left-0 top-[16%] flex w-[56%] items-start gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-3.5" style={{ boxShadow: FLOAT }}>
+          <Fade delay={0.1} className="relative mx-auto w-full max-w-[560px] pb-6 pt-4">
+            <div className="w-[88%]">
+              <BrowserFrame url="maximum-rent.vercel.app/admin">
+                <span className="relative block aspect-[16/10]">
+                  <Image src="/portfolio/maximum-admin-desktop-svijetla.webp" alt={h.h1a} fill unoptimized priority className="object-cover object-top" />
+                </span>
+              </BrowserFrame>
+            </div>
+            <div className="absolute -bottom-2 right-0 w-[34%]"><PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={h.h1a} /></div>
+            <div className="absolute -left-4 -top-3 flex w-[54%] items-start gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-3.5 sm:-left-8" style={{ boxShadow: FLOAT }}>
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><Bell size={16} /></span>
               <span className="min-w-0">
                 <span className="block text-[13px] font-semibold text-[#0F172A]">{h.cardTitle}</span>
                 <span className="block truncate text-[12px] text-[#64748B]">{h.cardBody}</span>
               </span>
             </div>
-            <div className="absolute bottom-[18%] right-0 flex w-[60%] items-center gap-2.5 rounded-2xl bg-[#0F172A] p-3.5" style={{ boxShadow: FLOAT }}>
+            <div className="absolute -bottom-6 left-[6%] flex w-[52%] items-center gap-2.5 rounded-2xl bg-[#0F172A] p-3.5" style={{ boxShadow: FLOAT }}>
               <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#16A34A] text-white"><Check size={14} strokeWidth={3} /></span>
               <span className="text-[12.5px] font-medium leading-snug text-white">{h.cardOk}</span>
             </div>
