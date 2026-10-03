@@ -78,7 +78,7 @@ export function Navbar() {
         <nav className="max-w-7xl mx-auto h-16 px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center" aria-label="mehiccdev, naslovna">
-            <Logo className="h-[21px] w-auto" />
+            <Logo className="h-[17px] w-auto" />
           </a>
 
           {/* Desktop links */}

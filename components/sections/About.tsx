@@ -25,13 +25,13 @@ const T: Record<"bs" | "en", Content> = {
     members: [
       {
         name: "Bakir Mehić",
-        role: "Razvoj aplikacija i dizajn",
+        role: "Razvoj i dizajn",
         bio:  "Vodim projekat od prve skice do objave. Pravim sajtove i web aplikacije, pa ih testiram tako da greške nađem ja, a ne vaši kupci. Zadnji veći projekat je kompletna rent-a-car aplikacija koja i danas radi.",
-        tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automatizacija"],
+        tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Engineer"],
       },
       {
         name: "Nedim Kupusija",
-        role: "Marketing i društvene mreže",
+        role: "Marketing i mreže",
         bio:  "Vodim društvene mreže i reklame tako da se svaki uloženi euro može pratiti. Znate šta je objavljeno, ko je to vidio i koliko je upita stiglo. Bez marketinškog žargona, samo jasan plan i mjesečni izvještaj koji se razumije iz prve.",
         tags: ["Brand Scaling", "Content Strategija", "Online Optimizacija"],
       },
@@ -46,13 +46,13 @@ const T: Record<"bs" | "en", Content> = {
     members: [
       {
         name: "Bakir Mehić",
-        role: "Lead Developer & UI/UX Architect",
+        role: "Development & Design",
         bio:  "I take projects from the first sketch to launch. I build websites and web apps, then test them so that I find the bugs, not your customers. My most recent build is a complete rent-a-car application that is still running today.",
-        tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Automation"],
+        tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Engineer"],
       },
       {
         name: "Nedim Kupusija",
-        role: "Digital Marketing & Social Media Manager",
+        role: "Marketing & Social",
         bio:  "I run social media and ads so every euro can be tracked. You know what was posted, who saw it, and how many inquiries it brought. No marketing jargon, just a clear plan and a monthly report you can actually read.",
         tags: ["Brand Scaling", "Content Strategy", "Online Optimization"],
       },
@@ -67,7 +67,7 @@ export function About() {
     <section id="o-nama" className="relative bg-white scroll-mt-24">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <Head label={d.label} h={d.heading1} accent={d.headingAccent} sub={d.subtitle} />
-        <div className="mx-auto mt-14 grid max-w-5xl gap-8 md:grid-cols-2">
+        <div className="mx-auto mt-14 grid max-w-5xl gap-8 lg:grid-cols-2">
           {d.members.map((m, i) => {
             const p = PEOPLE[i];
             const Icon = p.icon;
@@ -78,16 +78,16 @@ export function About() {
                     <Image src={p.src} alt={m.name} fill unoptimized className="object-cover object-[center_22%] transition-transform duration-500 group-hover:scale-[1.03]" />
                   </div>
                   <div className="flex flex-1 flex-col p-7 sm:p-9">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <h3 className="text-[24px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-[#EEF3F8] px-3 py-1 text-[12.5px] font-semibold text-[#0F3554]">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="whitespace-nowrap text-[22px] sm:text-[24px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
+                      <span className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-[#EEF3F8] px-3 py-1 text-[12.5px] font-semibold text-[#0F3554]">
                         <Icon size={13} /> {m.role}
                       </span>
                     </div>
                     <p className="mt-5 text-[15.5px] leading-[1.75] text-[#475569]">{m.bio}</p>
-                    <ul className="mt-6 flex flex-wrap gap-2">
+                    <ul className="mt-6 flex gap-1.5 xl:gap-2">
                       {m.tags.map((tg) => (
-                        <li key={tg} className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-1.5 text-[12.5px] font-medium text-[#334155]">{tg}</li>
+                        <li key={tg} className="whitespace-nowrap rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-2 py-1.5 text-[11.5px] sm:text-[12.5px] lg:text-[11.5px] xl:px-2.5 xl:text-[12.5px] font-medium text-[#334155]">{tg}</li>
                       ))}
                     </ul>
                     <div className="mt-auto pt-8">

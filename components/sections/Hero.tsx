@@ -285,8 +285,8 @@ export function Hero() {
         <div style={{ perspective: "1100px" }} className="relative flex items-start justify-center gap-[2%] pt-2
                         h-[300px] sm:h-[440px] lg:h-[520px] overflow-hidden">
           {/* lijevi: manji, niže, nagnut ulijevo */}
-          <div className="w-[33%] max-w-[290px] mt-[4%]" style={{ transform: "rotateY(-22deg)", transformOrigin: "100% 50%", filter: "drop-shadow(10px 0 0 #C9CDD3)" }}>
-            <PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} />
+          <div className="w-[33%] max-w-[290px] mt-[4%]" style={{ transform: "rotateY(-22deg)", transformOrigin: "100% 50%" }}>
+            <div className="relative"><span aria-hidden className="absolute inset-y-[1%] -right-[3%] left-[3%] rounded-[15.5%/7%] bg-[#C9CDD3]" /><div className="relative"><PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} /></div></div>
           </div>
 
           {/* srednji: najveći i najviši */}
@@ -295,8 +295,8 @@ export function Hero() {
           </div>
 
           {/* desni: manji, niže, nagnut udesno */}
-          <div className="w-[33%] max-w-[290px] mt-[4%]" style={{ transform: "rotateY(22deg)", transformOrigin: "0% 50%", filter: "drop-shadow(-10px 0 0 #C9CDD3)" }}>
-            <PhoneMockup src="/portfolio/roobet-mob.webp" alt={d.shots.right} bar="dark" barColor="#191939" />
+          <div className="w-[33%] max-w-[290px] mt-[4%]" style={{ transform: "rotateY(22deg)", transformOrigin: "0% 50%" }}>
+            <div className="relative"><span aria-hidden className="absolute inset-y-[1%] -left-[3%] right-[3%] rounded-[15.5%/7%] bg-[#C9CDD3]" /><div className="relative"><PhoneMockup src="/portfolio/roobet-mob.webp" alt={d.shots.right} bar="dark" barColor="#191939" /></div></div>
           </div>
         </div>
 
@@ -305,7 +305,7 @@ export function Hero() {
               2. preliv u bijelo preko njega, da donja ivica potpuno nestane
             Zamućenje je u style, jer stranica ima pravilo koje gasi klase
             sa zamućenjem. */}
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%]"
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[30%]"
              style={{
                backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
                maskImage: "linear-gradient(to bottom, transparent 0%, black 65%)",
