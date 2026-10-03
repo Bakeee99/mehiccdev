@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Star, Moon, Sun, Play, ClipboardCheck, CarFront, FileText, Languages, Gauge, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Star, Moon, Sun, Play, ClipboardCheck, CarFront, FileText, Languages, Gauge, ShieldCheck, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, Lightbox, SOFT, type ZoomState } from "@/components/ui/kit";
 
@@ -66,6 +66,7 @@ const T = {
       { k: "pdf", t: "Ugovori se pišu sami", d: "Iz potvrđene rezervacije nastaje gotov ugovor s podacima gosta, vozila i termina. Bez prekucavanja i bez grešaka u imenima." },
       { k: "lang", t: "Dvojezično od prvog dana", d: "Domaći i strani gosti čitaju istu ponudu na svom jeziku." },
       { k: "speed", t: "Brzina kao funkcija", d: "Stranica se otvara ispod tri sekunde na mobilnoj mreži, jer gost koji čeka odlazi kod konkurencije." },
+      { k: "secure", t: "Provjere na serveru", d: "Ista pravila važe u pregledniku i na serveru, pa se dupla rezervacija ne može provući ni zaobilaznim putem." },
     ],
     ctaContact: "Pošaljite upit",
     watch: "Pogledajte sistem u pokretu",
@@ -131,6 +132,7 @@ const T = {
       { k: "pdf", t: "Contracts write themselves", d: "A confirmed booking turns into a finished contract with guest, vehicle and date details. No retyping and no misspelled names." },
       { k: "lang", t: "Bilingual from day one", d: "Local and foreign guests read the same offer in their own language." },
       { k: "speed", t: "Speed as a feature", d: "The page opens in under three seconds on mobile data, because a guest who waits goes to a competitor." },
+      { k: "secure", t: "Server-side checks", d: "The same rules apply in the browser and on the server, so a double booking cannot slip through a back door either." },
     ],
     ctaContact: "Send an inquiry",
     watch: "Watch the system in action",
@@ -150,7 +152,7 @@ const IMG = {
   admin: { light: "/portfolio/maximum-admin-desktop-svijetla.webp", dark: "/portfolio/maximum-admin-desktop-tamna.webp" },
   adminMob: { light: "/portfolio/maximum-admin-mob-svijetla.webp", dark: "/portfolio/maximum-admin-mob-tamna.webp" },
 };
-const MODULE_ICONS: Record<string, LucideIcon> = { checkin: ClipboardCheck, fleet: CarFront, pdf: FileText, lang: Languages, speed: Gauge };
+const MODULE_ICONS: Record<string, LucideIcon> = { checkin: ClipboardCheck, fleet: CarFront, pdf: FileText, lang: Languages, speed: Gauge, secure: ShieldCheck };
 
 type Copy = (typeof T)["bs"] | (typeof T)["en"];
 type Zoom = (z: ZoomState) => void;
@@ -329,18 +331,25 @@ function Modules({ d }: { d: Copy }) {
     <section className="relative bg-white">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <Head label={d.bentoLabel} h={d.bentoH1} accent={d.bentoH2} />
-        <ul className="mt-12 grid gap-px overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-[#E5E7EB] sm:grid-cols-2 lg:grid-cols-3">
-          {d.modules.map((m) => {
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {d.modules.map((m, i) => {
             const Icon = MODULE_ICONS[m.k];
+            const tone = i === 0 ? "navy" : i === d.modules.length - 1 ? "ocean" : "plain";
+            const dark = tone !== "plain";
             return (
-              <li key={m.k} className="bg-white p-6 sm:p-7">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><Icon size={18} /></span>
-                <p className="mt-4 text-[15px] font-semibold text-[#0F172A]">{m.t}</p>
-                <p className="mt-1.5 text-[14px] leading-relaxed text-[#64748B]">{m.d}</p>
+              <li key={m.k}
+                  className={`rounded-[20px] p-6 sm:p-7 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 ${
+                    tone === "navy" ? "bg-[#0F172A]" : tone === "ocean" ? "bg-[#0F3554]" : "border border-[#E5E7EB] bg-white hover:border-[#CBD5E1]"}`}
+                  style={dark ? { boxShadow: "0 1px 2px rgba(15,23,42,0.06), 0 24px 48px -28px rgba(15,23,42,0.5)" } : undefined}>
+                <div className="flex items-center justify-between">
+                  <span className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/10 text-[#4ADE80]" : "bg-[#EEF3F8] text-[#0F3554]"}`}><Icon size={20} /></span>
+                  <span className={`text-[12px] font-semibold tabular-nums ${dark ? "text-white/40" : "text-[#CBD5E1]"}`}>{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <p className={`mt-5 text-[16px] font-semibold ${dark ? "text-white" : "text-[#0F172A]"}`}>{m.t}</p>
+                <p className={`mt-2 text-[14px] leading-relaxed ${dark ? "text-[#CBD5E1]" : "text-[#64748B]"}`}>{m.d}</p>
               </li>
             );
           })}
-          <li className="hidden lg:block bg-[#F8FAFC]" aria-hidden />
         </ul>
       </div>
     </section>
