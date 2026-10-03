@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/Logo";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 
 const LABELS = {
@@ -76,11 +77,8 @@ export function Navbar() {
       )}>
         <nav className="max-w-7xl mx-auto h-16 px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-baseline group relative" aria-label="mehiccdev, naslovna">
-            <span className="text-lg font-extrabold tracking-tight text-[var(--text)]">mehicc</span>
-            <span className="text-lg font-extrabold tracking-tight text-brand-600 dark:text-brand-400">dev</span>
-            <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-[#0F3554] opacity-0 group-hover:opacity-100
-                             transition-opacity duration-300 self-center" aria-hidden />
+          <a href="/" className="flex items-center" aria-label="mehiccdev, naslovna">
+            <Logo className="h-[21px] w-auto" />
           </a>
 
           {/* Desktop links */}
