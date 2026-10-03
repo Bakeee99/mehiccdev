@@ -140,8 +140,8 @@ const PHONE_SHADOW =
    Statusnu traku crtamo sami, jer screenshotovi je nemaju. Boja trake prati
    vrh stranice na slici, a ikonice su tamne na svijetloj ili svijetle na
    tamnoj traci. Slika se servira netaknuta (unoptimized), oštra na Retini. */
-export function PhoneMockup({ src, alt, bar = "light", priority = false }: {
-  src: string; alt: string; bar?: "light" | "dark"; priority?: boolean;
+export function PhoneMockup({ src, alt, bar = "light", barColor, priority = false }: {
+  src: string; alt: string; bar?: "light" | "dark"; barColor?: string; priority?: boolean;
 }) {
   const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
 
@@ -172,7 +172,7 @@ export function PhoneMockup({ src, alt, bar = "light", priority = false }: {
             {/* statusna traka */}
             <div
               className={`relative flex items-center justify-between ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}
-              style={{ height: "12.5cqw", paddingInline: "8cqw" }}
+              style={{ height: "12.5cqw", paddingInline: "8cqw", ...(barColor ? { background: barColor } : {}) }}
             >
               <span className="font-semibold tracking-tight" style={{ color: ink, fontSize: "4.4cqw" }}>9:41</span>
               {/* dinamičko ostrvo */}

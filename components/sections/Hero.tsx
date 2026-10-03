@@ -51,7 +51,7 @@ const T: Record<"bs" | "en", Content> = {
     shots: {
       left: "Admin panel s rezervacijama na čekanju",
       center: "Naslovna stranica sajta za iznajmljivanje vozila",
-      right: "Ista naslovna stranica u tamnoj temi",
+      right: "Roobet, sistem nagrada za gaming platformu",
     },
     cardSpeed: { label: "Učitavanje sajta", value: "3,2 s", was: "ranije 21,6 s", client: "Maximum Rent a Car" },
     watch: "Pogledajte sistem u pokretu", watchMeta: "1 min",
@@ -68,7 +68,7 @@ const T: Record<"bs" | "en", Content> = {
     shots: {
       left: "Admin panel with pending bookings",
       center: "Home page of a car rental website",
-      right: "The same home page in dark mode",
+      right: "Roobet, a rewards system for a gaming platform",
     },
     cardSpeed: { label: "Page load time", value: "3.2 s", was: "was 21.6 s", client: "Maximum Rent a Car" },
     watch: "Watch the system in action", watchMeta: "1 min",
@@ -296,7 +296,7 @@ export function Hero() {
 
           {/* desni: manji, niže, nagnut udesno */}
           <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] rotate-[3deg] sm:rotate-[5deg] origin-bottom">
-            <PhoneMockup src="/portfolio/maximum-hero-mob.webp" alt={d.shots.right} bar="dark" />
+            <PhoneMockup src="/portfolio/roobet-mob.webp" alt={d.shots.right} bar="dark" barColor="#191939" />
           </div>
         </div>
 
