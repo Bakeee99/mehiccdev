@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Code2, Megaphone, ArrowUpRight, type LucideIcon } from "lucide-react";
+import { Code2, Megaphone, ArrowUpRight, Linkedin, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import { Head, Fade } from "@/components/ui/kit";
+import { Head, Fade, FLOAT } from "@/components/ui/kit";
 
 const PEOPLE: { src: string; icon: LucideIcon; linkedin: string }[] = [
   { src: "/team/bakir.jpg", icon: Code2, linkedin: "https://www.linkedin.com/in/bakir-mehic-qa-engineer/" },
@@ -72,20 +72,29 @@ export function About() {
             const p = PEOPLE[i];
             const Icon = p.icon;
             return (
-              <Fade key={m.name} delay={i * 0.06} className="flex flex-col gap-6 rounded-[20px] border border-[#E5E7EB] bg-white p-6 sm:flex-row sm:p-8">
-                <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#F1F5F9] sm:h-32 sm:w-32">
-                  <Image src={p.src} alt={m.name} fill sizes="128px" className="object-cover" />
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <h3 className="text-[20px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
-                  <p className="mt-1 flex items-center gap-2 text-[13.5px] font-medium text-[#0F3554]"><Icon size={14} /> {m.role}</p>
-                  <p className="mt-4 text-[14.5px] leading-relaxed text-[#475569]">{m.bio}</p>
-                  <p className="mt-4 text-[12.5px] leading-relaxed text-[#64748B]">{m.tags.join(" · ")}</p>
-                  <a href={p.linkedin} target="_blank" rel="noopener noreferrer"
-                     className="mt-5 inline-flex w-fit items-center gap-1 text-[13.5px] font-semibold text-[#0F172A] underline decoration-[#CBD5E1] underline-offset-4 transition-colors hover:decoration-[#0F172A]">
-                    {d.linkedinBtn} <ArrowUpRight size={13} />
-                  </a>
-                </div>
+              <Fade key={m.name} delay={i * 0.06}>
+                <article className="group flex h-full flex-col gap-7 rounded-[24px] border border-[#E5E7EB] bg-white p-6 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[#CBD5E1] sm:flex-row sm:p-8">
+                  <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-[20px] bg-[#F1F5F9] sm:w-48"
+                       style={{ boxShadow: FLOAT }}>
+                    <Image src={p.src} alt={m.name} fill unoptimized className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  </div>
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <h3 className="text-[24px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
+                    <p className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-[#EEF3F8] px-3 py-1 text-[12.5px] font-semibold text-[#0F3554]">
+                      <Icon size={13} /> {m.role}
+                    </p>
+                    <p className="mt-4 text-[15px] leading-relaxed text-[#475569]">{m.bio}</p>
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {m.tags.map((tg) => (
+                        <li key={tg} className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-2.5 py-1 text-[12px] font-medium text-[#334155]">{tg}</li>
+                      ))}
+                    </ul>
+                    <a href={p.linkedin} target="_blank" rel="noopener noreferrer"
+                       className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#0F172A] transition-colors hover:border-[#0A66C2] hover:bg-[#F8FAFC]">
+                      <Linkedin size={16} className="text-[#0A66C2]" fill="currentColor" strokeWidth={0} /> {d.linkedinBtn} <ArrowUpRight size={13} className="text-[#64748B]" />
+                    </a>
+                  </div>
+                </article>
               </Fade>
             );
           })}

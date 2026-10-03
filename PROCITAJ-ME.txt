@@ -1,54 +1,59 @@
 ════════════════════════════════════════════════════════════════════
-  mehiccdev — Flagship sekcija: kartica proizvoda + forma koja radi
+  mehiccdev — TIM v2: premium redizajn + kvadratne slike (LinkedIn)
 ════════════════════════════════════════════════════════════════════
 
-ŠTA JE U ZIP-u (2 fajla + 2 pregleda):
-  components/sections/SaasTeaser.tsx   sekcija napisana ispočetka
-  app/globals.css                      uklonjeno staro pravilo za flagship
+Traži lib/useReveal.ts iz velikog paketa popravki (mora biti unutra
+prije ovoga).
 
-════════ ⚠ VAŽNO: FORMA ZA RANI PRISTUP NIJE RADILA ════════
-Stara forma je samo glumila slanje: čekala je 1,2 sekunde i prikazala
-"Hvala na prijavi!", a email nije išao nikuda. Svaka agencija koja se
-do sada prijavila je izgubljena.
+ŠTA JE U ZIP-u (1 fajl):
+  components/sections/About.tsx
 
-Sada prijava ide istim putem kao kontakt forma (/api/kontakt, Resend)
-i stiže ti na email s temom:
-    "Rani pristup · Real Estate SaaS"
-Ako slanje ne uspije, posjetilac vidi poruku s tvojim emailom umjesto
-lažnog "hvala". Provjereno lokalno: bez ključa API odbije, i greška
-se prikaže.
+────────────────────────────────────────────────────────────────────
+GLAVNA STVAR: SLIKE VIŠE NEĆE BITI IZREZANE
+────────────────────────────────────────────────────────────────────
+Stari dizajn je imao ŠIROKI foto baner preko cijele kartice, pa bi
+kvadratna LinkedIn slika (400×400) bila odsječena po pola glave.
+Novi dizajn ima KVADRATNI foto okvir (176×176 na desktopu) s
+gradijentnim rubom, u koji LinkedIn slika sjeda 1:1, bez rezanja.
 
-Na Vercelu moraju biti podešeni RESEND_API_KEY, UPIT_EMAIL_TO i
-UPIT_EMAIL_FROM (isti kao za kontakt formu). Poslije pusha pošalji
-sebi jednu probnu prijavu.
+KAKO UBACITI SLIKE (3 koraka):
+  1. Skini profilnu sliku s LinkedIn-a: otvori svoj profil → klikni
+     na sliku → desni klik → "Sačuvaj sliku kao" → bakir.jpg
+     (isto Nedim → nedim.jpg)
+  2. Spremi obje u  public/team/  (taj folder VEĆ POSTOJI u projektu)
+  3. U About.tsx, pri vrhu u PHOTOS, upiši:
+       src: "/team/bakir.jpg"   (prvi red, BM)
+       src: "/team/nedim.jpg"   (drugi red, NK)
+     Placeholder s inicijalima se sam sakrije.
 
-════════ DIZAJN ════════
-Cilj je da se osjeti da je ovo PROIZVOD, pa je sve u jednoj velikoj
-ploči, kao kartica proizvoda:
+Savjet: ako LinkedIn ponudi malu sliku, otvori profil u browseru,
+zumiraj sliku (klik na nju) pa tek onda sačuvaj, dobiješ veću
+rezoluciju. Sve preko 400×400 piksela je sasvim dovoljno.
 
-  STATUSNA TRAKA  ikonica i naziv platforme, zelena oznaka "U razvoju",
-                  a desno vremenska linija: Novembar 2026 (početak
-                  razvoja, tačka "sada") → Oktobar 2027 (lansiranje)
-  LIJEVO          naslov, opis, četiri tržišta i šest funkcija kao
-                  uredna lista u dvije kolone s plavim ikonicama
-  DESNO           SVIJETLI prikaz platforme umjesto tamnog plavog
-                  prozora: pretraga, filteri i četiri oglasa s
-                  ilustrovanim zgradama u prigušenim tonovima, uz
-                  oznake BOOST i AI; tri plutajuće oznake (AI opis,
-                  XML sync, kreditni kalkulator) postavljene tako da
-                  ne prekrivaju cijene ni filtere
-  DNO             rani pristup kao tamno plava traka: naslov sa
-                  zelenom iskrom, opis, bijelo polje za email i
-                  crveno dugme "Prijavi se"
+────────────────────────────────────────────────────────────────────
+ŠTA JE JOŠ NOVO U DIZAJNU
+────────────────────────────────────────────────────────────────────
+  • Naslov: "Ljudi iza mehiccdev-a" (serif gradient akcenat, kao
+    ostale sekcije). Ličnije od "Ko smo mi".
+  • Kartice: slika lijevo (s gradijentnim rubom i blagim zumom na
+    hover), sadržaj desno; na telefonu slika centrirana iznad.
+  • Uloga sada ima svoju ikonicu (kod za tebe, megafon za Nedima).
+  • Dodano LinkedIn dugme na svakoj kartici ("LinkedIn profil") koje
+    otvara profil u novom tabu. Prije je cijela kartica bila link,
+    što niko ne skonta; jasno dugme je bolje.
+  • Dekor: grid šara + sjaj koji se pojača na hover, kartica se
+    podigne.
+  • Prebačeno na useReveal pattern, tekstovi self-contained (BS/EN),
+    id sekcije ostaje "o-nama" pa navigacija radi kao prije.
 
-Oglasi u prikazu su ilustrativni (izmišljene nekretnine i cijene),
-jer platforma još nije lansirana.
+────────────────────────────────────────────────────────────────────
+KORACI:
+────────────────────────────────────────────────────────────────────
+  1. Raspakuj u KORIJEN projekta → "Zamijeni" DA
+  2. Ubaci slike po uputi gore (možeš i poslije, placeholder je uredan)
+  3. npm run dev → provjeri: slike (bez rezanja!), LinkedIn dugmad,
+     oba jezika, obje teme, telefon
+  4. git add . && git commit -m "feat: tim v2, kvadratne slike + redizajn" && git push
 
-════════ KOMANDE ZA KONZOLU ════════
-  git remote -v
-  git add .
-  git commit -m "feat: flagship kao kartica proizvoda, prava forma za rani pristup"
-  git push
-
-Build verifikovan prije slanja: npm run build ✓ (13/13 stranica)
+Build verifikovan prije slanja: npm run build ✓
 ════════════════════════════════════════════════════════════════════
