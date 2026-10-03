@@ -241,3 +241,9 @@ html.light .section-progress > div { background: #0F172A !important; }
   .tech-track > ul { flex-wrap: wrap; justify-content: center; row-gap: 1rem; }
   .tech-marquee { -webkit-mask-image: none; mask-image: none; }
 }
+
+html.light main > section:not(.hero-light):not(.strip) {
+  padding-top: clamp(5.5rem, 8vw, 8rem) !important;
+  padding-bottom: clamp(5.5rem, 8vw, 8rem) !important;
+}
+html.light [style*="radial-gradient"] { display: none !important; }
