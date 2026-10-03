@@ -26,6 +26,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, CarFront, Gauge, Play } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { PhoneMockup } from "@/components/ui/kit";
 
 type Content = {
   announceTag: string; announceText: string;
@@ -74,74 +75,6 @@ const T: Record<"bs" | "en", Content> = {
     cardBooking: { title: "New booking", detail: "VW Golf 8 · July 10 to 13", status: "Confirmed" },
   },
 };
-
-/* Meka sjena telefona: kratki sloj uz rub i dugi, blijedi ispod. */
-const PHONE_SHADOW =
-  "0 1px 2px rgba(15,23,42,0.08), 0 24px 50px -18px rgba(15,23,42,0.30)";
-
-/* ── Okvir telefona, po uzoru na referencu ──────────────────────────────────
-   Tri sloja, od spolja prema unutra:
-     1. srebrni okvir (svijetli gradijent, kao aluminijum)
-     2. tanak crni bezel
-     3. ekran: statusna traka s vremenom, ostrvom i ikonicama, pa slika
-
-   Statusnu traku crtamo sami, jer screenshotovi je nemaju. Boja trake prati
-   vrh stranice na slici, a ikonice su tamne na svijetloj ili svijetle na
-   tamnoj traci. Slika se servira netaknuta (unoptimized), oštra na Retini. */
-function Phone({ src, alt, bar = "light", priority = false }: {
-  src: string; alt: string; bar?: "light" | "dark"; priority?: boolean;
-}) {
-  const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
-
-  /* SVE MJERE SU U cqw, odnosno u postocima ŠIRINE OVOG TELEFONA.
-     Ranije su uglovi bili fiksni (oko 46 px). Na mobitelu je telefon širok
-     svega ~110 px, pa je takav ugao zauzimao skoro pola širine i oblik je
-     postajao ovalan, kao jaje. Pravi iPhone ima ugao oko 14 posto širine,
-     okvir oko 1 posto, a ostrvo oko trećinu širine. Kad je sve izraženo u
-     odnosu na širinu, telefon izgleda isto na svakoj veličini.
-
-     Spoljni div je "kontejner" (container-type), a cqw unutar njega znači
-     "jedan posto širine tog kontejnera". */
-  return (
-    <div style={{ containerType: "inline-size" }}>
-      {/* srebrni okvir */}
-      <div
-        style={{
-          borderRadius: "15.5cqw",
-          padding: "1.1cqw",
-          background: "linear-gradient(145deg, #F4F5F7 0%, #D9DCE1 45%, #EEF0F3 100%)",
-          boxShadow: PHONE_SHADOW,
-        }}
-      >
-        {/* crni bezel */}
-        <div className="bg-black" style={{ borderRadius: "14.4cqw", padding: "1.9cqw" }}>
-          {/* ekran */}
-          <div className="relative overflow-hidden" style={{ borderRadius: "12.5cqw" }}>
-            {/* statusna traka */}
-            <div
-              className={`relative flex items-center justify-between ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}
-              style={{ height: "12.5cqw", paddingInline: "8cqw" }}
-            >
-              <span className="font-semibold tracking-tight" style={{ color: ink, fontSize: "4.4cqw" }}>9:41</span>
-              {/* dinamičko ostrvo */}
-              <span aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
-                    style={{ top: "2.6cqw", width: "32%", height: "8.6cqw" }} />
-              <span className="flex items-center" style={{ gap: "1.2cqw" }} aria-hidden>
-                <svg viewBox="0 0 17 12" style={{ width: "5.2cqw" }}><g fill={ink}><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="4.5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="9" y="3" width="3" height="9" rx=".8"/><rect x="13.5" y="0" width="3" height="12" rx=".8"/></g></svg>
-                <svg viewBox="0 0 26 12" style={{ width: "7.4cqw" }}><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke={ink} strokeOpacity=".45" strokeWidth="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill={ink}/><rect x="23.5" y="4" width="1.8" height="4" rx=".9" fill={ink} fillOpacity=".45"/></svg>
-              </span>
-            </div>
-            {/* sadržaj ekrana */}
-            <div className="relative aspect-[1179/2556] bg-white">
-              <Image src={src} alt={alt} fill unoptimized priority={priority}
-                     className="object-cover object-top" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function Hero() {
   const { lang } = useLanguage();
@@ -353,17 +286,17 @@ export function Hero() {
                         h-[300px] sm:h-[440px] lg:h-[520px] overflow-hidden">
           {/* lijevi: manji, niže, nagnut ulijevo */}
           <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] -rotate-[3deg] sm:-rotate-[5deg] origin-bottom">
-            <Phone src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} />
+            <PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} />
           </div>
 
           {/* srednji: najveći i najviši */}
           <div className="w-[33%] sm:w-[35%] max-w-[300px]">
-            <Phone src="/portfolio/maximum-poslije-mob.webp" alt={d.shots.center} priority />
+            <PhoneMockup src="/portfolio/maximum-poslije-mob.webp" alt={d.shots.center} priority />
           </div>
 
           {/* desni: manji, niže, nagnut udesno */}
           <div className="w-[28%] sm:w-[30%] max-w-[250px] mt-[7%] rotate-[3deg] sm:rotate-[5deg] origin-bottom">
-            <Phone src="/portfolio/maximum-hero-mob.webp" alt={d.shots.right} bar="dark" />
+            <PhoneMockup src="/portfolio/maximum-hero-mob.webp" alt={d.shots.right} bar="dark" />
           </div>
         </div>
 

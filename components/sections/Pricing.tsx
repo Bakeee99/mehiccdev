@@ -28,6 +28,7 @@ import {
   CalendarClock, Wrench, type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { PlanCard, SOFT } from "@/components/ui/kit";
 
 type AppPlan = { name: string; tag: string; price: string; alt?: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { alt?: string; name: string; tag: string; price: string; note: string; features: string[] };
@@ -237,110 +238,6 @@ const PRICING: Record<"bs" | "en", PricingData> = {
 
 const APP_ICONS: LucideIcon[] = [LayoutDashboard, Car, Crown];
 const MKT_ICONS: LucideIcon[] = [Rocket, TrendingUp, Star];
-
-/* stavka koja je zapravo naslov grupe ("SVE iz Startera, plus:") */
-const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING");
-
-const SOFT = "0 1px 2px rgba(15,23,42,0.04)";
-const LIFT = "0 1px 2px rgba(15,23,42,0.06), 0 28px 56px -28px rgba(15,23,42,0.45)";
-
-/* ── Jedna kartica paketa ──────────────────────────────────────────────────
-   variant:
-     "dark"     preporučeni aplikacijski paket, tamno plava kartica
-     "outline"  preporučeni marketing paket, bijela s tamnim rubom
-     "plain"    ostali paketi */
-function PlanCard({
-  icon: Icon, name, tag, priceLabel, from, price, per, oldPrice, discount, alt, note,
-  promo, features, cta, href, badge, variant,
-}: {
-  icon: LucideIcon; name: string; tag: string; priceLabel?: string; from?: string;
-  price: string; per?: string; oldPrice?: string; discount?: string; alt?: string; note?: string;
-  promo?: string; features: string[]; cta: string; href: string; badge?: string;
-  variant: "dark" | "outline" | "plain";
-}) {
-  const dark = variant === "dark";
-  const txt   = dark ? "text-white" : "text-[#0F172A]";
-  const muted = dark ? "text-[#94A3B8]" : "text-[#64748B]";
-  const body  = dark ? "text-[#CBD5E1]" : "text-[#475569]";
-
-  return (
-    <article
-      className={`relative flex flex-col rounded-[20px] p-6 sm:p-7 ${
-        dark ? "bg-[#0F172A]"
-             : variant === "outline" ? "bg-white border-[1.5px] border-[#0F172A]"
-             : "bg-white border border-[#E5E7EB]"}`}
-      style={{ boxShadow: dark ? LIFT : SOFT }}
-    >
-      {/* ikonica, ime i oznaka */}
-      <div className="flex items-start justify-between gap-3">
-        <span className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/10 text-white" : "bg-[#EEF3F8] text-[#0F3554]"}`}>
-          <Icon size={20} strokeWidth={2} />
-        </span>
-        {badge && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#16A34A] px-2.5 py-1 text-[11px] font-semibold text-white">
-            <Star size={11} fill="currentColor" /> {badge}
-          </span>
-        )}
-      </div>
-      <h3 className={`mt-4 text-[19px] font-semibold ${txt}`}>{name}</h3>
-      <p className={`mt-1.5 text-[14px] leading-relaxed ${body}`}>{tag}</p>
-
-      {/* cijena */}
-      <div className={`mt-6 border-t pt-5 ${dark ? "border-white/10" : "border-[#F1F5F9]"}`}>
-        {priceLabel && <p className={`text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{priceLabel}</p>}
-        <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
-          {from && <span className={`text-[14px] font-medium ${muted}`}>{from}</span>}
-          <span className={`text-[34px] leading-none font-semibold tracking-tight tabular-nums ${txt}`}>{price}</span>
-          {per && <span className={`text-[14px] font-medium ${muted}`}>{per}</span>}
-          {oldPrice && <span className={`text-[15px] line-through ${muted}`}>{oldPrice}</span>}
-          {discount && (
-            <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${dark ? "bg-[#16A34A]/20 text-[#4ADE80]" : "bg-[#DCFCE7] text-[#15803D]"}`}>
-              {discount}
-            </span>
-          )}
-        </p>
-        {(alt || note) && <p className={`mt-1.5 text-[12.5px] ${muted}`}>{[alt, note].filter(Boolean).join(" · ")}</p>}
-        {promo && (
-          <p className={`mt-3 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium ${dark ? "bg-white/[0.06] text-[#E2E8F0]" : "bg-[#F8FAFC] text-[#334155]"}`}>
-            <Clock size={12} /> {promo}
-          </p>
-        )}
-      </div>
-
-      {/* stavke */}
-      <ul className="mt-6 space-y-2.5">
-        {features.map((f) =>
-          isHeader(f) ? (
-            <li key={f} className={`pt-2 text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{f}</li>
-          ) : (
-            <li key={f} className={`flex items-start gap-2.5 text-[14px] leading-snug ${body}`}>
-              <Check size={15} strokeWidth={2.5} className={`mt-0.5 shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
-              {f}
-            </li>
-          )
-        )}
-      </ul>
-
-      {/* dugme: crveno samo kod tamne (preporučene) kartice.
-          Omotač s mt-auto gura dugme na dno kartice, pa su dugmad u sve tri
-          kartice poravnata, bez obzira koliko stavki koja ima. */}
-      <div className="mt-auto pt-7">
-      <a
-        href={href}
-        className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-semibold transition-colors ${
-          dark
-            ? "border border-transparent bg-[#DC2626] text-white hover:bg-[#B91C1C]"
-            : variant === "outline"
-              ? "border border-transparent bg-[#0F172A] text-white hover:bg-[#1E293B]"
-              : "border border-[#E5E7EB] text-[#0F172A] hover:bg-[#F9FAFB]"
-        }`}
-      >
-        {cta} <ArrowRight size={15} />
-      </a>
-      </div>
-    </article>
-  );
-}
 
 /* zaglavlje bloka, isto kao u ostalim sekcijama */
 function Head({ eyebrow, h, accent, sub }: { eyebrow: string; h: string; accent?: string; sub: string }) {

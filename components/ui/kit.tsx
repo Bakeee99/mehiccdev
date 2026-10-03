@@ -1,0 +1,299 @@
+/**
+ * components/ui/kit.tsx
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Zajednički elementi dizajna, isti na naslovnici i na podstranicama:
+ *   Backdrop     pozadina heroja (preliv, odsjaji, mreža)
+ *   Head         zaglavlje sekcije (oznaka, naslov s naglaskom, podnaslov)
+ *   Fade         jedino pojavljivanje pri skrolanju na sajtu, blago i jednom
+ *   PhoneMockup  iPhone okvir, sve mjere razmjerne širini
+ *   BrowserFrame prozor preglednika oko screenshota
+ *   Lightbox     uvećanje slike preko cijelog ekrana
+ *   PlanCard     kartica paketa (cjenovnik, rent-a-car paketi)
+ *
+ * Boje: #0F172A tekst i tamne plohe, #0F3554 naglasak, #16A34A potvrde,
+ * #DC2626 samo glavni klik. Sjene su u style, jer globalno pravilo utišava
+ * sve klase sa sjenom.
+ */
+
+"use client";
+
+import { useEffect } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowRight, Check, Clock, Star, X, type LucideIcon } from "lucide-react";
+
+export const SOFT  = "0 1px 2px rgba(15,23,42,0.04)";
+export const LIFT  = "0 1px 2px rgba(15,23,42,0.06), 0 28px 56px -28px rgba(15,23,42,0.45)";
+export const FLOAT = "0 1px 2px rgba(15,23,42,0.06), 0 18px 36px -18px rgba(15,23,42,0.28)";
+
+/* ── pozadina heroja, identična naslovnici ───────────────────────────────── */
+export function Backdrop({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative overflow-hidden"
+         style={{ background: "linear-gradient(180deg, #D9E4F0 0%, #E7EEF6 34%, #F4F7FB 68%, #FFFFFF 100%)" }}>
+      <div aria-hidden className="pointer-events-none absolute -left-[12%] top-0 h-[70%] w-[38%] -skew-x-[24deg] opacity-60"
+           style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%)" }} />
+      <div aria-hidden className="pointer-events-none absolute right-[-8%] top-0 h-[60%] w-[26%] -skew-x-[24deg] opacity-50"
+           style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%)" }} />
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.35]"
+           style={{
+             backgroundImage: "linear-gradient(to right, rgba(15,53,84,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,53,84,0.06) 1px, transparent 1px)",
+             backgroundSize: "56px 56px",
+             maskImage: "linear-gradient(to bottom, black 0%, transparent 60%)",
+             WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 60%)",
+           }} />
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
+
+/* ── zaglavlje sekcije ───────────────────────────────────────────────────── */
+export function Head({ label, h, accent, sub, align = "center" }: {
+  label: string; h: string; accent?: string; sub?: string; align?: "center" | "left";
+}) {
+  const c = align === "center";
+  return (
+    <div className={c ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
+      <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{label}</p>
+      <h2 className="mt-4 text-[32px] leading-[1.12] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#0F172A]"
+          style={{ textWrap: "balance" }}>
+        {h}{accent && <> <span className="text-[#0F3554]">{accent}</span></>}
+      </h2>
+      {sub && <p className={`mt-5 text-[16px] leading-relaxed text-[#475569] ${c ? "mx-auto max-w-xl" : ""}`}>{sub}</p>}
+    </div>
+  );
+}
+
+/* ── blago pojavljivanje: jednom, kratko, uz isključene animacije nikako ── */
+export function Fade({ children, className = "", delay = 0 }: {
+  children: React.ReactNode; className?: string; delay?: number;
+}) {
+  const reduce = useReducedMotion() ?? false;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={reduce ? { duration: 0 } : { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── prozor preglednika ──────────────────────────────────────────────────── */
+export function BrowserFrame({ url, children }: { url?: string; children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-[#E5E7EB] bg-white" style={{ boxShadow: FLOAT }}>
+      <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3 py-2">
+        <span className="h-2 w-2 rounded-full bg-[#E2E8F0]" /><span className="h-2 w-2 rounded-full bg-[#E2E8F0]" /><span className="h-2 w-2 rounded-full bg-[#E2E8F0]" />
+        {url && <span className="ml-2 min-w-0 truncate text-[10.5px] text-[#94A3B8]">{url}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ── uvećanje slike ──────────────────────────────────────────────────────── */
+export type ZoomState = { src: string; alt: string; phone?: boolean } | null;
+
+export function Lightbox({ zoom, onClose, closeLabel }: { zoom: ZoomState; onClose: () => void; closeLabel: string }) {
+  useEffect(() => {
+    if (!zoom) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [zoom, onClose]);
+
+  return (
+    <AnimatePresence>
+      {zoom && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+                    onClick={onClose}
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-[#0F172A]/85 p-4 sm:p-8 cursor-zoom-out">
+          <button type="button" onClick={onClose} aria-label={closeLabel}
+                  className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-xl border border-white/20 text-white/80 hover:text-white">
+            <X size={18} />
+          </button>
+          <div onClick={(e) => e.stopPropagation()}
+               className={`relative overflow-hidden rounded-xl bg-white cursor-default ${zoom.phone ? "h-[86vh] aspect-[1179/2556]" : "w-full max-w-6xl aspect-[16/10]"}`}>
+            <Image src={zoom.src} alt={zoom.alt} fill unoptimized className="object-contain object-top" />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* Meka sjena telefona: kratki sloj uz rub i dugi, blijedi ispod. */
+const PHONE_SHADOW =
+  "0 1px 2px rgba(15,23,42,0.08), 0 24px 50px -18px rgba(15,23,42,0.30)";
+
+/* ── Okvir telefona, po uzoru na referencu ──────────────────────────────────
+   Tri sloja, od spolja prema unutra:
+     1. srebrni okvir (svijetli gradijent, kao aluminijum)
+     2. tanak crni bezel
+     3. ekran: statusna traka s vremenom, ostrvom i ikonicama, pa slika
+
+   Statusnu traku crtamo sami, jer screenshotovi je nemaju. Boja trake prati
+   vrh stranice na slici, a ikonice su tamne na svijetloj ili svijetle na
+   tamnoj traci. Slika se servira netaknuta (unoptimized), oštra na Retini. */
+export function PhoneMockup({ src, alt, bar = "light", priority = false }: {
+  src: string; alt: string; bar?: "light" | "dark"; priority?: boolean;
+}) {
+  const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
+
+  /* SVE MJERE SU U cqw, odnosno u postocima ŠIRINE OVOG TELEFONA.
+     Ranije su uglovi bili fiksni (oko 46 px). Na mobitelu je telefon širok
+     svega ~110 px, pa je takav ugao zauzimao skoro pola širine i oblik je
+     postajao ovalan, kao jaje. Pravi iPhone ima ugao oko 14 posto širine,
+     okvir oko 1 posto, a ostrvo oko trećinu širine. Kad je sve izraženo u
+     odnosu na širinu, telefon izgleda isto na svakoj veličini.
+
+     Spoljni div je "kontejner" (container-type), a cqw unutar njega znači
+     "jedan posto širine tog kontejnera". */
+  return (
+    <div style={{ containerType: "inline-size" }}>
+      {/* srebrni okvir */}
+      <div
+        style={{
+          borderRadius: "15.5cqw",
+          padding: "1.1cqw",
+          background: "linear-gradient(145deg, #F4F5F7 0%, #D9DCE1 45%, #EEF0F3 100%)",
+          boxShadow: PHONE_SHADOW,
+        }}
+      >
+        {/* crni bezel */}
+        <div className="bg-black" style={{ borderRadius: "14.4cqw", padding: "1.9cqw" }}>
+          {/* ekran */}
+          <div className="relative overflow-hidden" style={{ borderRadius: "12.5cqw" }}>
+            {/* statusna traka */}
+            <div
+              className={`relative flex items-center justify-between ${bar === "dark" ? "bg-[#0A0A0A]" : "bg-white"}`}
+              style={{ height: "12.5cqw", paddingInline: "8cqw" }}
+            >
+              <span className="font-semibold tracking-tight" style={{ color: ink, fontSize: "4.4cqw" }}>9:41</span>
+              {/* dinamičko ostrvo */}
+              <span aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black"
+                    style={{ top: "2.6cqw", width: "32%", height: "8.6cqw" }} />
+              <span className="flex items-center" style={{ gap: "1.2cqw" }} aria-hidden>
+                <svg viewBox="0 0 17 12" style={{ width: "5.2cqw" }}><g fill={ink}><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="4.5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="9" y="3" width="3" height="9" rx=".8"/><rect x="13.5" y="0" width="3" height="12" rx=".8"/></g></svg>
+                <svg viewBox="0 0 26 12" style={{ width: "7.4cqw" }}><rect x=".75" y=".75" width="21.5" height="10.5" rx="3" fill="none" stroke={ink} strokeOpacity=".45" strokeWidth="1.5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill={ink}/><rect x="23.5" y="4" width="1.8" height="4" rx=".9" fill={ink} fillOpacity=".45"/></svg>
+              </span>
+            </div>
+            {/* sadržaj ekrana */}
+            <div className="relative aspect-[1179/2556] bg-white">
+              <Image src={src} alt={alt} fill unoptimized priority={priority}
+                     className="object-cover object-top" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* stavka koja je zapravo naslov grupe ("SVE iz Startera, plus:") */
+const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING");
+
+
+/* ── Jedna kartica paketa ──────────────────────────────────────────────────
+   variant:
+     "dark"     preporučeni aplikacijski paket, tamno plava kartica
+     "outline"  preporučeni marketing paket, bijela s tamnim rubom
+     "plain"    ostali paketi */
+export function PlanCard({
+  icon: Icon, name, tag, priceLabel, from, price, per, oldPrice, discount, alt, note,
+  promo, features, foot, cta, href, badge, variant,
+}: {
+  icon: LucideIcon; name: string; tag: string; priceLabel?: string; from?: string;
+  price: string; per?: string; oldPrice?: string; discount?: string; alt?: string; note?: string;
+  promo?: string; features: string[]; foot?: string; cta: string; href: string; badge?: string;
+  variant: "dark" | "outline" | "plain";
+}) {
+  const dark = variant === "dark";
+  const txt   = dark ? "text-white" : "text-[#0F172A]";
+  const muted = dark ? "text-[#94A3B8]" : "text-[#64748B]";
+  const body  = dark ? "text-[#CBD5E1]" : "text-[#475569]";
+
+  return (
+    <article
+      className={`relative flex flex-col rounded-[20px] p-6 sm:p-7 ${
+        dark ? "bg-[#0F172A]"
+             : variant === "outline" ? "bg-white border-[1.5px] border-[#0F172A]"
+             : "bg-white border border-[#E5E7EB]"}`}
+      style={{ boxShadow: dark ? LIFT : SOFT }}
+    >
+      {/* ikonica, ime i oznaka */}
+      <div className="flex items-start justify-between gap-3">
+        <span className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/10 text-white" : "bg-[#EEF3F8] text-[#0F3554]"}`}>
+          <Icon size={20} strokeWidth={2} />
+        </span>
+        {badge && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#16A34A] px-2.5 py-1 text-[11px] font-semibold text-white">
+            <Star size={11} fill="currentColor" /> {badge}
+          </span>
+        )}
+      </div>
+      <h3 className={`mt-4 text-[19px] font-semibold ${txt}`}>{name}</h3>
+      <p className={`mt-1.5 text-[14px] leading-relaxed ${body}`}>{tag}</p>
+
+      {/* cijena */}
+      <div className={`mt-6 border-t pt-5 ${dark ? "border-white/10" : "border-[#F1F5F9]"}`}>
+        {priceLabel && <p className={`text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{priceLabel}</p>}
+        <p className="mt-2 flex flex-wrap items-baseline gap-x-2">
+          {from && <span className={`text-[14px] font-medium ${muted}`}>{from}</span>}
+          <span className={`text-[34px] leading-none font-semibold tracking-tight tabular-nums ${txt}`}>{price}</span>
+          {per && <span className={`text-[14px] font-medium ${muted}`}>{per}</span>}
+          {oldPrice && <span className={`text-[15px] line-through ${muted}`}>{oldPrice}</span>}
+          {discount && (
+            <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${dark ? "bg-[#16A34A]/20 text-[#4ADE80]" : "bg-[#DCFCE7] text-[#15803D]"}`}>
+              {discount}
+            </span>
+          )}
+        </p>
+        {(alt || note) && <p className={`mt-1.5 text-[12.5px] ${muted}`}>{[alt, note].filter(Boolean).join(" · ")}</p>}
+        {promo && (
+          <p className={`mt-3 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium ${dark ? "bg-white/[0.06] text-[#E2E8F0]" : "bg-[#F8FAFC] text-[#334155]"}`}>
+            <Clock size={12} /> {promo}
+          </p>
+        )}
+      </div>
+
+      {/* stavke */}
+      <ul className="mt-6 space-y-2.5">
+        {features.map((f) =>
+          isHeader(f) ? (
+            <li key={f} className={`pt-2 text-[11px] font-semibold uppercase tracking-[0.12em] ${muted}`}>{f}</li>
+          ) : (
+            <li key={f} className={`flex items-start gap-2.5 text-[14px] leading-snug ${body}`}>
+              <Check size={15} strokeWidth={2.5} className={`mt-0.5 shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
+              {f}
+            </li>
+          )
+        )}
+      </ul>
+      {foot && <p className={`mt-4 text-[12.5px] leading-relaxed ${muted}`}>{foot}</p>}
+
+      {/* dugme: crveno samo kod tamne (preporučene) kartice.
+          Omotač s mt-auto gura dugme na dno kartice, pa su dugmad u sve tri
+          kartice poravnata, bez obzira koliko stavki koja ima. */}
+      <div className="mt-auto pt-7">
+      <a
+        href={href}
+        className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-semibold transition-colors ${
+          dark
+            ? "border border-transparent bg-[#DC2626] text-white hover:bg-[#B91C1C]"
+            : variant === "outline"
+              ? "border border-transparent bg-[#0F172A] text-white hover:bg-[#1E293B]"
+              : "border border-[#E5E7EB] text-[#0F172A] hover:bg-[#F9FAFB]"
+        }`}
+      >
+        {cta} <ArrowRight size={15} />
+      </a>
+      </div>
+    </article>
+  );
+}

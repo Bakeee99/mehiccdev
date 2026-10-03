@@ -19,7 +19,7 @@ import { ThemeProvider } from "next-themes";
 
 export function RouteTheme({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const theme = pathname === "/" ? "light" : "dark";
+  const theme = pathname === "/" || pathname === "/maximum" ? "light" : "dark";
 
   return (
     <ThemeProvider attribute="class" defaultTheme={theme} forcedTheme={theme} enableSystem={false}>

@@ -134,8 +134,10 @@ function BlueprintLayerInner() {
    unutar njih uvijek pozivaju istim redom (pravilo Reacta). Naslovnica je
    čista bijela, bez svjetla, zrna i šina. */
 export function BackgroundLayers() {
-  return usePathname() === "/" ? null : <BackgroundLayersInner />;
+  const p = usePathname();
+  return p === "/" || p === "/maximum" ? null : <BackgroundLayersInner />;
 }
 export function BlueprintLayer() {
-  return usePathname() === "/" ? null : <BlueprintLayerInner />;
+  const p = usePathname();
+  return p === "/" || p === "/maximum" ? null : <BlueprintLayerInner />;
 }

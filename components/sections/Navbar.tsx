@@ -51,7 +51,8 @@ const SOLUTIONS = [
 export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
   // naslovnica ima ravnu bijelu traku, podstranice zadržavaju pilulu
-  const isHome = usePathname() === "/";
+  const pathname = usePathname();
+  const isHome = pathname === "/" || pathname === "/maximum";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solOpen,    setSolOpen]    = useState(false);   // desktop dropdown
   const [portOpen,   setPortOpen]   = useState(false);   // dropdown za portfolio
