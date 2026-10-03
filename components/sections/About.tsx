@@ -74,8 +74,8 @@ export function About() {
             return (
               <Fade key={m.name} delay={i * 0.06}>
                 <article className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#E5E7EB] bg-white transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[#CBD5E1]">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[#F1F5F9]">
-                    <Image src={p.src} alt={m.name} fill unoptimized className="object-cover object-[center_22%] transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <div className="relative aspect-[10/9] overflow-hidden bg-[#F1F5F9]">
+                    <Image src={p.src} alt={m.name} fill unoptimized className="object-cover object-[center_30%] transition-transform duration-500 group-hover:scale-[1.03]" />
                   </div>
                   <div className="flex flex-1 flex-col p-7 sm:p-9">
                     <div className="flex items-center justify-between gap-3">
