@@ -155,6 +155,12 @@ export function SystemDemo({ onPage = false }: { onPage?: boolean }) {
     return () => window.removeEventListener("demo:watch", onWatch);
   }, []);
 
+  useEffect(() => {
+    if (!onPage || window.location.hash !== "#kako-radi") return;
+    const t = window.setTimeout(() => window.dispatchEvent(new CustomEvent("demo:watch")), 500);
+    return () => window.clearTimeout(t);
+  }, [onPage]);
+
   /* 4) Promjena jezika na sajtu mijenja jezik i u prezentaciji. */
   useEffect(() => { send({ type: "lang", lang: l }); }, [l]);
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Star, Moon, Sun, ClipboardCheck, CarFront, FileText, Languages, Gauge, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Star, Moon, Sun, Play, ClipboardCheck, CarFront, FileText, Languages, Gauge, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, Lightbox, SOFT, type ZoomState } from "@/components/ui/kit";
 
@@ -68,6 +68,8 @@ const T = {
       { k: "speed", t: "Brzina kao funkcija", d: "Stranica se otvara ispod tri sekunde na mobilnoj mreži, jer gost koji čeka odlazi kod konkurencije." },
     ],
     ctaContact: "Pošaljite upit",
+    watch: "Pogledajte sistem u pokretu",
+    watchMeta: "1 min",
     close: "Zatvori",
   },
   en: {
@@ -131,6 +133,8 @@ const T = {
       { k: "speed", t: "Speed as a feature", d: "The page opens in under three seconds on mobile data, because a guest who waits goes to a competitor." },
     ],
     ctaContact: "Send an inquiry",
+    watch: "Watch the system in action",
+    watchMeta: "1 min",
     close: "Close",
   },
 } as const;
@@ -192,9 +196,22 @@ function Hero({ d, lang, onZoom }: { d: Copy; lang: string; onZoom: Zoom }) {
             <p className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[13px] text-[#64748B]">
               {d.meta.map((m, i) => <span key={m} className="flex items-center gap-3">{i > 0 && <span className="h-1 w-1 rounded-full bg-[#CBD5E1]" />}{m}</span>)}
             </p>
-            <a href={SITE} target="_blank" rel="noopener noreferrer"
-               className="mt-9 inline-flex items-center gap-2 rounded-xl bg-[#0F172A] px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#1E293B]">
-              {d.visit} <ArrowUpRight size={16} />
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a href={SITE} target="_blank" rel="noopener noreferrer"
+                 className="inline-flex items-center gap-2 rounded-xl bg-[#0F172A] px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#1E293B]">
+                {d.visit} <ArrowUpRight size={16} />
+              </a>
+              <a href="/rjesenja/rent-a-car#paketi"
+                 className="inline-flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-[15px] font-semibold text-[#0F172A] transition-colors hover:bg-[#F9FAFB]">
+                {d.ctaBtn} <ArrowRight size={16} />
+              </a>
+            </div>
+            <a href="/rjesenja/rent-a-car#kako-radi" className="group mt-6 inline-flex items-center gap-2.5 text-[14px] font-medium text-[#475569] transition-colors hover:text-[#0F172A]">
+              <span className="grid h-7 w-7 place-items-center rounded-full border border-[#CBD5E1] bg-white text-[#0F172A] transition-colors group-hover:border-[#0F172A]">
+                <Play size={11} fill="currentColor" className="ml-[1px]" />
+              </span>
+              <span className="underline decoration-[#CBD5E1] underline-offset-4 group-hover:decoration-[#0F172A]">{d.watch}</span>
+              <span className="text-[#94A3B8]">· {d.watchMeta}</span>
             </a>
           </Fade>
         </div>
