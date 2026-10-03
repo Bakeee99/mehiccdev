@@ -1,33 +1,19 @@
-/**
- * components/sections/Contact.tsx
- * ─────────────────────────────────────────────────────────────────────────────
- * Kontakt sekcija (v2, premium redizajn).
- *
- * Kompozicija:
- *   • Lijevo: "Šta slijedi" (3 numerisana koraka s gradijentnom linijom),
- *     kartice Bakira i Nedima s avatarima od inicijala i ulogama,
- *     te lokacija + vrijeme odgovora.
- *   • Desno: forma u kartici s gradijentnim okvirom (isti brand okvir kao
- *     flagship traka), polja na --bg podlozi, veliki submit s ikonicom.
- *
- * Logika slanja je ISTA kao prije (simulacija + Formspree uputa u komentaru).
- * Self-contained (BS/EN u fajlu), useReveal pattern, dark/light, bez crtica.
- */
-
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Send, CheckCircle2, Mail, MapPin, Phone, MessageCircle } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, slideInLeft, slideInRight } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
+import Image from "next/image";
+import { ArrowRight, Check, Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { PHONE_DISPLAY, PHONE_DIAL, waLink } from "@/lib/contact";
+import { Head, Fade, SOFT } from "@/components/ui/kit";
 
-const PEOPLE = [
-  { name: "Bakir Mehić",    email: "bakir.mehic@mehiccdev.com",    initials: "BM", gradient: "from-blue-500 to-indigo-600" },
-  { name: "Nedim Kupusija", email: "nedim.kupusija@mehiccdev.com", initials: "NK", gradient: "from-sky-400 to-blue-600" },
+const TEAM = [
+  { name: "Bakir Mehić", email: "bakir.mehic@mehiccdev.com", photo: "/team/bakir.jpg" },
+  { name: "Nedim Kupusija", email: "nedim.kupusija@mehiccdev.com", photo: "/team/nedim.jpg" },
 ];
+
+const field = "w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 text-[14px] text-[#0F172A] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-[#0F172A]";
+const lbl = "text-[13px] font-semibold text-[#0F172A]";
 
 type Content = {
   label: string; heading1: string; headingAccent: string; subtitle: string;
@@ -117,279 +103,135 @@ const T: Record<"bs" | "en", Content> = {
 export function Contact() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
-
-  // One reveal per motion block — fires exactly once, survives language/theme switches
-  const revealHead = useReveal();
-  const revealInfo = useReveal();
-  const revealForm = useReveal();
+  const wa = waLink(lang);
 
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState<string | null>(null);
-  const [honey, setHoney]         = useState("");   // honeypot, bot ga popuni
+  const [honey, setHoney] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "done">("idle");
+  const [error, setError] = useState("");
+  const set = (k: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [k]: v }));
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
+    setState("sending"); setError("");
     try {
       const res = await fetch("/api/kontakt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, website: honey }),
       });
-      if (res.ok) {
-        setSubmitted(true);
-      } else if (res.status === 429) {
-        setError(d.errTooMany);
-      } else {
-        setError(d.errSend);
-      }
-    } catch {
-      setError(d.errSend);
-    } finally {
-      setLoading(false);
-    }
+      if (res.ok) { setState("done"); return; }
+      setError(res.status === 429 ? d.errTooMany : d.errSend);
+    } catch { setError(d.errSend); }
+    setState("idle");
   };
 
-  const inputCls = `w-full px-4 py-3 rounded-xl text-sm bg-[var(--bg)]
-                    border border-[var(--border)] text-[var(--text)]
-                    placeholder:text-[var(--text-muted)] focus:outline-none
-                    focus:border-brand-600/60 focus:ring-2 focus:ring-brand-600/15 transition-all`;
-  const labelCls = "block text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2";
-
   return (
-    <section id="kontakt" className="py-28 lg:py-36 relative overflow-hidden">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="absolute inset-0 bg-grid-pattern bg-grid-md opacity-[0.05] pointer-events-none
-                      [mask-image:radial-gradient(75%_65%_at_50%_40%,black,transparent)]" aria-hidden />
-      <div className="absolute -right-64 bottom-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.12),transparent_72%)] pointer-events-none" aria-hidden />
-      <div className="absolute -left-64 top-24 w-96 h-96 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.10),transparent_72%)] pointer-events-none" aria-hidden />
+    <section id="kontakt" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <Head label={d.label} h={d.heading1} accent={d.headingAccent} sub={d.subtitle} />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.35fr]">
+          <Fade className="flex flex-col rounded-[24px] bg-[#0F172A] p-7 sm:p-8">
+            <p className="text-[19px] font-semibold text-white">{d.directTitle}</p>
+            <p className="mt-1.5 text-[14px] leading-relaxed text-[#94A3B8]">{d.directSub}</p>
+            <div className="mt-5 flex flex-col gap-2.5 sm:flex-row lg:flex-col xl:flex-row">
+              {PHONE_DIAL && (
+                <a href={`tel:${PHONE_DIAL}`} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-[14px] font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]">
+                  <Phone size={15} /> {PHONE_DISPLAY || d.callBtn}
+                </a>
+              )}
+              {wa && (
+                <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-4 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#15803D]">
+                  <MessageCircle size={15} /> {d.waBtn}
+                </a>
+              )}
+            </div>
 
-        {/* ── Header ─────────────────────────────────────────────────────── */}
-        <motion.div variants={staggerContainer} {...revealHead} className="text-center mb-16">
-          <motion.div variants={fadeUp} className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                             border border-brand-600/30 dark:border-brand-500/30
-                             bg-brand-600/8 dark:bg-brand-500/10
-                             text-brand-700 dark:text-brand-300
-                             text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-              {d.label}
-            </span>
-          </motion.div>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            {d.heading1}{" "}
-            <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
-          </motion.h2>
-          <motion.p variants={fadeUp} className="max-w-xl mx-auto text-[var(--text-muted)] text-lg leading-relaxed">
-            {d.subtitle}
-          </motion.p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 lg:gap-14 items-start">
-
-          {/* ── Lijevo: koraci + ljudi + info ──────────────────────────────── */}
-          <motion.div variants={staggerContainerSlow} {...revealInfo}>
-
-            {/* Direktni kanali: telefon i WhatsApp, iznad svega ostalog.
-               Prikazuju se samo ako je broj upisan u lib/contact.ts */}
-            {(PHONE_DIAL || waLink(lang)) && (
-              <motion.div variants={fadeUp}
-                className="rounded-2xl p-5 mb-8 bg-[var(--surface)] border border-brand-600/30">
-                <p className="text-[15px] font-extrabold text-[var(--text)]">{d.directTitle}</p>
-                <p className="text-[12.5px] text-[var(--text-muted)] mt-1 mb-4">{d.directSub}</p>
-                <div className="flex flex-wrap gap-2.5">
-                  {PHONE_DIAL && (
-                    <a href={`tel:${PHONE_DIAL}`}
-                       className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
-                                  bg-gradient-to-r from-brand-600 to-brand-500 text-white
-                                  shadow-lg shadow-brand-600/25
-                                  transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5">
-                      <Phone size={14} /> {d.callBtn}
-                      {PHONE_DISPLAY && <span className="font-semibold opacity-90">{PHONE_DISPLAY}</span>}
-                    </a>
-                  )}
-                  {waLink(lang) && (
-                    <a href={waLink(lang)!} target="_blank" rel="noopener noreferrer"
-                       className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold
-                                  bg-[#25D366] text-[#0B3D24]
-                                  transition-transform duration-300 hover:-translate-y-0.5">
-                      <MessageCircle size={14} /> {d.waBtn}
-                    </a>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Šta slijedi */}
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-5">
-              {d.stepsTitle}
-            </motion.p>
-            <motion.div variants={slideInLeft} className="relative mb-10">
-              <div className="absolute left-[19px] top-8 bottom-8 w-px bg-gradient-to-b from-brand-600 via-brand-500/50 to-brand-400/20" aria-hidden />
-              <div className="flex flex-col gap-5">
-                {d.steps.map((s, i) => (
-                  <div key={s.t} className="relative flex items-start gap-4">
-                    <span className="relative z-10 w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0
-                                     bg-[var(--surface)] border border-brand-600/35
-                                     text-sm font-extrabold text-brand-600 dark:text-brand-400
-                                     shadow-lg shadow-brand-600/10">
-                      {i + 1}
-                    </span>
-                    <span className="pt-0.5">
-                      <span className="block text-[15px] font-extrabold text-[var(--text)] leading-tight">{s.t}</span>
-                      <span className="block text-[13px] text-[var(--text-muted)] leading-relaxed mt-1">{s.d}</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Direktni kontakti */}
-            <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-4">
-              {d.orReach}
-            </motion.p>
-            <div className="flex flex-col gap-3 mb-8">
-              {PEOPLE.map((p, i) => (
-                <motion.a
-                  key={p.email}
-                  variants={fadeUp}
-                  whileHover={{ x: 5 }}
-                  href={`mailto:${p.email}`}
-                  className="group flex items-center gap-4 p-4 rounded-2xl
-                             bg-[var(--surface)] border border-[var(--border)]
-                             transition-[border-color,box-shadow] duration-300
-                             hover:border-brand-600/40 hover:shadow-lg hover:shadow-brand-600/10"
-                >
-                  <span className={`w-11 h-11 rounded-2xl flex-shrink-0 flex items-center justify-center
-                                    bg-gradient-to-br ${p.gradient} text-white text-[13px] font-extrabold
-                                    shadow-lg shadow-brand-600/25`}>
-                    {p.initials}
+            <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.stepsTitle}</p>
+            <ol className="mt-4 space-y-4">
+              {d.steps.map((s, i) => (
+                <li key={s.t} className="flex gap-3.5">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-[12px] font-semibold text-white">{i + 1}</span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-white">{s.t}</span>
+                    <span className="block text-[13px] leading-relaxed text-[#94A3B8]">{s.d}</span>
                   </span>
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-2">
-                      <span className="text-[14.5px] font-bold text-[var(--text)]">{p.name}</span>
-                      <span className="px-2 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider
-                                       text-brand-700 dark:text-brand-300 bg-brand-600/10 border border-brand-600/25">
-                        {d.roles[i]}
-                      </span>
-                    </span>
-                    <span className="block text-[12.5px] text-[var(--text-muted)] truncate mt-0.5">{p.email}</span>
-                  </span>
-                  <span className="ml-auto flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center
-                                   bg-brand-600/10 border border-brand-600/25 text-brand-600 dark:text-brand-400
-                                   transition-[background-color] duration-300 group-hover:bg-brand-600/25">
-                    <Mail size={15} />
-                  </span>
-                </motion.a>
+                </li>
               ))}
-            </div>
+            </ol>
 
-            {/* Lokacija + vrijeme odgovora */}
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-2.5">
-              <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold
-                               text-[var(--text)] bg-[var(--surface)] border border-[var(--border)]">
-                <MapPin size={13} className="text-brand-600 dark:text-brand-400" /> {d.location}
-              </span>
-              <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold
-                               text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden /> {d.response}
-              </span>
-            </motion.div>
-          </motion.div>
-
-          {/* ── Desno: forma u kartici s gradijentnim okvirom ──────────────── */}
-          <motion.div variants={slideInRight} {...revealForm}>
-            <div
-              className="relative rounded-3xl overflow-hidden"
-              style={{
-                background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, #2563EB, #60A5FA, #818CF8) border-box",
-                border: "1.5px solid transparent",
-              }}
-            >
-              <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,0.22),transparent_72%)] pointer-events-none" aria-hidden />
-
-              <div className="relative p-6 sm:p-9">
-                {submitted ? (
-                  <div className="flex flex-col items-center justify-center text-center py-16">
-                    <span className="w-16 h-16 rounded-3xl flex items-center justify-center mb-5
-                                     bg-green-500/10 border border-green-500/35 text-green-500">
-                      <CheckCircle2 size={28} />
+            <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{d.orReach}</p>
+            <ul className="mt-3 divide-y divide-white/10">
+              {TEAM.map((m, i) => (
+                <li key={m.email}>
+                  <a href={`mailto:${m.email}`} className="group flex items-center gap-3 py-3">
+                    <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white/10">
+                      <Image src={m.photo} alt={m.name} fill unoptimized className="object-cover" />
                     </span>
-                    <p className="text-lg font-bold text-[var(--text)] max-w-sm">{d.success}</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div>
-                        <label htmlFor="c-name" className={labelCls}>{d.nameLabel}</label>
-                        <input id="c-name" name="name" type="text" required value={form.name}
-                               onChange={handleChange} placeholder={d.namePlaceholder} className={inputCls} />
-                      </div>
-                      <div>
-                        <label htmlFor="c-email" className={labelCls}>{d.emailLabel}</label>
-                        <input id="c-email" name="email" type="email" required value={form.email}
-                               onChange={handleChange} placeholder={d.emailPlaceholder} className={inputCls} />
-                      </div>
-                    </div>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[13.5px] font-semibold text-white">{m.name} <span className="font-normal text-[#64748B]">· {d.roles[i]}</span></span>
+                      <span className="block truncate text-[12.5px] text-[#94A3B8] group-hover:text-white">{m.email}</span>
+                    </span>
+                    <Mail size={15} className="shrink-0 text-[#64748B] group-hover:text-white" />
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-                    <div>
-                      <label htmlFor="c-subject" className={labelCls}>{d.subjectLabel}</label>
-                      <select id="c-subject" name="subject" required value={form.subject}
-                              onChange={handleChange} className={`${inputCls} appearance-none cursor-pointer`}>
-                        <option value="" disabled>…</option>
-                        {d.subjectOptions.map((o) => (
-                          <option key={o} value={o}>{o}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="c-message" className={labelCls}>{d.messageLabel}</label>
-                      <textarea id="c-message" name="message" required rows={5} value={form.message}
-                                onChange={handleChange} placeholder={d.messagePlaceholder}
-                                className={`${inputCls} resize-none`} />
-                    </div>
-
-                    {/* honeypot: skriveno od ljudi, botovi ga popune */}
-                    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden
-                           value={honey} onChange={(e) => setHoney(e.target.value)}
-                           className="absolute left-[-9999px] w-px h-px opacity-0" />
-
-                    {error && (
-                      <p className="rounded-xl px-4 py-3 text-[13px] font-semibold text-red-400
-                                    bg-red-500/10 border border-red-500/30">
-                        {error}
-                      </p>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="cta-primary inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-xl
-                                 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold
-                                 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed
-                                 shadow-lg shadow-brand-600/30 hover:shadow-xl hover:shadow-brand-600/40
-                                 hover:-translate-y-0.5"
-                    >
-                      {loading ? d.submitting : (<>{d.submit} <Send size={14} /></>)}
-                    </button>
-                  </form>
-                )}
-              </div>
+            <div className="mt-auto flex flex-col gap-2 pt-6 text-[12.5px]">
+              <span className="flex items-center gap-2 text-[#94A3B8]"><MapPin size={13} /> {d.location}</span>
+              <span className="flex items-center gap-2 text-[#4ADE80]"><span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" /> {d.response}</span>
             </div>
-          </motion.div>
+          </Fade>
+
+          <Fade delay={0.06} className="rounded-[24px] border border-[#E5E7EB] bg-white p-6 sm:p-8" >
+            {state === "done" ? (
+              <div className="flex h-full flex-col items-center justify-center py-16 text-center">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#DCFCE7] text-[#15803D]"><Check size={22} /></span>
+                <p className="mt-4 max-w-sm text-[16px] font-semibold text-[#0F172A]">{d.success}</p>
+              </div>
+            ) : (
+              <form onSubmit={submit} className="flex h-full flex-col gap-6">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <label className="block">
+                    <span className={lbl}>{d.nameLabel}</span>
+                    <input required name="name" autoComplete="name" value={form.name} onChange={(e) => set("name")(e.target.value)} placeholder={d.namePlaceholder} className={`mt-2 ${field}`} />
+                  </label>
+                  <label className="block">
+                    <span className={lbl}>{d.emailLabel}</span>
+                    <input required type="email" name="email" autoComplete="email" value={form.email} onChange={(e) => set("email")(e.target.value)} placeholder={d.emailPlaceholder} className={`mt-2 ${field}`} />
+                  </label>
+                </div>
+
+                <div>
+                  <p className={lbl}>{d.subjectLabel}</p>
+                  <div role="radiogroup" aria-label={d.subjectLabel} className="mt-2 flex flex-wrap gap-2">
+                    {d.subjectOptions.map((o) => (
+                      <button key={o} type="button" role="radio" aria-checked={form.subject === o} onClick={() => set("subject")(form.subject === o ? "" : o)}
+                              className={`rounded-xl border px-3.5 py-2 text-[13.5px] font-medium transition-colors ${form.subject === o ? "border-[#0F172A] bg-[#0F172A] text-white" : "border-[#E5E7EB] bg-white text-[#334155] hover:border-[#CBD5E1]"}`}>
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <label className="flex flex-1 flex-col">
+                  <span className={lbl}>{d.messageLabel}</span>
+                  <textarea required name="message" rows={5} value={form.message} onChange={(e) => set("message")(e.target.value)} placeholder={d.messagePlaceholder} className={`mt-2 min-h-[140px] flex-1 resize-none ${field}`} />
+                </label>
+
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden value={honey} onChange={(e) => setHoney(e.target.value)} className="hidden" />
+                {error && <p className="text-[13px] text-[#B91C1C]">{error}</p>}
+
+                <button type="submit" disabled={state === "sending"}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#B91C1C] disabled:opacity-70"
+                        style={{ boxShadow: SOFT }}>
+                  {state === "sending" ? d.submitting : d.submit} {state !== "sending" && <ArrowRight size={16} />}
+                </button>
+              </form>
+            )}
+          </Fade>
         </div>
       </div>
     </section>
