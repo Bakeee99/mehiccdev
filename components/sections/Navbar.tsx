@@ -79,7 +79,7 @@ export function Navbar() {
           <a href="/" className="flex items-baseline group relative" aria-label="mehiccdev, naslovna">
             <span className="text-lg font-extrabold tracking-tight text-[var(--text)]">mehicc</span>
             <span className="text-lg font-extrabold tracking-tight text-brand-600 dark:text-brand-400">dev</span>
-            <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-brand-500 opacity-0 group-hover:opacity-100
+            <span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-[#0F3554] opacity-0 group-hover:opacity-100
                              transition-opacity duration-300 self-center" aria-hidden />
           </a>
 
@@ -101,7 +101,7 @@ export function Navbar() {
                 {L.solutions}
                 {/* plava tačkica: signal da tu ima nešto novo (crvena je
                    rezervisana za akciju na cjenovniku, da se ne takmiče) */}
-                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" />
                 <ChevronDown size={13} className={`transition-transform duration-200 ${solOpen ? "rotate-180" : ""}`} />
               </button>
 
@@ -275,7 +275,7 @@ export function Navbar() {
                 {L.solutions}
                 {/* plava tačkica: signal da tu ima nešto novo (crvena je
                    rezervisana za akciju na cjenovniku, da se ne takmiče) */}
-                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+                <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" />
                 <ChevronDown size={15} className={`text-[var(--text-muted)] transition-transform duration-200 ${solAccOpen ? "rotate-180" : ""}`} />
               </button>
               {solAccOpen && (
