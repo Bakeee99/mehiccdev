@@ -75,9 +75,9 @@ export async function POST(req: Request) {
 
   const rows: [string, string][] = [
     ["Broj vozila",        d.fleetSize],
-    ["Broj lokacija",      d.locations],
-    ["Prima rezervacije",  d.channels.join(", ")],
-    ["Koristi agregatore", d.aggregators],
+    ["Broj lokacija",      d.locations || "nije navedeno"],
+    ["Prima rezervacije",  d.channels?.join(", ") || "nije navedeno"],
+    ["Koristi agregatore", d.aggregators || "nije navedeno"],
     ["Postojeći sajt",     d.currentSite || "nije naveden"],
     ["Kada kreće",         d.timeline],
     ["Ime i prezime",      d.fullName],

@@ -45,6 +45,7 @@ const T = {
     ctaSub: "Cijene, paketi i primjer iz prakse",
     frameTitle: "Prikaz rezervacijskog sistema za rent-a-car",
     pause: "Pauza", play: "Pokreni", replay: "Ispočetka",
+    ctaPage: "Pogledajte pakete",
   },
   en: {
     label: "Our car rental system",
@@ -56,10 +57,11 @@ const T = {
     ctaSub: "Pricing, packages and a real example",
     frameTitle: "Walkthrough of the car rental booking system",
     pause: "Pause", play: "Play", replay: "Replay",
+    ctaPage: "See the packages",
   },
 } as const;
 
-export function SystemDemo() {
+export function SystemDemo({ onPage = false }: { onPage?: boolean }) {
   const { lang } = useLanguage();
   const l = (lang === "en" ? "en" : "bs") as "bs" | "en";
   const d = T[l];
@@ -157,7 +159,7 @@ export function SystemDemo() {
   useEffect(() => { send({ type: "lang", lang: l }); }, [l]);
 
   return (
-    <section id="rent-a-car" className="relative bg-white scroll-mt-24">
+    <section id={onPage ? "kako-radi" : "rent-a-car"} className="relative bg-white scroll-mt-24">
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
 
         {/* ── zaglavlje ── */}
@@ -245,11 +247,11 @@ export function SystemDemo() {
             </div>
 
             <a
-              href="/rjesenja/rent-a-car"
+              href={onPage ? "#paketi" : "/rjesenja/rent-a-car"}
               className="sm:ml-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#0F172A] px-5 py-3
                          text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-[#1E293B]"
             >
-              {d.cta}
+              {onPage ? d.ctaPage : d.cta}
               <ArrowRight size={16} />
             </a>
           </div>

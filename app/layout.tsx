@@ -8,8 +8,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider }    from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/components/ui/LanguageProvider";
-import { BackgroundLayers, BlueprintLayer } from "@/components/ui/BackgroundFX";
-import { RouteTheme } from "@/components/ui/RouteTheme";
 /* Inter je font naslovnice. Servira se s našeg domena (npm paket), bez
    poziva prema Google serverima, pa je brži i ne zavisi od tuđe usluge.
    Koristi se samo u svijetloj temi (globals.css, html.light), pa podstranice
@@ -93,25 +91,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       </head>
       <body className="antialiased">
-        <RouteTheme>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <LanguageProvider>
-            {/* ── Potpisna pozadina v2 "ŽIVI SISTEM": svjetlo, šine s pulsom
-                   koji putuje kroz njih, zrno, i blueprint skice po dubini
-                   stranice. Sve u components/ui/BackgroundFX.tsx. ── */}
-            <BackgroundLayers />
-
-            {/* sav sadržaj iznad potpisnih slojeva */}
-            <div className="relative z-10">
-              <BlueprintLayer />
-              {children}
-            </div>
-
-            {/* Plutajuće WhatsApp dugme: prikazuje se tek kad upišeš broj
-                u components/ui/WhatsAppButton.tsx */}
+            {children}
             <WhatsAppButton />
             <ScrollTopButton />
           </LanguageProvider>
-        </RouteTheme>
+        </ThemeProvider>
       </body>
     </html>
   );

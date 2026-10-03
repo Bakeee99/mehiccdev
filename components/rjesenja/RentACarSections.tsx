@@ -1,742 +1,256 @@
-/**
- * components/rjesenja/RentACarSections.tsx
- * ─────────────────────────────────────────────────────────────────────────────
- * Sve prikazne sekcije rent-a-car landing stranice (forma je zasebno, u
- * RcForm.tsx, jer nosi validaciju i slanje).
- *
- * Redoslijed: Hero → Problem → Rješenje → Case study → Paketi → Poređenje
- *             → (forma) → FAQ
- *
- * Poštuje projektna pravila: useReveal za scroll animacije, useCoarsePointer
- * za gašenje dekoracije na touchu, transition-[border-color,box-shadow] na
- * motion karticama, backdrop-blur tek od md:, color-mix() za prozirnost CSS
- * varijabli, sav tekst iz rentACarCopy.ts na oba jezika.
- */
-
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import {
-  ArrowRight, ArrowUpRight, Check, Phone, Percent, MoonStar, CalendarX2,
-  Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search,
-  Plus, Minus, Gauge, Car, Zap, Hand, CalendarDays, Info, Server, Gift, BellRing,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { staggerContainer, staggerContainerSlow, fadeUp, scaleIn, slideInLeft, slideInRight } from "@/lib/animations";
-import { useReveal } from "@/lib/useReveal";
-import { useCoarsePointer } from "@/lib/useCoarsePointer";
+import { ArrowRight, ArrowUpRight, Check, X, Plus, Bell, Car, CarFront, Building2, CalendarClock, Wrench } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import { COPY } from "@/components/rjesenja/rentACarCopy";
+import { COPY, type RcCopy } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
-import { RcHowItWorks } from "@/components/rjesenja/RcHowItWorks";
-import { RcCompare } from "@/components/rjesenja/RcCompare";
-import { SectionRail } from "@/components/ui/SectionRail";
+import { SystemDemo } from "@/components/sections/SystemDemo";
+import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, PlanCard, SOFT, FLOAT } from "@/components/ui/kit";
 
-const PROBLEM_ICONS: LucideIcon[]  = [Phone, Percent, MoonStar, CalendarX2];
-const SOLUTION_ICONS: LucideIcon[] = [Languages, CalendarCheck, LayoutDashboard, Send, MapPinned, Search];
+const PLAN_ICONS = [Car, CarFront, Building2];
 
-/* ── Zajednički header sekcije ───────────────────────────────────────────────
-   align="center" je zadano; align="left" koristе sekcije koje treba da razbiju
-   ritam, pa naslov ide lijevo a uvodni tekst desno od njega. Redni broj
-   (01, 02...) daje osjećaj poglavlja umjesto niza istih blokova.            */
-function SectionHead({
-  label, h1, accent, sub, align = "center", index,
-}: {
-  label: string; h1: string; accent: string; sub?: string;
-  align?: "center" | "left"; index?: string;
-}) {
-  const reveal = useReveal();
-
-  const eyebrow = (
-    <motion.div variants={fadeUp} className={align === "center" ? "flex justify-center mb-5" : "mb-5"}>
-      <span className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full
-                       border border-brand-600/30 bg-brand-600/10
-                       text-brand-300 text-xs font-semibold tracking-wider uppercase">
-        {index ? (
-          <span className="font-serif italic text-[13px] text-brand-400 leading-none">{index}</span>
-        ) : (
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-500" aria-hidden />
-        )}
-        {label}
-      </span>
-    </motion.div>
-  );
-
-  const heading = (
-    <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-      {h1}{" "}
-      <span className="text-gradient font-serif italic font-semibold tracking-normal">{accent}</span>
-    </motion.h2>
-  );
-
-  if (align === "left") {
-    return (
-      <motion.div variants={staggerContainer} {...reveal}
-        className="grid lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-12 items-end mb-12">
-        <div>
-          {eyebrow}
-          {heading}
-        </div>
-        {sub && (
-          <motion.p variants={fadeUp} className="text-[var(--text-muted)] text-base leading-relaxed lg:pb-2">
-            {sub}
-          </motion.p>
-        )}
-      </motion.div>
-    );
-  }
-
+function Hero({ c }: { c: RcCopy }) {
+  const h = c.hero;
   return (
-    <motion.div variants={staggerContainer} {...reveal} className="text-center mb-14">
-      {eyebrow}
-      {heading}
-      {sub && (
-        <motion.p variants={fadeUp} className="max-w-2xl mx-auto text-[var(--text-muted)] text-base sm:text-lg leading-relaxed mt-4">
-          {sub}
-        </motion.p>
-      )}
-    </motion.div>
-  );
-}
-
-/* ── 1 · Hero ───────────────────────────────────────────────────────────────
-   Koncept: JEDAN SISTEM, DVA EKRANA.
-   Desno stoje laptop s admin panelom i telefon gosta, povezani u istu priču
-   koja se odvija u tri takta:
-     0. gost na telefonu bira datume
-     1. u panelu na laptopu iskoči novi red, oznaka "Na čekanju" pulsira
-     2. red postaje zelen ("Odobreno"), a na telefon padne potvrda
-
-   Boje: plava ostaje nosilac, ali su potvrde zelene, a čekanje jantarno, pa
-   se probije jednoličnost plave. Ispod telefona stoji tihi tirkizni sjaj.
-
-   Tekst se preuzima iz postojećih rječnika (hero.demo i howItWorks.ui), pa
-   nema novih ključeva ni prijevoda.
-
-   Performanse: samo pomak, prozirnost i boja; nigdje zamućenja ni slika.  */
-
-const HERO_STEP_MS = 3200;
-
-function DeviceShowcase({ c, animate }: { c: typeof COPY.bs; animate: boolean }) {
-  const demo = c.hero.demo;
-  const ui   = c.howItWorks.ui;
-  const [step, setStep] = useState(animate ? 0 : 2);
-
-  useEffect(() => {
-    if (!animate) return;
-    const t = setInterval(() => setStep((s) => (s + 1) % 3), HERO_STEP_MS);
-    return () => clearInterval(t);
-  }, [animate]);
-
-  const arrived  = step >= 1;   // upit stigao u panel
-  const approved = step >= 2;   // vlasnik odobrio
-
-  return (
-    <div className="relative">
-      {/* sjaj: plavi gore desno, tirkizni dolje lijevo, da se plava ne ponavlja */}
-      <div aria-hidden className="absolute -top-16 -right-10 w-72 h-72 rounded-full pointer-events-none
-                                  bg-[radial-gradient(closest-side,rgba(37,99,235,0.20),transparent_72%)]" />
-      <div aria-hidden className="absolute -bottom-16 -left-10 w-64 h-64 rounded-full pointer-events-none
-                                  bg-[radial-gradient(closest-side,rgba(45,212,167,0.14),transparent_72%)]" />
-
-      {/* ── LAPTOP ── */}
-      <div className="relative">
-        <div className="rounded-2xl border border-white/12 bg-[#070C1A] overflow-hidden
-                        shadow-[0_44px_90px_-30px_rgba(37,99,235,0.45)]">
-          {/* traka prozora */}
-          <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.07]">
-            <span className="w-2 h-2 rounded-full bg-white/15" />
-            <span className="w-2 h-2 rounded-full bg-white/15" />
-            <span className="w-2 h-2 rounded-full bg-white/15" />
-            <span className="ml-2 text-[10px] text-white/35">{ui.panel}</span>
-            <span className="ml-auto flex items-center gap-1.5">
-              <motion.span
-                animate={animate && arrived && !approved ? { opacity: [1, 0.35, 1] } : { opacity: 1 }}
-                transition={{ duration: 1.1, repeat: Infinity }}
-                className={`w-1.5 h-1.5 rounded-full ${arrived && !approved ? "bg-amber-400" : "bg-emerald-400"}`}
-              />
-              <span className="text-[9.5px] text-white/30">{arrived && !approved ? ui.pending : ui.approved}</span>
+    <section className="hero-light relative bg-white">
+      <Backdrop>
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 pb-20 pt-36 sm:pt-40 lg:grid-cols-[1.15fr_1fr] lg:px-8">
+          <Fade>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3 py-1 text-[12.5px] font-medium text-[#0F172A]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" /> {h.eyebrow}
             </span>
-          </div>
-
-          <div className="p-4 sm:p-5">
-            {/* novi upit koji uleti u panel */}
-            <motion.div
-              animate={{
-                opacity: arrived ? 1 : 0.25,
-                y: arrived ? 0 : -6,
-                borderColor: approved ? "rgba(16,185,129,0.45)" : arrived ? "rgba(245,158,11,0.45)" : "rgba(255,255,255,0.08)",
-              }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="rounded-xl border bg-white/[.03] p-3.5 mb-3"
-            >
-              <div className="flex items-center gap-3">
-                <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500/40 to-indigo-600/20 flex items-center justify-center flex-shrink-0">
-                  <Car size={15} className="text-blue-200" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[12.5px] font-bold text-white/90 leading-tight">{demo.car}</span>
-                  <span className="block text-[10.5px] text-white/40 leading-tight">{ui.guest} · {ui.dates}</span>
-                </span>
-                <motion.span
-                  animate={{
-                    backgroundColor: approved ? "rgba(16,185,129,0.14)" : "rgba(245,158,11,0.12)",
-                    color: approved ? "rgb(52,211,153)" : "rgb(251,191,36)",
-                  }}
-                  transition={{ duration: 0.35 }}
-                  className="ml-auto px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap"
-                >
-                  {approved ? ui.approved : ui.pending}
-                </motion.span>
-              </div>
-
-              <motion.div
-                animate={{
-                  backgroundColor: approved ? "rgb(5,150,105)" : "rgba(37,99,235,0.95)",
-                  scale: animate && step === 2 ? [1, 0.97, 1] : 1,
-                }}
-                transition={{ duration: 0.45 }}
-                className="mt-3 h-8 rounded-lg flex items-center justify-center gap-1.5 text-[11.5px] font-bold text-white"
-              >
-                {approved ? <><Check size={12} strokeWidth={3} /> {ui.approved}</> : ui.approveBtn}
-              </motion.div>
-            </motion.div>
-
-            {/* ostatak flote, tiho u pozadini */}
-            <div className="space-y-2" aria-hidden>
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="flex items-center gap-2.5 rounded-lg border border-white/[.06] px-3 py-2.5 opacity-35">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/70" />
-                  <span className="h-1.5 rounded bg-white/15" style={{ width: `${70 - i * 12}px` }} />
-                  <span className="ml-auto h-1.5 w-9 rounded bg-white/10" />
-                </div>
-              ))}
+            <h1 className="mt-6 text-[38px] leading-[1.08] sm:text-[56px] font-semibold tracking-[-0.035em] text-[#0F172A]" style={{ textWrap: "balance" }}>
+              {h.h1a} <span className="block text-[#0F3554]">{h.h1b.replace(/-/g, "‑")}</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#475569]">{h.sub}</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a href="#upit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#B91C1C]">
+                {h.ctaPrimary} <ArrowRight size={16} />
+              </a>
+              <a href="#paketi" className="inline-flex items-center justify-center rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-[15px] font-semibold text-[#0F172A] transition-colors hover:bg-[#F9FAFB]">
+                {h.ctaSecondary}
+              </a>
             </div>
-          </div>
-        </div>
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+              {h.points.map((p) => (
+                <li key={p} className="flex items-center gap-2 text-[14px] text-[#334155]"><Check size={15} strokeWidth={2.5} className="text-[#16A34A]" /> {p}</li>
+              ))}
+            </ul>
+          </Fade>
 
-        {/* postolje laptopa */}
-        <div aria-hidden className="mx-auto h-2.5 w-[86%] rounded-b-2xl bg-gradient-to-b from-white/12 to-white/[.03]" />
-        <div aria-hidden className="mx-auto h-1 w-[38%] rounded-full bg-white/10" />
-      </div>
-
-      {/* ── TELEFON ── */}
-      <div className="absolute -bottom-8 -left-3 sm:-left-6 w-[118px] sm:w-[136px]">
-        <div className="rounded-[22px] border border-white/12 bg-[#070C1A] p-1.5 pt-3
-                        shadow-[0_28px_60px_-20px_rgba(2,8,30,0.85)]">
-          <span aria-hidden className="absolute top-1.5 left-1/2 -translate-x-1/2 w-9 h-1 rounded-full bg-white/15" />
-          <div className="rounded-[16px] bg-gradient-to-b from-[#0B1226] to-[#060A16] p-2 h-[168px] sm:h-[188px] overflow-hidden">
-            <AnimatePresence mode="wait">
-              {step < 2 ? (
-                <motion.div
-                  key="picking"
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <p className="text-[7.5px] font-bold uppercase tracking-wider text-blue-200/60 mb-1.5">
-                    {demo.calendar}
-                  </p>
-                  <div className="grid grid-cols-7 gap-[3px] mb-2.5" aria-hidden>
-                    {Array.from({ length: 14 }).map((_, i) => {
-                      const on = i >= 5 && i <= 8;
-                      return (
-                        <motion.span
-                          key={i}
-                          animate={{ backgroundColor: on ? "rgba(37,99,235,0.9)" : "rgba(255,255,255,0.06)" }}
-                          transition={{ duration: 0.25, delay: animate && on ? (i - 5) * 0.09 : 0 }}
-                          className="h-[13px] rounded-[3px]"
-                        />
-                      );
-                    })}
-                  </div>
-                  <motion.div
-                    animate={{ backgroundColor: arrived ? "rgba(255,255,255,0.08)" : "rgba(37,99,235,0.95)" }}
-                    className="h-6 rounded-lg flex items-center justify-center text-[7.5px] font-bold text-white px-1 text-center leading-tight"
-                  >
-                    {arrived ? demo.newRequest : demo.car}
-                  </motion.div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="confirmed"
-                  initial={{ opacity: 0, y: -22 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  className="rounded-xl border border-emerald-500/40 bg-emerald-500/[.08] p-2.5"
-                >
-                  <span className="w-7 h-7 rounded-lg flex items-center justify-center mb-2
-                                   bg-emerald-500/15 border border-emerald-500/40 text-emerald-400">
-                    <Check size={14} strokeWidth={3} />
-                  </span>
-                  <p className="text-[8.5px] font-bold text-white/90 leading-tight mb-1">{ui.phoneTitle}</p>
-                  <p className="text-[7.5px] text-white/45 leading-snug">{demo.car} · {ui.dates}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Hero({ c, calm }: { c: typeof COPY.bs; calm: boolean }) {
-  const reveal  = useReveal();
-  const revealR = useReveal();
-  const d = c.hero;
-
-  return (
-    <section className="relative pt-32 pb-28 lg:pt-40 lg:pb-36 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-[1fr_1.05fr] gap-16 lg:gap-14 items-center">
-
-          {/* ── lijevo ── */}
-          <motion.div variants={staggerContainer} {...reveal} className="text-center lg:text-left">
-            <motion.div variants={fadeUp} className="flex justify-center lg:justify-start mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                               border border-brand-600/30 bg-brand-600/10
-                               text-brand-300 text-xs font-semibold tracking-wider uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
-                {d.eyebrow}
+          <Fade delay={0.1} className="relative mx-auto w-full max-w-[420px]">
+            <div className="mx-auto w-[62%]"><PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={h.h1a} priority /></div>
+            <div className="absolute left-0 top-[16%] flex w-[56%] items-start gap-3 rounded-2xl border border-[#E5E7EB] bg-white p-3.5" style={{ boxShadow: FLOAT }}>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><Bell size={16} /></span>
+              <span className="min-w-0">
+                <span className="block text-[13px] font-semibold text-[#0F172A]">{h.cardTitle}</span>
+                <span className="block truncate text-[12px] text-[#64748B]">{h.cardBody}</span>
               </span>
-            </motion.div>
-
-            <motion.h1 variants={fadeUp}
-              className="text-[38px] leading-[1.06] sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-[var(--text)]">
-              {d.h1a}{" "}
-              <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.h1b}</span>
-            </motion.h1>
-
-            <motion.p variants={fadeUp}
-              className="mt-6 max-w-lg mx-auto lg:mx-0 text-[15.5px] sm:text-[17px] text-[var(--text-muted)] leading-relaxed">
-              {d.sub}
-            </motion.p>
-
-            <motion.div variants={fadeUp}
-              className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3">
-              <a href="#upit"
-                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
-                            bg-gradient-to-r from-brand-600 to-brand-500 text-white text-[15px] font-bold
-                            shadow-xl shadow-brand-600/30
-                            transition-[box-shadow,transform] duration-300 hover:shadow-2xl hover:shadow-brand-600/45 hover:-translate-y-0.5">
-                {d.ctaPrimary}
-                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-              </a>
-              <a href="#paketi"
-                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
-                            border border-[var(--border)] text-[15px] font-bold text-[var(--text)]
-                            transition-[border-color,background-color,transform] duration-300
-                            hover:border-brand-600/50 hover:bg-brand-600/5 hover:-translate-y-0.5">
-                {d.ctaSecondary}
-              </a>
-            </motion.div>
-
-            <motion.ul variants={fadeUp} className="mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-              {d.points.map((p, i) => (
-                <li key={p}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold
-                               text-[var(--text)] bg-[color-mix(in_srgb,var(--surface)_80%,transparent)]
-                               border border-[var(--border)]">
-                  <Check size={12} strokeWidth={3} className={i === 0 ? "text-emerald-400" : "text-brand-400"} /> {p}
-                </li>
-              ))}
-            </motion.ul>
-          </motion.div>
-
-          {/* ── desno: uređaji ── */}
-          <motion.div variants={slideInRight} {...revealR} className="lg:pl-6">
-            <DeviceShowcase c={c} animate={!calm} />
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 5 · Case study ─────────────────────────────────────────────────────────── */
-function CaseStudy({ c }: { c: typeof COPY.bs }) {
-  const revealL = useReveal();
-  const revealR = useReveal();
-  const d = c.caseStudy;
-  return (
-    <section id="case-study" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-14 items-center">
-          <motion.div variants={staggerContainer} {...revealL}>
-            <motion.span variants={fadeUp}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5
-                         border border-brand-600/30 bg-brand-600/10
-                         text-brand-300 text-xs font-semibold tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
-              {d.label}
-            </motion.span>
-            <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
-              {d.heading1}{" "}
-              <span className="text-gradient font-serif italic font-semibold tracking-normal">{d.headingAccent}</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-[var(--text-muted)] leading-relaxed mb-6">{d.desc}</motion.p>
-
-            <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3 mb-6">
-              {d.stats.map((s) => (
-                <div key={s.l} className="rounded-2xl p-4 bg-[var(--surface)] border border-[var(--border)] text-center">
-                  <p className="text-2xl font-extrabold text-[var(--text)] tracking-tight">{s.v}</p>
-                  <p className="text-[10.5px] text-[var(--text-muted)] leading-snug mt-1">{s.l}</p>
-                </div>
-              ))}
-            </motion.div>
-
-            <motion.p variants={fadeUp} className="flex items-start gap-2 text-[12px] text-[var(--text-muted)] mb-6">
-              <Gauge size={13} className="mt-0.5 flex-shrink-0 text-brand-400" /> {d.note}
-            </motion.p>
-
-            <motion.a variants={fadeUp} href={d.ctaHref} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold
-                         bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/25
-                         transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-xl">
-              {d.cta} <ArrowUpRight size={14} />
-            </motion.a>
-          </motion.div>
-
-          {/* TODO: kada case study dobije svoju stranicu, ovaj blok linkovati na nju,
-                    a screenshot zamijeniti novijim (ili galerijom više ekrana). */}
-          <motion.div variants={slideInRight} {...revealR} className="relative">
-            <div className="rounded-3xl overflow-hidden border border-brand-500/25 bg-[#080D1E]
-                            shadow-[0_44px_90px_-30px_rgba(37,99,235,0.45)]">
-              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[.08]">
-                <span className="w-2 h-2 rounded-full bg-white/15" />
-                <span className="w-2 h-2 rounded-full bg-white/15" />
-                <span className="w-2 h-2 rounded-full bg-white/15" />
-                <span className="flex-1 ml-2 h-[18px] rounded-md bg-white/[.06]" />
-              </div>
-              <Image src="/portfolio/maximum-naslovna.png" alt={d.imageAlt}
-                     width={1600} height={1000} sizes="(max-width: 1024px) 100vw, 620px"
-                     className="w-full h-auto object-cover object-top" />
             </div>
-          </motion.div>
+            <div className="absolute bottom-[18%] right-0 flex w-[60%] items-center gap-2.5 rounded-2xl bg-[#0F172A] p-3.5" style={{ boxShadow: FLOAT }}>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#16A34A] text-white"><Check size={14} strokeWidth={3} /></span>
+              <span className="text-[12.5px] font-medium leading-snug text-white">{h.cardOk}</span>
+            </div>
+          </Fade>
         </div>
-      </div>
+      </Backdrop>
     </section>
   );
 }
 
-/* ── 6 · Paketi ─────────────────────────────────────────────────────────────
-   Tri kartice, srednja (Pro) istaknuta gradijentnim rubom i blagim
-   uvećanjem. Svaka kartica ima "mjerač flote": traka od 12 segmenata koja
-   odmah pokazuje za koju veličinu firme je paket, bez čitanja.
-   Ispod kartica ide traka s cijenom održavanja.                            */
-function CapacityMeter({ filled, label, active }: { filled: number; label: string; active: boolean }) {
+function Difference({ c }: { c: RcCopy }) {
+  const d = c.compare;
+  const sides = [
+    { tag: d.tabOld, title: d.stepsTitleOld, data: d.old, neu: false },
+    { tag: d.tabNew, title: d.stepsTitleNew, data: d.neu, neu: true },
+  ];
   return (
-    <div className="mb-6">
-      <p className="text-[9.5px] font-bold uppercase tracking-[0.16em] text-[var(--text-muted)] mb-2">{label}</p>
-      <div className="flex gap-1" aria-hidden>
-        {Array.from({ length: 12 }).map((_, i) => (
-          <span
-            key={i}
-            className={`h-1.5 flex-1 rounded-full transition-colors duration-500
-                        ${i < filled
-                          ? active
-                            ? "bg-gradient-to-r from-brand-500 to-brand-400"
-                            : "bg-brand-600/55"
-                          : "bg-[var(--border)]"}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Packages({ c }: { c: typeof COPY.bs }) {
-  const reveal     = useReveal();
-  const revealNote = useReveal();
-  const d = c.packages;
-  const FILL = [4, 8, 12];
-
-  return (
-    <section id="paketi" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} index="05" />
-
-        <motion.div variants={staggerContainerSlow} {...reveal}
-                    className="grid md:grid-cols-3 gap-5 lg:gap-6 items-start pt-4">
-          {d.items.map((p, i) => {
-            const featured = i === 1;
-
-            /* Sve na jednom elementu: radijus, rub, pozadina i sjena. Ranije je
-               gradijentni rub bio na vanjskom divu, a radijus i pozadina na
-               unutrašnjem, pa se uglovi i sjena nisu poklapali (vidjelo se kao
-               čudan ugao uz karticu). */
-            const card = (
-              <div
-                className={`relative flex flex-col h-full rounded-3xl p-6 sm:p-7 overflow-hidden
-                            transition-[box-shadow] duration-300
-                            ${featured
-                              ? "hover:shadow-2xl hover:shadow-brand-600/20"
-                              : "bg-[var(--surface)] border border-[var(--border)] hover:shadow-xl hover:shadow-brand-600/10"}`}
-                style={featured ? {
-                  background: "linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(150deg, #2563EB, #60A5FA, #818CF8) border-box",
-                  border: "1.5px solid transparent",
-                } : undefined}
-              >
-                {/* sjaj u uglu istaknute kartice */}
-                {featured && (
-                  <span aria-hidden className="absolute -top-24 -right-20 w-64 h-64 rounded-full pointer-events-none
-                                               bg-[radial-gradient(closest-side,rgba(37,99,235,0.20),transparent_72%)]" />
-                )}
-
-                <div className="relative">
-                  <div className="flex items-baseline justify-between gap-3 mb-1">
-                    <h3 className="text-xl font-extrabold tracking-tight text-[var(--text)]">{p.name}</h3>
-                    <span className="text-[26px] leading-none font-serif italic font-semibold text-gradient opacity-40 select-none">
-                      0{i + 1}
+    <section id="razlika" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <Head label={d.label} h={d.heading1} accent={d.headingAccent} sub={d.sub} />
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {sides.map((s) => (
+            <Fade key={s.tag} className={`rounded-[20px] p-6 sm:p-8 ${s.neu ? "border-[1.5px] border-[#0F172A] bg-white" : "border border-[#E5E7EB] bg-[#F8FAFC]"}`}>
+              <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${s.neu ? "bg-[#DCFCE7] text-[#15803D]" : "bg-[#E2E8F0] text-[#475569]"}`}>{s.tag}</span>
+              <p className="mt-4 text-[18px] font-semibold text-[#0F172A]">{s.title}</p>
+              <ol className="mt-5 space-y-4">
+                {s.data.steps.map((st, i) => (
+                  <li key={st.t} className="flex gap-3.5">
+                    <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[12px] font-semibold ${s.neu ? "bg-[#0F172A] text-white" : "bg-white text-[#64748B] border border-[#E5E7EB]"}`}>{i + 1}</span>
+                    <span>
+                      <span className="block text-[14.5px] font-semibold text-[#0F172A]">{st.t}</span>
+                      <span className="block text-[13.5px] leading-relaxed text-[#64748B]">{st.d}</span>
                     </span>
+                  </li>
+                ))}
+              </ol>
+              <dl className="mt-7 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-[#E5E7EB] pt-6">
+                {s.data.stats.map((x) => (
+                  <div key={x.l}>
+                    <dd className={`text-[20px] font-semibold tracking-tight ${s.neu ? "text-[#0F172A]" : "text-[#94A3B8]"}`}>{x.v}</dd>
+                    <dt className="text-[12.5px] leading-snug text-[#64748B]">{x.l}</dt>
                   </div>
-                  <p className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[var(--text-muted)] mb-5">
-                    <Car size={12} className="text-brand-400" /> {p.size}
-                  </p>
+                ))}
+              </dl>
+            </Fade>
+          ))}
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-[12.5px] leading-relaxed text-[#94A3B8]">{d.note}</p>
+      </div>
+    </section>
+  );
+}
 
-                  <CapacityMeter filled={FILL[i]} label={d.capacityLabel} active={featured} />
+function CaseStudy({ c }: { c: RcCopy }) {
+  const s = c.caseStudy;
+  return (
+    <section id="case-study" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <Fade className="grid overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white lg:grid-cols-[1.1fr_1fr]">
+          <div className="border-b border-[#E5E7EB] bg-[#F8FAFC] p-6 sm:p-9 lg:border-b-0 lg:border-r">
+            <BrowserFrame url="maximum-rent.vercel.app">
+              <span className="relative block aspect-[16/10]">
+                <Image src="/portfolio/maximum-poslije.webp" alt={s.imageAlt} fill unoptimized className="object-cover object-top" />
+              </span>
+            </BrowserFrame>
+          </div>
+          <div className="flex flex-col justify-center p-6 sm:p-9">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{s.label}</p>
+            <h2 className="mt-3 text-[28px] leading-[1.15] font-semibold tracking-tight text-[#0F172A]">{s.heading1} <span className="text-[#0F3554]">{s.headingAccent}</span></h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-[#475569]">{s.desc}</p>
+            <dl className="mt-6 grid grid-cols-3 gap-4 border-y border-[#F1F5F9] py-5">
+              {s.stats.map((x) => (
+                <div key={x.l}>
+                  <dd className="text-[22px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{x.v}</dd>
+                  <dt className="mt-0.5 text-[12px] leading-snug text-[#64748B]">{x.l}</dt>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-[12.5px] text-[#94A3B8]">{s.note}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/maximum" className="inline-flex items-center gap-2 rounded-xl bg-[#0F172A] px-5 py-3 text-[14px] font-semibold text-white hover:bg-[#1E293B]">{s.caseLink} <ArrowRight size={15} /></a>
+              <a href={s.ctaHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E7EB] px-5 py-3 text-[14px] font-semibold text-[#0F172A] hover:bg-[#F9FAFB]">{s.cta} <ArrowUpRight size={15} /></a>
+            </div>
+          </div>
+        </Fade>
+      </div>
+    </section>
+  );
+}
 
-                  <p className="text-[26px] sm:text-[28px] font-extrabold text-[var(--text)] tracking-tight leading-none">
-                    {p.price}
-                  </p>
-                  <p className="text-[11.5px] text-[var(--text-muted)] mt-2">{p.priceNote}</p>
+function Packages({ c }: { c: RcCopy }) {
+  const p = c.packages;
+  const sp = p.support;
+  const after = [
+    { I: CalendarClock, l: sp.subLabel, price: sp.subPrice, per: sp.subPer, d: sp.subDesc, x: sp.subAnchor },
+    { I: Wrench, l: sp.hourLabel, price: sp.hourPrice, per: sp.hourPer, d: sp.hourDesc, x: "" },
+  ];
+  return (
+    <section id="paketi" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <Head label={p.label} h={p.heading1} accent={p.headingAccent} />
+        <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+          {p.items.map((it, i) => (
+            <PlanCard
+              key={it.name}
+              icon={PLAN_ICONS[i]}
+              name={it.name}
+              tag={it.size}
+              price={it.price}
+              alt={it.priceNote}
+              note={it.perDay}
+              promo={"bonus" in it ? `${it.bonus} · ${it.bonusNote}` : undefined}
+              features={[...it.features]}
+              foot={it.catch}
+              cta={it.cta}
+              href="#upit"
+              badge={i === 1 ? p.recommended : undefined}
+              variant={i === 1 ? "dark" : "plain"}
+            />
+          ))}
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] text-[#64748B]">{p.note}</p>
 
-                  {/* Dnevna računica: ista cifra, pristupačnija percepcija.
-                     Vlasniku je lakše odmjeriti "9,50 KM dnevno" nego 3.500 KM. */}
-                  <p className={`inline-flex items-center gap-1.5 mt-3 mb-5 px-3 py-1.5 rounded-full text-[11.5px] font-semibold
-                                 ${featured
-                                   ? "bg-brand-600/15 border border-brand-600/35 text-brand-200"
-                                   : "bg-[color-mix(in_srgb,var(--bg)_60%,transparent)] border border-[var(--border)] text-[var(--text-muted)]"}`}>
-                    <CalendarDays size={12} /> {p.perDay}
-                  </p>
-
-                  {/* Bonus: 3 mjeseca podrške uz Pro i Premium. Zeleno da se
-                     odvoji od plavog i da se vidi kao poklon, ne kao stavka. */}
-                  {"bonus" in p && p.bonus && (
-                    <div className="flex items-center gap-2.5 rounded-xl mb-5 px-3.5 py-2.5
-                                    bg-green-500/10 border border-green-500/30">
-                      <Gift size={15} className="text-green-400 flex-shrink-0" />
-                      <span className="min-w-0">
-                        <span className="block text-[12.5px] font-bold text-green-400 leading-tight">{p.bonus}</span>
-                        <span className="block text-[11px] text-[var(--text-muted)] leading-tight">{p.bonusNote}</span>
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="h-px bg-[var(--border)] mb-5" aria-hidden />
-
-                  <ul className="flex flex-col gap-2.5 mb-7">
-                    {p.features.map((f, fi) => {
-                      const inherited = fi === 0 && i > 0;
-                      return (
-                        <li key={f}
-                            className={`flex items-start gap-2.5 leading-snug
-                                        ${inherited
-                                          ? "text-[12px] font-bold uppercase tracking-wider text-brand-300"
-                                          : "text-[13px] text-[var(--text)]"}`}>
-                          <span className={`mt-0.5 w-[17px] h-[17px] rounded-full flex items-center justify-center flex-shrink-0
-                                            ${inherited
-                                              ? "bg-brand-600/20 border border-brand-600/40 text-brand-300"
-                                              : "bg-brand-600/12 border border-brand-600/30 text-brand-400"}`}>
-                            <Check size={9} strokeWidth={3.5} />
-                          </span>
-                          {f}
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-                  <p className={`flex items-start gap-2 text-[12px] leading-snug mb-5 -mt-2
-                                 ${featured ? "text-brand-200" : "text-[var(--text-muted)]"}`}>
-                    <Info size={12} className="mt-0.5 flex-shrink-0" /> {p.catch}
-                  </p>
-
-                  <a href="#upit"
-                     className={`mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl
-                                 text-sm font-bold transition-[background-color,border-color,box-shadow,transform] duration-300
-                                 hover:-translate-y-0.5
-                                 ${featured
-                                   ? "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/35 hover:shadow-xl hover:shadow-brand-600/45"
-                                   : "border border-[var(--border)] text-[var(--text)] hover:border-brand-600/45 hover:bg-brand-600/5"}`}>
-                    {p.cta} <ArrowRight size={14} />
-                  </a>
+        <div className="mx-auto mt-16 max-w-3xl">
+          <p className="text-center text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{p.afterHeading}</p>
+          <p className="mt-2 text-center text-[14px] text-[#475569]">{p.afterSub}</p>
+          <div className="mt-6 grid overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white sm:grid-cols-2" style={{ boxShadow: SOFT }}>
+            {after.map(({ I, l, price, per, d, x }, i) => (
+              <div key={l} className={`flex gap-4 p-6 ${i ? "border-t sm:border-t-0 sm:border-l border-[#F1F5F9]" : ""}`}>
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><I size={18} /></span>
+                <div>
+                  <p className="text-[13px] font-semibold text-[#0F172A]">{l}</p>
+                  <p className="mt-1 flex items-baseline gap-1"><span className="text-[24px] font-semibold tracking-tight text-[#0F172A]">{price}</span><span className="text-[13px] text-[#64748B]">{per}</span></p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-[#64748B]">{d}</p>
+                  {x && <p className="mt-1.5 text-[12.5px] text-[#94A3B8]">{x}</p>}
                 </div>
               </div>
-            );
-
-            return (
-              <motion.article
-                key={p.name}
-                variants={scaleIn}
-                whileHover={{ y: -6 }}
-                className={`relative ${featured ? "md:-mt-4 md:mb-4 z-10" : ""}`}
-              >
-                {featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-3.5 py-1 rounded-full
-                                   bg-gradient-to-r from-brand-600 to-brand-500 text-white
-                                   text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-brand-600/40
-                                   whitespace-nowrap">
-                    ★ {d.recommended}
-                  </span>
-                )}
-                {card}
-              </motion.article>
-            );
-          })}
-        </motion.div>
-
-        {/* Podrška nakon isporuke: dvije opcije jedna do druge.
-           Namjerno je pretplata prikazana lijevo i s računicom koliko bi
-           isto vrijeme koštalo po satnici, jer je to poštena usporedba i
-           istovremeno najjasniji argument za pretplatu. */}
-        <motion.div variants={staggerContainer} {...revealNote} className="mt-14 max-w-4xl mx-auto">
-          <motion.p variants={fadeUp} className="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] mb-2">
-            {d.afterHeading}
-          </motion.p>
-          <motion.p variants={fadeUp} className="text-center text-sm text-[var(--text-muted)] mb-7">
-            {d.afterSub}
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="grid sm:grid-cols-2 gap-4">
-            {/* pretplata */}
-            <div className="rounded-2xl p-6 bg-[var(--surface)] border border-brand-600/35">
-              <div className="flex items-baseline justify-between gap-3 mb-3">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-brand-300">{d.support.subLabel}</p>
-                <p className="text-2xl font-extrabold text-[var(--text)] whitespace-nowrap">
-                  {d.support.subPrice}
-                  <span className="text-sm font-semibold text-[var(--text-muted)]">{d.support.subPer}</span>
-                </p>
-              </div>
-              <p className="text-[13px] text-[var(--text)] leading-relaxed mb-3">{d.support.subDesc}</p>
-              <p className="flex items-start gap-2 text-[11.5px] text-[var(--text-muted)]">
-                <Info size={12} className="mt-0.5 flex-shrink-0 text-brand-400" /> {d.support.subAnchor}
-              </p>
-            </div>
-
-            {/* po satu */}
-            <div className="rounded-2xl p-6 bg-[color-mix(in_srgb,var(--surface)_60%,transparent)] border border-dashed border-[var(--border)]">
-              <div className="flex items-baseline justify-between gap-3 mb-3">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">{d.support.hourLabel}</p>
-                <p className="text-2xl font-extrabold text-[var(--text)] whitespace-nowrap">
-                  {d.support.hourPrice}
-                  <span className="text-sm font-semibold text-[var(--text-muted)]">{d.support.hourPer}</span>
-                </p>
-              </div>
-              <p className="text-[13px] text-[var(--text-muted)] leading-relaxed">{d.support.hourDesc}</p>
-            </div>
-          </motion.div>
-
-          <motion.p variants={fadeUp}
-            className="mt-4 flex items-start justify-center gap-2 text-center text-[12px] text-[var(--text-muted)]">
-            <Server size={12} className="mt-0.5 flex-shrink-0" /> {d.support.hostingNote}
-          </motion.p>
-          <motion.p variants={fadeUp} className="text-center text-[12px] text-[var(--text-muted)] mt-2">
-            {d.note}
-          </motion.p>
-        </motion.div>
+            ))}
+          </div>
+          <p className="mt-4 text-center text-[12.5px] leading-relaxed text-[#64748B]">{sp.hostingNote}</p>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ── 7 · Poređenje ──────────────────────────────────────────────────────────── */
-function Comparison({ c }: { c: typeof COPY.bs }) {
-  const reveal = useReveal();
-  const d = c.comparison;
+function Ownership({ c }: { c: RcCopy }) {
+  const o = c.comparison;
   return (
-    <section id="poredjenje" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} sub={d.body} align="left" index="06" />
-        <motion.div variants={staggerContainerSlow} {...reveal} className="flex flex-col gap-3">
-          {d.rows.map((r) => (
-            <motion.div key={r.b} variants={fadeUp}
-              className="grid sm:grid-cols-2 gap-3 sm:gap-4 rounded-2xl p-4 sm:p-5
-                         bg-[var(--surface)] border border-[var(--border)]">
-              <p className="flex items-start gap-2.5 text-[13px] text-[var(--text-muted)] line-through decoration-red-500/40">
-                <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500/60 flex-shrink-0" aria-hidden />
-                {r.a}
-              </p>
-              <p className="flex items-start gap-2.5 text-[13px] font-semibold text-[var(--text)]">
-                <Check size={14} strokeWidth={3} className="mt-0.5 flex-shrink-0 text-green-500" />
-                {r.b}
-              </p>
-            </motion.div>
+    <section id="poredjenje" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8">
+        <Head label={o.label} h={o.heading1} accent={o.headingAccent} sub={o.body} />
+        <Fade className="mt-12 overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white" >
+          <div className="grid grid-cols-2 border-b border-[#E5E7EB] bg-[#F8FAFC] text-[11px] font-semibold uppercase tracking-[0.12em]">
+            <p className="px-5 py-3.5 text-[#94A3B8] sm:px-6">{o.colA}</p>
+            <p className="border-l border-[#E5E7EB] px-5 py-3.5 text-[#0F172A] sm:px-6">{o.colB}</p>
+          </div>
+          {o.rows.map((r) => (
+            <div key={r.a} className="grid grid-cols-2 border-b border-[#F1F5F9] last:border-b-0">
+              <p className="flex items-start gap-2.5 px-5 py-4 text-[14px] text-[#475569] sm:px-6"><X size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#94A3B8]" />{r.a}</p>
+              <p className="flex items-start gap-2.5 border-l border-[#F1F5F9] px-5 py-4 text-[14px] font-medium text-[#0F172A] sm:px-6"><Check size={15} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#16A34A]" />{r.b}</p>
+            </div>
           ))}
-        </motion.div>
+        </Fade>
       </div>
     </section>
   );
 }
 
-/* ── 8 · FAQ ────────────────────────────────────────────────────────────────── */
-function Faq({ c }: { c: typeof COPY.bs }) {
-  const reveal = useReveal();
-  const [open, setOpen] = useState<number | null>(0);
-  const d = c.faq;
+function Faq({ c }: { c: RcCopy }) {
+  const f = c.faq;
   return (
-    <section id="pitanja" className="py-24 lg:py-28 relative scroll-mt-24">
-      <div className="absolute top-0 inset-x-0 h-px bg-[var(--border)]" aria-hidden />
-      <div className="max-w-3xl mx-auto px-6 lg:px-8">
-        <SectionHead label={d.label} h1={d.heading1} accent={d.headingAccent} />
-        <motion.div variants={staggerContainerSlow} {...reveal} className="flex flex-col gap-3">
-          {d.items.map((item, i) => {
-            const isOpen = open === i;
-            return (
-              <motion.div key={item.q} variants={fadeUp}
-                className={`rounded-2xl border bg-[var(--surface)] overflow-hidden
-                            transition-[border-color] duration-300
-                            ${isOpen ? "border-brand-600/40" : "border-[var(--border)]"}`}>
-                <button type="button" onClick={() => setOpen(isOpen ? null : i)}
-                        aria-expanded={isOpen}
-                        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left">
-                  <span className="text-[14.5px] font-bold text-[var(--text)]">{item.q}</span>
-                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
-                                    border transition-colors duration-300
-                                    ${isOpen ? "bg-brand-600/15 border-brand-600/35 text-brand-400"
-                                             : "border-[var(--border)] text-[var(--text-muted)]"}`}>
-                    {isOpen ? <Minus size={14} /> : <Plus size={14} />}
-                  </span>
-                </button>
-                {isOpen && (
-                  <p className="px-5 pb-5 -mt-1 text-[13.5px] text-[var(--text-muted)] leading-relaxed">
-                    {item.a}
-                  </p>
-                )}
-              </motion.div>
-            );
-          })}
-        </motion.div>
+    <section id="pitanja" className="relative bg-white scroll-mt-24">
+      <div className="mx-auto max-w-3xl px-6 lg:px-8">
+        <Head label={f.label} h={f.heading1} accent={f.headingAccent} />
+        <div className="mt-12 divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+          {f.items.map((it) => (
+            <details key={it.q} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-[16px] font-semibold text-[#0F172A] [&::-webkit-details-marker]:hidden">
+                {it.q}
+                <Plus size={18} className="shrink-0 text-[#64748B] transition-transform duration-200 group-open:rotate-45" />
+              </summary>
+              <p className="pb-5 pr-10 text-[15px] leading-relaxed text-[#475569]">{it.a}</p>
+            </details>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-/* ── Stranica ───────────────────────────────────────────────────────────────── */
 export function RentACarSections() {
   const { lang } = useLanguage();
-  const c = (COPY[(lang as "bs" | "en")] ?? COPY.bs) as typeof COPY.bs;
-  const coarse = useCoarsePointer();
-  const reduce = useReducedMotion() ?? false;
-  const calm = coarse || reduce;
-
+  const c = COPY[lang === "en" ? "en" : "bs"];
   return (
-    <main className="relative">
-      {/* dekorativni sjaj: miruje na touch uređajima i uz reduced motion */}
-      {!calm && (
-        <div aria-hidden className="absolute inset-x-0 top-0 h-[70vh] pointer-events-none
-                                    bg-[radial-gradient(115%_70%_at_50%_-10%,rgba(37,99,235,0.14),transparent_60%)]" />
-      )}
-      <SectionRail items={c.nav} />
-      <Hero c={c} calm={reduce} />
-      <RcCompare c={c} />
-      <RcHowItWorks c={c} />
+    <main className="relative bg-white">
+      <Hero c={c} />
+      <Difference c={c} />
+      <SystemDemo onPage />
       <CaseStudy c={c} />
       <Packages c={c} />
-      <Comparison c={c} />
+      <Ownership c={c} />
       <RcForm c={c} />
       <Faq c={c} />
     </main>

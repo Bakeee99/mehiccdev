@@ -19,9 +19,9 @@ export const TIMELINES     = ["odmah", "prije-sezone", "istrazujem"] as const;
 
 export const rentACarInquirySchema = z.object({
   fleetSize:  z.enum(FLEET_SIZES,  { message: "required" }),
-  locations:  z.enum(LOCATIONS,    { message: "required" }),
-  channels:   z.array(z.enum(CHANNELS)).min(1, { message: "required" }),
-  aggregators: z.enum(AGGREGATORS, { message: "required" }),
+  locations:  z.enum(LOCATIONS).optional(),
+  channels:   z.array(z.enum(CHANNELS)).optional(),
+  aggregators: z.enum(AGGREGATORS).optional(),
   currentSite: z.string().trim().url({ message: "url" }).optional().or(z.literal("")),
   timeline:   z.enum(TIMELINES,    { message: "required" }),
   fullName:   z.string().trim().min(2,  { message: "required" }).max(80),

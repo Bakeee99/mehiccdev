@@ -12,7 +12,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -50,9 +49,6 @@ const SOLUTIONS = [
 
 export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
-  // naslovnica ima ravnu bijelu traku, podstranice zadržavaju pilulu
-  const pathname = usePathname();
-  const isHome = pathname === "/" || pathname === "/maximum";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solOpen,    setSolOpen]    = useState(false);   // desktop dropdown
   const [portOpen,   setPortOpen]   = useState(false);   // dropdown za portfolio
@@ -75,28 +71,10 @@ export function Navbar() {
   return (
     <>
       <header className={cn(
-        "fixed top-0 inset-x-0 z-50",
-        isHome
-          // naslovnica: na vrhu providna, pa se stapa s panelom heroja;
-          // kad se skrola, dobije bijelu podlogu i tanku liniju ispod
-          ? cn("transition-[background-color,border-color] duration-300 border-b",
-               scrolled ? "bg-white border-[#E5E7EB]" : "bg-transparent border-transparent")
-          : "px-3 sm:px-4 pt-3"
+        "fixed top-0 inset-x-0 z-50 border-b transition-[background-color,border-color] duration-300",
+        scrolled ? "bg-white border-[#E5E7EB]" : "bg-transparent border-transparent"
       )}>
-        <nav
-          className={cn(
-            "flex items-center justify-between",
-            isHome
-              ? "max-w-7xl mx-auto h-16 px-6 lg:px-8"
-              : cn(
-                  "max-w-6xl mx-auto h-14 px-3 sm:px-4 lg:px-5",
-                  "rounded-2xl border transition-all duration-300 md:backdrop-blur-xl",
-                  scrolled
-                    ? "bg-[color-mix(in_srgb,var(--bg)_95%,transparent)] md:bg-[color-mix(in_srgb,var(--bg)_85%,transparent)] border-brand-600/20 shadow-lg shadow-black/10"
-                    : "bg-[color-mix(in_srgb,var(--bg)_80%,transparent)] md:bg-[color-mix(in_srgb,var(--bg)_45%,transparent)] border-[color-mix(in_srgb,var(--border)_25%,transparent)]"
-                )
-          )}
-        >
+        <nav className="max-w-7xl mx-auto h-16 px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-baseline group relative" aria-label="mehiccdev, naslovna">
             <span className="text-lg font-extrabold tracking-tight text-[var(--text)]">mehicc</span>
