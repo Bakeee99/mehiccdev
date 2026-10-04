@@ -92,7 +92,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Web aplikacija za rezervacije i termine. Gost bira datum i šalje upit, vi potvrđujete iz panela. Za sve što se iznajmljuje ili zakazuje.",
-        price: "2.200 KM", alt: "oko €1.120", from: true, oldPrice: "3.600 KM", discountBadge: "-39%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
+        price: "2.200 KM", alt: "oko €1.120", from: true, oldPrice: "2.800 KM", discountBadge: "-21%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "2 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -186,7 +186,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A web app for bookings and appointments. The guest picks a date and sends a request, you confirm it from the panel. For anything you rent out or schedule.",
-        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,840", discountBadge: "-39%", promoNote: "Early-client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,430", discountBadge: "-21%", promoNote: "Early-client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "2 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
@@ -258,11 +258,17 @@ export function Pricing() {
   const AFTER_ICONS: LucideIcon[] = [CalendarClock, Wrench];
 
   return (
-    <section id="cjenovnik" className="relative bg-white scroll-mt-24">
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+    <section id="cjenovnik" className="relative scroll-mt-24 overflow-hidden"
+             style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #E8EFF7 9%, #E4ECF5 50%, #EBF1F8 88%, #FFFFFF 100%)" }}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-50"
+           style={{
+             backgroundImage: "linear-gradient(to right, rgba(15,53,84,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,53,84,0.06) 1px, transparent 1px)",
+             backgroundSize: "56px 56px",
+             maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+             WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+           }} />
+      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
 
-        <div className="rounded-[32px] border border-[#DCE5EF] px-5 py-14 sm:px-10 sm:py-16"
-             style={{ background: "linear-gradient(180deg, #E3EBF5 0%, #EDF2F8 55%, #F6F9FC 100%)", boxShadow: "0 1px 2px rgba(15,23,42,0.04), 0 48px 90px -56px rgba(15,53,84,0.45)" }}>
         <Head eyebrow={d.eyebrow} h={d.heading} accent={d.headingAccent} sub={d.subtitle} />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -288,7 +294,6 @@ export function Pricing() {
           ))}
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-[#64748B]">{d.appNote}</p>
-        </div>
 
         {/* ══ nakon isporuke: jedna kartica, dvije kolone ══ */}
         <div className="mt-16 mx-auto max-w-3xl">
@@ -319,7 +324,7 @@ export function Pricing() {
         {/* ══ rent-a-car ══ */}
         <a
           href="/rjesenja/rent-a-car"
-          className="group mt-12 mx-auto flex max-w-3xl flex-col sm:flex-row sm:items-center gap-5 rounded-[20px] border border-[#E5E7EB] bg-[#F8FAFC] p-6 transition-colors hover:border-[#CBD5E1]"
+          className="group mt-12 mx-auto flex max-w-3xl flex-col sm:flex-row sm:items-center gap-5 rounded-[20px] border border-[#E5E7EB] bg-white p-6 transition-colors hover:border-[#CBD5E1]"
         >
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#0F3554] text-white"><Car size={22} /></span>
           <span className="flex-1">
