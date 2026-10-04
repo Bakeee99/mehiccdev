@@ -28,6 +28,7 @@ export function SectionRail({ items }: { items: readonly RailItem[] }) {
 
   const [active, setActive] = useState<string>(items[0].id);
   const [past, setPast]     = useState(false);   // je li hero sekcija prošla
+  const [onDark, setOnDark] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
 
   // ── koja je sekcija trenutno u fokusu ────────────────────────────────────
@@ -62,6 +63,8 @@ export function SectionRail({ items }: { items: readonly RailItem[] }) {
       // Tračnica se prikazuje tek kad posjetilac napusti prvi ekran. U hero
       // sekciji nema šta da orijentiše, a smeta uz plutajuće kartice.
       setPast(window.scrollY > window.innerHeight * 0.8);
+      const mid = window.innerHeight / 2;
+      setOnDark(Array.from(document.querySelectorAll<HTMLElement>("[data-dark]")).some((el) => { const r = el.getBoundingClientRect(); return r.top < mid && r.bottom > mid; }));
       raf = 0;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
@@ -94,7 +97,7 @@ export function SectionRail({ items }: { items: readonly RailItem[] }) {
       {/* ── DESKTOP: tračnica sekcija ── */}
       <nav aria-label="Sekcije stranice"
            aria-hidden={!past}
-           className={`section-rail hidden lg:flex fixed left-6 xl:left-10 top-1/2 -translate-y-1/2 z-30 flex-col gap-3
+           className={`section-rail ${onDark ? "rail-dark" : ""} hidden lg:flex fixed left-6 xl:left-10 top-1/2 -translate-y-1/2 z-30 flex-col gap-3
                        transition-[opacity,transform] duration-500
                        ${past ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3 pointer-events-none"}`}>
         {items.map((item) => {

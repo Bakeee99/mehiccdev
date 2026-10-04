@@ -311,11 +311,11 @@ export function Pricing() {
 
   return (
     <>
-      <section id="cjenovnik" className="relative scroll-mt-24 overflow-hidden"
+      <section id="cjenovnik" data-dark className="relative scroll-mt-24 overflow-hidden"
                style={{ background: "linear-gradient(180deg, #0B1324 0%, #0F172A 50%, #0B1324 100%)" }}>
         <div aria-hidden className="pointer-events-none absolute inset-0"
              style={{
-               backgroundImage: "linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)",
+               backgroundImage: "linear-gradient(to right, rgba(255,255,255,0.014) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.014) 1px, transparent 1px)",
                backgroundSize: "56px 56px",
                maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
                WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",

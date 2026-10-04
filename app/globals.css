@@ -247,3 +247,9 @@ html.light main > section:not(.hero-light):not(.strip) {
   padding-bottom: clamp(5.5rem, 8vw, 8rem) !important;
 }
 html.light [style*="radial-gradient"] { display: none !important; }
+
+html.light .section-rail.rail-dark button > span:first-child { background-color: rgba(255,255,255,0.3) !important; }
+html.light .section-rail.rail-dark button:hover > span:first-child { background-color: rgba(255,255,255,0.6) !important; }
+html.light .section-rail.rail-dark button[aria-current="true"] > span:first-child { background-color: #FFFFFF !important; }
+html.light .section-rail.rail-dark button > span:last-child { color: #FFFFFF !important; }
+html.light .section-rail button > span { transition: background-color .3s ease, color .3s ease, width .5s ease, opacity .3s ease, transform .3s ease; }
