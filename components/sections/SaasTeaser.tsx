@@ -26,7 +26,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   Sparkles, RefreshCw, Landmark, Globe2, TrendingUp, Gauge, Building2, Search,
   Check, ArrowRight, Heart, type LucideIcon,
@@ -226,7 +225,6 @@ export function SaasTeaser() {
   const { lang } = useLanguage();
   const l = (lang === "en" ? "en" : "bs") as "bs" | "en";
   const d = T[l];
-  const reduce = useReducedMotion() ?? false;
 
   const [email, setEmail]   = useState("");
   const [state, setState]   = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -258,10 +256,6 @@ export function SaasTeaser() {
   };
 
   /* plutajuće oznake oko prikaza: blago lebde, uz isključene animacije stoje */
-  const float = (delay: number) => reduce ? {} : {
-    animate: { y: [0, -6, 0] },
-    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay },
-  };
 
   return (
     <section id="saas" className="relative bg-white scroll-mt-24">
@@ -343,16 +337,16 @@ export function SaasTeaser() {
                 // da nijedna oznaka ne prekrije cijenu ili filter
                 const pos = ["-left-3 sm:-left-10 -top-5", "-right-3 sm:-right-10 top-[36%]", "left-[12%] -bottom-6"][i];
                 return (
-                  <motion.div key={title} {...float(i * 0.8)}
-                    className={`absolute ${pos} hidden sm:flex items-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-2`}
-                    style={{ boxShadow: FLOAT }}>
+                  <div key={title}
+                    className={`float-y absolute ${pos} hidden sm:flex items-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-2`}
+                    style={{ boxShadow: FLOAT, animationDelay: `${i * 0.8}s` }}>
                     <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#EEF3F8] text-[#0F3554]"><Icon size={14} /></span>
                     <span className="leading-tight">
                       <span className="block text-[11px] font-semibold text-[#0F172A]">{title}</span>
                       <span className="block text-[11px] text-[#64748B]">{value}</span>
                     </span>
                     <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" aria-hidden />
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>

@@ -127,9 +127,8 @@ export function Hero() {
         {...rise(0.35)}
         className="pointer-events-none absolute left-[3%] xl:left-[6%] top-[300px] hidden lg:block"
       >
-        <motion.div
-          animate={reduce ? undefined : { y: [0, -8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        <div className="float-y" style={{ animationDuration: "6s" }}>
+        <div
           className="w-[230px] -rotate-[6deg] rounded-2xl border border-[#E5E7EB] bg-white p-4 text-left"
           style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.05), 0 18px 40px -16px rgba(15,23,42,0.22)" }}
         >
@@ -147,16 +146,16 @@ export function Hero() {
             <span className="text-[#94A3B8]">{d.cardSpeed.was}</span>
             <span className="font-medium text-[#475569]">{d.cardSpeed.client}</span>
           </div>
-        </motion.div>
+        </div>
+        </div>
       </motion.div>
 
       <motion.div
         {...rise(0.45)}
         className="pointer-events-none absolute right-[3%] xl:right-[6%] top-[230px] hidden lg:block"
       >
-        <motion.div
-          animate={reduce ? undefined : { y: [0, -8, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        <div className="float-y" style={{ animationDuration: "7s", animationDelay: "0.8s" }}>
+        <div
           className="w-[240px] rotate-[6deg] rounded-2xl border border-[#E5E7EB] bg-white p-4 text-left"
           style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.05), 0 18px 40px -16px rgba(15,23,42,0.22)" }}
         >
@@ -170,7 +169,8 @@ export function Hero() {
           <div className="mt-3.5 flex items-center gap-1.5 rounded-lg bg-[#16A34A] px-3 py-2 text-[12.5px] font-semibold text-white">
             <Check size={14} strokeWidth={3} /> {d.cardBooking.status}
           </div>
-        </motion.div>
+        </div>
+        </div>
       </motion.div>
 
       <div className="relative max-w-5xl mx-auto px-6 pt-32 sm:pt-36 lg:pt-40 text-center">

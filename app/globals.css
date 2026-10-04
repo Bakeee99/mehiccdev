@@ -256,3 +256,7 @@ html.light .section-rail button > span { transition: background-color .3s ease, 
 
 html.light body { text-wrap: balance; }
 html.light :is(input, textarea) { text-wrap: wrap; }
+
+@keyframes float-y { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -8px, 0); } }
+.float-y { animation: float-y 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; will-change: transform; backface-visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .float-y { animation: none; } }
