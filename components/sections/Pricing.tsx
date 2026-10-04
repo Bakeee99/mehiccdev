@@ -261,7 +261,8 @@ export function Pricing() {
     <section id="cjenovnik" className="relative bg-white scroll-mt-24">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
 
-        {/* ══ aplikacije ══ */}
+        <div className="rounded-[32px] border border-[#DCE5EF] px-5 py-14 sm:px-10 sm:py-16"
+             style={{ background: "linear-gradient(180deg, #E3EBF5 0%, #EDF2F8 55%, #F6F9FC 100%)", boxShadow: "0 1px 2px rgba(15,23,42,0.04), 0 48px 90px -56px rgba(15,53,84,0.45)" }}>
         <Head eyebrow={d.eyebrow} h={d.heading} accent={d.headingAccent} sub={d.subtitle} />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -282,11 +283,12 @@ export function Pricing() {
               cta={plan.ctaLabel ?? d.cta}
               href="#kontakt"
               badge={i === 1 ? d.popular : undefined}
-              variant={i === 1 ? "dark" : "plain"}
+              variant={i === 1 ? "accent" : "plain"}
             />
           ))}
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-[#64748B]">{d.appNote}</p>
+        </div>
 
         {/* ══ nakon isporuke: jedna kartica, dvije kolone ══ */}
         <div className="mt-16 mx-auto max-w-3xl">

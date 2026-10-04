@@ -211,7 +211,7 @@ export function PlanCard({
   icon: LucideIcon; name: string; tag: string; priceLabel?: string; from?: string;
   price: string; per?: string; oldPrice?: string; discount?: string; alt?: string; note?: string;
   promo?: string; features: string[]; foot?: string; cta: string; href: string; badge?: string;
-  variant: "dark" | "outline" | "plain";
+  variant: "dark" | "outline" | "plain" | "accent";
 }) {
   const dark = variant === "dark";
   const txt   = dark ? "text-white" : "text-[#0F172A]";
@@ -222,9 +222,10 @@ export function PlanCard({
     <article
       className={`relative flex flex-col rounded-[20px] p-6 sm:p-7 ${
         dark ? "bg-[#0F172A]"
+             : variant === "accent" ? "bg-white border-2 border-[#0F3554]"
              : variant === "outline" ? "bg-white border-[1.5px] border-[#0F172A]"
              : "bg-white border border-[#E5E7EB]"}`}
-      style={{ boxShadow: dark ? LIFT : SOFT }}
+      style={{ boxShadow: dark || variant === "accent" ? LIFT : SOFT }}
     >
       {/* ikonica, ime i oznaka */}
       <div className="flex items-start justify-between gap-3">
@@ -284,7 +285,7 @@ export function PlanCard({
       <a
         href={href}
         className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-semibold transition-colors ${
-          dark
+          dark || variant === "accent"
             ? "border border-transparent bg-[#DC2626] text-white hover:bg-[#B91C1C]"
             : variant === "outline"
               ? "border border-transparent bg-[#0F172A] text-white hover:bg-[#1E293B]"
