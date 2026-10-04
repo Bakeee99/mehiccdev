@@ -42,7 +42,7 @@ const PORTFOLIO_ITEMS = [
 const SOLUTIONS = [
   {
     href: "/rjesenja/rent-a-car",
-    label: { bs: "Rent-a-Car sistem", en: "Car rental system" },
+    label: { bs: "Rent a Car sistem", en: "Car rental system" },
     desc:  { bs: "Rezervacije, flota i kalendar", en: "Bookings, fleet and calendar" },
     isNew: true,
   },

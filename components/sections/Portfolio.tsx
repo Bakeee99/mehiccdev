@@ -94,7 +94,7 @@ const T: Record<"bs" | "en", Content> = {
       "Search available cars by dates, with no double bookings",
       "The owner updates cars, prices and photos without calling a developer",
       "Inquiries arrive instantly on Telegram and WhatsApp, guests get an automatic email",
-      "Bilingual HR/EN, built mobile-first",
+      "Bilingual HR and EN, built for phones first",
     ],
     ctaLive: "See it live",
     ctaCase: "See the full case study",
@@ -159,9 +159,9 @@ export function Portfolio() {
             <p className="mt-3 text-[15px] leading-relaxed text-[#475569]">{d.desc}</p>
 
             {/* četiri brojke u jednom redu, bez kutija */}
-            <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-y-5 border-y border-[#F1F5F9] py-5">
+            <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-y-5 border-y border-[#F1F5F9] py-5">
               {d.stats.map((s, i) => (
-                <div key={s.l} className={`pr-3 ${i > 0 ? "sm:border-l sm:border-[#F1F5F9] sm:pl-4" : ""}`}>
+                <div key={s.l} className={`pr-3 ${i > 0 ? "sm:border-l sm:border-[#F1F5F9] sm:pl-4 lg:border-l-0 lg:pl-0 xl:border-l xl:pl-4" : ""}`}>
                   <dd className="text-[20px] font-semibold tracking-tight text-[#0F172A] tabular-nums">{s.v}</dd>
                   <dt className="mt-0.5 text-[11.5px] leading-snug text-[#64748B]">{s.l}</dt>
                 </div>

@@ -4,7 +4,7 @@
  * Hero (v3, minimalistički svijetli).
  *
  * Raspored, odozgo prema dolje, sve centrirano:
- *   1. bedž "Novo · Rezervacioni sistem za rent-a-car firme" (link)
+ *   1. bedž "Novo · Rezervacioni sistem za rent a car firme" (link)
  *   2. naslov u dva reda, drugi red prigušen
  *   3. podnaslov
  *   4. dva dugmeta: crveno glavno i obrubljeno sporedno
@@ -42,7 +42,7 @@ type Content = {
 const T: Record<"bs" | "en", Content> = {
   bs: {
     announceTag: "Novo",
-    announceText: "Rezervacioni sistem za rent-a-car firme",
+    announceText: "Rezervacioni sistem za rent a car firme",
     h1a: "Vašem biznisu ne treba sajt.",
     h1b: "Treba mu sistem.",
     sub: "Web aplikacije koje primaju rezervacije, sajtovi koje sami uređujete i marketing koji dovodi upite. Sve iz jedne ruke, iz Mostara za cijeli region.",

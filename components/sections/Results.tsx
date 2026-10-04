@@ -74,7 +74,7 @@ const T: Record<"bs" | "en", Content> = {
     stillLabel: "still loading…",
     fasterBadge: "6.7× faster",
     raceNote: "More than half of visitors give up if a page doesn't open within about 3 seconds. At the old speed, those people never even see the offer.",
-    gaugesCaptionPre: "Google PageSpeed scores, Maximum Rent a Car. You can re-run the measurement yourself at",
+    gaugesCaptionPre: "Google PageSpeed scores, Maximum Rent a Car. You can run the measurement again yourself at",
     gaugesLink: "pagespeed.web.dev",
     gauges: [
       { v: 100, l: "Performance", s: "desktop" },

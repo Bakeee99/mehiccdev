@@ -64,10 +64,10 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     ],
     hostingNote: "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine sajtova je to vrlo mali iznos.",
     rcBanner: {
-      eyebrow: "Za rent-a-car firme",
-      title: "Imate rent-a-car firmu?",
+      eyebrow: "Za rent a car firme",
+      title: "Imate rent a car firmu?",
       desc: "Napravili smo poseban paket sa svojim cijenama, prema veličini flote, i sve je objašnjeno na jednom mjestu.",
-      cta: "Pogledajte rent-a-car sistem",
+      cta: "Pogledajte rent a car sistem",
     },
     perMonth: "/mj",
     from: "od",
@@ -98,7 +98,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
           "SVE iz Startera, plus:",
           "Više povezanih dijelova (katalog, upiti i admin panel)",
           "Više uloga: vlasnik vidi sve, osoblje samo svoje",
-          "Galerija slika s upload-om i pregledom",
+          "Galerija slika s učitavanjem i pregledom",
           "Kalendar zauzetosti, pa se termini ne mogu preklopiti",
           "Obavijesti na email i WhatsApp kad stigne nova rezervacija",
           "Dvojezično (BS + EN) za domaće i strane klijente",
@@ -124,7 +124,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     mktSubtitle: "Prvi mjesec je gratis uz svaku aplikaciju. Nakon toga nastavljate samo ako želite:",
     mktCta: "Više o paketu",
     mktNote:
-      "Marketing paketi su opcionalni. Budžet koji ide direktno Meti/Google-u za reklame plaća se zasebno.",
+      "Marketing paketi su opcionalni. Budžet za reklame, koji ide direktno Meti i Googleu, plaća se zasebno.",
     mkt: [
       {
         name: "Start", tag: "Osnovno prisustvo da vas ljudi nađu.", price: "60 KM", alt: "oko €30", note: "bez ugovorne obaveze",
@@ -143,11 +143,11 @@ const PRICING: Record<"bs" | "en", PricingData> = {
   en: {
     eyebrow: "WEB APPLICATIONS",
     heading: "Business applications,",
-    headingAccent: "custom-built",
+    headingAccent: "built to order",
     subtitle:
       "We build the app that runs your business, from bookings and client records to an internal tool for your team. Every package includes a free month of our Rast marketing package.",
-    buildLabel: "Development (one-time)",
-    once: "one-time",
+    buildLabel: "Development, paid once",
+    once: "paid once",
     monthlyLabel: "Hosting + support · optional",
     monthlySub: "not required, only if you want our support and maintenance",
     afterHeading: "After launch",
@@ -186,7 +186,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A web app for bookings and appointments. The guest picks a date and sends a request, you confirm it from the panel. For anything you rent out or schedule.",
-        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,430", discountBadge: "-21%", promoNote: "Early-client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,430", discountBadge: "-21%", promoNote: "Early client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "2 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",

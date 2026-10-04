@@ -29,7 +29,7 @@ const T = {
       { label: "Kontakt", href: "/#kontakt" },
     ],
     solutions: [
-      { label: "Sistem za rent-a-car", href: "/rjesenja/rent-a-car" },
+      { label: "Sistem za rent a car", href: "/rjesenja/rent-a-car" },
       { label: "Sistem u pokretu", href: "/#rent-a-car" },
       { label: "Maximum Rent a Car, primjer", href: "/maximum" },
       { label: "Platforma za nekretnine", href: "/#saas" },

@@ -18,15 +18,15 @@ type Content = {
 const T: Record<"bs" | "en", Content> = {
   bs: {
     label: "Tim",
-    heading1: "Ljudi iza",
-    headingAccent: "mehiccdev-a",
+    heading1: "Upoznajte",
+    headingAccent: "naš tim",
     subtitle: "Nas dvojica radimo sve sami. Jedan gradi, drugi dovodi klijente. Razgovarate direktno s ljudima koji rade posao, bez posrednika.",
     linkedinBtn: "LinkedIn profil",
     members: [
       {
         name: "Bakir Mehić",
         role: "Razvoj i dizajn",
-        bio:  "Vodim projekat od prve skice do objave. Pravim sajtove i web aplikacije, pa ih testiram tako da greške nađem ja, a ne vaši kupci. Zadnji veći projekat je kompletna rent-a-car aplikacija koja i danas radi.",
+        bio:  "Vodim projekat od prve skice do objave. Pravim sajtove i web aplikacije, pa ih testiram tako da greške nađem ja, a ne vaši kupci. Zadnji veći projekat je kompletna aplikacija za iznajmljivanje vozila koja i danas radi.",
         tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Engineer"],
       },
       {
@@ -47,7 +47,7 @@ const T: Record<"bs" | "en", Content> = {
       {
         name: "Bakir Mehić",
         role: "Development & Design",
-        bio:  "I take projects from the first sketch to launch. I build websites and web apps, then test them so that I find the bugs, not your customers. My most recent build is a complete rent-a-car application that is still running today.",
+        bio:  "I take projects from the first sketch to launch. I build websites and web apps, then test them so that I find the bugs, not your customers. My most recent build is a complete car rental app that is still running today.",
         tags: ["Webflow & Next.js", "AI Prompt Engineering", "QA Engineer"],
       },
       {

@@ -32,6 +32,7 @@ import {
   Check, ArrowRight, Heart, type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { keepTail } from "@/lib/text";
 
 type Content = {
   label: string; heading1: string; headingAccent: string;
@@ -51,7 +52,7 @@ const T: Record<"bs" | "en", Content> = {
     heading1: "Nova generacija",
     headingAccent: "oglašavanja nekretnina",
     badge: "Real Estate SaaS Platforma",
-    title: "Sve-u-jednom platforma za nekretnine, građena za Balkan",
+    title: "Jedna platforma za nekretnine, građena za Balkan",
     desc: "Agencije gube sate na ručni unos oglasa i pisanje tekstova, a kupci se muče sa sporim i nepreglednim oglasnicima. Gradimo platformu koja to mijenja: AI piše prodajne opise, oglasi velikih agencija se sinhronizuju sami, a sve se učitava trenutno i na telefonu. Dizajnirano u Mostaru, napravljeno za cijeli Balkan.",
     roadmap: [
       { icon: "start",  date: "Novembar 2026", label: "Početak razvoja" },
@@ -69,7 +70,7 @@ const T: Record<"bs" | "en", Content> = {
       { t: "Kreditni kalkulator", d: "Bankama donosi spremne klijente, direktno iz oglasa." },
       { t: "4 tržišta od starta", d: "Više valuta i jezika, za BiH, Srbiju, Hrvatsku i Crnu Goru." },
       { t: "Boost oglasa",        d: "Isticanje i promocija za privatne korisnike." },
-      { t: "Ispod sekunde",       d: "Čist mobile-first dizajn sa savršenim tamnim modom." },
+      { t: "Ispod sekunde",       d: "Čist dizajn, prvo za telefon, sa savršenim tamnim modom." },
     ],
     earlyAccess: "Rani pristup za agencije",
     earlyAccessDesc: "Prijavite se prije lansiranja i testirajte besplatno prva 2 mjeseca.",
@@ -85,7 +86,7 @@ const T: Record<"bs" | "en", Content> = {
     heading1: "The next generation of",
     headingAccent: "real estate listings",
     badge: "Real Estate SaaS Platform",
-    title: "An all-in-one real estate platform, built for the Balkans",
+    title: "One real estate platform, built for the Balkans",
     desc: "Agencies lose hours on manual listing entry and copywriting, while buyers struggle with slow, cluttered listing sites. We're building a platform that changes that: AI writes the sales copy, large agencies' listings sync themselves, and everything loads instantly, even on a phone. Designed in Mostar, made for the whole Balkan region.",
     roadmap: [
       { icon: "start",  date: "November 2026", label: "Development starts" },
@@ -96,14 +97,14 @@ const T: Record<"bs" | "en", Content> = {
       ["XML sync", "142 listings published on their own"],
       ["Mortgage calculator", "payment from €248/mo"],
     ],
-    mockSearch: "2-bedroom apartment, Mostar…",
+    mockSearch: "Two bedroom apartment, Mostar…",
     features: [
       { t: "AI listing copy",      d: "The agent enters the parameters, sales copy is ready in one click." },
       { t: "XML synchronization",  d: "At large agencies, listings publish themselves." },
       { t: "Mortgage calculator",  d: "Delivers ready leads to partner banks, straight from the listing." },
       { t: "4 markets from day 1", d: "Multiple currencies and languages for Bosnia, Serbia, Croatia and Montenegro." },
       { t: "Listing boost",        d: "Featuring and promotion for private users." },
-      { t: "Under a second",       d: "Clean mobile-first design with a flawless dark mode." },
+      { t: "Under a second",       d: "Clean design, built for phones first, with a flawless dark mode." },
     ],
     earlyAccess: "Early access for agencies",
     earlyAccessDesc: "Sign up before launch and test free for the first 2 months.",
@@ -129,9 +130,9 @@ const LISTINGS = {
     { t: "Penthouse, Rondo",       m: "110 m² · 4 sobe", p: "410.000 KM", tag: "" },
   ],
   en: [
-    { t: "3-room flat, Centre",    m: "78 m² · 3 rooms",  p: "€94,500",  tag: "boost" },
+    { t: "Three room flat, Centre",    m: "78 m² · 3 rooms",  p: "€94,500",  tag: "boost" },
     { t: "House with garden, Bijeli Brijeg", m: "142 m² · 5 rooms", p: "€163,500", tag: "ai" },
-    { t: "2-room flat, Zalik",     m: "56 m² · 2 rooms",  p: "€66,000",  tag: "" },
+    { t: "Two room flat, Zalik",     m: "56 m² · 2 rooms",  p: "€66,000",  tag: "" },
     { t: "Penthouse, Rondo",       m: "110 m² · 4 rooms", p: "€209,500", tag: "" },
   ],
 } as const;
@@ -306,7 +307,7 @@ export function SaasTeaser() {
           <div className="grid gap-12 px-6 py-10 sm:px-9 lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:py-12">
             <div>
               <h3 className="text-[26px] leading-[1.2] font-semibold tracking-tight text-[#0F172A]" style={{ textWrap: "balance" }}>{d.title}</h3>
-              <p className="mt-4 text-[15px] leading-relaxed text-[#475569]">{d.desc}</p>
+              <p className="mt-4 text-[15px] leading-relaxed text-[#475569]">{keepTail(d.desc, 4)}</p>
 
               <ul className="mt-5 flex flex-wrap gap-2">
                 {MARKETS.map(([code, name]) => (

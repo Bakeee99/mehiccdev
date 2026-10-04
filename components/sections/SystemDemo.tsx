@@ -1,7 +1,7 @@
 /**
  * components/sections/SystemDemo.tsx
  * ─────────────────────────────────────────────────────────────────────────────
- * "Naš sistem za rent-a-car": prikaz cijelog sistema u pokretu.
+ * "Naš sistem za rent a car": prikaz cijelog sistema u pokretu.
  *
  * Zamjenjuje staru promo sekciju (RentACarPromo). Umjesto da opisuje sistem,
  * pokazuje ga: animirana prezentacija prolazi put od pitanja gosta, preko
@@ -36,14 +36,14 @@ const SRC = "/demo/rent-a-car.html";
 
 const T = {
   bs: {
-    label: "Naš sistem za rent-a-car",
+    label: "Naš sistem za rent a car",
     h1: "Cijeli sistem za iznajmljivanje vozila,",
     accent: "na jednoj stranici",
     sub: "Sajt, kalendar dostupnosti i admin panel rade zajedno. Gost rezerviše sam, vi potvrđujete jednim klikom, a vozilo se zaključa za te datume.",
     cta: "Pogledajte sistem i cijene",
     priceTag: "Paketi od 1.500 KM",
     ctaSub: "Cijene, paketi i primjer iz prakse",
-    frameTitle: "Prikaz rezervacijskog sistema za rent-a-car",
+    frameTitle: "Prikaz rezervacijskog sistema za rent a car",
     pause: "Pauza", play: "Pokreni", replay: "Ispočetka",
     ctaPage: "Pogledajte pakete",
   },
