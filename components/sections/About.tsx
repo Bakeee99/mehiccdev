@@ -74,17 +74,25 @@ export function About() {
             return (
               <Fade key={m.name} delay={i * 0.06} className="min-w-0">
                 <article className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#E5E7EB] bg-white transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[#CBD5E1]">
-                  <div className="relative aspect-[10/9] overflow-hidden bg-[#F1F5F9]">
-                    <Image src={p.src} alt={m.name} fill unoptimized className="object-cover object-[center_30%] transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <div aria-hidden className="relative h-24 sm:h-28"
+                       style={{ background: "linear-gradient(135deg, #DCE6F1 0%, #EAF0F7 55%, #F4F7FB 100%)" }}>
+                    <div className="absolute inset-0 opacity-60"
+                         style={{ backgroundImage: "linear-gradient(to right, rgba(15,53,84,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,53,84,0.06) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
                   </div>
-                  <div className="flex flex-1 flex-col p-7 sm:p-9">
-                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 sm:flex-nowrap">
-                      <h3 className="whitespace-nowrap text-[22px] sm:text-[24px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
-                      <span className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-[#EEF3F8] px-3 py-1 text-[12.5px] font-semibold text-[#0F3554]">
-                        <Icon size={13} /> {m.role}
-                      </span>
+                  <div className="relative flex flex-1 flex-col px-7 pb-7 sm:px-9 sm:pb-9">
+                    <div className="-mt-10 flex items-end gap-4 sm:-mt-12">
+                      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#F1F5F9] ring-4 ring-white sm:h-28 sm:w-28"
+                           style={{ boxShadow: "0 12px 28px -14px rgba(15,23,42,0.4)" }}>
+                        <Image src={p.src} alt={m.name} fill unoptimized className="object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
+                      </div>
+                      <div className="min-w-0 pb-1">
+                        <h3 className="text-[21px] sm:text-[23px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>
+                        <span className="mt-1.5 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#EEF3F8] px-3 py-1 text-[12.5px] font-semibold text-[#0F3554]">
+                          <Icon size={13} /> {m.role}
+                        </span>
+                      </div>
                     </div>
-                    <p className="mt-5 text-[15.5px] leading-[1.75] text-[#475569]">{m.bio}</p>
+                    <p className="mt-6 text-[15px] leading-[1.75] text-[#475569]">{m.bio}</p>
                     <ul className="mt-6 flex flex-wrap gap-1.5 sm:flex-nowrap xl:gap-2">
                       {m.tags.map((tg) => (
                         <li key={tg} className="whitespace-nowrap rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-2 py-1.5 text-[11.5px] sm:text-[12.5px] lg:text-[11.5px] xl:px-2.5 xl:text-[12.5px] font-medium text-[#334155]">{tg}</li>

@@ -38,7 +38,7 @@ type Content = {
   badge: string; title: string; desc: string;
   stats: { v: string; l: string }[];
   features: string[];
-  ctaLive: string; ctaWant: string; ctaCase: string; livePill: string;
+  ctaLive: string; ctaWant: string; ctaCase: string; livePill: string; buildPill: string;
   zoomHint: string; closeLabel: string;
   minis: Mini[];
 };
@@ -48,7 +48,7 @@ const T: Record<"bs" | "en", Content> = {
     label: "Naš rad",
     heading: "Projekti koji",
     headingAccent: "rade posao",
-    subtitle: "Sve što vidite ovdje je uživo i donosi rezultate stvarnim klijentima. Slobodno otvorite i probajte.",
+    subtitle: "Gotovi projekti rade uživo za stvarne klijente, a na nekima još radimo. Slobodno otvorite i probajte.",
     badge: "Naš najveći projekat · Business paket",
     title: "Maximum Rent a Car",
     desc: "Kompletna web aplikacija za iznajmljivanje vozila. Gost izabere auto i datume, sistem provjeri dostupnost i spriječi dupla rezervisanja, a vlasnik sve potvrđuje u dva klika iz svog privatnog panela.",
@@ -68,10 +68,11 @@ const T: Record<"bs" | "en", Content> = {
     ctaCase: "Pogledajte detaljnije",
     ctaWant: "Želim ovakvu aplikaciju",
     livePill: "Uživo",
+    buildPill: "U izradi",
     zoomHint: "Klikni za uvećanje",
     closeLabel: "Zatvori",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Web sajt · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage.", live: true },
+      { title: "OxyBaric Mostar", cat: "Web sajt · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage." },
       { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn sistema nagrada za gaming platformu, s nivoima i napretkom koji igrača vodi naprijed.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
     ],
@@ -80,7 +81,7 @@ const T: Record<"bs" | "en", Content> = {
     label: "Our work",
     heading: "Projects that",
     headingAccent: "do the job",
-    subtitle: "Everything you see here is live and delivering results for real clients. Feel free to open and try them.",
+    subtitle: "Finished projects run live for real clients, and a few are still in the works. Feel free to open and try them.",
     badge: "Our biggest build · Business package",
     title: "Maximum Rent a Car",
     desc: "A complete car rental web application. Guests pick a car and dates, the system checks availability and prevents double bookings, and the owner confirms everything in two clicks from a private panel.",
@@ -100,10 +101,11 @@ const T: Record<"bs" | "en", Content> = {
     ctaCase: "See the full case study",
     ctaWant: "I want an app like this",
     livePill: "Live",
+    buildPill: "In progress",
     zoomHint: "Click to enlarge",
     closeLabel: "Close",
     minis: [
-      { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search.", live: true },
+      { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search." },
       { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform, with tiers and progression that pull players forward.", live: true },
       { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
     ],
@@ -207,8 +209,8 @@ export function Portfolio() {
                     <ZoomIn size={11} /> {d.zoomHint}
                   </span>
                 </span>
-                <span className="relative block aspect-[16/10]">
-                  <Image src={SCREEN_DESKTOP} alt={d.title} fill unoptimized className="object-cover object-top" />
+                <span className="relative block aspect-[16/10] overflow-hidden">
+                  <Image src={SCREEN_DESKTOP} alt={d.title} fill unoptimized className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
                 </span>
               </button>
 
@@ -220,7 +222,7 @@ export function Portfolio() {
                 <span className="block bg-black"
                       style={{ borderRadius: "15cqw", padding: "2.6cqw", boxShadow: "0 18px 40px -18px rgba(15,23,42,0.45)" }}>
                   <span className="relative block overflow-hidden bg-white aspect-[1179/2556]" style={{ borderRadius: "12cqw" }}>
-                    <Image src={SCREEN_MOBILE} alt={`${d.title} · admin`} fill unoptimized className="object-cover object-top" />
+                    <Image src={SCREEN_MOBILE} alt={`${d.title} · admin`} fill unoptimized className="object-cover object-top transition-transform duration-500 ease-out hover:scale-[1.05]" />
                   </span>
                 </span>
               </button>
@@ -233,38 +235,39 @@ export function Portfolio() {
           {d.minis.map((m, i) => {
             const meta = MINI_META[i];
             const external = meta.href.startsWith("http");
-            return (
-              <a key={m.title} href={meta.href}
-                 {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                 className="group flex flex-col overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white transition-colors hover:border-[#CBD5E1]">
-                <span className="relative block aspect-[16/10] border-b border-[#F1F5F9] bg-[#F8FAFC]">
+            const body = (
+              <>
+                <span className="relative block aspect-[16/10] overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC]">
                   {meta.img ? (
                     <Image src={meta.img} alt={m.title} fill sizes="(max-width: 640px) 100vw, 360px"
-                           className="object-cover object-top" />
+                           className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.05]" />
                   ) : (
-                    /* nema screenshota: mirna ploha umjesto lažnog prikaza */
-                    <span className="absolute inset-0 grid place-items-center">
+                    <span className="absolute inset-0 grid place-items-center transition-transform duration-500 ease-out group-hover:scale-[1.05]">
                       <span className="flex flex-col items-center gap-2 text-[#94A3B8]">
                         <Dumbbell size={26} />
                         <span className="text-[12px] font-medium">{m.cat}</span>
                       </span>
                     </span>
                   )}
-                  {m.live && (
-                    <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-[#0F172A]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" /> {d.livePill}
-                    </span>
-                  )}
+                  <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-[#0F172A]">
+                    <span className={`h-1.5 w-1.5 rounded-full ${m.live ? "bg-[#16A34A]" : "bg-[#F59E0B]"}`} /> {m.live ? d.livePill : d.buildPill}
+                  </span>
                 </span>
                 <span className="flex flex-1 flex-col p-5">
                   <span className="text-[12px] font-medium text-[#64748B]">{m.cat}</span>
                   <span className="mt-1 flex items-start justify-between gap-3">
                     <span className="text-[16px] font-semibold text-[#0F172A]">{m.title}</span>
-                    <ArrowUpRight size={17} className="mt-0.5 shrink-0 text-[#94A3B8] transition-colors group-hover:text-[#0F172A]" />
+                    {m.live && <ArrowUpRight size={17} className="mt-0.5 shrink-0 text-[#94A3B8] transition-colors group-hover:text-[#0F172A]" />}
                   </span>
                   <span className="mt-1.5 text-[13.5px] leading-relaxed text-[#64748B]">{m.desc}</span>
                 </span>
-              </a>
+              </>
+            );
+            const cls = "group flex flex-col overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white transition-colors hover:border-[#CBD5E1]";
+            return m.live ? (
+              <a key={m.title} href={meta.href} className={cls} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{body}</a>
+            ) : (
+              <div key={m.title} className={cls}>{body}</div>
             );
           })}
         </div>

@@ -107,7 +107,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "Aplikacija bez ograničenja, kreirana tačno oko vašeg procesa.",
-        price: "5.000 KM", alt: "oko €2.500", monthly: "100", from: true, gift: "Dominacija",
+        price: "4.400 KM", alt: "oko €2.250", monthly: "100", from: true, gift: "Dominacija",
         features: [
           "SVE iz Business paketa, plus:",
           "Neograničeni dijelovi i funkcije po vašoj želji",
@@ -201,7 +201,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "An app without limits, built exactly around your process.",
-        price: "€2,500", alt: "about 5,000 KM", monthly: "100", from: true, gift: "Domination",
+        price: "€2,250", alt: "about 4,400 KM", monthly: "100", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
