@@ -74,7 +74,7 @@ const T: Record<"bs" | "en", Content> = {
     minis: [
       { title: "OxyBaric Mostar", cat: "Web sajt · Medicina", desc: "Medicinski sajt koji dovodi pacijente iz Google pretrage." },
       { title: "Roobet Rewards", cat: "UI/UX Dizajn · Crypto Casino", desc: "Dizajn sistema nagrada za gaming platformu, s nivoima i napretkom koji igrača vodi naprijed.", live: true },
-      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "Lični brend s online zakazivanjem umjesto prepiske porukama." },
+      { title: "Adnan Gosto · IFBB Pro", cat: "Web aplikacija · Bodybuilding coaching", desc: "Platforma za IFBB Pro trenera i višestrukog prvaka BiH, s prijavama klijenata i admin panelom za vođenje saradnji." },
     ],
   },
   en: {
@@ -107,7 +107,7 @@ const T: Record<"bs" | "en", Content> = {
     minis: [
       { title: "OxyBaric Mostar", cat: "Custom Website · Medicine", desc: "A medical site that brings patients in from Google search." },
       { title: "Roobet Rewards", cat: "UI/UX Design · Crypto Casino", desc: "Rewards system design for a gaming platform, with tiers and progression that pull players forward.", live: true },
-      { title: "Fitness Trainer", cat: "UI/UX & Development", desc: "A personal brand site with online booking instead of endless messaging." },
+      { title: "Adnan Gosto · IFBB Pro", cat: "Web app · Bodybuilding coaching", desc: "A platform for an IFBB Pro coach and multiple national champion, with client sign-ups and an admin panel to manage coaching." },
     ],
   },
 };
@@ -117,7 +117,7 @@ const T: Record<"bs" | "en", Content> = {
 const MINI_META = [
   { img: "/portfolio/oxybaric.png", href: "https://oxybaricmostar.ba" },
   { img: "/portfolio/roobet.png",   href: "https://roobet.com/" },
-  { img: "",                        href: "#kontakt" },
+  { img: "/portfolio/gosto-coaching.webp", href: "#kontakt" },
 ];
 
 type Zoom = { src: string; alt: string; phone: boolean } | null;
@@ -239,7 +239,7 @@ export function Portfolio() {
               <>
                 <span className="relative block aspect-[16/10] overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC]">
                   {meta.img ? (
-                    <Image src={meta.img} alt={m.title} fill sizes="(max-width: 640px) 100vw, 360px"
+                    <Image src={meta.img} alt={m.title} fill unoptimized
                            className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.05]" />
                   ) : (
                     <span className="absolute inset-0 grid place-items-center transition-transform duration-500 ease-out group-hover:scale-[1.05]">
