@@ -49,7 +49,7 @@ const T: Record<"bs" | "en", Content> = {
     ctaPrimary: "Besplatne konsultacije",
     ctaSecondary: "Šta smo napravili",
     shots: {
-      left: "Admin panel s rezervacijama na čekanju",
+      left: "Adnan Gosto, platforma za IFBB Pro trenera",
       center: "Naslovna stranica sajta za iznajmljivanje vozila",
       right: "Roobet, sistem nagrada za gaming platformu",
     },
@@ -66,7 +66,7 @@ const T: Record<"bs" | "en", Content> = {
     ctaPrimary: "Free consultation",
     ctaSecondary: "See what we\u0027ve built",
     shots: {
-      left: "Admin panel with pending bookings",
+      left: "Adnan Gosto, a platform for an IFBB Pro coach",
       center: "Home page of a car rental website",
       right: "Roobet, a rewards system for a gaming platform",
     },
@@ -286,7 +286,7 @@ export function Hero() {
                         h-[300px] sm:h-[440px] lg:h-[520px] overflow-hidden">
           {/* lijevi: manji, niže, nagnut ulijevo */}
           <div className="w-[33%] max-w-[290px] mt-[4%]" style={{ transform: "rotateY(-22deg)", transformOrigin: "100% 50%" }}>
-            <div className="relative"><span aria-hidden className="absolute inset-y-[1%] -right-[3%] left-[3%] rounded-[15.5%/7%] bg-[#C9CDD3]" /><div className="relative"><PhoneMockup src="/portfolio/maximum-admin-mob-svijetla.webp" alt={d.shots.left} /></div></div>
+            <div className="relative"><span aria-hidden className="absolute inset-y-[1%] -right-[3%] left-[3%] rounded-[15.5%/7%] bg-[#C9CDD3]" /><div className="relative"><PhoneMockup src="/portfolio/gosto-mob.webp" alt={d.shots.left} bar="dark" barColor="#0A0A0A" /></div></div>
           </div>
 
           {/* srednji: najveći i najviši */}
