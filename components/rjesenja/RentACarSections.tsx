@@ -6,6 +6,7 @@ import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY, type RcCopy } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
 import { SystemDemo } from "@/components/sections/SystemDemo";
+import { Value } from "@/components/sections/Value";
 import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, PlanCard, SOFT, FLOAT } from "@/components/ui/kit";
 
 const PLAN_ICONS = [Car, CarFront, Building2];
@@ -273,6 +274,7 @@ export function RentACarSections() {
       <SystemDemo onPage />
       <CaseStudy c={c} />
       <Packages c={c} />
+      <Value rentACar />
       <Ownership c={c} />
       <RcForm c={c} />
       <Faq c={c} />

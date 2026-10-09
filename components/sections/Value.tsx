@@ -110,14 +110,54 @@ const T: { bs: Content; en: Content } = {
   },
 };
 
+
+const RC: { bs: Partial<Content>; en: Partial<Content> } = {
+  bs: {
+    sub: "Sistem plaćate jednom i on je zauvijek vaš. Nema mjesečne pretplate, provizije po rezervaciji ni naplate po vozilu.",
+    yearOnePrice: "2.000 KM",
+    laterNote: "sistem je vaš",
+    calcApp:     { label: "Samo sistem", value: "5,48 KM", per: "dnevno", how: "2.000 KM ÷ 365 dana, samo prve godine" },
+    calcSupport: { label: "S mjesečnom podrškom", value: "oko 8,20 KM", per: "dnevno", how: "+ 100 KM mjesečno nakon 2 besplatna mjeseca, opciono" },
+    calcNote: "Računica je za Pro paket (2.000 KM, oko €1.020), za flote od 10 do 20 vozila. Da se vrati, dovoljna je jedna dodatna rezervacija sedmično. Hosting se plaća zasebno, po stvarnoj potrošnji.",
+    included: ["Dizajn po mjeri", "Sistem je vaš", "Hosting i domena podešeni", "Flotu i cijene mijenjate sami", "2 mjeseca podrške uključena"],
+    pairs: [
+      { b: "Upiti razbacani po Viberu i telefonu", a: "Svi upiti u jednom panelu" },
+      { b: "Dvije rezervacije za isti auto", a: "Kalendar sam blokira zauzete termine" },
+      { b: "Propušteni pozivi van radnog vremena", a: "Rezervacije stižu i noću" },
+      { b: "Cijene i flota mijenjaju se preko developera", a: "Sve mijenjate sami za minut" },
+    ],
+    bannerSub: "Računicu za vašu flotu napravimo na besplatnim konsultacijama.",
+    btn: "Zatražite ponudu",
+  },
+  en: {
+    sub: "You pay for the system once and it's yours for good. No monthly subscription, no fee per booking and no charge per vehicle.",
+    yearOnePrice: "€1,020",
+    laterNote: "the system is yours",
+    calcApp:     { label: "The system only", value: "€2.79", per: "a day", how: "€1,020 ÷ 365 days, first year only" },
+    calcSupport: { label: "With monthly support", value: "about €4.20", per: "a day", how: "+ €50 a month after 2 free months, optional" },
+    calcNote: "Based on the Pro package (€1,020, about 2,000 KM), for fleets of 10 to 20 vehicles. One extra booking a week is enough to pay it back. Hosting is billed separately, based on actual usage.",
+    included: ["Design made for you", "The system is yours", "Hosting and domain set up", "You manage fleet and prices", "2 months of support included"],
+    pairs: [
+      { b: "Inquiries scattered across Viber and phone", a: "Every inquiry in one panel" },
+      { b: "Two bookings for the same car", a: "The calendar blocks taken dates" },
+      { b: "Missed calls after office hours", a: "Bookings come in at night too" },
+      { b: "Fleet and price changes need a developer", a: "You change it all in a minute" },
+    ],
+    bannerSub: "We'll run the numbers for your fleet in a free consultation.",
+    btn: "Request a quote",
+  },
+};
+
 const SOFT = "0 1px 2px rgba(15,23,42,0.04)";
 
-export function Value() {
+export function Value({ rentACar = false }: { rentACar?: boolean }) {
   const { lang } = useLanguage();
-  const d = T[(lang as "bs" | "en")] ?? T.bs;
+  const l = lang === "en" ? "en" : "bs";
+  const d: Content = rentACar ? { ...T[l], ...RC[l] } : T[l];
+  const href = rentACar ? "#upit" : "#kontakt";
 
   return (
-    <section id="vrijednost" className="relative bg-white scroll-mt-24">
+    <section id={rentACar ? "isplati" : "vrijednost"} className="relative bg-white scroll-mt-24">
       <div className="mx-auto max-w-5xl px-6 lg:px-8">
 
         {/* ── zaglavlje ── */}
@@ -225,7 +265,7 @@ export function Value() {
             </p>
             <p className="mt-2 text-[14px] text-[#94A3B8]">{d.bannerSub}</p>
           </div>
-          <a href="#kontakt"
+          <a href={href}
              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-semibold text-[#0F172A] transition-colors hover:bg-[#F1F5F9]">
             {d.btn} <ArrowRight size={15} />
           </a>
