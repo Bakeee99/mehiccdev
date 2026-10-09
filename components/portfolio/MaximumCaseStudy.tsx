@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, Star, Moon, Sun, Play, ClipboardCheck, CarFront, FileText, Languages, Gauge, ShieldCheck, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, Lightbox, SOFT, type ZoomState } from "@/components/ui/kit";
+import { Backdrop, Head, Fade, BrowserFrame, PhoneMockup, Lightbox, SOFT, preloadImage, type ZoomState } from "@/components/ui/kit";
 
 const T = {
   bs: {
@@ -161,10 +161,10 @@ const fmt = (n: number, dec: number, lang: string) => n.toFixed(dec).replace("."
 
 function Shot({ src, alt, url, onZoom, ratio = "aspect-[16/10]" }: { src: string; alt: string; url?: string; onZoom: Zoom; ratio?: string }) {
   return (
-    <button type="button" onClick={() => onZoom({ src, alt })} aria-label={alt} className="block w-full cursor-zoom-in text-left">
+    <button type="button" onPointerEnter={() => preloadImage(src)} onClick={() => onZoom({ src, alt })} aria-label={alt} className="block w-full cursor-zoom-in text-left">
       <BrowserFrame url={url}>
         <span className={`relative block ${ratio}`}>
-          <Image src={src} alt={alt} fill unoptimized className="object-cover object-top" />
+          <Image src={src} alt={alt} fill sizes="(max-width: 1024px) 100vw, 1100px" quality={85} className="object-cover object-top" />
         </span>
       </BrowserFrame>
     </button>
@@ -173,7 +173,7 @@ function Shot({ src, alt, url, onZoom, ratio = "aspect-[16/10]" }: { src: string
 
 function PhoneShot({ src, alt, bar, onZoom, className = "w-full" }: { src: string; alt: string; bar?: "light" | "dark"; onZoom: Zoom; className?: string }) {
   return (
-    <button type="button" onClick={() => onZoom({ src, alt, phone: true })} aria-label={alt} className={`block cursor-zoom-in ${className}`}>
+    <button type="button" onPointerEnter={() => preloadImage(src)} onClick={() => onZoom({ src, alt, phone: true })} aria-label={alt} className={`block cursor-zoom-in ${className}`}>
       <PhoneMockup src={src} alt={alt} bar={bar} />
     </button>
   );

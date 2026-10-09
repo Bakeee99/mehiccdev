@@ -17,7 +17,8 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Clock, Star, X, type LucideIcon } from "lucide-react";
@@ -98,32 +99,78 @@ export function BrowserFrame({ url, children }: { url?: string; children: React.
 /* ── uvećanje slike ──────────────────────────────────────────────────────── */
 export type ZoomState = { src: string; alt: string; phone?: boolean } | null;
 
+export function preloadImage(src: string) {
+  if (typeof window === "undefined") return;
+  const img = new window.Image();
+  img.decoding = "async";
+  img.src = src;
+}
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function Lightbox({ zoom, onClose, closeLabel }: { zoom: ZoomState; onClose: () => void; closeLabel: string }) {
+  const [mounted, setMounted] = useState(false);
+  const [ready, setReady] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
+    setReady(false);
     if (!zoom) return;
+    const html = document.documentElement;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+    html.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); html.style.overflow = ""; };
   }, [zoom, onClose]);
 
-  return (
+  const show = (img: HTMLImageElement | null) => {
+    if (!img) return;
+    (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(() => setReady(true));
+  };
+
+  const setImg = (img: HTMLImageElement | null) => {
+    imgRef.current = img;
+    if (img && img.complete && img.naturalWidth) show(img);
+  };
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {zoom && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+        <motion.div key="lightbox"
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    transition={{ duration: 0.22, ease: EASE }}
                     onClick={onClose}
-                    className="fixed inset-0 z-[60] flex items-center justify-center bg-[#0F172A]/85 p-4 sm:p-8 cursor-zoom-out">
+                    className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0F172A]/90 p-4 sm:p-8 cursor-zoom-out"
+                    style={{ willChange: "opacity" }}>
           <button type="button" onClick={onClose} aria-label={closeLabel}
-                  className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-xl border border-white/20 text-white/80 hover:text-white">
+                  className="absolute right-5 top-5 z-10 grid h-10 w-10 place-items-center rounded-xl border border-white/20 text-white/80 hover:text-white">
             <X size={18} />
           </button>
-          <div onClick={(e) => e.stopPropagation()}
-               className={`relative overflow-hidden rounded-xl bg-white cursor-default ${zoom.phone ? "h-[86vh] aspect-[1179/2556]" : "w-full max-w-6xl aspect-[16/10]"}`}>
-            <Image src={zoom.src} alt={zoom.alt} fill unoptimized className="object-contain object-top" />
-          </div>
+          {!ready && <span aria-hidden className="absolute h-7 w-7 animate-spin rounded-full border-2 border-white/25 border-t-white/80" />}
+          <motion.img
+            key={zoom.src}
+            ref={setImg}
+            src={zoom.src}
+            alt={zoom.alt}
+            decoding="async"
+            draggable={false}
+            onLoad={(e) => show(e.currentTarget)}
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            className={`relative block h-auto w-auto cursor-default select-none bg-white object-contain ${zoom.phone ? "max-h-[88vh] max-w-full rounded-[2rem]" : "max-h-[88vh] max-w-[min(1200px,100%)] rounded-xl"}`}
+            style={{ willChange: "transform, opacity", boxShadow: "0 30px 80px -20px rgba(0,0,0,0.55)" }}
+          />
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
 
@@ -139,9 +186,9 @@ const PHONE_SHADOW =
 
    Statusnu traku crtamo sami, jer screenshotovi je nemaju. Boja trake prati
    vrh stranice na slici, a ikonice su tamne na svijetloj ili svijetle na
-   tamnoj traci. Slika se servira netaknuta (unoptimized), oštra na Retini. */
-export function PhoneMockup({ src, alt, bar = "light", barColor, priority = false }: {
-  src: string; alt: string; bar?: "light" | "dark"; barColor?: string; priority?: boolean;
+   tamnoj traci.  */
+export function PhoneMockup({ src, alt, bar = "light", barColor, priority = false, sizes = "(max-width: 640px) 45vw, 320px" }: {
+  src: string; alt: string; bar?: "light" | "dark"; barColor?: string; priority?: boolean; sizes?: string;
 }) {
   const ink = bar === "dark" ? "#FFFFFF" : "#0F172A";
 
@@ -185,7 +232,7 @@ export function PhoneMockup({ src, alt, bar = "light", barColor, priority = fals
             </div>
             {/* sadržaj ekrana */}
             <div className="relative aspect-[1179/2556] bg-white">
-              <Image src={src} alt={alt} fill unoptimized priority={priority}
+              <Image src={src} alt={alt} fill sizes={sizes} quality={85} priority={priority}
                      className="object-cover object-top" />
             </div>
           </div>

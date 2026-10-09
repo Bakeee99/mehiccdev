@@ -89,7 +89,23 @@ export function SystemDemo({ onPage = false }: { onPage?: boolean }) {
       { rootMargin: "600px 0px" }
     );
     io.observe(el);
-    return () => io.disconnect();
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
+    let idle = 0;
+    let timer = 0;
+    const start = () => {
+      timer = window.setTimeout(() => {
+        if (w.requestIdleCallback) idle = w.requestIdleCallback(() => setLoad(true), { timeout: 4000 });
+        else setLoad(true);
+      }, 1200);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      io.disconnect();
+      window.removeEventListener("load", start);
+      window.clearTimeout(timer);
+      if (idle && w.cancelIdleCallback) w.cancelIdleCallback(idle);
+    };
   }, []);
 
   /* 2) Kreni tek kad je CIJELA scena u kadru, stani kad većim dijelom izađe.
@@ -202,7 +218,6 @@ export function SystemDemo({ onPage = false }: { onPage?: boolean }) {
                 ref={frameRef}
                 src={`${SRC}?embed&lang=${l}`}
                 title={d.frameTitle}
-                loading="lazy"
                 scrolling="no"
                 onLoad={() => {
                   // poruke poslate prije učitavanja su se izgubile, pa ih

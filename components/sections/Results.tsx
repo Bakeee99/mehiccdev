@@ -105,8 +105,9 @@ export function Results() {
 
   /* traka koja se jednom izduži do svoje širine kad uđe u vid */
   const bar = (pct: number) => ({
-    initial: { width: reduce ? `${pct}%` : "0%" },
-    whileInView: { width: `${pct}%` },
+    style: { width: `${pct}%`, transformOrigin: "0% 50%" },
+    initial: { scaleX: reduce ? 1 : 0 },
+    whileInView: { scaleX: 1 },
     viewport: { once: true, amount: 0.6 },
     transition: { duration: reduce ? 0 : 0.9, ease: [0.22, 1, 0.36, 1] as const },
   });

@@ -75,13 +75,13 @@ export function About() {
               <Fade key={m.name} delay={i * 0.06} className="min-w-0">
                 <article className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#E5E7EB] bg-white transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[#CBD5E1]">
                   <div aria-hidden className="relative h-28 overflow-hidden bg-[#E7EEF6] sm:h-32">
-                    <Image src={p.banner} alt="" fill unoptimized className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+                    <Image src={p.banner} alt="" fill sizes="(max-width: 1024px) 100vw, 520px" className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
                   </div>
                   <div className="relative flex flex-1 flex-col px-7 pb-7 sm:px-9 sm:pb-9">
                     <div className="-mt-8 flex items-end gap-4 sm:-mt-9">
                       <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#F1F5F9] ring-4 ring-white sm:h-28 sm:w-28"
                            style={{ boxShadow: "0 12px 28px -14px rgba(15,23,42,0.4)" }}>
-                        <Image src={p.src} alt={m.name} fill unoptimized className="object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
+                        <Image src={p.src} alt={m.name} fill sizes="112px" className="object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
                       </div>
                       <div className="min-w-0 pb-1">
                         <h3 className="text-[21px] sm:text-[23px] font-semibold tracking-tight text-[#0F172A]">{m.name}</h3>

@@ -21,11 +21,11 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, ArrowRight, Check, Star, ZoomIn, X, Dumbbell } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Check, Star, ZoomIn, Dumbbell } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
+import { Lightbox, preloadImage } from "@/components/ui/kit";
 
 /* svijetli screenshotovi, jer se slažu s bijelom naslovnicom */
 const SCREEN_DESKTOP = "/portfolio/maximum-poslije.webp";
@@ -126,15 +126,7 @@ export function Portfolio() {
   const { lang } = useLanguage();
   const d = T[(lang as "bs" | "en")] ?? T.bs;
   const [zoom, setZoom] = useState<Zoom>(null);
-
-  /* uvećanje: Escape zatvara, pozadina se ne skrola dok je otvoreno */
-  useEffect(() => {
-    if (!zoom) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setZoom(null); };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
-  }, [zoom]);
+  const closeZoom = useCallback(() => setZoom(null), []);
 
   return (
     <section id="portfolio" className="relative bg-white scroll-mt-24">
@@ -199,7 +191,7 @@ export function Portfolio() {
           {/* prikaz: sajt u prozoru, admin panel na telefonu */}
           <div className="relative border-t lg:border-t-0 lg:border-l border-[#E5E7EB] bg-[#F8FAFC] p-6 sm:p-9 flex items-center">
             <div className="relative w-full pb-[12%]">
-              <button type="button" onClick={() => setZoom({ src: SCREEN_DESKTOP, alt: d.title, phone: false })}
+              <button type="button" onPointerEnter={() => preloadImage(SCREEN_DESKTOP)} onClick={() => setZoom({ src: SCREEN_DESKTOP, alt: d.title, phone: false })}
                       aria-label={`${d.title} · ${d.zoomHint}`}
                       className="group block w-full overflow-hidden rounded-xl border border-[#E5E7EB] bg-white text-left cursor-zoom-in">
                 <span className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3 py-2">
@@ -210,19 +202,19 @@ export function Portfolio() {
                   </span>
                 </span>
                 <span className="relative block aspect-[16/10] overflow-hidden">
-                  <Image src={SCREEN_DESKTOP} alt={d.title} fill unoptimized className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
+                  <Image src={SCREEN_DESKTOP} alt={d.title} fill sizes="(max-width: 1024px) 100vw, 640px" quality={85} className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
                 </span>
               </button>
 
               {/* telefon s admin panelom, preko donjeg desnog ugla */}
-              <button type="button" onClick={() => setZoom({ src: SCREEN_MOBILE, alt: `${d.title} · admin`, phone: true })}
+              <button type="button" onPointerEnter={() => preloadImage(SCREEN_MOBILE)} onClick={() => setZoom({ src: SCREEN_MOBILE, alt: `${d.title} · admin`, phone: true })}
                       aria-label={`${d.title} · admin · ${d.zoomHint}`}
                       className="absolute bottom-0 right-[4%] w-[27%] cursor-zoom-in"
                       style={{ containerType: "inline-size" }}>
                 <span className="block bg-black"
                       style={{ borderRadius: "15cqw", padding: "2.6cqw", boxShadow: "0 18px 40px -18px rgba(15,23,42,0.45)" }}>
                   <span className="relative block overflow-hidden bg-white aspect-[1179/2556]" style={{ borderRadius: "12cqw" }}>
-                    <Image src={SCREEN_MOBILE} alt={`${d.title} · admin`} fill unoptimized className="object-cover object-top transition-transform duration-500 ease-out hover:scale-[1.05]" />
+                    <Image src={SCREEN_MOBILE} alt={`${d.title} · admin`} fill sizes="(max-width: 1024px) 30vw, 180px" quality={85} className="object-cover object-top transition-transform duration-500 ease-out hover:scale-[1.05]" />
                   </span>
                 </span>
               </button>
@@ -239,7 +231,7 @@ export function Portfolio() {
               <>
                 <span className="relative block aspect-[16/10] overflow-hidden border-b border-[#F1F5F9] bg-[#F8FAFC]">
                   {meta.img ? (
-                    <Image src={meta.img} alt={m.title} fill unoptimized
+                    <Image src={meta.img} alt={m.title} fill sizes="(max-width: 640px) 100vw, 400px"
                            className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.05]" />
                   ) : (
                     <span className="absolute inset-0 grid place-items-center transition-transform duration-500 ease-out group-hover:scale-[1.05]">
@@ -273,24 +265,7 @@ export function Portfolio() {
         </div>
       </div>
 
-      {/* ── uvećanje slike ── */}
-      <AnimatePresence>
-        {zoom && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-                      onClick={() => setZoom(null)}
-                      className="fixed inset-0 z-[60] flex items-center justify-center bg-[#0F172A]/85 p-4 sm:p-8 cursor-zoom-out">
-            <button type="button" onClick={() => setZoom(null)} aria-label={d.closeLabel}
-                    className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-xl border border-white/20 text-white/80 hover:text-white">
-              <X size={18} />
-            </button>
-            <motion.div initial={{ scale: 0.97 }} animate={{ scale: 1 }} exit={{ scale: 0.98 }} transition={{ duration: 0.2 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className={`relative overflow-hidden rounded-xl bg-white cursor-default ${zoom.phone ? "h-[86vh] aspect-[1179/2556]" : "w-full max-w-6xl aspect-[16/10]"}`}>
-              <Image src={zoom.src} alt={zoom.alt} fill unoptimized className="object-contain object-top" />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Lightbox zoom={zoom} onClose={closeZoom} closeLabel={d.closeLabel} />
     </section>
   );
 }

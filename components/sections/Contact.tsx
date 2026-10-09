@@ -167,7 +167,7 @@ export function Contact() {
                 <li key={m.email}>
                   <a href={`mailto:${m.email}`} className="group flex items-center gap-3 py-3">
                     <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white/10">
-                      <Image src={m.photo} alt={m.name} fill unoptimized className="object-cover" />
+                      <Image src={m.photo} alt={m.name} fill sizes="36px" className="object-cover" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[13.5px] font-semibold text-white">{m.name} <span className="font-normal text-[#64748B]">· {d.roles[i]}</span></span>

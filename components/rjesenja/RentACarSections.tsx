@@ -60,7 +60,7 @@ function Hero({ c }: { c: RcCopy }) {
             <div className="w-[88%]">
               <BrowserFrame url="maximum-rent.vercel.app/admin">
                 <span className="relative block aspect-[16/10]">
-                  <Image src="/portfolio/maximum-admin-desktop-svijetla.webp" alt={h.h1a} fill unoptimized priority className="object-cover object-top" />
+                  <Image src="/portfolio/maximum-admin-desktop-svijetla.webp" alt={h.h1a} fill sizes="(max-width: 1024px) 90vw, 500px" quality={85} priority className="object-cover object-top" />
                 </span>
               </BrowserFrame>
             </div>
@@ -135,7 +135,7 @@ function CaseStudy({ c }: { c: RcCopy }) {
           <div className="border-b border-[#E5E7EB] bg-[#F8FAFC] p-6 sm:p-9 lg:border-b-0 lg:border-r">
             <BrowserFrame url="maximum-rent.vercel.app">
               <span className="relative block aspect-[16/10]">
-                <Image src="/portfolio/maximum-poslije.webp" alt={s.imageAlt} fill unoptimized className="object-cover object-top" />
+                <Image src="/portfolio/maximum-poslije.webp" alt={s.imageAlt} fill sizes="(max-width: 1024px) 100vw, 620px" quality={85} className="object-cover object-top" />
               </span>
             </BrowserFrame>
           </div>
