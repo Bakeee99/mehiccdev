@@ -3,6 +3,7 @@
 import { Mail, MapPin, Instagram, Linkedin, ArrowUp, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { Logo } from "@/components/ui/Logo";
+import { EmailLink } from "@/components/ui/EmailLink";
 
 const INSTAGRAM = "https://www.instagram.com/mehiccdev";
 
@@ -114,9 +115,9 @@ export function Footer() {
                 <li key={m.email}>
                   <p className="text-[13.5px] font-semibold text-white">{m.name} <span className="font-normal text-[#64748B]">· {d.roles[i]}</span></p>
                   <div className="mt-1.5 flex items-center gap-3">
-                    <a href={`mailto:${m.email}`} className={`inline-flex min-w-0 items-center gap-1.5 ${link}`}>
+                    <EmailLink email={m.email} wrapClassName="min-w-0" className={`inline-flex min-w-0 max-w-full items-center gap-1.5 ${link}`}>
                       <Mail size={13} className="shrink-0" /> <span className="truncate">{m.email}</span>
-                    </a>
+                    </EmailLink>
                     <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} LinkedIn`}
                        className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-white/10 text-[#94A3B8] transition-colors hover:border-[#0A66C2] hover:text-white">
                       <Linkedin size={13} />

@@ -6,6 +6,7 @@ import { ArrowRight, Check, Mail, MapPin, Phone, MessageCircle } from "lucide-re
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { PHONE_DISPLAY, PHONE_DIAL, waLink } from "@/lib/contact";
 import { Head, Fade, SOFT } from "@/components/ui/kit";
+import { EmailLink } from "@/components/ui/EmailLink";
 
 const TEAM = [
   { name: "Bakir Mehić", email: "bakir.mehic@mehiccdev.com", photo: "/team/bakir.jpg" },
@@ -165,7 +166,7 @@ export function Contact() {
             <ul className="mt-3 divide-y divide-white/10">
               {TEAM.map((m, i) => (
                 <li key={m.email}>
-                  <a href={`mailto:${m.email}`} className="group flex items-center gap-3 py-3">
+                  <EmailLink email={m.email} wrapClassName="block" className="group flex items-center gap-3 py-3">
                     <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white/10">
                       <Image src={m.photo} alt={m.name} fill sizes="36px" className="object-cover" />
                     </span>
@@ -174,7 +175,7 @@ export function Contact() {
                       <span className="block truncate text-[12.5px] text-[#94A3B8] group-hover:text-white">{m.email}</span>
                     </span>
                     <Mail size={15} className="shrink-0 text-[#64748B] group-hover:text-white" />
-                  </a>
+                  </EmailLink>
                 </li>
               ))}
             </ul>
