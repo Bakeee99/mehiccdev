@@ -92,7 +92,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "Web aplikacija za rezervacije i termine. Gost bira datum i šalje upit, vi potvrđujete iz panela. Za sve što se iznajmljuje ili zakazuje.",
-        price: "2.200 KM", alt: "oko €1.120", from: true, oldPrice: "2.800 KM", discountBadge: "-21%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
+        price: "1.800 KM", alt: "oko €920", from: true, oldPrice: "2.200 KM", discountBadge: "-18%", promoNote: "Za prve klijente · vrijedi do 30.10.", ctaLabel: "Zakažimo razgovor", monthly: "75", gift: "Rast",
         features: [
           "2 mjeseca besplatne podrške nakon isporuke, za sve nejasnoće i probleme",
           "SVE iz Startera, plus:",
@@ -107,7 +107,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "Aplikacija bez ograničenja, kreirana tačno oko vašeg procesa.",
-        price: "4.400 KM", alt: "oko €2.250", monthly: "100", from: true, gift: "Dominacija",
+        price: "2.800 KM", alt: "oko €1.430", monthly: "100", from: true, gift: "Dominacija",
         features: [
           "SVE iz Business paketa, plus:",
           "Neograničeni dijelovi i funkcije po vašoj želji",
@@ -186,7 +186,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Business", tag: "A web app for bookings and appointments. The guest picks a date and sends a request, you confirm it from the panel. For anything you rent out or schedule.",
-        price: "€1,120", alt: "about 2,200 KM", from: true, oldPrice: "€1,430", discountBadge: "-21%", promoNote: "Early client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
+        price: "€920", alt: "about 1,800 KM", from: true, oldPrice: "€1,125", discountBadge: "-18%", promoNote: "Early client price · until Oct 30", ctaLabel: "Let\u0027s talk", monthly: "75", gift: "Growth",
         features: [
           "2 months of free support after launch, for any questions or issues",
           "EVERYTHING in Starter, plus:",
@@ -201,7 +201,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
       },
       {
         name: "Premium", tag: "An app without limits, built exactly around your process.",
-        price: "€2,250", alt: "about 4,400 KM", monthly: "100", from: true, gift: "Domination",
+        price: "€1,430", alt: "about 2,800 KM", monthly: "100", from: true, gift: "Domination",
         features: [
           "EVERYTHING in Business, plus:",
           "Unlimited parts and features to your spec",
