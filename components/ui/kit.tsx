@@ -21,7 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, Clock, Star, X, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check, Clock, ShieldCheck, Star, X, type LucideIcon } from "lucide-react";
 
 export const SOFT  = "0 1px 2px rgba(15,23,42,0.04)";
 export const LIFT  = "0 1px 2px rgba(15,23,42,0.06), 0 28px 56px -28px rgba(15,23,42,0.45)";
@@ -251,14 +251,26 @@ const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING"
      "dark"     preporučeni aplikacijski paket, tamno plava kartica
      "outline"  preporučeni marketing paket, bijela s tamnim rubom
      "plain"    ostali paketi */
+export function NoSubscription({ title, sub, dark = false }: { title: string; sub: string; dark?: boolean }) {
+  return (
+    <div className={`mt-4 flex items-start gap-2.5 rounded-xl border px-3 py-2.5 ${dark ? "border-[#4ADE80]/25 bg-[#16A34A]/[0.12]" : "border-[#BBF7D0] bg-[#F0FDF4]"}`}>
+      <ShieldCheck size={16} className={`mt-px shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
+      <span className="min-w-0">
+        <span className={`block text-[12.5px] font-semibold leading-snug ${dark ? "text-white" : "text-[#14532D]"}`}>{title}</span>
+        <span className={`block text-[12px] leading-snug ${dark ? "text-[#BBF7D0]/80" : "text-[#15803D]"}`}>{sub}</span>
+      </span>
+    </div>
+  );
+}
+
 export function PlanCard({
   icon: Icon, name, tag, priceLabel, from, price, per, oldPrice, discount, alt, note,
-  promo, features, foot, cta, href, badge, variant,
+  promo, features, foot, cta, href, badge, variant, free,
 }: {
   icon: LucideIcon; name: string; tag: string; priceLabel?: string; from?: string;
   price: string; per?: string; oldPrice?: string; discount?: string; alt?: string; note?: string;
   promo?: string; features: string[]; foot?: string; cta: string; href: string; badge?: string;
-  variant: "dark" | "outline" | "plain" | "accent";
+  variant: "dark" | "outline" | "plain" | "accent"; free?: { title: string; sub: string };
 }) {
   const dark = variant === "dark";
   const txt   = dark ? "text-white" : "text-[#0F172A]";
@@ -308,6 +320,7 @@ export function PlanCard({
             <Clock size={12} /> {promo}
           </p>
         )}
+        {free && <NoSubscription title={free.title} sub={free.sub} dark={dark} />}
       </div>
 
       {/* stavke */}

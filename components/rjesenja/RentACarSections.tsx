@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Check, X, Plus, Bell, Car, CarFront, Building2, CalendarClock, Wrench } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, X, Plus, Bell, Car, CarFront, Building2, CalendarClock, Wrench, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
 import { COPY, type RcCopy } from "@/components/rjesenja/rentACarCopy";
 import { RcForm } from "@/components/rjesenja/RcForm";
@@ -167,8 +167,9 @@ function Packages({ c }: { c: RcCopy }) {
   const p = c.packages;
   const sp = p.support;
   const after = [
-    { I: CalendarClock, l: sp.subLabel, price: sp.subPrice, per: sp.subPer, d: sp.subDesc, x: sp.subAnchor },
-    { I: Wrench, l: sp.hourLabel, price: sp.hourPrice, per: sp.hourPer, d: sp.hourDesc, x: "" },
+    { I: ShieldCheck, l: sp.freeLabel, price: sp.freePrice, per: sp.freePer, d: sp.freeDesc, x: "", free: true },
+    { I: CalendarClock, l: sp.subLabel, price: sp.subPrice, per: sp.subPer, d: sp.subDesc, x: sp.subAnchor, free: false },
+    { I: Wrench, l: sp.hourLabel, price: sp.hourPrice, per: sp.hourPer, d: sp.hourDesc, x: "", free: false },
   ];
   return (
     <section id="paketi" className="relative bg-white scroll-mt-24">
@@ -191,28 +192,31 @@ function Packages({ c }: { c: RcCopy }) {
               href="#upit"
               badge={i === 1 ? p.recommended : undefined}
               variant={i === 1 ? "dark" : "plain"}
+              free={p.free}
             />
           ))}
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] text-[#64748B]">{p.note}</p>
 
-        <div className="mx-auto mt-16 max-w-3xl">
+        <div className="mx-auto mt-16 max-w-5xl">
           <p className="text-center text-[13px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">{p.afterHeading}</p>
-          <p className="mt-2 text-center text-[14px] text-[#475569]">{p.afterSub}</p>
-          <div className="mt-6 grid overflow-hidden rounded-[20px] border border-[#E5E7EB] bg-white sm:grid-cols-2" style={{ boxShadow: SOFT }}>
-            {after.map(({ I, l, price, per, d, x }, i) => (
-              <div key={l} className={`flex gap-4 p-6 ${i ? "border-t sm:border-t-0 sm:border-l border-[#F1F5F9]" : ""}`}>
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EEF3F8] text-[#0F3554]"><I size={18} /></span>
-                <div>
-                  <p className="text-[13px] font-semibold text-[#0F172A]">{l}</p>
-                  <p className="mt-1 flex items-baseline gap-1"><span className="text-[24px] font-semibold tracking-tight text-[#0F172A]">{price}</span><span className="text-[13px] text-[#64748B]">{per}</span></p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-[#64748B]">{d}</p>
-                  {x && <p className="mt-1.5 text-[12.5px] text-[#94A3B8]">{x}</p>}
-                </div>
+          <h3 className="mt-3 text-center text-[26px] font-semibold tracking-[-0.02em] text-[#0F172A] sm:text-[32px]">
+            {p.afterTitle} <span className="text-[#16A34A]">{p.afterAccent}</span>
+          </h3>
+          <p className="mx-auto mt-3 max-w-xl text-center text-[14.5px] leading-relaxed text-[#475569]">{p.afterSub}</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {after.map(({ I, l, price, per, d, x, free }) => (
+              <div key={l} className={`relative flex flex-col rounded-[20px] border p-6 ${free ? "border-[#86EFAC] bg-[#F0FDF4]" : "border-[#E5E7EB] bg-white"}`} style={{ boxShadow: SOFT }}>
+                {free && <span className="absolute right-4 top-4 rounded-full bg-[#16A34A] px-2.5 py-0.5 text-[11px] font-semibold text-white">{p.defaultTag}</span>}
+                <span className={`grid h-10 w-10 place-items-center rounded-xl ${free ? "bg-[#16A34A] text-white" : "bg-[#EEF3F8] text-[#0F3554]"}`}><I size={18} /></span>
+                <p className="mt-4 text-[14px] font-semibold text-[#0F172A]">{l}</p>
+                <p className="mt-1 flex items-baseline gap-1"><span className={`text-[28px] font-semibold tracking-tight ${free ? "text-[#16A34A]" : "text-[#0F172A]"}`}>{price}</span><span className="text-[13px] text-[#64748B]">{per}</span></p>
+                <p className="mt-2 text-[13px] leading-relaxed text-[#64748B]">{d}</p>
+                {x && <p className="mt-1.5 text-[12.5px] text-[#94A3B8]">{x}</p>}
               </div>
             ))}
           </div>
-          <p className="mt-4 text-center text-[12.5px] leading-relaxed text-[#64748B]">{sp.hostingNote}</p>
+          <p className="mt-5 text-center text-[12.5px] leading-relaxed text-[#64748B]">{sp.hostingNote}</p>
         </div>
       </div>
     </section>

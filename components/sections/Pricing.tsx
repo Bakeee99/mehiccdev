@@ -25,10 +25,10 @@
 
 import {
   ArrowRight, Check, CircleCheck, Clock, Star, LayoutDashboard, Car, Crown, Rocket, TrendingUp,
-  CalendarClock, Wrench, type LucideIcon,
+  CalendarClock, Wrench, ShieldCheck, Gift, type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/components/ui/LanguageProvider";
-import { PlanCard } from "@/components/ui/kit";
+import { PlanCard, NoSubscription } from "@/components/ui/kit";
 
 type AppPlan = { name: string; tag: string; price: string; alt?: string; kmNote?: string; oldPrice?: string; promoNote?: string; discountBadge?: string; ctaLabel?: string; monthly: string; from?: boolean; gift: string; features: string[] };
 type MktPlan = { alt?: string; name: string; tag: string; price: string; note: string; features: string[] };
@@ -36,7 +36,8 @@ type PricingData = {
   eyebrow: string; heading: string; headingAccent: string; subtitle: string;
   buildLabel: string; once: string; monthlyLabel: string; monthlySub: string;
   afterHeading: string; afterSub: string;
-  afterBoxes: { label: string; price: string; alt?: string; per: string; sub: string }[];
+  afterTitle: string; afterAccent: string; afterGift: string; freeTitle: string; freeSub: string; defaultTag: string;
+  afterBoxes: { label: string; price: string; alt?: string; per: string; sub: string; free?: boolean }[];
   hostingNote: string;
   rcBanner: { eyebrow: string; title: string; desc: string; cta: string };
   perMonth: string; from: string; popular: string;
@@ -57,10 +58,17 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     monthlyLabel: "Hosting + podrška · opciono",
     monthlySub: "nije obavezno, samo ako želite našu podršku i održavanje",
     afterHeading: "Nakon isporuke",
-    afterSub: "Prva 2 mjeseca podrške su besplatna uz Business paket. Poslije je sve opciono.",
+    afterSub: "Sistem je vaš i radi sam. Podršku uzimate tek kad procijenite da vam treba, a otkazujete je kad god želite.",
+    afterTitle: "Mjesečno održavanje",
+    afterAccent: "nije obavezno",
+    afterGift: "Uz Business paket prva 2 mjeseca podrške dobijate besplatno.",
+    freeTitle: "Bez obavezne mjesečne pretplate",
+    freeSub: "Održavanje uzimate samo ako vam zatreba",
+    defaultTag: "Zadano",
     afterBoxes: [
+      { label: "Bez održavanja", price: "0 KM", per: "/mj", sub: "Sistem radi sam i ne plaćate ništa mjesečno, dok vi ne odlučite drugačije.", free: true },
       { label: "Mjesečna podrška", price: "100 KM", alt: "oko €50", per: "/mj", sub: "do 4 sata mjesečno za izmjene, nadogradnje i pomoć · prioritetno javljanje" },
-      { label: "Bez pretplate", price: "50 KM", alt: "oko €25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
+      { label: "Po potrebi", price: "50 KM", alt: "oko €25", per: "/h", sub: "plaćate samo kada nešto zatreba, po utrošenom vremenu" },
     ],
     hostingNote: "Hosting se plaća zasebno, po stvarnoj potrošnji, i kod većine sajtova je to vrlo mali iznos.",
     rcBanner: {
@@ -151,10 +159,17 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     monthlyLabel: "Hosting + support · optional",
     monthlySub: "not required, only if you want our support and maintenance",
     afterHeading: "After launch",
-    afterSub: "The first 2 months of support are free with the Business package. After that, everything is optional.",
+    afterSub: "The system is yours and runs on its own. You add support only when you feel you need it, and cancel it whenever you want.",
+    afterTitle: "Monthly maintenance",
+    afterAccent: "is optional",
+    afterGift: "With the Business package, the first 2 months of support are free.",
+    freeTitle: "No required monthly fee",
+    freeSub: "Take maintenance only when you need it",
+    defaultTag: "Default",
     afterBoxes: [
+      { label: "No maintenance", price: "€0", per: "/mo", sub: "The system runs on its own and you pay nothing monthly, until you decide otherwise.", free: true },
       { label: "Monthly support", price: "€50", alt: "about 100 KM", per: "/mo", sub: "up to 4 hours a month for changes, upgrades and help · priority response" },
-      { label: "No subscription", price: "€25", alt: "about 50 KM", per: "/h", sub: "you pay only when you need something, for the time spent" },
+      { label: "As needed", price: "€25", alt: "about 50 KM", per: "/h", sub: "you pay only when you need something, for the time spent" },
     ],
     hostingNote: "Hosting is billed separately based on actual usage, and for most sites it is a very small amount.",
     rcBanner: {
@@ -278,6 +293,7 @@ function AppCard({ plan, icon: Icon, featured, d }: { plan: AppPlan; icon: Lucid
         {plan.promoNote && (
           <p className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1.5 text-[12px] font-medium text-white"><Clock size={12} /> {plan.promoNote}</p>
         )}
+        <NoSubscription title={d.freeTitle} sub={d.freeSub} dark />
       </div>
 
       <div className={`border-t px-6 py-6 sm:px-7 ${featured ? "border-white/15" : "border-white/[0.08]"}`}>
@@ -307,7 +323,7 @@ function AppCard({ plan, icon: Icon, featured, d }: { plan: AppPlan; icon: Lucid
 export function Pricing() {
   const { lang } = useLanguage();
   const d = PRICING[(lang as "bs" | "en")] ?? PRICING.bs;
-  const AFTER_ICONS: LucideIcon[] = [CalendarClock, Wrench];
+  const AFTER_ICONS: LucideIcon[] = [ShieldCheck, CalendarClock, Wrench];
 
   return (
     <>
@@ -330,29 +346,33 @@ export function Pricing() {
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-[#94A3B8]">{d.appNote}</p>
 
-          <div className="mx-auto mt-14 max-w-3xl">
+          <div id="odrzavanje" className="mx-auto mt-16 max-w-5xl scroll-mt-24">
             <p className="text-center text-[13px] font-semibold uppercase tracking-[0.14em] text-[#8FB3D9]">{d.afterHeading}</p>
-            <p className="mt-2 text-center text-[14px] text-[#94A3B8]">{d.afterSub}</p>
-            <div className="mt-6 grid overflow-hidden rounded-[20px] border border-white/[0.08] bg-white/[0.03] sm:grid-cols-2">
+            <h3 className="mt-3 text-center text-[26px] font-semibold tracking-[-0.02em] text-white sm:text-[32px]">
+              {d.afterTitle} <span className="text-[#4ADE80]">{d.afterAccent}</span>
+            </h3>
+            <p className="mx-auto mt-3 max-w-xl text-center text-[14.5px] leading-relaxed text-[#94A3B8]">{d.afterSub}</p>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
               {d.afterBoxes.map((b, i) => {
                 const Icon = AFTER_ICONS[i];
                 return (
-                  <div key={b.label} className={`flex gap-4 p-6 ${i > 0 ? "border-t border-white/[0.08] sm:border-l sm:border-t-0" : ""}`}>
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/[0.06] text-white"><Icon size={18} /></span>
-                    <div>
-                      <p className="text-[13px] font-semibold text-white">{b.label}</p>
-                      <p className="mt-1 flex items-baseline gap-1.5">
-                        <span className="text-[24px] font-semibold tracking-tight text-white tabular-nums">{b.price}</span>
-                        <span className="text-[13px] text-[#94A3B8]">{b.per}</span>
-                        {b.alt && <span className="text-[12px] text-[#64748B]">· {b.alt}</span>}
-                      </p>
-                      <p className="mt-1 text-[13px] leading-relaxed text-[#94A3B8]">{b.sub}</p>
-                    </div>
+                  <div key={b.label}
+                       className={`relative flex flex-col rounded-[20px] border p-6 ${b.free ? "border-[#4ADE80]/40 bg-[#16A34A]/[0.10]" : "border-white/[0.08] bg-white/[0.03]"}`}>
+                    {b.free && <span className="absolute right-4 top-4 rounded-full bg-[#16A34A] px-2.5 py-0.5 text-[11px] font-semibold text-white">{d.defaultTag}</span>}
+                    <span className={`grid h-10 w-10 place-items-center rounded-xl ${b.free ? "bg-[#16A34A] text-white" : "bg-white/[0.06] text-white"}`}><Icon size={18} /></span>
+                    <p className="mt-4 text-[14px] font-semibold text-white">{b.label}</p>
+                    <p className="mt-1 flex items-baseline gap-1.5">
+                      <span className={`text-[28px] font-semibold tracking-tight tabular-nums ${b.free ? "text-[#4ADE80]" : "text-white"}`}>{b.price}</span>
+                      <span className="text-[13px] text-[#94A3B8]">{b.per}</span>
+                      {b.alt && <span className="text-[12px] text-[#64748B]">· {b.alt}</span>}
+                    </p>
+                    <p className="mt-2 text-[13px] leading-relaxed text-[#94A3B8]">{b.sub}</p>
                   </div>
                 );
               })}
             </div>
-            <p className="mt-4 text-center text-[12.5px] text-[#64748B]">{d.hostingNote}</p>
+            <p className="mt-5 text-center text-[13px] text-[#CBD5E1]"><Gift size={14} className="mr-1.5 inline -translate-y-px text-[#4ADE80]" />{d.afterGift}</p>
+            <p className="mt-2 text-center text-[12.5px] text-[#64748B]">{d.hostingNote}</p>
           </div>
 
           <a href="/rjesenja/rent-a-car"
