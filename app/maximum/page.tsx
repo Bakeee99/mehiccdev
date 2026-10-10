@@ -7,7 +7,7 @@ const PAGE_URL = "https://mehiccdev.com/maximum";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mehiccdev.com"),
-  title: "Maximum Rent a Car - Case Study | mehiccdev",
+  title: { absolute: "mehiccdev" },
   description:
     "Pregled arhitekture i razvoja SaaS rješenja za rent-a-car agencije.",
   keywords: [

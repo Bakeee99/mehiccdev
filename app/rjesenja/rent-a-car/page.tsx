@@ -22,7 +22,7 @@ const PAGE_URL = "https://mehiccdev.com/rjesenja/rent-a-car";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mehiccdev.com"),
-  title: "Rezervacioni sistem za rent-a-car firme",
+  title: { absolute: "mehiccdev" },
   description: COPY.bs.meta.description,
   keywords: [
     "rezervacioni sistem rent a car",

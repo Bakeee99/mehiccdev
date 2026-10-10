@@ -27,10 +27,7 @@ export const metadata: Metadata = {
      Brend ide prvi (tab prikaže samo prvih ~20 znakova, pa se vidi
      "mehiccdev · Web apl…"), a ostatak nosi ključne riječi i grad.
      template dodaje brend na naslove podstranica automatski. */
-  title: {
-    default: "mehiccdev · Web aplikacije i sajtovi, Mostar",
-    template: "%s · mehiccdev",
-  },
+  title: { absolute: "mehiccdev" },
   description:
     "Gradimo web aplikacije za rezervacije i najam, sajtove koje sami uređujete i marketing koji dovodi upite. Iz Mostara za cijeli region.",
   keywords: [
