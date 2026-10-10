@@ -253,11 +253,11 @@ const isHeader = (f: string) => f.startsWith("SVE") || f.startsWith("EVERYTHING"
      "plain"    ostali paketi */
 export function NoSubscription({ title, sub, dark = false }: { title: string; sub: string; dark?: boolean }) {
   return (
-    <div className={`mt-4 flex items-start gap-2.5 rounded-xl border px-3 py-2.5 ${dark ? "border-[#4ADE80]/25 bg-[#16A34A]/[0.12]" : "border-[#BBF7D0] bg-[#F0FDF4]"}`}>
-      <ShieldCheck size={16} className={`mt-px shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
+    <div className={`mt-4 flex items-center gap-2.5 rounded-xl border px-3 py-2.5 ${dark ? "border-[#4ADE80]/25 bg-[#16A34A]/[0.12]" : "border-[#BBF7D0] bg-[#F0FDF4]"}`}>
+      <ShieldCheck size={16} className={`shrink-0 ${dark ? "text-[#4ADE80]" : "text-[#16A34A]"}`} />
       <span className="min-w-0">
-        <span className={`block text-[12.5px] font-semibold leading-snug ${dark ? "text-white" : "text-[#14532D]"}`}>{title}</span>
-        <span className={`block text-[12px] leading-snug ${dark ? "text-[#BBF7D0]/80" : "text-[#15803D]"}`}>{sub}</span>
+        <span className={`block truncate text-[12.5px] font-semibold leading-snug ${dark ? "text-white" : "text-[#14532D]"}`}>{title}</span>
+        <span className={`block truncate text-[12px] leading-snug ${dark ? "text-[#BBF7D0]/80" : "text-[#15803D]"}`}>{sub}</span>
       </span>
     </div>
   );

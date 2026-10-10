@@ -62,8 +62,8 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterTitle: "Mjesečno održavanje",
     afterAccent: "nije obavezno",
     afterGift: "Uz Business paket prva 2 mjeseca podrške dobijate besplatno.",
-    freeTitle: "Bez obavezne mjesečne pretplate",
-    freeSub: "Održavanje uzimate samo ako vam zatreba",
+    freeTitle: "Bez obavezne pretplate",
+    freeSub: "Održavanje samo po želji",
     defaultTag: "Zadano",
     afterBoxes: [
       { label: "Bez održavanja", price: "0 KM", per: "/mj", sub: "Sistem radi sam i ne plaćate ništa mjesečno, dok vi ne odlučite drugačije.", free: true },
@@ -164,7 +164,7 @@ const PRICING: Record<"bs" | "en", PricingData> = {
     afterAccent: "is optional",
     afterGift: "With the Business package, the first 2 months of support are free.",
     freeTitle: "No required monthly fee",
-    freeSub: "Take maintenance only when you need it",
+    freeSub: "Maintenance is up to you",
     defaultTag: "Default",
     afterBoxes: [
       { label: "No maintenance", price: "€0", per: "/mo", sub: "The system runs on its own and you pay nothing monthly, until you decide otherwise.", free: true },
