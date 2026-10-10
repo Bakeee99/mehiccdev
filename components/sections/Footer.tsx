@@ -24,7 +24,7 @@ const T = {
     nav: [
       { label: "O nama", href: "/#o-nama" },
       { label: "Rezultati", href: "/#rezultati" },
-      { label: "Portfolio", href: "/#portfolio" },
+      { label: "Portfolio", href: "/portfolio" },
       { label: "Cjenovnik", href: "/#cjenovnik" },
       { label: "Flagship", href: "/#saas" },
       { label: "Kontakt", href: "/#kontakt" },
@@ -50,7 +50,7 @@ const T = {
     nav: [
       { label: "About", href: "/#o-nama" },
       { label: "Results", href: "/#rezultati" },
-      { label: "Portfolio", href: "/#portfolio" },
+      { label: "Portfolio", href: "/portfolio" },
       { label: "Pricing", href: "/#cjenovnik" },
       { label: "Flagship", href: "/#saas" },
       { label: "Contact", href: "/#kontakt" },

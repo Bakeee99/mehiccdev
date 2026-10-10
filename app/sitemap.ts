@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://mehiccdev.com/portfolio",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
       url: "https://mehiccdev.com/maximum",
       lastModified: new Date(),
       changeFrequency: "yearly",

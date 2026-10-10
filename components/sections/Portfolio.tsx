@@ -38,7 +38,7 @@ type Content = {
   badge: string; title: string; desc: string;
   stats: { v: string; l: string }[];
   features: string[];
-  ctaLive: string; ctaWant: string; ctaCase: string; livePill: string; buildPill: string;
+  ctaLive: string; ctaWant: string; allLink: string; ctaCase: string; livePill: string; buildPill: string;
   zoomHint: string; closeLabel: string;
   minis: Mini[];
 };
@@ -67,6 +67,7 @@ const T: Record<"bs" | "en", Content> = {
     ctaLive: "Pogledaj uživo",
     ctaCase: "Pogledajte detaljnije",
     ctaWant: "Želim ovakvu aplikaciju",
+    allLink: "Pogledaj sve projekte",
     livePill: "Uživo",
     buildPill: "U izradi",
     zoomHint: "Klikni za uvećanje",
@@ -100,6 +101,7 @@ const T: Record<"bs" | "en", Content> = {
     ctaLive: "See it live",
     ctaCase: "See the full case study",
     ctaWant: "I want an app like this",
+    allLink: "See all projects",
     livePill: "Live",
     buildPill: "In progress",
     zoomHint: "Click to enlarge",
@@ -262,6 +264,12 @@ export function Portfolio() {
               <div key={m.title} className={cls}>{body}</div>
             );
           })}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <a href="/portfolio" className="group inline-flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-5 py-3 text-[14px] font-semibold text-[#0F172A] transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC]">
+            {d.allLink} <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+          </a>
         </div>
       </div>
 
